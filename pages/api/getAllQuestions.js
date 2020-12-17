@@ -1,4 +1,3 @@
-import Bolt from "bolt"
 
 export default function handler(req, res) {
   res.statusCode = 200
