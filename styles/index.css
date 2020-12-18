@@ -1,0 +1,14 @@
+@tailwind base;
+
+* {
+	box-sizing: border-box;
+}
+html {
+	scroll-behavior: smooth;
+}
+::-webkit-scrollbar {
+	display: none;
+}
+
+@tailwind components;
+@tailwind utilities;
