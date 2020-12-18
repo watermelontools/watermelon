@@ -9,6 +9,8 @@ html {
 ::-webkit-scrollbar {
 	display: none;
 }
-
+h1{
+	@apply font-bold text-3xl text-green-800;
+}
 @tailwind components;
 @tailwind utilities;

@@ -3,9 +3,9 @@ const Layout = ({ children }) => {
   return (
     <div className="w-screen h-screen">
       <div className="w-full h-full flex">
-        <nav className="w-1/12 h-full border-r border-gray-400 flex flex-col justify-between items-center p-2">
+        <nav className="w-1/12 h-full border-r border-pink-400 flex flex-col justify-between items-center p-2 bg-red-50">
           <div className="flex flex-col">
-            <span className="font-bold mb-2">Admin</span>
+            <span className="font-bold mb-2 text-green-800 text-xl">Admin</span>
             <Link href="weeklyquestions">
               <a>Weekly Questions</a>
             </Link>
