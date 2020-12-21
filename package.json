@@ -5,11 +5,14 @@
   "main": "index.js",
   "dependencies": {
     "@slack/bolt": "^2.5.0",
+    "@tailwindcss/postcss7-compat": "^2.0.2",
+    "autoprefixer": "^9.8.6",
     "next": "^10.0.3",
+    "postcss": "^7.0.35",
     "postcss-preset-env": "^6.7.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "tailwindcss": "^2.0.2"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.14",
