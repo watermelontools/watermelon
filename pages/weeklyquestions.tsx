@@ -1,84 +1,70 @@
+import { useReducer } from "react"
+const initialState = [
+  { question: "Does pineapple go on pizza?", icebreaker: "Hey @bob, what about other fruits on pizza?", answers: ["Yes 🍍🍕", "NO!"] },
+  { question: "Which is the best movie saga?", icebreaker: "Do you think @alice would be sorted into Griffyndor?", answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"] },
+]
+function reducer(state, action) {
+  switch (action.type) {
+    case "add_question": {
+      return [
+        ...state,
+        { question: "What would you like to ask?", icebreaker: "You may use @tag here to randomly select a user", answers: ["At least two answers", "Second answer"] },
+      ]
+    }
+    case "add_answer": {
+      let newQuestions = [...state]
+    }
+    default:
+      throw new Error();
+  }
+}
+
 function WeeklyQuestions() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <div>
       <h1>Weekly Questions</h1>
       <p>We recommend having 3 questions per week.</p>
       <p>We allow minimum 2 questions and maximum 4, each varying between 2 and 4 answers.</p>
       <form>
-        <div className="my-1">
-          <div>
-            <label className="w-full md:w-1/2 flex flex-col">
-              Title
-          <input type="text" maxLength={140} placeholder="Does pineapple go on pizza?"
-                className="border rounded border-gray-200" />
-            </label>
+        {state.map((question, index) =>
+          <div className="my-1" key={index}>
+            <div>
+              <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
+                Title
+          <input type="text" maxLength={140} value={question.question}
+                  placeholder="The question that will be asked goes here, end it with a question mark"
+                  className="border rounded border-gray-200 text-base font-normal ml-1" />
+              </label>
+            </div>
+            <div>
+              <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
+                Icebreaker
+               <input type="text"
+                  placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
+                  value={question.icebreaker}
+                  className="border rounded border-gray-200 text-base font-normal ml-1" />
+              </label>
+            </div>
+            {question.answers.map((answer, jndex) =>
+              <div>
+                <label className="flex flex-nowrap w-full m-1 items-center" >
+                  {jndex + 1}.
+                  <input type="text" maxLength={140}
+                    placeholder="Keep answers short"
+                    value={answer}
+                    className="border rounded border-gray-200 mx-1 p-1" />
+                </label>
+              </div>
+            )}
+            {question.answers.length < 4 &&
+              <div className="m-1">
+                {question.answers.length+1}. <button className="border rounded border-green-500 bg-green-100 px-2">Add answer</button>
+              </div>
+            }
           </div>
-          <div>
-            <label className="w-full md:w-1/2 flex flex-col">
-              Icebreaker
-          <input type="text" placeholder="Hey @bob, what about other fruits on pizza?"
-                className="border rounded border-gray-200" />
-            </label>
-          </div>
-          <div>
-            <label className="flex flex-nowrap w-full m-1 items-center" >
-              A.
-          <input type="text" maxLength={140} placeholder="Yes 🍍🍕"
-                className="border rounded border-gray-200 mx-1 p-1" />
-            </label>
-          </div>
-          <div>
-            <label className="flex flex-nowrap w-full m-1 items-center">
-              B.
-          <input type="text" maxLength={140} placeholder="NO!"
-                className="border rounded border-gray-200 mx-1 p-1" />
-            </label>
-          </div>
-          <div className="m-1">
-            C. <button className="border rounded border-green-500 bg-green-100 px-2">Add answer</button>
-          </div>
-        </div>
-        <div className="my-1">
-          <div>
-            <label className="w-full md:w-1/2 flex flex-col">
-              Title
-          <input type="text" maxLength={140} placeholder="Which is the best movie saga?"
-                className="border rounded border-gray-200" />
-            </label>
-          </div>
-          <div>
-            <label className="w-full md:w-1/2 flex flex-col">
-              Icebreaker
-          <input type="text" placeholder="Do you think @alice would be sorted into Griffyndor?"
-                className="border rounded border-gray-200" />
-            </label>
-          </div>
-          <div>
-            <label className="flex flex-nowrap w-full m-1 items-center" >
-              A.
-          <input type="text" maxLength={140} placeholder="Harry Potter"
-                className="border rounded border-gray-200 mx-1 p-1" />
-            </label>
-          </div>
-          <div>
-            <label className="flex flex-nowrap w-full m-1 items-center">
-              B.
-          <input type="text" maxLength={140} placeholder="Star Wars"
-                className="border rounded border-gray-200 mx-1 p-1" />
-            </label>
-          </div>
-          <div>
-            <label className="flex flex-nowrap w-full m-1 items-center">
-              C.
-          <input type="text" maxLength={140} placeholder="Lord of the Rings"
-                className="border rounded border-gray-200 mx-1 p-1" />
-            </label>
-          </div>
-          <div className="m-1">
-            C. <button className="border rounded border-green-500 bg-green-100 px-2">Add answer</button>
-          </div>
-        </div>
-        <button className="border rounded border-red-500 bg-red-100">Add Question</button>
+        )}
+        <button className="border rounded border-red-500 bg-red-100 p-2">Add Question</button>
       </form>
     </div>
   )
