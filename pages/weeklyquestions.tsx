@@ -17,8 +17,15 @@ function reducer(state, action) {
         newQuestions[action.questionIndex].answers = [...newQuestions[action.questionIndex].answers, ""]
       return newQuestions
     }
+    case "remove_answer": {
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].answers.splice(action.answerIndex, 1)
+      return newQuestions
+    }
     case "edit_icebreaker": {
-
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].icebreaker = action.icebreakerText
+      return newQuestions
     }
     default:
       throw new Error();
@@ -38,7 +45,7 @@ function WeeklyQuestions() {
             <div>
               <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
                 Title
-          <input type="text" maxLength={140} value={question.question}
+              <input type="text" maxLength={140} value={question.question}
                   placeholder="The question that will be asked goes here, end it with a question mark"
                   className="border rounded border-gray-200 text-base font-normal ml-1" />
               </label>
@@ -49,18 +56,24 @@ function WeeklyQuestions() {
                <input type="text"
                   placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
                   value={question.icebreaker}
-                  onChange={e =>{e.preventDefault()}}
+                  onChange={e => { e.preventDefault(); dispatch({ type: "edit_icebreaker", icebreakerText: e.target.value, questionIndex: index }) }}
                   className="border rounded border-gray-200 text-base font-normal ml-1" />
               </label>
             </div>
             {question.answers.map((answer, jndex) =>
-              <div key={"answer"+jndex}>
+              <div key={"answer" + jndex}>
                 <label className="flex flex-nowrap w-full m-1 items-center" >
                   {jndex + 1}.
                   <input type="text" maxLength={140}
                     placeholder="Keep answers short"
                     value={answer}
                     className="border rounded border-gray-200 mx-1 p-1" />
+                  {question.answers.length > 1 && <button
+                    onClick={e => { e.preventDefault(); dispatch({ type: "remove_answer", questionIndex: index, answerIndex: jndex }) }}
+                    className="border-red-500 bg-red-100 text-white font-bold rounded-full border px-2"
+                  >
+                    -
+                  </button>}
                 </label>
               </div>
             )}
