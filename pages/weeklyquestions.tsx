@@ -13,6 +13,12 @@ function reducer(state, action) {
     }
     case "add_answer": {
       let newQuestions = [...state]
+      if (newQuestions[action.questionIndex].answers.length < 4)
+        newQuestions[action.questionIndex].answers = [...newQuestions[action.questionIndex].answers, ""]
+      return newQuestions
+    }
+    case "edit_icebreaker": {
+
     }
     default:
       throw new Error();
@@ -43,11 +49,12 @@ function WeeklyQuestions() {
                <input type="text"
                   placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
                   value={question.icebreaker}
+                  onChange={e =>{e.preventDefault()}}
                   className="border rounded border-gray-200 text-base font-normal ml-1" />
               </label>
             </div>
             {question.answers.map((answer, jndex) =>
-              <div>
+              <div key={"answer"+jndex}>
                 <label className="flex flex-nowrap w-full m-1 items-center" >
                   {jndex + 1}.
                   <input type="text" maxLength={140}
@@ -59,7 +66,12 @@ function WeeklyQuestions() {
             )}
             {question.answers.length < 4 &&
               <div className="m-1">
-                {question.answers.length+1}. <button className="border rounded border-green-500 bg-green-100 px-2">Add answer</button>
+                {question.answers.length + 1}.
+                <button
+                  onClick={(e) => { e.preventDefault(); dispatch({ type: "add_answer", questionIndex: index }) }}
+                  className="border rounded border-green-500 bg-green-100 px-2">
+                  Add answer
+                </button>
               </div>
             }
           </div>
