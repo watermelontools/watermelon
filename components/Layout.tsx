@@ -23,9 +23,9 @@ const Layout = ({ children }) => {
     },
   ]
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex">
-        <nav className="w-2/12 lg:w-1/12 h-full border-r border-pink-400 flex flex-col justify-between items-center bg-red-50">
+        <nav className="w-3/12 lg:w-1/12 h-full min-h-screen border-r border-pink-400 flex flex-col justify-between items-center bg-red-50">
           <div className="flex flex-col">
             <span className="font-bold mb-2 text-green-800 text-xl">🍉 Admin</span>
             {links.map((link, index) =>
@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
             Salir
           </button>
         </nav>
-        <div className="w-11/12 h-full p-2">
+        <div className="w-9/12 lg:w-11/12 h-full p-2">
           {children}
         </div>
       </div>
