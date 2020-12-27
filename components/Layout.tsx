@@ -46,7 +46,7 @@ const Layout = ({ children }) => {
                 </Link>
               )}
           </div>
-          <button className="bg-pink-200 text-white w-full">
+          <button className="bg-pink-200 text-red-500 w-full">
             Salir
           </button>
         </nav>
