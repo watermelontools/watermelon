@@ -23,6 +23,11 @@ function reducer(state, action) {
         },
       ]
     }
+    case "delete_question": {
+      let newQuestions = [...state]
+      newQuestions.splice(action.questionIndex, 1)
+      return newQuestions
+    }
     case "add_answer": {
       let newQuestions = [...state]
       if (newQuestions[action.questionIndex].answers.length < 4)
@@ -61,13 +66,17 @@ function WeeklyQuestions() {
           <div className="my-2" key={index}>
             <div>
               <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-              <div className="flex justify-between my-1">
-                Title
-                 <button className="bg-pink-200 text-red-500 w-24 rounded text-base">
-                   Delete
-                 </button>
+                <div className="flex justify-between my-1">
+                  Title
+                 {state.length > 1 &&
+                    <button
+                      onClick={e => { e.preventDefault(); dispatch({ type: "delete_question", questionIndex: index }) }}
+                      className="bg-pink-200 text-red-500 w-24 rounded text-base">
+                      Delete
+                    </button>
+                  }
                 </div>
-              <input type="text" maxLength={140} value={question.question}
+                <input type="text" maxLength={140} value={question.question}
                   placeholder="The question that will be asked goes here, end it with a question mark"
                   onChange={e => { e.preventDefault(); dispatch({ type: "edit_title", titleText: e.target.value, questionIndex: index }) }}
                   className="border rounded border-gray-200 text-base font-normal ml-1" />
