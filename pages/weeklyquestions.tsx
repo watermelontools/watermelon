@@ -100,7 +100,7 @@ function WeeklyQuestions() {
                     placeholder="Keep answers short"
                     value={answer}
                     className="border rounded border-gray-200 mx-1 p-1" />
-                  {question.answers.length > 1 && <button
+                  {question.answers.length > 2 && <button
                     onClick={e => { e.preventDefault(); dispatch({ type: "remove_answer", questionIndex: index, answerIndex: jndex }) }}
                     className="bg-red-100 text-red-500 font-bold rounded-full w-8 h-8"
                   >
