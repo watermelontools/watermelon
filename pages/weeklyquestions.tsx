@@ -61,73 +61,80 @@ function WeeklyQuestions() {
       <h1>Weekly Questions</h1>
       <p>We recommend having 3 questions per week.</p>
       <p>We allow minimum 2 questions and maximum 4, each varying between 2 and 4 answers.</p>
-      <form>
-        {state.map((question, index) =>
-          <div className="my-2" key={index}>
-            <div>
-              <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-                <div className="flex justify-between my-1">
-                  Title
+      <form className="flex flex-col md:flex-row w-full h-full items-end">
+        <div className="w-full md:w-10/12">
+          {state.map((question, index) =>
+            <div className="my-2" key={index}>
+              <div>
+                <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
+                  <div className="flex justify-between my-1">
+                    Title
                  {state.length > 1 &&
-                    <button
-                      onClick={e => { e.preventDefault(); dispatch({ type: "delete_question", questionIndex: index }) }}
-                      className="bg-pink-200 text-red-500 w-24 rounded text-base">
-                      Delete
+                      <button
+                        onClick={e => { e.preventDefault(); dispatch({ type: "delete_question", questionIndex: index }) }}
+                        className="bg-pink-200 text-red-500 w-24 rounded text-base">
+                        Delete
                     </button>
-                  }
-                </div>
-                <input type="text" maxLength={140} value={question.question}
-                  placeholder="The question that will be asked goes here, end it with a question mark"
-                  onChange={e => { e.preventDefault(); dispatch({ type: "edit_title", titleText: e.target.value, questionIndex: index }) }}
-                  className="border rounded border-gray-200 text-base font-normal ml-1" />
-              </label>
-            </div>
-            <div>
-              <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-                Icebreaker
-               <input type="text"
-                  placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
-                  value={question.icebreaker}
-                  onChange={e => { e.preventDefault(); dispatch({ type: "edit_icebreaker", icebreakerText: e.target.value, questionIndex: index }) }}
-                  className="border rounded border-gray-200 text-base font-normal ml-1" />
-              </label>
-            </div>
-            {question.answers.map((answer, jndex) =>
-              <div key={"answer" + jndex}>
-                <label className="flex flex-nowrap w-full m-1 items-center" >
-                  {jndex + 1}.
-                  <input type="text" maxLength={140}
-                    placeholder="Keep answers short"
-                    value={answer}
-                    className="border rounded border-gray-200 mx-1 p-1" />
-                  {question.answers.length > 2 && <button
-                    onClick={e => { e.preventDefault(); dispatch({ type: "remove_answer", questionIndex: index, answerIndex: jndex }) }}
-                    className="bg-red-100 text-red-500 font-bold rounded-full w-8 h-8"
-                  >
-                    -
-                  </button>}
+                    }
+                  </div>
+                  <input type="text" maxLength={140} value={question.question}
+                    placeholder="The question that will be asked goes here, end it with a question mark"
+                    onChange={e => { e.preventDefault(); dispatch({ type: "edit_title", titleText: e.target.value, questionIndex: index }) }}
+                    className="border rounded border-gray-200 text-base font-normal ml-1" />
                 </label>
               </div>
-            )}
-            {question.answers.length < 4 &&
-              <div className="m-1">
-                {question.answers.length + 1}.
-                <button
-                  onClick={(e) => { e.preventDefault(); dispatch({ type: "add_answer", questionIndex: index }) }}
-                  className="rounded text-green-500 bg-green-100 px-2">
-                  Add answer
-                </button>
+              <div>
+                <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
+                  Icebreaker
+               <input type="text"
+                    placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
+                    value={question.icebreaker}
+                    onChange={e => { e.preventDefault(); dispatch({ type: "edit_icebreaker", icebreakerText: e.target.value, questionIndex: index }) }}
+                    className="border rounded border-gray-200 text-base font-normal ml-1" />
+                </label>
               </div>
-            }
-          </div>
-        )}
-        {state.length < 3 &&
-          <button
-            onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
-            className="rounded text-green-500 bg-green-100 p-2">
-            Add Question
+              {question.answers.map((answer, jndex) =>
+                <div key={"answer" + jndex}>
+                  <label className="flex flex-nowrap w-full m-1 items-center" >
+                    {jndex + 1}.
+                  <input type="text" maxLength={140}
+                      placeholder="Keep answers short"
+                      value={answer}
+                      className="border rounded border-gray-200 mx-1 p-1" />
+                    {question.answers.length > 2 && <button
+                      onClick={e => { e.preventDefault(); dispatch({ type: "remove_answer", questionIndex: index, answerIndex: jndex }) }}
+                      className="bg-red-100 text-red-500 font-bold rounded-full w-8 h-8"
+                    >
+                      -
+                  </button>}
+                  </label>
+                </div>
+              )}
+              {question.answers.length < 4 &&
+                <div className="m-1">
+                  {question.answers.length + 1}.
+                <button
+                    onClick={(e) => { e.preventDefault(); dispatch({ type: "add_answer", questionIndex: index }) }}
+                    className="rounded text-green-500 bg-green-100 px-2">
+                    Add answer
+                </button>
+                </div>
+              }
+            </div>
+          )}
+          {state.length < 3 &&
+            <button
+              onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
+              className="rounded text-green-500 bg-green-100 p-2">
+              Add Question
         </button>
-        }
+          }
+        </div>
+        <div className="flex justify-end h-full w-full md:w-2/12">
+        <button className="h-10 border border-green-600 bg-green-200 text-green-600 p-2 rounded w-full">
+          Save
+        </button>
+        </div>
       </form>
     </div>
   )
