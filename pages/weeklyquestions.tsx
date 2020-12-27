@@ -95,11 +95,13 @@ function WeeklyQuestions() {
             }
           </div>
         )}
-        <button
-          onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
-          className="border rounded border-red-500 bg-red-100 p-2">
-          Add Question
+        {state.length < 3 &&
+          <button
+            onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
+            className="border rounded border-red-500 bg-red-100 p-2">
+            Add Question
         </button>
+        }
       </form>
     </div>
   )
