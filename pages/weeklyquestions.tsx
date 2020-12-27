@@ -61,7 +61,12 @@ function WeeklyQuestions() {
           <div className="my-2" key={index}>
             <div>
               <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
+              <div className="flex justify-between my-1">
                 Title
+                 <button className="bg-pink-200 text-red-500 w-24 rounded text-base">
+                   Delete
+                 </button>
+                </div>
               <input type="text" maxLength={140} value={question.question}
                   placeholder="The question that will be asked goes here, end it with a question mark"
                   onChange={e => { e.preventDefault(); dispatch({ type: "edit_title", titleText: e.target.value, questionIndex: index }) }}
@@ -88,7 +93,7 @@ function WeeklyQuestions() {
                     className="border rounded border-gray-200 mx-1 p-1" />
                   {question.answers.length > 1 && <button
                     onClick={e => { e.preventDefault(); dispatch({ type: "remove_answer", questionIndex: index, answerIndex: jndex }) }}
-                    className="border-red-500 bg-red-100 text-white font-bold rounded-full border px-2"
+                    className="bg-red-100 text-red-500 font-bold rounded-full w-8 h-8"
                   >
                     -
                   </button>}
@@ -100,7 +105,7 @@ function WeeklyQuestions() {
                 {question.answers.length + 1}.
                 <button
                   onClick={(e) => { e.preventDefault(); dispatch({ type: "add_answer", questionIndex: index }) }}
-                  className="border rounded border-green-500 bg-green-100 px-2">
+                  className="rounded text-green-500 bg-green-100 px-2">
                   Add answer
                 </button>
               </div>
@@ -110,7 +115,7 @@ function WeeklyQuestions() {
         {state.length < 3 &&
           <button
             onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
-            className="border rounded border-red-500 bg-red-100 p-2">
+            className="rounded text-green-500 bg-green-100 p-2">
             Add Question
         </button>
         }
