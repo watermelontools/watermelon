@@ -1,14 +1,26 @@
 import { useReducer } from "react"
 const initialState = [
-  { question: "Does pineapple go on pizza?", icebreaker: "Hey @bob, what about other fruits on pizza?", answers: ["Yes 🍍🍕", "NO!"] },
-  { question: "Which is the best movie saga?", icebreaker: "Do you think @alice would be sorted into Griffyndor?", answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"] },
+  {
+    question: "Does pineapple go on pizza?",
+    icebreaker: "Hey @bob, what about other fruits on pizza?",
+    answers: ["Yes 🍍🍕", "NO!"]
+  },
+  {
+    question: "Which is the best movie saga?",
+    icebreaker: "Do you think @alice would be sorted into Griffyndor?",
+    answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"]
+  },
 ]
 function reducer(state, action) {
   switch (action.type) {
     case "add_question": {
       return [
         ...state,
-        { question: "What would you like to ask?", icebreaker: "You may use @tag here to randomly select a user", answers: ["At least two answers", "Second answer"] },
+        {
+          question: "What would you like to ask?",
+          icebreaker: "You may use @tag here to randomly select a user",
+          answers: ["At least two answers", "Second answer"]
+        },
       ]
     }
     case "add_answer": {
@@ -46,7 +58,7 @@ function WeeklyQuestions() {
       <p>We allow minimum 2 questions and maximum 4, each varying between 2 and 4 answers.</p>
       <form>
         {state.map((question, index) =>
-          <div className="my-1" key={index}>
+          <div className="my-2" key={index}>
             <div>
               <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
                 Title
