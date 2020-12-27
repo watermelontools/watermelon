@@ -22,6 +22,11 @@ function reducer(state, action) {
       newQuestions[action.questionIndex].answers.splice(action.answerIndex, 1)
       return newQuestions
     }
+    case "edit_title": {
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].title = action.titleText
+      return newQuestions
+    }
     case "edit_icebreaker": {
       let newQuestions = [...state]
       newQuestions[action.questionIndex].icebreaker = action.icebreakerText
@@ -47,6 +52,7 @@ function WeeklyQuestions() {
                 Title
               <input type="text" maxLength={140} value={question.question}
                   placeholder="The question that will be asked goes here, end it with a question mark"
+                  onChange={e => { e.preventDefault(); dispatch({ type: "edit_title", titleText: e.target.value, questionIndex: index }) }}
                   className="border rounded border-gray-200 text-base font-normal ml-1" />
               </label>
             </div>
