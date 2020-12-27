@@ -95,7 +95,11 @@ function WeeklyQuestions() {
             }
           </div>
         )}
-        <button className="border rounded border-red-500 bg-red-100 p-2">Add Question</button>
+        <button
+          onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
+          className="border rounded border-red-500 bg-red-100 p-2">
+          Add Question
+        </button>
       </form>
     </div>
   )
