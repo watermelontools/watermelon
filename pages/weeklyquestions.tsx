@@ -1,4 +1,5 @@
 import { useReducer } from "react"
+
 const initialState = [
   {
     question: "Does pineapple go on pizza?",
@@ -11,7 +12,7 @@ const initialState = [
     answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"]
   },
 ]
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case "add_question": {
       return [
@@ -53,9 +54,20 @@ function reducer(state, action) {
       throw new Error();
   }
 }
-
-function WeeklyQuestions() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+const WeeklyQuestions = ({ firebaseApp }) => {
+  const saveQuestions = () => {
+    let db = firebaseApp.firestore()
+    db.collection("users").doc("maria@lean-tech.io").set({
+      weekly_questions: state
+    }, { merge: true })
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef)
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error)
+      })
+  }
+  const [state, dispatch] = useReducer(reducer, initialState)
   return (
     <div>
       <h1>Weekly Questions</h1>
@@ -131,8 +143,10 @@ function WeeklyQuestions() {
           }
         </div>
         <div className="flex justify-end h-full w-full md:w-2/12">
-        <button className="h-10 border border-green-600 bg-green-200 text-green-600 p-2 rounded w-full">
-          Save
+          <button
+            onClick={e => { e.preventDefault(); saveQuestions() }}
+            className="h-10 border border-green-600 bg-green-200 text-green-600 p-2 rounded w-full">
+            Save
         </button>
         </div>
       </form>
