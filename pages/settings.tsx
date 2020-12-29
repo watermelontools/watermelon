@@ -1,4 +1,60 @@
+import { useReducer } from "react"
+
 import Button from "../components/Button"
+const initialState = [
+  {
+    question: "Does pineapple go on pizza?",
+    icebreaker: "Hey @bob, what about other fruits on pizza?",
+    answers: ["Yes 🍍🍕", "NO!"]
+  },
+  {
+    question: "Which is the best movie saga?",
+    icebreaker: "Do you think @alice would be sorted into Griffyndor?",
+    answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"]
+  },
+]
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "add_question": {
+      return [
+        ...state,
+        {
+          question: "What would you like to ask?",
+          icebreaker: "You may use @tag here to randomly select a user",
+          answers: ["At least two answers", "Second answer"]
+        },
+      ]
+    }
+    case "delete_question": {
+      let newQuestions = [...state]
+      newQuestions.splice(action.questionIndex, 1)
+      return newQuestions
+    }
+    case "add_answer": {
+      let newQuestions = [...state]
+      if (newQuestions[action.questionIndex].answers.length < 4)
+        newQuestions[action.questionIndex].answers = [...newQuestions[action.questionIndex].answers, ""]
+      return newQuestions
+    }
+    case "remove_answer": {
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].answers.splice(action.answerIndex, 1)
+      return newQuestions
+    }
+    case "edit_title": {
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].title = action.titleText
+      return newQuestions
+    }
+    case "edit_icebreaker": {
+      let newQuestions = [...state]
+      newQuestions[action.questionIndex].icebreaker = action.icebreakerText
+      return newQuestions
+    }
+    default:
+      throw new Error();
+  }
+}
 let timezones = [
   {
     "value": "Dateline Standard Time",
@@ -1411,7 +1467,22 @@ let timezones = [
     ]
   }
 ]
-function Settings() {
+
+const Settings= ({ firebaseApp }) => {
+  const saveQuestions = () => {
+    let db = firebaseApp.firestore()
+    db.collection("users").doc("maria@lean-tech.io").set({
+      weekly_questions: state
+    }, { merge: true })
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef)
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error)
+      })
+  }
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   return (
     <div>
       <h1>Settings</h1>
