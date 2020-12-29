@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "firebase": "^8.2.1",
     "next": "latest",
     "postcss-loader": "^4.1.0",
     "postcss-preset-env": "^6.7.0",
