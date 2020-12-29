@@ -47,7 +47,7 @@ const Layout = ({ children }) => {
               )}
           </div>
           <button className="bg-pink-200 text-red-500 w-full">
-            Salir
+            Logout
           </button>
         </nav>
         <div className="w-10/12 h-full p-2">
