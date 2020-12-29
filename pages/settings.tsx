@@ -4,14 +4,13 @@ import Button from "../components/Button"
 
 import timezones from "../public/data/timezones.js"
 
-const initialState = [
+const initialState = 
   {
-    weekday: 0,
+    weekday: "saturday",
     timezone: "-5",
-    time: "13:30",
-    auto_delete: "auto"
-  },
-]
+    time: "15:30",
+    auto_delete: "force"
+  }
 const reducer = (state, action) => {
   switch (action.type) {
     case "set_weekday": {
@@ -39,7 +38,6 @@ const reducer = (state, action) => {
       })
     }
     default:
-
       throw new Error();
   }
 }
@@ -69,7 +67,9 @@ const Settings = ({ firebaseApp }) => {
             Watermelon will send the questionaire on this day. We recommend avoiding holidays and weekends.
         </p>
         </div>
-        <select className="w-1/3">
+        <select className="w-1/3"
+        value={state.weekday}
+         onChange={e=>{e.preventDefault(); dispatch({type: "set_weekday", weekday: e.target.value})}}>
           <option value="monday">Monday</option>
           <option value="mondtuesdayay">Tuesday</option>
           <option value="wednesday">Wednesday</option>
@@ -118,7 +118,9 @@ const Settings = ({ firebaseApp }) => {
             Watermelon will use this to calculate the time for every member. Please select one that fits the majority of your teammates.
         </p>
         </div>
-        <select className="w-1/3">
+        <select className="w-1/3" 
+        value={state.timezone}
+        onChange={e=>{e.preventDefault(); dispatch({type: "set_timezone", timezone: e.target.value})}}>
           {timezones.map((tz, i) =>
             <option value={tz.offset}>{tz.text}</option>)}
         </select>
