@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
   return (
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
-        <nav className="w-2/12 h-full flex-grow min-h-screen border-r border-pink-400 flex flex-col justify-between items-center bg-red-50 sticky top-0 max-w-max">
+        <nav className="w-2/12 h-full flex-grow min-h-screen border-r border-pink-400 flex flex-col justify-between items-center bg-red-50 sticky top-0 max-w-max pt-2">
           <div className="flex flex-col h-full w-full">
             <span className="font-bold mb-2 text-green-800 text-xl">🍉 Admin</span>
             {links.map((link, index) =>
@@ -34,9 +34,9 @@ const Layout = ({ children }) => {
                   key={index}
                 >
                   <a>
-                    <div className={`flex w-full py-4 px-2 justify-start items-center
+                    <div className={`flex w-full py-4 px-2 justify-start items-center hover:bg-pink-300
                       ${pathname === link.route
-                        ? "bg-pink-200 border-pink-700 border-l-4"
+                        ? "bg-pink-200 border-pink-700 border-l-2"
                         : ""}`}>
                       <Image
                         className="mx-1 block w-10" src={link.icon} width={24} height={24} layout="fixed" />
@@ -50,7 +50,7 @@ const Layout = ({ children }) => {
             Logout
           </button>
         </nav>
-        <div className="w-10/12 h-full p-2">
+        <div className="w-10/12 h-full p-2 pl-6 pt-3">
           {children}
         </div>
       </div>
