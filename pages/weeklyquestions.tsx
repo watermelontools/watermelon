@@ -1,4 +1,5 @@
 import { useReducer } from "react"
+import Button from "../components/Button"
 
 const initialState = [
   {
@@ -82,11 +83,11 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                   <div className="flex justify-between my-1">
                     Title
                  {state.length > 1 &&
-                      <button
+                      <Button
                         onClick={e => { e.preventDefault(); dispatch({ type: "delete_question", questionIndex: index }) }}
-                        className="bg-pink-200 text-red-500 w-24 rounded text-base">
-                        Delete
-                    </button>
+                        color="pink"
+                        text="Delete"
+                      />
                     }
                   </div>
                   <input type="text" maxLength={140} value={question.question}
@@ -125,29 +126,31 @@ const WeeklyQuestions = ({ firebaseApp }) => {
               {question.answers.length < 4 &&
                 <div className="m-1">
                   {question.answers.length + 1}.
-                <button
+                <Button
                     onClick={(e) => { e.preventDefault(); dispatch({ type: "add_answer", questionIndex: index }) }}
-                    className="rounded text-green-500 bg-green-100 px-2">
-                    Add answer
-                </button>
+                    text="Add answer"
+                    color="green"
+                  />
                 </div>
               }
             </div>
           )}
           {state.length < 3 &&
-            <button
+            <Button
               onClick={e => { e.preventDefault(); dispatch({ type: "add_question" }) }}
-              className="rounded text-green-500 bg-green-100 p-2">
-              Add Question
-        </button>
+              text="Add Question"
+              color="green"
+              border
+            />
           }
         </div>
         <div className="flex justify-end h-full w-full md:w-2/12">
-          <button
+          <Button
             onClick={e => { e.preventDefault(); saveQuestions() }}
-            className="h-10 border border-green-600 bg-green-200 text-green-600 p-2 rounded w-full">
-            Save
-        </button>
+            text="Save"
+            color="green"
+            border
+          />
         </div>
       </form>
     </div>
