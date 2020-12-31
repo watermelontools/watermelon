@@ -125,7 +125,7 @@ const Settings = ({ firebaseApp }) => {
             <option value={tz.offset}>{tz.text}</option>)}
         </select>
         <div className="w-full flex justify-end">
-          <Button onClick={e => console.log(e)} text="Save" />
+          <Button onClick={e => console.log(e)} text="Save" color="green" border/>
         </div>
       </div>
     </div>
