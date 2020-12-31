@@ -1,4 +1,4 @@
-const Button = ({ onClick, text, disabled = false, color, border = false }) => (
+const Button = ({ onClick, text="Button", disabled = false, color="pink", border = false }) => (
   <button
     onClick={onClick}
     disabled={disabled}
