@@ -1,61 +1,65 @@
-import { useReducer } from "react"
+import { useReducer } from "react";
 
-import Button from "../components/Button"
+import Button from "../components/Button";
 
-import timezones from "../public/data/timezones.js"
+import timezones from "../public/data/timezones.js";
 
-const initialState = 
-  {
-    weekday: "saturday",
-    timezone: "-5",
-    time: "15:30",
-    auto_delete: "force"
-  }
+const initialState = {
+  weekday: "saturday",
+  timezone: "-5",
+  time: "15:30",
+  auto_delete: "force",
+};
 const reducer = (state, action) => {
   switch (action.type) {
     case "set_weekday": {
-      return ({
+      return {
         ...state,
-        weekday: action.weekday
-      })
+        weekday: action.weekday,
+      };
     }
     case "set_timezone": {
-      return ({
+      return {
         ...state,
-        timezone: action.timezone
-      })
+        timezone: action.timezone,
+      };
     }
     case "set_time": {
-      return ({
+      return {
         ...state,
-        time: action.time
-      })
+        time: action.time,
+      };
     }
     case "set_auto_delete": {
-      return ({
+      return {
         ...state,
-        auto_delete: action.auto_delete
-      })
+        auto_delete: action.auto_delete,
+      };
     }
     default:
       throw new Error();
   }
-}
+};
 
 const Settings = ({ firebaseApp }) => {
   const saveQuestions = () => {
-    let db = firebaseApp.firestore()
-    db.collection("users").doc("maria@lean-tech.io").set({
-      settings: state
-    }, { merge: true })
+    let db = firebaseApp.firestore();
+    db.collection("users")
+      .doc("maria@lean-tech.io")
+      .set(
+        {
+          settings: state,
+        },
+        { merge: true }
+      )
       .then(function (docRef) {
-        console.log("Document written with ID: ", docRef)
+        console.log("Document written with ID: ", docRef);
       })
       .catch(function (error) {
-        console.error("Error adding document: ", error)
-      })
-  }
-  const [state, dispatch] = useReducer(reducer, initialState)
+        console.error("Error adding document: ", error);
+      });
+  };
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <div>
@@ -64,12 +68,18 @@ const Settings = ({ firebaseApp }) => {
         <div className="w-1/2">
           <h2>Day</h2>
           <p>
-            Watermelon will send the questionaire on this day. We recommend avoiding holidays and weekends.
-        </p>
+            Watermelon will send the questionaire on this day. We recommend
+            avoiding holidays and weekends.
+          </p>
         </div>
-        <select className="w-1/3"
-        value={state.weekday}
-         onChange={e=>{e.preventDefault(); dispatch({type: "set_weekday", weekday: e.target.value})}}>
+        <select
+          className="w-1/3"
+          value={state.weekday}
+          onChange={(e) => {
+            e.preventDefault();
+            dispatch({ type: "set_weekday", weekday: e.target.value });
+          }}
+        >
           <option value="monday">Monday</option>
           <option value="mondtuesdayay">Tuesday</option>
           <option value="wednesday">Wednesday</option>
@@ -84,17 +94,16 @@ const Settings = ({ firebaseApp }) => {
         <div className="w-1/2">
           <h2>Time</h2>
           <p>
-            Watermelon will send the questionaire at this hour. We recommend early mornings or midafternoon.
-        </p>
+            Watermelon will send the questionaire at this hour. We recommend
+            early mornings or midafternoon.
+          </p>
         </div>
         <input type="time" value="09:30"></input>
       </div>
       <div className="flex flex-wrap w-3/4 justify-between">
         <div className="w-1/2">
           <h2>Autodelete</h2>
-          <p>
-            Watermelon will erase the groups created with this rule.
-        </p>
+          <p>Watermelon will erase the groups created with this rule.</p>
         </div>
         <div>
           <div>
@@ -102,7 +111,12 @@ const Settings = ({ firebaseApp }) => {
             <label htmlFor="force">Force deletion in 14 days</label>
           </div>
           <div>
-            <input type="radio" id="inactive" name="deletion" value="inactive" />
+            <input
+              type="radio"
+              id="inactive"
+              name="deletion"
+              value="inactive"
+            />
             <label htmlFor="inactive">Delete if inactive for 14 days</label>
           </div>
           <div>
@@ -115,21 +129,28 @@ const Settings = ({ firebaseApp }) => {
         <div className="w-1/2">
           <h2>Timezone</h2>
           <p>
-            Watermelon will use this to calculate the time for every member. Please select one that fits the majority of your teammates.
-        </p>
+            Watermelon will use this to calculate the time for every member.
+            Please select one that fits the majority of your teammates.
+          </p>
         </div>
-        <select className="w-1/3" 
-        value={state.timezone}
-        onChange={e=>{e.preventDefault(); dispatch({type: "set_timezone", timezone: e.target.value})}}>
-          {timezones.map((tz, i) =>
-            <option value={tz.offset}>{tz.text}</option>)}
+        <select
+          className="w-1/3"
+          value={state.timezone}
+          onChange={(e) => {
+            e.preventDefault();
+            dispatch({ type: "set_timezone", timezone: e.target.value });
+          }}
+        >
+          {timezones.map((tz, i) => (
+            <option value={tz.offset}>{tz.text}</option>
+          ))}
         </select>
         <div className="w-full flex justify-end">
-          <Button onClick={e => console.log(e)} text="Save" color="green" border/>
+          <Button onClick={saveQuestions} text="Save" color="green" border />
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Settings
+export default Settings;
