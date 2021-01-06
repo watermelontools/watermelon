@@ -97,7 +97,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
               <div>
                 <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
                   <div className="flex justify-between my-1">
-                    Title
+                    Question
                     {state.length > 1 && (
                       <button
                         onClick={(e) => {
