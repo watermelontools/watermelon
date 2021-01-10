@@ -8,7 +8,8 @@ function HomePage() {
         Watermelon is the best way to connect your coworkers through shared
         interests.
       </p>
-      <h2>Connections</h2>
+      <h2>Connections (coming soon)</h2>
+      <p>Understand your workspace</p>
       <BlurredChart />
     </div>
   );
