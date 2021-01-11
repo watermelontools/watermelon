@@ -12,6 +12,7 @@ class MyDocument extends Document {
         <Head >
         <meta charset="utf-8" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"></link>
+        <meta name="slack-app-id" content="A01GX682DQD"></meta>
         </Head>
         <body>
           <Main />
