@@ -1,19 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-const FirstAuth = ({}) => {
-  let router = useRouter();
-  let code = router.query.code;
-  console.log(code);
-  console.log(process.env.SLACK_CLIENT_ID);
-  console.log(process.env.SLACK_CLIENT_SECRET);
-  useEffect(() => {
-    fetch(
-      `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${code}`
-    )
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-  });
+const FirstAuth = ({ token }) => {
+  console.log(token);
   return (
     <div>
       <h1>Welcome to watermelon</h1>
@@ -31,3 +20,19 @@ const FirstAuth = ({}) => {
   );
 };
 export default FirstAuth;
+export async function getServerSideProps(context) {
+  let token = "token";
+  fetch(
+    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      token = data;
+      console.log(token);
+    });
+  return {
+    props: {
+      token,
+    }, // will be passed to the page component as props
+  };
+}
