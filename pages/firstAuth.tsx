@@ -23,7 +23,7 @@ export default FirstAuth;
 export async function getServerSideProps(context) {
   let token = "token";
   let f = await fetch(
-    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}`
+    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}&redirect_uri=https://app.watermelon.tools/firstAuth`
   );
   let json = await f.json();
   token = json;
