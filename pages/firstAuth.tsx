@@ -29,7 +29,8 @@ export async function getServerSideProps(context) {
     .then((data) => {
       token = data;
       console.log(token);
-    });
+    })
+    .catch((err) => console.error(err));
   return {
     props: {
       token,
