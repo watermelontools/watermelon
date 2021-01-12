@@ -20,8 +20,9 @@ if (!firebase.apps.length) {
 const MyApp = ({ Component, pageProps }) => {
   let isLoggedIn = false;
   let hasAddedToSlack = false;
-  const router = useRouter();
+  let router;
   useEffect(() => {
+    router = useRouter();
     isLoggedIn = window?.localStorage?.getItem("sign_in_token");
     hasAddedToSlack = window?.localStorage?.getItem("add_to_slack_token");
   }, []);
