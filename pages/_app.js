@@ -2,6 +2,7 @@ import Layout from '../components/Layout'
 import '../styles/index.css'
 import firebase from 'firebase';
 import 'firebase/firestore';
+import { useRouter } from 'next/router';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAxio45RoVcMHwwjYnl7-QcvTVzm46X7fk",
@@ -15,11 +16,16 @@ let firebaseApp
 if (!firebase.apps.length) {
   firebaseApp = firebase.initializeApp(firebaseConfig)
 }
+const isLoggedIn = window?.localStorage?.getItem("sign_in_token");
+const hasAddedToSlack = window?.localStorage?.getItem("add_to_slack_token");
 
 const MyApp = ({ Component, pageProps }) => {
+  const router = useRouter()
+  if(!isLoggedIn) router.push("login")
+  if(!hasAddedToSlack) router.push("welcome")
   return (
     <>
-      <Layout>
+      <Layout isLoggedIn={isLoggedIn}>
         <Component {...pageProps} firebaseApp={firebaseApp} />
       </Layout>
     </>

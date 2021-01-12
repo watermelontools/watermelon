@@ -20,6 +20,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
   };
   useEffect(() => {
     saveToken();
+    window.localStorage.setItem("sign_in_token", JSON.stringify(token));
   }, []);
   console.log(token);
   return (
