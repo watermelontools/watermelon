@@ -25,9 +25,9 @@ const MyApp = ({ Component, pageProps }) => {
     router = useRouter();
     isLoggedIn = window?.localStorage?.getItem("sign_in_token");
     hasAddedToSlack = window?.localStorage?.getItem("add_to_slack_token");
+    if (!isLoggedIn) router.push("login");
+    if (!hasAddedToSlack) router.push("welcome");
   }, []);
-  if (!isLoggedIn) router.push("login");
-  if (!hasAddedToSlack) router.push("welcome");
   return (
     <>
       <Layout isLoggedIn={isLoggedIn}>
