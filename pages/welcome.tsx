@@ -7,7 +7,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .doc(token.team.id)
       .set(
         {
-          sign_in_token: token,
+          add_to_slack_token: token,
         },
         { merge: true }
       )
@@ -24,19 +24,8 @@ const FirstAuth = ({ firebaseApp, token }) => {
   console.log(token);
   return (
     <div>
-      <h1>Welcome to watermelon</h1>
-      <p>Please install the app on your workspace</p>
-      <a
-        href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook,commands,chat:write&client_id=1471534976662.1575212081829&team=${token.team.id}&redirect_uri=https://app.watermelon.tools/welcome`}
-      >
-        <img
-          alt="Add to Slack"
-          height="40"
-          width="139"
-          src="https://platform.slack-edge.com/img/add_to_slack.png"
-          srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
-        />
-      </a>
+      <h1>Congratulations</h1>
+      <p>You're ready to start helping your coworkers know each other</p>
     </div>
   );
 };
@@ -44,7 +33,7 @@ export default FirstAuth;
 export async function getServerSideProps(context) {
   let token = "token";
   let f = await fetch(
-    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}&redirect_uri=https://app.watermelon.tools/firstAuth`
+    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}&redirect_uri=https://app.watermelon.tools/welcome`
   );
   let json = await f.json();
   token = json;
@@ -55,3 +44,18 @@ export async function getServerSideProps(context) {
     }, // will be passed to the page component as props
   };
 }
+
+let t = {
+  ok: true,
+  app_id: "A01GX682DQD",
+  authed_user: {
+    id: "U01J9G2DHAS",
+    scope: "identity.basic,identity.email,identity.avatar,identity.team",
+    access_token:
+      "xoxp-1628322446642-1621546459366-1628555838242-42a9bdb82c90c13e57054413f014e397",
+    token_type: "user",
+  },
+  team: { id: "T01JG9GD4JW" },
+  enterprise: null,
+  is_enterprise_install: false,
+};
