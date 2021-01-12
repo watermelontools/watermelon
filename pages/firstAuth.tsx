@@ -7,7 +7,9 @@ const FirstAuth = ({ token }) => {
     <div>
       <h1>Welcome to watermelon</h1>
       <p>Please install the app on your workspace</p>
-      <a href="https://slack.com/oauth/v2/authorize?client_id=1471534976662.1575212081829&scope=chat:write,team:read,channels:manage,commands,users:read.email,users:read,dnd:read&user_scope=">
+      <a
+        href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook,commands,chat:write&client_id=1471534976662.1575212081829&team=${token.team.id}&redirect_uri=https://app.watermelon.tools/`}
+      >
         <img
           alt="Add to Slack"
           height="40"
