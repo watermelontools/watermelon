@@ -4,6 +4,9 @@ import { useEffect } from "react";
 const FirstAuth = ({}) => {
   let router = useRouter();
   let code = router.query.code;
+  console.log(code);
+  console.log(process.env.SLACK_CLIENT_ID);
+  console.log(process.env.SLACK_CLIENT_SECRET);
   useEffect(() => {
     fetch(
       `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${code}`
