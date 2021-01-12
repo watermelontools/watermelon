@@ -4,12 +4,12 @@ import Button from "../components/Button";
 const initialState = [
   {
     question: "Does pineapple go on pizza?",
-    icebreaker: "Hey @bob, what about other fruits on pizza?",
+    icebreaker: "Hey {person}, what about other fruits on pizza?",
     answers: ["Yes 🍍🍕", "NO!"],
   },
   {
     question: "Which is the best movie saga?",
-    icebreaker: "Do you think @alice would be sorted into Griffyndor?",
+    icebreaker: "What's your favourite movie in the {answer} saga?",
     answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"],
   },
 ];
