@@ -5,11 +5,11 @@ import useCheckLogin from "../hooks/useCheckLogin";
 import { useEffect } from "react";
 const Layout = ({ children }) => {
   const router = useRouter();
-  let { isLoggedIn, hasAddedToSlack } = useCheckLogin();
   let { pathname } = router;
-  console.log(isLoggedIn);
-  console.log(hasAddedToSlack);
   useEffect(() => {
+    let { isLoggedIn, hasAddedToSlack } = useCheckLogin();
+    console.log(isLoggedIn);
+    console.log(hasAddedToSlack);
     if (!isLoggedIn) router.push("/login");
     if (!hasAddedToSlack) router.push("/welcome");
   }, []);
