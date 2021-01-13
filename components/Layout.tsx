@@ -11,8 +11,8 @@ const Layout = ({ children }) => {
     console.log(isLoggedIn);
     console.log(hasAddedToSlack);
     if (!isLoggedIn) router.push("/login");
-    else if (!hasAddedToSlack && !router.pathname.includes("welcome"))
-      router.push("/welcome");
+    else if (!hasAddedToSlack && !router.pathname.includes("firstAuth"))
+      router.push("/firstAuth");
   }, []);
   const links = [
     {
