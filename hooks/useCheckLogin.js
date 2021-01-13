@@ -1,7 +1,4 @@
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-
-function useCheckLogin() {
+const useCheckLogin = () => {
   let isLoggedIn = false;
   let hasAddedToSlack = false;
   if (typeof window !== "undefined") {
@@ -9,5 +6,5 @@ function useCheckLogin() {
     hasAddedToSlack = window?.localStorage?.getItem("add_to_slack_token");
   }
   return { isLoggedIn, hasAddedToSlack };
-}
+};
 export default useCheckLogin;
