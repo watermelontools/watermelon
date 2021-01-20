@@ -94,8 +94,8 @@ const WeeklyQuestions = ({ firebaseApp }) => {
         answers.
       </p>
       <p>
-        You may use the text <code>${answer}</code> to use the user selected
-        answer and <code>${person}</code> to randomly select a person from the
+        You may use the text <code>$answer</code> to use the user selected
+        answer and <code>$person</code> to randomly select a person from the
         group.
       </p>
       <form className="flex flex-col md:flex-row w-full h-full items-end">
