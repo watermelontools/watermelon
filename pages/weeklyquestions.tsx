@@ -68,9 +68,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
     db.collection("users")
-      .doc(
-        JSON.parse(window.localStorage.getItem("add_to_slack.token")).team.id
-      )
+      .doc(JSON.parse(window.localStorage.getItem("add_to_slack")).team.id)
       .set(
         {
           weekly_questions: state,
