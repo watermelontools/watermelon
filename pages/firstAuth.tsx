@@ -17,6 +17,23 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
+    db.collection("teams")
+      .doc(token.team.id)
+      .set(
+        {
+          installation: {
+            botId: token.bot_user_id,
+            botToken: token.access_token,
+          },
+        },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef);
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
   };
   useEffect(() => {
     saveToken();
@@ -27,6 +44,15 @@ const FirstAuth = ({ firebaseApp, token }) => {
     <div>
       <h1>Welcome to watermelon</h1>
       <p>Please install the app on your workspace</p>
+      <a href="https://slack.com/oauth/v2/authorize?client_id=1471534976662.1575212081829&scope=channels:manage,chat:write,commands,team:read,users:read&user_scope=">
+        <img
+          alt="Add to Slack"
+          height="40"
+          width="139"
+          src="https://platform.slack-edge.com/img/add_to_slack.png"
+          srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+        />
+      </a>
       <a
         href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook,commands,chat:write&client_id=1471534976662.1575212081829&team=${token.team.id}&redirect_uri=https://app.watermelon.tools/welcome`}
       >

@@ -17,6 +17,24 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
+    db.collection("teams")
+      .doc(token.team.id)
+      .set(
+        {
+          installation: {
+            userToken: token.authed_user.access_token,
+            teamId: token.team.id,
+            userId: token.authed_user.id,
+          },
+        },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef);
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
   };
   useEffect(() => {
     saveToken();
