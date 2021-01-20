@@ -68,7 +68,9 @@ const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
     db.collection("users")
-      .doc("maria@lean-tech.io")
+      .doc(
+        JSON.parse(window.localStorage.getItem("add_to_slack.token")).team.id
+      )
       .set(
         {
           weekly_questions: state,
@@ -90,6 +92,11 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       <p>
         We allow minimum 2 questions and maximum 4, each varying between 2 and 4
         answers.
+      </p>
+      <p>
+        You may use the text <code>${answer}</code> to use the user selected
+        answer and <code>${person}</code> to randomly select a person from the
+        group.
       </p>
       <form className="flex flex-col md:flex-row w-full h-full items-end">
         <div className="w-full md:w-10/12">
@@ -149,6 +156,8 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                     className="border rounded border-gray-200 text-base font-normal ml-1"
                   />
                 </label>
+                <button title="Use this button to">Tag person</button>
+                <button title="Use this button to">Show Answer</button>
               </div>
               {question.answers.map((answer, jndex) => (
                 <div key={"answer" + jndex}>
