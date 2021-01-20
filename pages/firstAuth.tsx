@@ -22,8 +22,9 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .set(
         {
           installation: {
-            botId: token.bot_user_id,
-            botToken: token.access_token,
+            teamId: token.team.id,
+            userToken: token.authed_user.access_token,
+            userId: token.authed_user.id,
           },
         },
         { merge: true }
