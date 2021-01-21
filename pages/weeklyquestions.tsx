@@ -4,12 +4,12 @@ import Button from "../components/Button";
 const initialState = [
   {
     question: "Does pineapple go on pizza?",
-    icebreaker: "Hey {person}, what about other fruits on pizza?",
+    icebreaker: "Hey ${person}, what about other fruits on pizza?",
     answers: ["Yes 🍍🍕", "NO!"],
   },
   {
     question: "Which is the best movie saga?",
-    icebreaker: "What's your favourite movie in the {answer} saga?",
+    icebreaker: "What's your favourite movie in the ${answer} saga?",
     answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"],
   },
 ];
@@ -20,7 +20,8 @@ const reducer = (state, action) => {
         ...state,
         {
           question: "What would you like to ask?",
-          icebreaker: "You may use @tag here to randomly select a user",
+          icebreaker:
+            "You may use ${person} here to randomly select a user, and ${answer} to show the answer",
           answers: ["At least two answers", "Second answer"],
         },
       ];
@@ -85,6 +86,8 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       });
   };
   const [state, dispatch] = useReducer(reducer, initialState);
+  const personTag = "${person}";
+  const answerTag = "${answer";
   return (
     <div>
       <h1>Weekly Questions</h1>
@@ -95,7 +98,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       </p>
       <p>
         You may use the text <code>$answer</code> to use the user selected
-        answer and <code>$person</code> to randomly select a person from the
+        answer and <code>{personTag}</code> to randomly select a person from the
         group.
       </p>
       <form className="flex flex-col md:flex-row w-full h-full items-end">
@@ -143,7 +146,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                   Icebreaker
                   <input
                     type="text"
-                    placeholder="This will be the first message in the created group, use @tag to select a random user to begin a conversation"
+                    placeholder="This will be the first message in the created group, use ${person} to select a random user to begin a conversation"
                     value={question.icebreaker}
                     onChange={(e) => {
                       e.preventDefault();
@@ -156,8 +159,12 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                     className="border rounded border-gray-200 text-base font-normal ml-1"
                   />
                 </label>
-                <button title="Use this button to">Tag person</button>
-                <button title="Use this button to">Show Answer</button>
+                <button title="Use this button to tag a person">
+                  Tag person
+                </button>
+                <button title="Use this button to add the selected answer">
+                  Show Answer
+                </button>
               </div>
               {question.answers.map((answer, jndex) => (
                 <div key={"answer" + jndex}>
