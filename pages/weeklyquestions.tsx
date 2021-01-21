@@ -1,6 +1,9 @@
 import { useReducer } from "react";
 import Button from "../components/Button";
 
+const personTag = "${person}";
+const answerTag = "${answer";
+
 const initialState = [
   {
     question: "Does pineapple go on pizza?",
@@ -61,6 +64,18 @@ const reducer = (state, action) => {
       newQuestions[action.questionIndex].icebreaker = action.icebreakerText;
       return newQuestions;
     }
+    case "add_person_tag": {
+      let newQuestions = [...state];
+      newQuestions[action.questionIndex].icebreaker =
+        newQuestions[action.questionIndex].icebreaker + personTag;
+      return newQuestions;
+    }
+    case "edit_icebreaker": {
+      let newQuestions = [...state];
+      newQuestions[action.questionIndex].icebreaker =
+        newQuestions[action.questionIndex].icebreaker + answerTag;
+      return newQuestions;
+    }
     default:
       throw new Error();
   }
@@ -86,8 +101,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       });
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-  const personTag = "${person}";
-  const answerTag = "${answer";
+
   return (
     <div>
       <h1>Weekly Questions</h1>
@@ -145,6 +159,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                 <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
                   Icebreaker
                   <input
+                    id={`icebreaker-${index}`}
                     type="text"
                     placeholder="This will be the first message in the created group, use ${person} to select a random user to begin a conversation"
                     value={question.icebreaker}
@@ -159,10 +174,24 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                     className="border rounded border-gray-200 text-base font-normal ml-1"
                   />
                 </label>
-                <button title="Use this button to tag a person">
+                <button
+                  className="border border-gray-200 m-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch({ type: "add_person_tag", questionIndex: index });
+                  }}
+                  title="Use this button to tag a person"
+                >
                   Tag person
                 </button>
-                <button title="Use this button to add the selected answer">
+                <button
+                  className="border border-gray-200 m-2"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch({ type: "add_answer_tag", questionIndex: index });
+                  }}
+                  title="Use this button to add the selected answer"
+                >
                   Show Answer
                 </button>
               </div>
