@@ -70,7 +70,7 @@ const reducer = (state, action) => {
         newQuestions[action.questionIndex].icebreaker + personTag;
       return newQuestions;
     }
-    case "edit_icebreaker": {
+    case "add_answer_tag": {
       let newQuestions = [...state];
       newQuestions[action.questionIndex].icebreaker =
         newQuestions[action.questionIndex].icebreaker + answerTag;
