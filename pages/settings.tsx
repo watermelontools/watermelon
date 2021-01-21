@@ -45,7 +45,9 @@ const Settings = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
     db.collection("users")
-      .doc("maria@lean-tech.io")
+      .doc(
+        JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
+      )
       .set(
         {
           settings: state,
