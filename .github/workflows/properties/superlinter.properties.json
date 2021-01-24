@@ -1,0 +1,7 @@
+{
+    "name": "Ensure the repo is linted using Prettier",
+    "description": "Pulls the repo and runs prettier for JS, MD and TS",
+    "creator": "Esteban Dalel R",
+    "iconName": "prettier",
+    "categories": "lint, code-quality"
+}
