@@ -1,25 +1,29 @@
-name: Super-Linter
+name: linter-prettier
 
 # Run this workflow every time a new commit pushed to your repository
-on: push
+
+on:
+  pull_request:
+    branches: [main]
 
 jobs:
-  # Set the job key. The key is displayed as the job name
-  # when a job name is not provided
-  super-lint:
-    # Name the Job
-    name: Lint code base
-    # Set the type of machine to run on
+  prettier:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
+        with:
+          # Make sure the actual branch is checked out when running on pull requests
+          ref: ${{ github.head_ref }}
+          # This is important to fetch the changes to the previous commit
+          fetch-depth: 0
 
-      # Runs the Super-Linter action
-      - name: Run Super-Linter
-        uses: github/super-linter@v3
+      - name: Prettify code
+        uses: creyD/prettier_action@v3.1
+        with:
+          # This part is also where you can pass other options, for example:
+          prettier_options: --write **/*.{js,md,ts}
+          only_changed: True
         env:
-          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
