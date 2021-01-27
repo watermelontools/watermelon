@@ -83,19 +83,16 @@ const reducer = (state, action) => {
 const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
-    db.collection("teams")
+    let batch = db.batch();
+    let nycRef = db
+      .collection("teams")
       .doc(
         JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
-      )
-      .document("weekly_questions")
-      .document(state[0].question)
-      .document(state[0].answers[0])
-      .set(
-        {
-          picked_by: [],
-        },
-        { merge: true }
-      )
+      );
+    batch.set(nycRef, { [state[0].question]: state[0].answers });
+
+    batch
+      .commit()
       .then(function (docRef) {
         console.log("Document written with ID: ", docRef);
       })
