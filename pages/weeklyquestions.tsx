@@ -84,16 +84,18 @@ const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
     let batch = db.batch();
-    let teamDocRef = db
-      .collection("teams")
-      .doc(
-        JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
-      );
     state.forEach((question) => {
       console.log(question.question);
       question.answers.forEach((answer) => {
         batch.set(
-          teamDocRef.doc(question.question).doc(answer),
+          db
+            .collection("teams")
+            .doc(
+              JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+                .id
+            )
+            .doc(question.question)
+            .doc(answer),
           { picked_by: [] },
           { merge: true }
         );
