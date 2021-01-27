@@ -90,7 +90,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
           `${
             JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
               .id
-          }/${question.question}`
+          }/weekly_questions/${question.question}`
         )
         .set({ icebreaker: question.icebreaker }, { merge: true })
         .then(function (docRef) {
