@@ -83,13 +83,16 @@ const reducer = (state, action) => {
 const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
-    db.collection("users")
+    db.collection("teams")
       .doc(
         JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
       )
+      .document("weekly_questions")
+      .document(state[0].question)
+      .document(state[0].answers[0])
       .set(
         {
-          weekly_questions: state,
+          picked_by: [],
         },
         { merge: true }
       )
