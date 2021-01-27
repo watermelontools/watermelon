@@ -86,7 +86,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
     let batch = db.batch();
     let teamDocRef = db
       .collection("teams")
-      .collection(
+      .doc(
         JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
       );
     state.forEach((question) => {
