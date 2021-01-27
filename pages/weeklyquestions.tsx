@@ -87,15 +87,16 @@ const WeeklyQuestions = ({ firebaseApp }) => {
     state.forEach((question) => {
       console.log(question.question);
       question.answers.forEach((answer) => {
+        let teamDocRef = db
+          .collection("teams")
+          .doc(
+            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+              .id
+          )
+          .doc(question.question)
+          .doc(answer);
         batch.set(
-          db
-            .collection("teams")
-            .doc(
-              JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-                .id
-            )
-            .doc(question.question)
-            .doc(answer),
+          teamDocRef.doc(question.question).doc(answer),
           { picked_by: [] },
           { merge: true }
         );
