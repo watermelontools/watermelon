@@ -97,10 +97,10 @@ const WeeklyQuestions = ({ firebaseApp }) => {
     batch
       .commit()
       .then(function (docRef) {
-        console.log("Document written with ID: ", docRef);
+        console.log("Wrote to db", docRef);
       })
       .catch(function (error) {
-        console.error("Error adding document: ", error);
+        console.error("Error writing: ", error);
       });
   };
   const [state, dispatch] = useReducer(reducer, initialState);
