@@ -91,7 +91,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
             JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
               .id
           )
-          .doc(question.question)
+          .collection(question.question)
           .doc(answer)
           .set({ picked_by: [] }, { merge: true })
           .then(function (docRef) {
