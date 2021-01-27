@@ -83,34 +83,25 @@ const reducer = (state, action) => {
 const WeeklyQuestions = ({ firebaseApp }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
-    let batch = db.batch();
     state.forEach((question) => {
       console.log(question.question);
       question.answers.forEach((answer) => {
-        let teamDocRef = db
-          .collection("teams")
+        db.collection("teams")
           .doc(
             JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
               .id
           )
           .doc(question.question)
-          .doc(answer);
-        batch.set(
-          teamDocRef.doc(question.question).doc(answer),
-          { picked_by: [] },
-          { merge: true }
-        );
+          .doc(answer)
+          .set({ picked_by: [] }, { merge: true })
+          .then(function (docRef) {
+            console.log("Wrote to db", docRef);
+          })
+          .catch(function (error) {
+            console.error("Error writing: ", error);
+          });
       });
     });
-
-    batch
-      .commit()
-      .then(function (docRef) {
-        console.log("Wrote to db", docRef);
-      })
-      .catch(function (error) {
-        console.error("Error writing: ", error);
-      });
   };
   const [state, dispatch] = useReducer(reducer, initialState);
 
