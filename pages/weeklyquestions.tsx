@@ -105,10 +105,12 @@ const WeeklyQuestions = ({ firebaseApp }) => {
             `${
               JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
                 .id
-            }/weekly_questions`
+            }`
           )
-          .collection(question.question)
-          .doc(answer)
+          .collection("weekly_questions")
+          .doc(question.question)
+          .collection(answer)
+          .doc("picked_by")
           .set({ picked_by: [] }, { merge: true })
           .then(function (docRef) {
             console.log("Wrote to db", docRef);
