@@ -100,12 +100,13 @@ const WeeklyQuestions = ({ firebaseApp }) => {
           console.error("Error writing: ", error);
         });
       question.answers.forEach((answer) => {
-        db.collection(
-          `teams/${
-            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-              .id
-          }/weekly_questions`
-        )
+        db.collection("teams")
+          .doc(
+            `${
+              JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+                .id
+            }/weekly_questions`
+          )
           .collection(question.question)
           .doc(answer)
           .set({ picked_by: [] }, { merge: true })
