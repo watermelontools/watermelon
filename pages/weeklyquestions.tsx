@@ -102,8 +102,10 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       question.answers.forEach((answer) => {
         db.collection("teams")
           .doc(
-            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-              .id
+            `${
+              JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+                .id
+            }/weekly_questions`
           )
           .collection(question.question)
           .doc(answer)
