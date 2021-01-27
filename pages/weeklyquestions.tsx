@@ -87,9 +87,11 @@ const WeeklyQuestions = ({ firebaseApp }) => {
       console.log(question.question);
       db.collection("teams")
         .doc(
-          JSON.parse(window.localStorage.getItem("add_to_slack_token")).team.id
+          `${
+            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+              .id
+          }/${question.question}`
         )
-        .doc(question.question)
         .set({ icebreaker: question.icebreaker }, { merge: true })
         .then(function (docRef) {
           console.log("Wrote to db", docRef);
