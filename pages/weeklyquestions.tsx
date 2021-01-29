@@ -218,19 +218,6 @@ const WeeklyQuestions = ({ firebaseApp }) => {
                   </label>
                 </div>
               ))}
-              {question.answers.length < 4 && (
-                <div className="m-1">
-                  {question.answers.length + 1}.
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      dispatch({ type: "add_answer", questionIndex: index });
-                    }}
-                    text="Add answer"
-                    color="green"
-                  />
-                </div>
-              )}
             </div>
           ))}
           {state.length < 3 && (
