@@ -138,23 +138,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
             <div className="my-2" key={index}>
               <div>
                 <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-                  <div className="flex justify-between my-1">
-                    Question
-                    {state.length > 1 && (
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault();
-                          dispatch({
-                            type: "delete_question",
-                            questionIndex: index,
-                          });
-                        }}
-                        className="bg-pink-200 text-red-500 w-24 rounded text-base"
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
+                  <div className="flex justify-between my-1">Question</div>
                   <input
                     type="text"
                     maxLength={140}
