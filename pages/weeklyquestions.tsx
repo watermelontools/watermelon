@@ -11,9 +11,9 @@ const initialState = [
     answers: ["Yes 🍍🍕", "NO!"],
   },
   {
-    question: "Which is the best movie saga?",
-    icebreaker: "What's your favourite movie in the ${answer} saga?",
-    answers: ["Harry Potter", "Star Wars", "Lord of the Rings", "The Avengers"],
+    question: "Which is your favourite holiday?",
+    icebreaker: "Who do you hang out with in ${answer}?",
+    answers: ["Xmas", "Halloween"],
   },
 ];
 const reducer = (state, action) => {
