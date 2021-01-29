@@ -220,17 +220,6 @@ const WeeklyQuestions = ({ firebaseApp }) => {
               ))}
             </div>
           ))}
-          {state.length < 3 && (
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                dispatch({ type: "add_question" });
-              }}
-              text="Add Question"
-              color="green"
-              border
-            />
-          )}
         </div>
         <div className="flex justify-end h-full w-full md:w-2/12">
           <Button
