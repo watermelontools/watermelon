@@ -126,13 +126,9 @@ const WeeklyQuestions = ({ firebaseApp }) => {
   return (
     <div>
       <h1>Weekly Questions</h1>
-      <p>We recommend having 3 questions per week.</p>
+      <p>We allow minimum 2 questions and maximum 3, each with 2 answers.</p>
       <p>
-        We allow minimum 2 questions and maximum 4, each varying between 2 and 4
-        answers.
-      </p>
-      <p>
-        You may use the text <code>$answer</code> to use the user selected
+        You may use the text <code>{answerTag}</code> to use the user selected
         answer and <code>{personTag}</code> to randomly select a person from the
         group.
       </p>
