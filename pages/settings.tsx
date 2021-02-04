@@ -56,6 +56,7 @@ const Settings = ({ firebaseApp }) => {
       )
       .then(function (docRef) {
         console.log("Document written with ID: ", docRef);
+        alert("We have saved your settings");
       })
       .catch(function (error) {
         console.error("Error adding document: ", error);

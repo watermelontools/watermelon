@@ -95,6 +95,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
         .set({ icebreaker: question.icebreaker }, { merge: true })
         .then(function (docRef) {
           console.log("Wrote to db", docRef);
+          alert("We have saved your questions");
         })
         .catch(function (error) {
           console.error("Error writing: ", error);
