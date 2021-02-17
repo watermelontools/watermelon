@@ -17,13 +17,29 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
+    let userToken = JSON.parse(window?.localStorage?.getItem("sign_in_token"));
     db.collection("teams")
       .doc(token.team.id)
       .set(
         {
           installation: {
-            botId: token.bot_user_id,
-            botToken: token.access_token,
+            team: token.team,
+            enterprise: token.enterprise,
+            user: {
+              token: userToken.authed_user.access_token,
+              scopes: userToken.authed_user.scope,
+              id: userToken.authed_user.id,
+            },
+            tokenType: "bot",
+            isEnterpriseInstall: token.is_enterprise_install,
+            appId: token.app_id,
+            authVersion: "v2",
+            bot: {
+              scopes: token.scope.split(","),
+              token: token.access_token,
+              userId: token.bot_user_id,
+              id: token.incoming_webhook.channel_id,
+            },
           },
         },
         { merge: true }
