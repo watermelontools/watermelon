@@ -24,7 +24,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
         {
           installation: {
             team: token.team,
-            enterprise: token.enterprise,
+            enterprise: token.enterprise ?? false,
             user: {
               token: userToken.authed_user.access_token,
               scopes: userToken.authed_user.scope,
