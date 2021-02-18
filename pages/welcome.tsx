@@ -31,7 +31,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
               id: userToken.authed_user.id,
             },
             tokenType: "bot",
-            isEnterpriseInstall: token.is_enterprise_install,
+            isEnterpriseInstall: token.is_enterprise_install ?? false,
             appId: token.app_id,
             authVersion: "v2",
             bot: {
