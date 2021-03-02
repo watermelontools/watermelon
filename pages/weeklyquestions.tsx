@@ -2,7 +2,7 @@ import { useReducer } from "react";
 import Button from "../components/Button";
 
 const personTag = "${person}";
-const answerTag = "${answer";
+const answerTag = "${answer}";
 
 const initialState = [
   {
