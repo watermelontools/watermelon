@@ -8,8 +8,7 @@ const Layout = ({ children }) => {
   let { pathname } = router;
   useEffect(() => {
     let { isLoggedIn, hasAddedToSlack } = useCheckLogin();
-    console.log(isLoggedIn);
-    console.log(hasAddedToSlack);
+
     if (!isLoggedIn) router.push("/login");
     else if (!hasAddedToSlack && !router.pathname.includes("firstAuth"))
       router.push("/firstAuth");
@@ -67,7 +66,14 @@ const Layout = ({ children }) => {
                   </Link>
                 ))}
               </div>
-              <button className="bg-pink-200 text-red-500 w-full">
+              <button
+                onClick={() => {
+                  window.localStorage.removeItem("sign_in_token");
+                  window.localStorage.removeItem("add_to_slack_token");
+                  router.push("/login");
+                }}
+                className="bg-pink-200 text-red-500 w-full"
+              >
                 Logout
               </button>
             </nav>
