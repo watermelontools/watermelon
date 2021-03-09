@@ -6,14 +6,14 @@ const answerTag = "${answer}";
 
 const initialState = [
   {
-    question: "Does pineapple go on pizza?",
-    icebreaker: "Hey ${person}, what about other fruits on pizza?",
-    answers: ["Yes 🍍🍕", "NO!"],
+    question: "What instrument would you like to play?",
+    icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
+    answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
   },
   {
-    question: "Which is your favourite holiday?",
-    icebreaker: "Who do you hang out with in ${answer}?",
-    answers: ["Xmas", "Halloween"],
+    question: "Who would you rather be?",
+    icebreaker: "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+    answers: ["The first person on Mars", "The person to discover the cure for cancer"],
   },
 ];
 const reducer = (state, action) => {
