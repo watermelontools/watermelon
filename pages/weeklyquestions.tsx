@@ -13,7 +13,7 @@ const initialState = [
   {
     question: "Who would you rather be?",
     icebreaker: "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-    answers: ["The first person on Mars", "The person to discover the cure for cancer"],
+    answers: ["The first person on Mars", "The person that cures cancer"],
   },
 ];
 const reducer = (state, action) => {
