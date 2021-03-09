@@ -15,16 +15,6 @@ const Layout = ({ children }) => {
   }, []);
   const links = [
     {
-      icon: "/svg/dashboard.svg",
-      text: "Dashboard",
-      route: "/",
-    },
-    {
-      icon: "/svg/settings.svg",
-      text: "Settings",
-      route: "/settings",
-    },
-    {
       icon: "/svg/question.svg",
       text: "Weekly Questions",
       route: "/weeklyquestions",
