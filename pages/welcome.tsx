@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
 const FirstAuth = ({ firebaseApp, token }) => {
+  let db = firebaseApp.firestore();
   const saveToken = () => {
-    let db = firebaseApp.firestore();
     db.collection("teams")
       .doc(token.team.id)
       .set(
@@ -50,6 +50,38 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .catch(function (error) {
         console.error("Error adding document: ", error);
       });
+  };
+  let saveQuestions = () => {
+    [
+      {
+        question: "What instrument would you like to play?",
+        icebreaker:
+          "Hey ${person}, what song would you play with your ${answer}?",
+        answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
+      },
+      {
+        question: "Who would you rather be?",
+        icebreaker:
+          "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+        answers: ["The first person on Mars", "The person that cures cancer"],
+      },
+    ].forEach((question) => {
+      question.answers.forEach((answer) => {
+        db.collection("teams")
+          .doc(token.team.id)
+          .collection("weekly_questions")
+          .doc(question.question)
+          .collection(answer)
+          .doc("picked_by")
+          .set({ picked_by: [] }, { merge: true })
+          .then(function (docRef) {
+            console.log("Wrote to db", docRef);
+          })
+          .catch(function (error) {
+            console.error("Error writing: ", error);
+          });
+      });
+    });
   };
   useEffect(() => {
     saveToken();
