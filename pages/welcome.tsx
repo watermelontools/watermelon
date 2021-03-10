@@ -66,6 +66,21 @@ const FirstAuth = ({ firebaseApp, token }) => {
         answers: ["The first person on Mars", "The person that cures cancer"],
       },
     ].forEach((question) => {
+      db.collection("teams")
+        .doc(
+          `${
+            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+              .id
+          }/weekly_questions/${question.question}`
+        )
+        .set({ icebreaker: question.icebreaker }, { merge: true })
+        .then(function (docRef) {
+          console.log("Wrote to db", docRef);
+          alert("We have saved your questions");
+        })
+        .catch(function (error) {
+          console.error("Error writing: ", error);
+        });
       question.answers.forEach((answer) => {
         db.collection("teams")
           .doc(token.team.id)
