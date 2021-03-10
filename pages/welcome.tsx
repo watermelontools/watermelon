@@ -85,6 +85,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
   };
   useEffect(() => {
     saveToken();
+    saveQuestions();
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
   }, []);
   console.log(token);
