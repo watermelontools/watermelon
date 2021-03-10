@@ -67,16 +67,10 @@ const FirstAuth = ({ firebaseApp, token }) => {
       },
     ].forEach((question) => {
       db.collection("teams")
-        .doc(
-          `${
-            JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-              .id
-          }/weekly_questions/${question.question}`
-        )
+        .doc(`${token.team.id}/weekly_questions/${question.question}`)
         .set({ icebreaker: question.icebreaker }, { merge: true })
         .then(function (docRef) {
-          console.log("Wrote to db", docRef);
-          alert("We have saved your questions");
+          console.log("Wrote weekly questions to db", docRef);
         })
         .catch(function (error) {
           console.error("Error writing: ", error);
@@ -90,7 +84,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
           .doc("picked_by")
           .set({ picked_by: [] }, { merge: true })
           .then(function (docRef) {
-            console.log("Wrote to db", docRef);
+            console.log("Wrote picked by to db", docRef);
           })
           .catch(function (error) {
             console.error("Error writing: ", error);
