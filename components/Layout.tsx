@@ -25,7 +25,7 @@ const Layout = ({ children }) => {
       <div className="w-full h-full flex min-h-screen ">
         {!router.pathname.includes("login") &&
           !router.pathname.includes("firstAuth") && (
-            <nav className="w-2/12 h-full flex-grow min-h-screen border-r border-pink-400 flex flex-col justify-between items-center bg-red-50 sticky top-0 max-w-max pt-2">
+            <nav className="w-2/12 h-full flex-grow min-h-screen border-r border-gray-400 flex flex-col justify-between items-center bg-gray-50 sticky top-0 max-w-max pt-2">
               <div className="flex flex-col h-full w-full">
                 <span className="font-bold mb-2 text-green-800 text-xl">
                   🍉 Admin
