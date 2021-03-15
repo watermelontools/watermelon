@@ -42,8 +42,8 @@ const FirstAuth = ({ firebaseApp, token }) => {
   }, []);
   console.log(token);
   return (
-    <div className="flex justify-center items-center">
-      <div className="rounded shadow">
+    <div className="flex justify-center items-center h-screen w-full">
+      <div className="rounded shadow p-4">
         <h1>Welcome to watermelon</h1>
         <p>Please install the app on your workspace</p>
         <a
