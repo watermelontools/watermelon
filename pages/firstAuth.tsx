@@ -1,8 +1,11 @@
+import { Router } from "next/router";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const FirstAuth = ({ firebaseApp, token }) => {
+  const router = useRouter();
+  let db = firebaseApp.firestore();
   const saveToken = () => {
-    let db = firebaseApp.firestore();
     db.collection("teams")
       .doc(token.team.id)
       .set(
@@ -37,8 +40,10 @@ const FirstAuth = ({ firebaseApp, token }) => {
       });
   };
   useEffect(() => {
-    saveToken();
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
+    if (db.collection("teams").doc(token.team.id).get())
+      router.push("/weeklyQuestions");
+    else saveToken();
   }, []);
   console.log(token);
   return (
