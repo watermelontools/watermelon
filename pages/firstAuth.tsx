@@ -42,7 +42,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
     if (db.collection("teams").doc(token.team.id).get())
-      router.push("/weeklyQuestions");
+      router.push("/weeklyquestions");
     else saveToken();
   }, []);
   console.log(token);
