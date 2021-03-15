@@ -99,9 +99,11 @@ const FirstAuth = ({ firebaseApp, token }) => {
   }, []);
   console.log(token);
   return (
-    <div>
-      <h1>Congratulations</h1>
-      <p>You're ready to start helping your coworkers know each other</p>
+    <div className="flex justify-center items-center">
+      <div className="rounded shadow">
+        <h1>Congratulations</h1>
+        <p>You're ready to start helping your coworkers know each other</p>
+      </div>
     </div>
   );
 };
