@@ -43,12 +43,12 @@ const FirstAuth = ({ firebaseApp, token }) => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
     let gottenToken = db.collection("teams").doc(token.team.id).get()
     if (gottenToken){
+      console.log(gottenToken);
       window.localStorage.setItem("add_to_slack_token", JSON.stringify(gottenToken.add_to_slack_token)); 
       router.push("/weeklyquestions");
     }
     else saveToken();
   }, []);
-  console.log(token);
   return (
     <div className="grid-rows-2">
       <div className="row-start-1 row-end-2 bg-pink-600 w-full"></div>
