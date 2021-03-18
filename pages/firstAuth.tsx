@@ -41,11 +41,10 @@ const FirstAuth = ({ firebaseApp, token }) => {
   };
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    let gottenToken = db.collection("teams").doc(token.team.id).get()
-    gottenToken.then(res=>{
+     db.collection("teams").doc(token.team.id).get().then(res=>{
 
+       console.log("loginres", res);
       if (res){
-        console.log(res);
         window.localStorage.setItem("add_to_slack_token", JSON.stringify(res.add_to_slack_token)); 
         router.push("/weeklyquestions");
       }
