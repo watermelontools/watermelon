@@ -43,8 +43,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
      db.collection("teams").doc(token.team.id).get().then(res=>{
    let   responseData = res.data()
-       console.log("loginres", responseData);
-      if (responseData){
+      if (responseData.exists){
         window.localStorage.setItem("add_to_slack_token", JSON.stringify(responseData.add_to_slack_token)); 
         router.push("/weeklyquestions");
       }
