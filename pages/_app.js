@@ -1,6 +1,6 @@
 import Layout from "../components/Layout";
 import "../styles/index.css";
-import firebase from "firebase";
+import firebase from "firebase/app";
 import "firebase/firestore";
 
 const firebaseConfig = {
