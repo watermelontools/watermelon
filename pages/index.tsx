@@ -1,8 +1,9 @@
 import BlurredChart from "../components/dashboard/BlurredChart";
+import PagePadder from "../components/PagePadder";
 
 function HomePage() {
   return (
-    <div>
+    <PagePadder>
       <h1>Welcome to Watermelon🍉!</h1>
       <p>
         Watermelon is the best way to connect your coworkers through shared
@@ -11,7 +12,7 @@ function HomePage() {
       <h2>Connections (coming soon)</h2>
       <p>Understand your workspace</p>
       <BlurredChart />
-    </div>
+    </PagePadder>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useReducer } from "react";
 import Button from "../components/Button";
+import PagePadder from "../components/PagePadder";
 
 const personTag = "${person}";
 const answerTag = "${answer}";
@@ -12,7 +13,8 @@ const initialState = [
   },
   {
     question: "Who would you rather be?",
-    icebreaker: "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+    icebreaker:
+      "Hey ${person} would you rather be rich or famous due to being ${answer}?",
     answers: ["The first person on Mars", "The person that cures cancer"],
   },
 ];
@@ -125,7 +127,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <div>
+    <PagePadder>
       <h1>Weekly Questions</h1>
       <p>We allow minimum 2 questions and maximum 3, each with 2 answers.</p>
       <p>
@@ -234,7 +236,7 @@ const WeeklyQuestions = ({ firebaseApp }) => {
           />
         </div>
       </form>
-    </div>
+    </PagePadder>
   );
 };
 
