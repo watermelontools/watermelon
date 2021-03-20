@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { useEffect } from "react";
+import PagePadder from "../components/PagePadder";
 
 const FirstAuth = ({ firebaseApp, token }) => {
   let db = firebaseApp.firestore();
@@ -99,12 +101,34 @@ const FirstAuth = ({ firebaseApp, token }) => {
   }, []);
   console.log(token);
   return (
-    <div className="flex justify-center items-center h-screen w-full">
+    <PagePadder>
       <div className="rounded shadow p-4">
         <h1>Congratulations</h1>
-        <p>You're ready to start helping your coworkers know each other</p>
+        <p>✅You are ready to go!</p>
+        <p>
+          You may set questions over at{" "}
+          <Link href="/weeklyquestions">
+            <a>questions</a>
+          </Link>
+          , but we have added a couple for you 😉
+        </p>
+        <h3>In Slack:</h3>
+        <ol>
+          <li>
+            Add <strong>@watermelon</strong> to a channel
+          </li>
+          <li>
+            Use <strong>/ask</strong> to send the questions
+          </li>
+          <li>Have people answer them (you do it too, don’t miss the fun)</li>
+          <li>
+            Use <strong>/create</strong> and watch the groups be created!
+          </li>
+        </ol>
+        <h3>Remember</h3>
+        <p>Change the questions every week, we’ll send you a reminder</p>
       </div>
-    </div>
+    </PagePadder>
   );
 };
 export default FirstAuth;
@@ -122,18 +146,3 @@ export async function getServerSideProps(context) {
     }, // will be passed to the page component as props
   };
 }
-
-let t = {
-  ok: true,
-  app_id: "A01GX682DQD",
-  authed_user: {
-    id: "U01J9G2DHAS",
-    scope: "identity.basic,identity.email,identity.avatar,identity.team",
-    access_token:
-      "xoxp-1628322446642-1621546459366-1628555838242-42a9bdb82c90c13e57054413f014e397",
-    token_type: "user",
-  },
-  team: { id: "T01JG9GD4JW" },
-  enterprise: null,
-  is_enterprise_install: false,
-};
