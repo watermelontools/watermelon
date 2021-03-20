@@ -26,7 +26,7 @@ const Layout = ({ children }) => {
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
         {!isInitialFlow && (
-          <nav className="w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-gray-700 sticky top-0 max-w-max">
+          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-gray-700 sticky top-0 max-w-max">
             <div className="flex flex-col h-full w-full">
               <div className="bg-gray-900 flex justify-center">
                 <Image
@@ -77,7 +77,11 @@ const Layout = ({ children }) => {
             </button>
           </nav>
         )}
-        <div className={`${isInitialFlow ? "w-full" : "w-10/12"} h-full`}>
+        <div
+          className={`${
+            isInitialFlow ? "w-full" : "lg:w-10/12 md:w-9/12"
+          } h-full`}
+        >
           {children}
         </div>
       </div>
