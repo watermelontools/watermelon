@@ -26,36 +26,44 @@ const Layout = ({ children }) => {
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
         {!isInitialFlow && (
-          <nav className="w-2/12 h-full flex-grow min-h-screen border-r border-gray-400 flex flex-col justify-between items-center bg-gray-50 sticky top-0 max-w-max pt-2">
+          <nav className="w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-gray-700 sticky top-0 max-w-max">
             <div className="flex flex-col h-full w-full">
-              <span className="font-bold mb-2 text-green-800 text-xl">
-                🍉 Admin
-              </span>
-              {links.map((link, index) => (
-                <Link href={link.route} key={index}>
-                  <a>
-                    <div
-                      className={`flex w-full py-4 px-2 justify-start items-center hover:bg-pink-300
+              <div className="bg-gray-900 flex justify-center">
+                <Image
+                  className="block"
+                  src={"/imagotype-white.png"}
+                  width={154}
+                  height={52}
+                  layout="fixed"
+                />
+              </div>
+              <div className="p-2">
+                {links.map((link, index) => (
+                  <Link href={link.route} key={index}>
+                    <a>
+                      <div
+                        className={`flex w-full py-4 px-2 justify-start items-center hover:bg-gray-800 rounded
                       ${
                         pathname === link.route
-                          ? "bg-pink-200 border-pink-700 border-l-2"
+                          ? "bg-gray-900 border-pink-700 border-l-2"
                           : ""
                       }`}
-                    >
-                      <Image
-                        className="mx-1 block w-10"
-                        src={link.icon}
-                        width={24}
-                        height={24}
-                        layout="fixed"
-                      />
-                      <span className="mx-1 sm:hidden md:block lg:block">
-                        {link.text}
-                      </span>
-                    </div>
-                  </a>
-                </Link>
-              ))}
+                      >
+                        <Image
+                          className="mx-1 block w-10"
+                          src={link.icon}
+                          width={24}
+                          height={24}
+                          layout="fixed"
+                        />
+                        <span className="mx-1 sm:hidden md:block lg:block text-gray-300">
+                          {link.text}
+                        </span>
+                      </div>
+                    </a>
+                  </Link>
+                ))}
+              </div>
             </div>
             <button
               onClick={() => {
@@ -63,7 +71,7 @@ const Layout = ({ children }) => {
                 window.localStorage.removeItem("add_to_slack_token");
                 router.push("/login");
               }}
-              className="bg-pink-200 text-red-500 w-full"
+              className="bg-gray-600 text-gray-200 w-full"
             >
               Logout
             </button>
