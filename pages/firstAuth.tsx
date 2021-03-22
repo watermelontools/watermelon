@@ -41,14 +41,19 @@ const FirstAuth = ({ firebaseApp, token }) => {
   };
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-     db.collection("teams").doc(token.team.id).get().then(res=>{
-       if (res.exists){
-   let   responseData = res.data()
-        window.localStorage.setItem("add_to_slack_token", JSON.stringify(responseData.add_to_slack_token)); 
-        router.push("/weeklyquestions");
-      }
-      else saveToken();
-    })
+    db.collection("teams")
+      .doc(token.team.id)
+      .get()
+      .then((res) => {
+        if (res.exists) {
+          let responseData = res.data();
+          window.localStorage.setItem(
+            "add_to_slack_token",
+            JSON.stringify(responseData.add_to_slack_token)
+          );
+          router.push("/weeklyquestions");
+        } else saveToken();
+      });
   }, []);
   return (
     <div className="grid-rows-2">
@@ -60,7 +65,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
           <p>Please install the app on your workspace</p>
           <div className="w-full flex justify-center items-center my-2">
             <a
-              href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands&client_id=1471534976662.1575212081829&team=${token.team.id}&redirect_uri=https://app.watermelon.tools/welcome`}
+              href={`https://slack.com/oauth/v2/authorize?scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public&client_id=1471534976662.1575212081829&team=${token.team.id}&redirect_uri=https://app.watermelon.tools/welcome`}
             >
               <img
                 alt="Add to Slack"
@@ -78,12 +83,10 @@ const FirstAuth = ({ firebaseApp, token }) => {
 };
 export default FirstAuth;
 export async function getServerSideProps(context) {
-  let token = "token";
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code}&redirect_uri=https://app.watermelon.tools/firstAuth`
   );
-  let json = await f.json();
-  token = json;
+  let token = await f.json();
   console.log(token);
   return {
     props: {
