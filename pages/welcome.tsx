@@ -139,7 +139,7 @@ export async function getServerSideProps(context) {
     }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${
       context.query.code
     }&redirect_uri=https://${
-      process.env.IS_DEV ? "dev" : ""
+      process.env.IS_DEV ? "dev." : ""
     }app.watermelon.tools/welcome`
   );
   let token = await f.json();
