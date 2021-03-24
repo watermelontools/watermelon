@@ -11,6 +11,7 @@ const firebaseConfig = {
   messagingSenderId: "736231654320",
   appId: "1:736231654320:web:ca4e788e8ceca4a89a0c75",
 };
+// TODO: extract to env!
 let firebaseApp;
 if (!firebase.apps.length) {
   firebaseApp = firebase.initializeApp(firebaseConfig);
