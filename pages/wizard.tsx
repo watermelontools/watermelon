@@ -8,10 +8,12 @@ const Wizard = () => {
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])
+  const person = "{person}"
+  const answer= "{answer}"
   const questions = [
     {
       question: "What do you value more in a workplace?",
-      icebreaker: "Hey ${person}, why do you value ${answer} so much?",
+      icebreaker: <>Hey <span title="These are variables that will be replaced when sent" className="text-green-400">${person}</span>, why do you value <span title="These are variables that will be replaced when sent" className="text-green-400">${answer}</span> so much?</>,
       ansA: "Risk-taking",
       ansB: "Being careful",
       cat: "profDev",
@@ -19,7 +21,7 @@ const Wizard = () => {
     },
     {
       question: "What do you prefer to read?",
-      icebreaker: "Hey ${person}, who's your favorite ${answer} author?",
+      icebreaker: <>Hey <span title="These are variables that will be replaced when sent" className="text-green-400">${person}</span>, who's your favorite <span title="These are variables that will be replaced when sent" className="text-green-400">${answer}</span> author?</>,
       ansA: "Fiction",
       ansB: "Non-fiction",
       cat: "hobbies",
@@ -27,7 +29,7 @@ const Wizard = () => {
     },
     {
       question: "¿Qué prefieres leer?",
-      icebreaker: "¿${person}, quien es tu autor favorito de ${answer}?",
+      icebreaker: <>¿<span title="These are variables that will be replaced when sent" className="text-green-400">${person}</span>, quien es tu autor favorito de <span title="These are variables that will be replaced when sent" className="text-green-400">${answer}</span>?</>,
       ansA: "Ficción",
       ansB: "No ficción",
       cat: "hobbies",
@@ -35,7 +37,7 @@ const Wizard = () => {
     },
     {
       question: "¿En qué habilidad blanda te gustaría recibir capacitación?",
-      icebreaker: "¿${person}, por qué te gustaría saber más sobre ${answer}?",
+      icebreaker: <>¿<span title="These are variables that will be replaced when sent" className="text-green-400">${person}</span>, por qué te gustaría saber más sobre <span title="These are variables that will be replaced when sent" className="text-green-400">${answer}</span>?</>,
       ansA: "Hablar en público",
       ansB: "Toma de decisiones",
       cat: "profDev",
@@ -65,10 +67,12 @@ const Wizard = () => {
         </div>
       </div>
       <div>
-        <p>{questions[exampleQuestion].question}</p>
+        <p className="font-bold">{questions[exampleQuestion].question}</p>
+        <div className="flex justify-start my-1">
+        <p className="border border-gray-200 rounded px-2 py-1 mr-2 hover:bg-gray-100">{questions[exampleQuestion].ansA}</p>
+        <p className="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100">{questions[exampleQuestion].ansB}</p>
+        </div>
         <p>{questions[exampleQuestion].icebreaker}</p>
-        <p>{questions[exampleQuestion].ansA}</p>
-        <p>{questions[exampleQuestion].ansB}</p>
       </div>
     </div>
   )
