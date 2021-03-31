@@ -59,48 +59,48 @@ const Wizard = () => {
   ]
   return (
     <>
-    <PageTitle pageTitle="The finishing touches"></PageTitle>
-    <PagePadder>
-    <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
-      <div className="flex sm:flex-col md:flex-row">
-        <div className="card-style flex flex-col justify-between w-80">
-          <h2 className="font-bold text-xl">Language</h2>
-          <p>Select the language in which the questions will be sent:</p>
-          <p>This dashboard will stay in English</p>
-          <Select onChange={e => setLang(e.value)} value={langOpts.find(el=> el.value=== lang)} options={langOpts} />
+      <PageTitle pageTitle="The finishing touches" />
+      <PagePadder>
+      <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
+        <div className="flex sm:flex-col md:flex-row">
+          <div className="card-style flex flex-col justify-between w-80">
+            <h2 className="font-bold text-xl">Language</h2>
+            <p>Select the language in which the questions will be sent:</p>
+            <p>This dashboard will stay in English</p>
+            <Select onChange={e => setLang(e.value)} value={langOpts.find(el=> el.value=== lang)} options={langOpts} />
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+
+            <h2 className="font-bold text-xl">Question Type</h2>
+            <p>Select the category of the questions to be shown</p>
+            </div>
+            <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
+          </div>
         </div>
-        <div className="card-style flex flex-col justify-between w-80">
+        <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
+          <div className="rounded mx-2" style={{width: "3em", height: "3em"}}>
+          <img src="/wmslack.png" />
+          </div>
           <div>
+            <div className="flex">
 
-          <h2 className="font-bold text-xl">Question Type</h2>
-          <p>Select the category of the questions to be shown</p>
+          <p className="font-bold text-lg">Watermelon</p>
+          <div className="flex-col flex justify-center">
+
+          <p className="bg-gray-200 rounded-sm text-xs ml-2 px-1 text-gray-500 leading-1">APP</p>
           </div>
-          <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
+            </div>
+          <p className="font-semibold">{questions[exampleQuestion].question}</p>
+          <div className="flex justify-start my-1">
+          <p className="border border-gray-200 rounded px-2 py-1 mr-2 hover:bg-gray-100">{questions[exampleQuestion].ansA}</p>
+          <p className="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100">{questions[exampleQuestion].ansB}</p>
+          </div>
+          <p>{questions[exampleQuestion].icebreaker}</p>
+          </div>
         </div>
       </div>
-      <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
-        <div className="rounded mx-2" style={{width: "3em", height: "3em"}}>
-        <img src="/wmslack.png" />
-        </div>
-        <div>
-          <div className="flex">
-
-        <p className="font-bold text-lg">Watermelon</p>
-        <div className="flex-col flex justify-center">
-
-        <p className="bg-gray-200 rounded-sm text-xs ml-2 px-1 text-gray-500 leading-1">APP</p>
-        </div>
-          </div>
-        <p className="font-semibold">{questions[exampleQuestion].question}</p>
-        <div className="flex justify-start my-1">
-        <p className="border border-gray-200 rounded px-2 py-1 mr-2 hover:bg-gray-100">{questions[exampleQuestion].ansA}</p>
-        <p className="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100">{questions[exampleQuestion].ansB}</p>
-        </div>
-        <p>{questions[exampleQuestion].icebreaker}</p>
-        </div>
-      </div>
-    </div>
-    </PagePadder>
+      </PagePadder>
     </>
   )
 }
