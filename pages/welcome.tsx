@@ -70,7 +70,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
     ].forEach((question) => {
       db.collection("teams")
         .doc(`${token.team.id}/weekly_questions/${question.question}`)
-        .set({ icebreaker: question.icebreaker }, { merge: true })
+        .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
         .then(function (docRef) {
           console.log("Wrote weekly questions to db", docRef);
         })
@@ -134,12 +134,9 @@ const FirstAuth = ({ firebaseApp, token }) => {
 export default FirstAuth;
 export async function getServerSideProps(context) {
   let f = await fetch(
-    `https://slack.com/api/oauth.v2.access?client_id=${
-      process.env.SLACK_CLIENT_ID
-    }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${
-      context.query.code
-    }&redirect_uri=https://${
-      process.env.IS_DEV ? "dev." : ""
+    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
+    }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
+    }&redirect_uri=https://${process.env.IS_DEV ? "dev." : ""
     }app.watermelon.tools/welcome`
   );
   let token = await f.json();
