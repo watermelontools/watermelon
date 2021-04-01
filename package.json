@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "firebase": "^8.2.1",
+    "firebase-admin": "^9.5.0",
     "next": "latest",
     "postcss-loader": "^4.1.0",
     "postcss-preset-env": "^6.7.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-select": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.14",
