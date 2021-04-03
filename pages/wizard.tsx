@@ -10,11 +10,16 @@ const Wizard = ({firebaseApp}) => {
   const [exampleQuestion, setExampleQuestion] = useState(1)
   const router = useRouter();
 
+  let signInToken = {team: {id:""}}
+  useEffect(()=>{
+    signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
+  })
   const saveQuestions = () => {
+    console.log(signInToken)
     let db = firebaseApp.firestore();
       db.collection("teams")
         .doc(
-          `${JSON.parse(window.localStorage.getItem("sign_in_token")).team
+          `${signInToken.team
             .id
           }`
         )
