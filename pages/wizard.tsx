@@ -14,7 +14,7 @@ const Wizard = ({firebaseApp}) => {
     let db = firebaseApp.firestore();
       db.collection("teams")
         .doc(
-          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+          `${JSON.parse(window.localStorage.getItem("sign_in_token")).team
             .id
           }`
         )
