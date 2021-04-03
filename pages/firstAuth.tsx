@@ -69,7 +69,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
                 href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
                   }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                   }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
-                  }app.watermelon.tools/welcome`}
+                  }app.watermelon.tools/wizard`}
               >
                 <img
                   alt="Add to Slack"

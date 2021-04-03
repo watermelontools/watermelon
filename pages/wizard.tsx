@@ -1,14 +1,33 @@
 import { useEffect, useState } from "react"
 import Select from 'react-select';
-import Image from 'next/image'
+import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = () => {
+const Wizard = ({firebaseApp}) => {
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
+  const router = useRouter();
 
+  const saveQuestions = () => {
+    let db = firebaseApp.firestore();
+      db.collection("teams")
+        .doc(
+          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+            .id
+          }`
+        )
+        .set({ settings: {language: lang, category: cat} }, { merge: true })
+        .then(function (docRef) {
+          console.log("Wrote to db", docRef);
+          router.push("/welcome");
+        })
+        .catch(function (error) {
+          console.error("Error writing: ", error);
+        });
+      
+  };
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])
@@ -99,6 +118,12 @@ const Wizard = () => {
           <p>{questions[exampleQuestion].icebreaker}</p>
           </div>
         </div>
+<div className="my-2 flex justify-end w-full">
+
+      <button onClick={(e)=> saveQuestions()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
+        Finish
+      </button>
+</div>
       </div>
       </PagePadder>
     </>
