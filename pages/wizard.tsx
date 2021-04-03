@@ -63,8 +63,7 @@ const Wizard = ({firebaseApp, token}) => {
   useEffect(()=>{
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
   })
-  const saveQuestions = () => {
-    console.log(signInToken)
+  const saveSettings = () => {
     let db = firebaseApp.firestore();
       db.collection("teams")
         .doc(
@@ -84,7 +83,6 @@ const Wizard = ({firebaseApp, token}) => {
   };
   useEffect(() => {
     saveToken();
-    saveQuestions();
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
   }, []);
   useEffect(() => {
@@ -178,7 +176,7 @@ const Wizard = ({firebaseApp, token}) => {
           </div>
         </div>
         <div className="my-2 flex justify-end w-full">
-         <button onClick={(e)=> saveQuestions()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
+         <button onClick={(e)=> saveSettings()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
            Finish
          </button>
        </div>
