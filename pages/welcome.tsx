@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const FirstAuth = ({ firebaseApp, token }) => {
+const Welcome = ({ firebaseApp, token }) => {
   let db = firebaseApp.firestore();
   const saveToken = () => {
     db.collection("teams")
@@ -134,7 +134,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
     </>
   );
 };
-export default FirstAuth;
+export default Welcome;
 export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
@@ -143,7 +143,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  console.log(token);
+
   return {
     props: {
       token,
