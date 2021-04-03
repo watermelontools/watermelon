@@ -5,6 +5,7 @@ import PageTitle from "../components/PageTitle";
 const FirstAuth = ({ firebaseApp, token }) => {
   const router = useRouter();
   let db = firebaseApp.firestore();
+  token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
   const saveToken = () => {
     db.collection("teams")
       .doc(token.team.id)
@@ -65,7 +66,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
           <div className="rounded shadow p-4">
             <p>Please install the app on your workspace</p>
             <div className="w-full flex justify-center items-center my-2">
-              <a
+              {token && <a
                 href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
                   }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                   }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV ? "dev." : ""
@@ -78,7 +79,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
                   src="https://platform.slack-edge.com/img/add_to_slack.png"
                   srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
                 />
-              </a>
+              </a>}
             </div>
           </div>
         </div>
