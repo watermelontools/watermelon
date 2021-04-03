@@ -28,6 +28,7 @@ const Wizard = ({firebaseApp}) => {
         });
       
   };
+
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])
@@ -118,12 +119,11 @@ const Wizard = ({firebaseApp}) => {
           <p>{questions[exampleQuestion].icebreaker}</p>
           </div>
         </div>
-<div className="my-2 flex justify-end w-full">
-
-      <button onClick={(e)=> saveQuestions()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
-        Finish
-      </button>
-</div>
+        <div className="my-2 flex justify-end w-full">
+         <button onClick={(e)=> saveQuestions()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
+           Finish
+         </button>
+       </div>
       </div>
       </PagePadder>
     </>
