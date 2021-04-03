@@ -4,12 +4,61 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({firebaseApp}) => {
+const Wizard = ({firebaseApp, token}) => {
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
   const router = useRouter();
-
+  let db = firebaseApp.firestore();
+  const saveToken = () => {
+    db.collection("teams")
+      .doc(token.team.id)
+      .set(
+        {
+          add_to_slack_token: token,
+        },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef);
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+    let userToken = JSON.parse(window?.localStorage?.getItem("sign_in_token"));
+    db.collection("teams")
+      .doc(token.team.id)
+      .set(
+        {
+          installation: {
+            team: token.team,
+            enterprise: token.enterprise ?? false,
+            user: {
+              token: userToken.authed_user.access_token,
+              scopes: userToken.authed_user.scope,
+              id: userToken.authed_user.id,
+            },
+            tokenType: "bot",
+            isEnterpriseInstall: token.is_enterprise_install ?? false,
+            appId: token.app_id,
+            authVersion: "v2",
+            bot: {
+              scopes: token.scope.split(","),
+              token: token.access_token,
+              userId: token.bot_user_id,
+              id: token.incoming_webhook.channel_id,
+            },
+          },
+        },
+        { merge: true }
+      )
+      .then(function (docRef) {
+        console.log("Document written with ID: ", docRef);
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+  };
   let signInToken = {team: {id:""}}
   useEffect(()=>{
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
@@ -33,7 +82,11 @@ const Wizard = ({firebaseApp}) => {
         });
       
   };
-
+  useEffect(() => {
+    saveToken();
+    saveQuestions();
+    window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
+  }, []);
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])
@@ -136,3 +189,18 @@ const Wizard = ({firebaseApp}) => {
 }
 
 export default Wizard
+export async function getServerSideProps(context) {
+  let f = await fetch(
+    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
+    }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
+    }&redirect_uri=https://${process.env.IS_DEV ? "dev." : ""
+    }app.watermelon.tools/wizard`
+  );
+  let token = await f.json();
+
+  return {
+    props: {
+      token,
+    }, // will be passed to the page component as props
+  };
+}
