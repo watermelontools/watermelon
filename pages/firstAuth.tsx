@@ -52,7 +52,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
             "add_to_slack_token",
             JSON.stringify(responseData.add_to_slack_token)
           );
-          router.push("/weeklyquestions");
+          router.push("/wizard");
         } else saveToken();
       });
   }, []);
