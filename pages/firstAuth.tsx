@@ -95,8 +95,17 @@ export async function getServerSideProps(context) {
     }&redirect_uri=https://${process.env.IS_DEV ? "dev." : ""
     }app.watermelon.tools/firstAuth`
   );
-  let token = await f.json();
-  console.log(token);
+  let data = await f.json();
+  let token = {
+    team: data.team,
+    app_id: data.app_id,
+    authed_user: {
+      id: data.authed_user.id,
+      scope: data.authed_user.scope
+    },
+    enterprise: data.enterprise,
+    is_enterprise_install: data.is_enterprise_install
+  }
   return {
     props: {
       token,
