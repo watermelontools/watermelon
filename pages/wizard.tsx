@@ -161,7 +161,7 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
   let firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
+    credential: admin.credential.cert(serviceAccount.toString())
   });
   let db = firebaseApp.firestore();
   db.collection("teams")
