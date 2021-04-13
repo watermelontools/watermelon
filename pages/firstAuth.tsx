@@ -88,6 +88,9 @@ const FirstAuth = ({ firebaseApp, token }) => {
   );
 };
 export default FirstAuth;
+
+import * as admin from 'firebase-admin';
+
 export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
@@ -96,7 +99,6 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
-  console.log(data)
   let token = {
     team: data.team,
     app_id: data.app_id,
@@ -107,6 +109,30 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
+  let firebaseApp = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+  let db = firebaseApp.firestore();
+  db.collection("teams")
+    .doc(token.team.id)
+    .set(
+      {
+        installation: {
+          user: {
+            token: data.authed_user.access_token,
+            scopes: data.authed_user.scope,
+            id: data.authed_user.id,
+          },
+        },
+      },
+      { merge: true }
+    )
+    .then(function (docRef) {
+      console.log("Document written with ID: ", docRef);
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
   return {
     props: {
       token,
