@@ -160,9 +160,13 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  let firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount as any)
-  });
+  let firebaseApp
+  if (!admin.apps.length) {
+
+    firebaseApp = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount as any)
+    });
+  }
   let db = firebaseApp.firestore();
   db.collection("teams")
   .doc(token.team.id)
