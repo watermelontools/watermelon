@@ -122,7 +122,7 @@ export async function getServerSideProps(context) {
     client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-rinna%40wm-dev-6e6a9.iam.gserviceaccount.com"
   }
   let firebaseApp = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount.toString())
+    credential: admin.credential.cert(serviceAccount as any)
   });
   let db = firebaseApp.firestore();
   db.collection("teams")
