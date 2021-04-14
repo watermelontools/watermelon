@@ -92,7 +92,9 @@ export async function getServerSideProps(context) {
   let firebaseApp = admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as any)
   }, "firstAuth");
+  console.log("fba", firebaseApp)
   let db = firebaseApp.firestore();
+  console.log("db", db)
   db.collection("teams")
     .doc(data.team.id)
     .set(
