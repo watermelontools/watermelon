@@ -92,9 +92,7 @@ export async function getServerSideProps(context) {
   let firebaseApp = admin.initializeApp({
     credential: admin.credential.cert(serviceAccount as any)
   }, "firstAuth");
-  console.log("fba", firebaseApp)
   let db = firebaseApp.firestore();
-  console.log("db", db)
   db.collection("teams")
     .doc(data.team.id)
     .set(
@@ -115,10 +113,13 @@ export async function getServerSideProps(context) {
     })
     .catch(function (error) {
       console.error("Error adding document: ", error);
-    });
-  return {
-    props: {
-      token,
-    }, // will be passed to the page component as props
-  };
+    })
+    .finally(() => {
+      console.log("finally")
+      return {
+        props: {
+          token,
+        }, // will be passed to the page component as props
+      };
+    })
 }
