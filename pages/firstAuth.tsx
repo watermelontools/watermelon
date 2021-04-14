@@ -14,11 +14,13 @@ const FirstAuth = ({ firebaseApp, token }) => {
       .then((res) => {
         if (res.exists) {
           let responseData = res.data();
-          window.localStorage.setItem(
-            "add_to_slack_token",
-            JSON.stringify(responseData.add_to_slack_token)
-          );
-          router.push("/wizard");
+          if (responseData.add_to_slack_token) {
+            window.localStorage.setItem(
+              "add_to_slack_token",
+              JSON.stringify(responseData.add_to_slack_token)
+            );
+            router.push("/wizard");
+          }
         }
       });
   }, []);
