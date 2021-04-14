@@ -164,7 +164,7 @@ export async function getServerSideProps(context) {
     credential: admin.credential.cert(serviceAccount as any)
   }, "wizard");
   let db = firebaseApp.firestore();
-  if(db) {db.collection("teams")
+  await db.collection("teams")
   .doc(token.team.id)
   .set(
     {
@@ -192,7 +192,7 @@ export async function getServerSideProps(context) {
   .catch(function (error) {
     console.error("Error adding document: ", error);
   });
-}
+
   const token_clone = Object.assign({}, token);
   delete token_clone.access_token;
   return {
