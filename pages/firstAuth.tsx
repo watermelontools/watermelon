@@ -65,6 +65,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
+  console.log("DATA", data)
   let token = {
     team: data.team,
     app_id: data.app_id,
@@ -75,6 +76,7 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
+  console.log("token", token)
   const serviceAccount = {
     type: "service_account",
     project_id: "wm-dev-6e6a9",
