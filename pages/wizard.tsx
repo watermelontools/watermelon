@@ -169,19 +169,6 @@ export async function getServerSideProps(context) {
   .set(
     {
       add_to_slack_token: token,
-    },
-    { merge: true }
-  )
-  .then(function (docRef) {
-    console.log("Document written with ID: ", docRef);
-  })
-  .catch(function (error) {
-    console.error("Error adding document: ", error);
-  });
-  db.collection("teams")
-  .doc(token.team.id)
-  .set(
-    {
       installation: {
         team: token.team,
         enterprise: token.enterprise ?? false,
@@ -200,7 +187,7 @@ export async function getServerSideProps(context) {
     { merge: true }
   )
   .then(function (docRef) {
-    console.log("Document written with ID: ", docRef);
+    console.log("New install:", token.team);
   })
   .catch(function (error) {
     console.error("Error adding document: ", error);
@@ -208,7 +195,6 @@ export async function getServerSideProps(context) {
 }
   const token_clone = Object.assign({}, token);
   delete token_clone.access_token;
-  console.log(token_clone)
   return {
     props: {
       token:token_clone
