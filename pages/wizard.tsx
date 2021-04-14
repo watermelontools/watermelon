@@ -169,22 +169,33 @@ export async function getServerSideProps(context) {
   .set(
     {
       add_to_slack_token: token,
-      installation: {
-        team: token.team,
-        enterprise: token.enterprise ?? false,
-        tokenType: "bot",
-        isEnterpriseInstall: token.is_enterprise_install ?? false,
-        appId: token.app_id,
-        authVersion: "v2",
-        bot: {
+    },
+    { merge: true }
+  )
+  .then(function (docRef) {
+    console.log("New install:", token.team);
+  })
+  .catch(function (error) {
+    console.error("Error adding document: ", error);
+  });
+
+  await db.collection("teams")
+  .doc(token.team.id)
+  .update(
+    {
+        "installation.team": token.team,
+        "installation.enterprise": token.enterprise ?? false,
+        "installation.tokenType": "bot",
+        "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
+        "installation.appId": token.app_id,
+        "installation.authVersion": "v2",
+        "installation.bot": {
           scopes: token.scope.split(","),
           token: token.access_token,
           userId: token.bot_user_id,
           id: token.incoming_webhook.channel_id,
         },
-      },
-    },
-    { merge: true }
+    }
   )
   .then(function (docRef) {
     console.log("New install:", token.team);
