@@ -6,40 +6,6 @@ const FirstAuth = ({ firebaseApp, token }) => {
   const router = useRouter();
   let db = firebaseApp.firestore();
   token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
-  const saveToken = () => {
-    db.collection("teams")
-      .doc(token.team.id)
-      .set(
-        {
-          sign_in_token: token,
-        },
-        { merge: true }
-      )
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
-    db.collection("teams")
-      .doc(token.team.id)
-      .set(
-        {
-          installation: {
-            teamId: token.team.id,
-            userToken: token.authed_user.access_token,
-            userId: token.authed_user.id,
-          },
-        },
-        { merge: true }
-      )
-      .then(function (docRef) {
-        console.log("Document written with ID: ", docRef);
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      });
-  };
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
     db.collection("teams")
@@ -53,7 +19,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
             JSON.stringify(responseData.add_to_slack_token)
           );
           router.push("/wizard");
-        } else saveToken();
+        }
       });
   }, []);
   return (
@@ -126,9 +92,10 @@ export async function getServerSideProps(context) {
   }, "firstAuth");
   let db = firebaseApp.firestore();
   db.collection("teams")
-    .doc(token.team.id)
+    .doc(data.team.id)
     .set(
       {
+        sign_in_token: data,
         installation: {
           user: {
             token: data.authed_user.access_token,
