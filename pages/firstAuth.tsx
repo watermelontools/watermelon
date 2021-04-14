@@ -70,8 +70,8 @@ export async function getServerSideProps(context) {
     team: data.team,
     app_id: data.app_id,
     authed_user: {
-      id: data.authed_user.id,
-      scope: data.authed_user.scope
+      id: data.authed_user?.id,
+      scope: data.authed_user?.scope
     },
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
@@ -102,9 +102,9 @@ export async function getServerSideProps(context) {
         sign_in_token: data,
         installation: {
           user: {
-            token: data.authed_user.access_token,
-            scopes: data.authed_user.scope,
-            id: data.authed_user.id,
+            token: data?.authed_user?.access_token,
+            scopes: data?.authed_user?.scope,
+            id: data?.authed_user?.id,
           },
         },
       },
