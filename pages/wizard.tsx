@@ -138,7 +138,7 @@ const Wizard = ({firebaseApp, token}) => {
 
 export default Wizard
 
-import * as admin from '../utils/firebase/backend';
+import admin from '../utils/firebase/backend';
 
 export async function getServerSideProps(context) {
 
@@ -150,7 +150,6 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
 
-  // @ts-ignore
   let db = admin.firestore();
   await db.collection("teams")
   .doc(token.team.id)

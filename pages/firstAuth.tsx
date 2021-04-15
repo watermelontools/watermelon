@@ -57,7 +57,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
 };
 export default FirstAuth;
 
-import * as admin from '../utils/firebase/backend';
+import admin from '../utils/firebase/backend';
 
 export async function getServerSideProps(context) {
   let f = await fetch(
@@ -77,7 +77,7 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
-  //@ts-ignore
+
   let db = admin.firestore();
   await db.collection("teams")
     .doc(data.team.id)
