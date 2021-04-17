@@ -100,9 +100,59 @@ export async function getServerSideProps(context) {
     .catch(function (error) {
       console.error("Error adding document: ", error);
     })
-  return {
-    props: {
-      token,
-    }, // will be passed to the page component as props
-  };
+  const initialState = [
+    {
+      question: "What instrument would you like to play?",
+      icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
+      answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
+    },
+    {
+      question: "Who would you rather be?",
+      icebreaker:
+        "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+      answers: ["The first person on Mars", "The person that cures cancer"],
+    },
+  ];
+  initialState.forEach((question) => {
+    console.log(question.question);
+    db.collection("teams")
+      .doc(
+        `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+          .id
+        }/weekly_questions/${question.question}`
+      )
+      .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
+      .then(function (docRef) {
+        console.log("Wrote to db", docRef);
+        alert("We have saved your questions");
+      })
+      .catch(function (error) {
+        console.error("Error writing: ", error);
+      });
+    question.answers.forEach((answer) => {
+      db.collection("teams")
+        .doc(
+          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
+            .id
+          }`
+        )
+        .collection("weekly_questions")
+        .doc(question.question)
+        .collection(answer)
+        .doc("picked_by")
+        .set({ picked_by: [] }, { merge: true })
+        .then(function (docRef) {
+          console.log("Wrote to db", docRef);
+        })
+        .catch(function (error) {
+          console.error("Error writing: ", error);
+        });
+    });
+  });
+};
+return {
+  props: {
+    token,
+  }, // will be passed to the page component as props
+};
 }
