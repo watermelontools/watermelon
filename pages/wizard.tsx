@@ -145,7 +145,7 @@ export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
     }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-    }&redirect_uri=https://${process.env.IS_DEV ? "dev." : ""
+    }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();

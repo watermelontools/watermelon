@@ -37,7 +37,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
               {token && <a
                 href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
                   }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
-                  }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV ? "dev." : ""
+                  }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                   }app.watermelon.tools/wizard`}
               >
                 <img
@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
     }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-    }&redirect_uri=https://${process.env.IS_DEV ? "dev." : ""
+    }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
