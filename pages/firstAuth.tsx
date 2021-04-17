@@ -149,10 +149,9 @@ export async function getServerSideProps(context) {
         });
     });
   });
-};
-return {
-  props: {
-    token,
-  }, // will be passed to the page component as props
-};
+  return {
+    props: {
+      token,
+    }, // will be passed to the page component as props
+  };
 }
