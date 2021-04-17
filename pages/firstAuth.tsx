@@ -121,8 +121,11 @@ export async function getServerSideProps(context) {
       )
       .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
       .then(function (docRef) {
-        console.log("Wrote to db", docRef);
-        alert("We have saved your questions");
+        console.log("Wrote default question", {
+          question: question.question,
+          icebreaker: question.icebreaker,
+          answers: question.answers
+        });
       })
       .catch(function (error) {
         console.error("Error writing: ", error);
@@ -137,9 +140,7 @@ export async function getServerSideProps(context) {
         .collection(answer)
         .doc("picked_by")
         .set({ picked_by: [] }, { merge: true })
-        .then(function (docRef) {
-          console.log("Wrote to db", docRef);
-        })
+        .then(() => { })
         .catch(function (error) {
           console.error("Error writing: ", error);
         });
