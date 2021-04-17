@@ -84,6 +84,7 @@ export async function getServerSideProps(context) {
     .set(
       {
         sign_in_token: data,
+        settings: { language: "en", category: "hobbies" },
         installation: {
           user: {
             token: data?.authed_user?.access_token,
@@ -114,7 +115,6 @@ export async function getServerSideProps(context) {
     },
   ];
   initialState.forEach((question) => {
-    console.log(question.question);
     db.collection("teams")
       .doc(
         `${data.team.id}/weekly_questions/${question.question}`
