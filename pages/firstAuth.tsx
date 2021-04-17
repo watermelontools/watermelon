@@ -117,9 +117,7 @@ export async function getServerSideProps(context) {
     console.log(question.question);
     db.collection("teams")
       .doc(
-        `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-          .id
-        }/weekly_questions/${question.question}`
+        `${data.team.id}/weekly_questions/${question.question}`
       )
       .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
       .then(function (docRef) {
@@ -132,9 +130,7 @@ export async function getServerSideProps(context) {
     question.answers.forEach((answer) => {
       db.collection("teams")
         .doc(
-          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-            .id
-          }`
+          `${data.team.id}`
         )
         .collection("weekly_questions")
         .doc(question.question)
