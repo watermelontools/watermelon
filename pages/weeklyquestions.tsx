@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import Select from 'react-select';
+
+import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 import SlackQuestionDemo from "../components/SlackQuestionDemo";
-
 
 const WeeklyQuestions = ({ firebaseApp, questions }: { firebaseApp: any; questions: any[] }) => {
   const langOpts = [
@@ -24,8 +26,22 @@ const WeeklyQuestions = ({ firebaseApp, questions }: { firebaseApp: any; questio
   return (
     <>
       <PageTitle pageTitle="Questions" />
-      <p>Here you can see all the example questions we have for you</p>
-      {filteredQuestions.map(question => <SlackQuestionDemo question={question} />)}
+      <PagePadder>
+        <p>Here you can see all the example questions we have for you</p>
+        <div className="flex sm:flex-col md:flex-row">
+          <div className="card-style flex flex-col justify-between w-80">
+            <h2 className="font-bold text-xl">Language</h2>
+            <Select onChange={e => setLang(e.value)} value={langOpts.find(el => el.value === lang)} options={langOpts} />
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+              <h2 className="font-bold text-xl">Question Type</h2>
+            </div>
+            <Select onChange={e => setCat(e.value)} value={catOpts.find(el => el.value === cat)} options={catOpts} />
+          </div>
+        </div>
+        {filteredQuestions.map(question => <SlackQuestionDemo question={question} />)}
+      </PagePadder>
     </>
   );
 };
