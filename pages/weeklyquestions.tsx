@@ -253,7 +253,7 @@ export async function getServerSideProps(context) {
     apiKey: process.env.AIRTABLE_API_KEY
   });
   let base = Airtable.base('appyNw8U8LEBl4iPs');
-  base('en').select({
+  await base('en').select({
     // Selecting the first 3 records in Grid view:
     view: "Grid view"
   }).eachPage(function page(records, fetchNextPage) {
