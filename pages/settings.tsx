@@ -76,7 +76,7 @@ const Settings = ({firebaseApp}) => {
   ]
   return (
     <>
-      <PageTitle pageTitle="The finishing touches" />
+      <PageTitle pageTitle="Settings" />
       <PagePadder>
       <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
         <div className="flex sm:flex-col md:flex-row">
