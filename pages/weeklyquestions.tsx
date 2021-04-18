@@ -260,7 +260,7 @@ export async function getServerSideProps(context) {
     // This function (`page`) will get called for each page of records.
 
     records.forEach(function (record) {
-      questions.push(record)
+      questions.push(record.fields)
     });
 
     // To fetch the next page of records, call `fetchNextPage`.
