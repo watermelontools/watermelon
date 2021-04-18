@@ -83,7 +83,7 @@ const reducer = (state, action) => {
       throw new Error();
   }
 };
-const WeeklyQuestions = ({ firebaseApp }) => {
+const WeeklyQuestions = ({ firebaseApp, questions }) => {
   const saveQuestions = () => {
     let db = firebaseApp.firestore();
     state.forEach((question) => {
@@ -243,3 +243,39 @@ const WeeklyQuestions = ({ firebaseApp }) => {
 };
 
 export default WeeklyQuestions;
+const Airtable = require('airtable');
+
+export async function getServerSideProps(context) {
+  let questions = []
+
+  Airtable.configure({
+    endpointUrl: 'https://api.airtable.com',
+    apiKey: process.env.AIRTABLE_API_KEY
+  });
+  let base = Airtable.base('appyNw8U8LEBl4iPs');
+  base('en').select({
+    // Selecting the first 3 records in Grid view:
+    view: "Grid view"
+  }).eachPage(function page(records, fetchNextPage) {
+    // This function (`page`) will get called for each page of records.
+
+    records.forEach(function (record) {
+      questions.push(record)
+    });
+
+    // To fetch the next page of records, call `fetchNextPage`.
+    // If there are more records, `page` will get called again.
+    // If there are no more records, `done` will get called.
+    fetchNextPage();
+
+  }, function done(err) {
+    if (err) { console.error(err); return; }
+  });
+  console.log(questions)
+
+  return {
+    props: {
+      questions
+    }, // will be passed to the page component as props
+  };
+}
