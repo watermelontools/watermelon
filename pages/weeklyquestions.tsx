@@ -268,8 +268,6 @@ export async function getServerSideProps(context) {
     // If there are no more records, `done` will get called.
     fetchNextPage();
 
-  }, function done(err) {
-    if (err) { console.error(err); return; }
   });
   console.log(questions)
 
