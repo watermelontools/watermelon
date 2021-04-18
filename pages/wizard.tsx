@@ -15,7 +15,6 @@ const Wizard = ({firebaseApp, token}) => {
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
   })
   const saveSettings = () => {
-    let db = firebaseApp.firestore();
       db.collection("teams")
         .doc(
           `${signInToken.team
