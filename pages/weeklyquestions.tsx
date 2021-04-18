@@ -253,23 +253,18 @@ export async function getServerSideProps(context) {
     apiKey: process.env.AIRTABLE_API_KEY
   });
   let base = Airtable.base('appyNw8U8LEBl4iPs');
-  await base('en').select({
-    // Selecting the first 3 records in Grid view:
-    view: "Grid view"
-  }).eachPage(function page(records, fetchNextPage) {
-    // This function (`page`) will get called for each page of records.
-
+  await base('en').select().eachPage(function page(records, fetchNextPage) {
     records.forEach(function (record) {
       questions.push(record.fields)
     });
-
-    // To fetch the next page of records, call `fetchNextPage`.
-    // If there are more records, `page` will get called again.
-    // If there are no more records, `done` will get called.
     fetchNextPage();
-
   });
-  console.log(questions)
+  await base('es').select().eachPage(function page(records, fetchNextPage) {
+    records.forEach(function (record) {
+      questions.push(record.fields)
+    });
+    fetchNextPage();
+  });
 
   return {
     props: {
