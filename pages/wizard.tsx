@@ -148,7 +148,8 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-
+  console.log("cq",context.query)
+console.log("token", token)
   let db = admin.firestore();
   await db.collection("teams")
   .doc(token.team.id)
