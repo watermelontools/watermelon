@@ -4,11 +4,12 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({firebaseApp, token}) => {
+const Wizard = ({firebaseApp, token, redirect}) => {
+  const router = useRouter();
+  if(redirect) router.push("/weeklyQuestions")
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  const router = useRouter();
   let db = firebaseApp.firestore();
   let signInToken = {team: {id:""}}
   useEffect(()=>{
@@ -148,8 +149,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  console.log("cq",context.query)
-console.log("token", token)
+  if(token.ok){
   let db = admin.firestore();
   await db.collection("teams")
   .doc(token.team.id)
@@ -198,4 +198,10 @@ console.log("token", token)
       token:token_clone
     }, // will be passed to the page component as props
   };
+}
+return {
+  props: {
+    redirect: true
+  }, // will be passed to the page component as props
+};
 }
