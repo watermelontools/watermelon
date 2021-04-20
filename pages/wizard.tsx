@@ -6,7 +6,7 @@ import PageTitle from "../components/PageTitle";
 
 const Wizard = ({firebaseApp, token, redirect}) => {
   const router = useRouter();
-  if(redirect) router.push("/weeklyQuestions")
+  if(redirect) router.push("/weeklyquestions")
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
