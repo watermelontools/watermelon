@@ -7,9 +7,6 @@ const Welcome = ({ firebaseApp, token }) => {
   let addToSlackToken
   useEffect(() => {
     addToSlackToken = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
-    console.log(addToSlackToken)
-    console.log(addToSlackToken.team)
-    console.log(addToSlackToken.team.id)
   }, [])
   return (
     <>
@@ -34,9 +31,7 @@ const Welcome = ({ firebaseApp, token }) => {
               Use <strong>/create</strong> and watch the groups be created!
           </li>
           </ol>
-          {addToSlackToken?.team?.id
-            ? <a href={`slack://app?team=${addToSlackToken.team.id}&id=${addToSlackToken.app_id}`}>Start using Watermelon</a>
-            : null}
+          <a href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>Start using Watermelon</a>
         </div>
       </PagePadder>
     </>
