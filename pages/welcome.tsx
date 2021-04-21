@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
 const Welcome = ({ firebaseApp, token }) => {
-  let addToSlackToken
+  const [addToSlackToken, setAddToSlackToken] = useState(undefined)
   useEffect(() => {
-    addToSlackToken = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+    setAddToSlackToken(JSON.parse(window.localStorage.getItem("add_to_slack_token")))
   }, [])
   return (
     <>
