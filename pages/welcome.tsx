@@ -4,7 +4,10 @@ import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
 const Welcome = ({ firebaseApp, token }) => {
-  const add_to_slack_token = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+  let add_to_slack_token = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+  useEffect(() => {
+    add_to_slack_token = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+  }, [])
   return (
     <>
       <PageTitle pageTitle="Congratulations" />
