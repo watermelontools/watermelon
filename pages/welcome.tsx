@@ -4,10 +4,12 @@ import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
 const Welcome = ({ firebaseApp, token }) => {
-  let add_to_slack_token
+  let addToSlackToken
   useEffect(() => {
-    add_to_slack_token = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
-    console.log(add_to_slack_token)
+    addToSlackToken = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+    console.log(addToSlackToken)
+    console.log(addToSlackToken.team)
+    console.log(addToSlackToken.team.id)
   }, [])
   return (
     <>
@@ -32,8 +34,8 @@ const Welcome = ({ firebaseApp, token }) => {
               Use <strong>/create</strong> and watch the groups be created!
           </li>
           </ol>
-          {add_to_slack_token?.team?.id ?
-            <a href={`slack://app?team=${add_to_slack_token.team.id}&id=${add_to_slack_token.app_id}`}>Start using Watermelon</a>
+          {addToSlackToken?.team?.id
+            ? <a href={`slack://app?team=${addToSlackToken.team.id}&id=${addToSlackToken.app_id}`}>Start using Watermelon</a>
             : null}
         </div>
       </PagePadder>
