@@ -7,6 +7,7 @@ const Welcome = ({ firebaseApp, token }) => {
   let add_to_slack_token
   useEffect(() => {
     add_to_slack_token = JSON.parse(window.localStorage.getItem("add_to_slack_token"))
+    console.log(add_to_slack_token)
   }, [])
   return (
     <>
