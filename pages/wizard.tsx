@@ -6,7 +6,6 @@ import PageTitle from "../components/PageTitle";
 
 const Wizard = ({firebaseApp, token, redirect}) => {
   const router = useRouter();
-  if(redirect) router.push("/weeklyquestions")
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
@@ -14,6 +13,7 @@ const Wizard = ({firebaseApp, token, redirect}) => {
   let signInToken = {team: {id:""}}
   useEffect(()=>{
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
+    if(redirect) router.push("/weeklyquestions")
   })
   const saveSettings = () => {
       db.collection("teams")
