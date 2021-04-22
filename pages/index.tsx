@@ -1,17 +1,18 @@
-import BlurredChart from "../components/dashboard/BlurredChart";
+import Link from "next/link";
+import PageTitle from "../components/PageTitle";
 import PagePadder from "../components/PagePadder";
 
 function HomePage() {
   return (
     <PagePadder>
-      <h1>Welcome to Watermelon🍉!</h1>
+      <PageTitle pageTitle="Welcome to Watermelon🍉!" />
       <p>
         Watermelon is the best way to connect your coworkers through shared
         interests.
       </p>
-      <h2>Connections (coming soon)</h2>
-      <p>Understand your workspace</p>
-      <BlurredChart />
+      <p>You can change the language and question type over at <Link href="/settings"><a>Settings</a></Link></p>
+      <p>You can view a selection of questions at <Link href="/weeklyQuestions"><a>Questions</a></Link></p>
+      <p>(Coming soon)Understand your workspace</p>
     </PagePadder>
   );
 }
