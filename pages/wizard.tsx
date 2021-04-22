@@ -24,7 +24,6 @@ const Wizard = ({firebaseApp, token, redirect}) => {
         )
         .set({ settings: {language: lang, category: cat} }, { merge: true })
         .then(function (docRef) {
-          console.log("Wrote to db", docRef);
           router.push("/welcome");
         })
         .catch(function (error) {
@@ -150,58 +149,58 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
   if(token.ok){
-  let db = admin.firestore();
-  await db.collection("teams")
-  .doc(token.team.id)
-  .set(
-    {
-      add_to_slack_token: token,
-    },
-    { merge: true }
-  )
-  .then(function (docRef) {
-    console.log("New install:", token.team);
-  })
-  .catch(function (error) {
-    console.error("Error adding document: ", error);
-  });
+    let db = admin.firestore();
+    await db.collection("teams")
+    .doc(token.team.id)
+    .set(
+      {
+        add_to_slack_token: token,
+      },
+      { merge: true }
+    )
+    .then(function (docRef) {
+      console.log("New install:", token.team);
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
 
-  await db.collection("teams")
-  .doc(token.team.id)
-  .update(
-    {
-        "installation.team": token.team,
-        "installation.enterprise": token.enterprise ?? false,
-        "installation.tokenType": "bot",
-        "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
-        "installation.appId": token.app_id,
-        "installation.authVersion": "v2",
-        "installation.bot": {
-          scopes: token.scope.split(","),
-          token: token.access_token,
-          userId: token.bot_user_id,
-          id: token.incoming_webhook.channel_id,
-        },
-    }
-  )
-  .then(function (docRef) {
-    console.log("New install:", token.team);
-  })
-  .catch(function (error) {
-    console.error("Error adding document: ", error);
-  });
+    await db.collection("teams")
+    .doc(token.team.id)
+    .update(
+      {
+          "installation.team": token.team,
+          "installation.enterprise": token.enterprise ?? false,
+          "installation.tokenType": "bot",
+          "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
+          "installation.appId": token.app_id,
+          "installation.authVersion": "v2",
+          "installation.bot": {
+            scopes: token.scope.split(","),
+            token: token.access_token,
+            userId: token.bot_user_id,
+            id: token.incoming_webhook.channel_id,
+          },
+      }
+    )
+    .then(function (docRef) {
+      console.log("New install:", token.team);
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
 
-  const token_clone = Object.assign({}, token);
-  delete token_clone.access_token;
+    const token_clone = Object.assign({}, token);
+    delete token_clone.access_token;
+    return {
+      props: {
+        token:token_clone
+      }, // will be passed to the page component as props
+    };
+  }
   return {
     props: {
-      token:token_clone
+      redirect: true
     }, // will be passed to the page component as props
   };
-}
-return {
-  props: {
-    redirect: true
-  }, // will be passed to the page component as props
-};
 }

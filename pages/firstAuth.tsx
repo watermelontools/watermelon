@@ -2,27 +2,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
-const FirstAuth = ({ firebaseApp, token }) => {
+const FirstAuth = ({ firebaseApp, token, add_to_slack_token }) => {
   const router = useRouter();
-  let db = firebaseApp.firestore();
   token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    db.collection("teams")
-      .doc(token.team.id)
-      .get()
-      .then((res) => {
-        if (res.exists) {
-          let responseData = res.data();
-          if (responseData.add_to_slack_token) {
-            window.localStorage.setItem(
-              "add_to_slack_token",
-              JSON.stringify(responseData.add_to_slack_token)
-            );
-            router.push("/wizard");
-          }
-        }
-      });
+    if (add_to_slack_token) {
+      window.localStorage.setItem(
+        "add_to_slack_token",
+        JSON.stringify(add_to_slack_token)
+      )
+      router.push("/weeklyquestions")
+    }
   }, []);
   return (
     <>
@@ -77,8 +68,20 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
-
   let db = admin.firestore();
+  let add_to_slack_token
+  db.collection("teams")
+    .doc(token.team.id)
+    .get()
+    .then((res) => {
+      if (res.exists) {
+        let responseData = res.data();
+        if (responseData.add_to_slack_token) {
+          add_to_slack_token = responseData.add_to_slack_token
+          delete add_to_slack_token.access_token;
+        }
+      }
+    });
   await db.collection("teams")
     .doc(data.team.id)
     .set(
@@ -149,6 +152,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       token,
+      add_to_slack_token
     }, // will be passed to the page component as props
   };
 }
