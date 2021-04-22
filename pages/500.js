@@ -7,10 +7,12 @@ function HomePage() {
     <>
       <PageTitle pageTitle="500" />
       <PagePadder>
+        <div className="w-full flex flex-col justify-center items-center">
         <p>
           Server error - we broke something :(
         </p>
         <p><Link href="/"><a>Go back home</a></Link></p>
+        </div>
       </PagePadder>
     </>
   );
