@@ -82,73 +82,81 @@ export async function getServerSideProps(context) {
         }
       }
     });
-  await db.collection("teams")
-    .doc(data.team.id)
-    .set(
-      {
-        sign_in_token: data,
-        settings: { language: "en", category: "hobbies" },
-        installation: {
-          user: {
-            token: data?.authed_user?.access_token,
-            scopes: data?.authed_user?.scope,
-            id: data?.authed_user?.id,
+  if (!add_to_slack_token) {
+    const response = await fetch("https://slack.com/api/users.identity", {
+      headers: {
+        'Authorization': `Bearer ${data?.authed_user?.access_token}`
+      },
+    })
+    await db.collection("teams")
+      .doc(data.team.id)
+      .set(
+        {
+          loggedUser: response.json(),
+          sign_in_token: data,
+          settings: { language: "en", category: "hobbies" },
+          installation: {
+            user: {
+              token: data?.authed_user?.access_token,
+              scopes: data?.authed_user?.scope,
+              id: data?.authed_user?.id,
+            },
           },
         },
-      },
-      { merge: true }
-    )
-    .then(function () {
-      console.log("New signin", data.team);
-    })
-    .catch(function (error) {
-      console.error("Error adding document: ", error);
-    })
-  const initialState = [
-    {
-      question: "What instrument would you like to play?",
-      icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
-      answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
-    },
-    {
-      question: "Who would you rather be?",
-      icebreaker:
-        "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-      answers: ["The first person on Mars", "The person that cures cancer"],
-    },
-  ];
-  initialState.forEach((question) => {
-    db.collection("teams")
-      .doc(
-        `${data.team.id}/weekly_questions/${question.question}`
+        { merge: true }
       )
-      .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-      .then(function (docRef) {
-        console.log("Wrote default question", {
-          question: question.question,
-          icebreaker: question.icebreaker,
-          answers: question.answers
-        });
+      .then(function () {
+        console.log("New signin", data.team);
       })
       .catch(function (error) {
-        console.error("Error writing: ", error);
-      });
-    question.answers.forEach((answer) => {
+        console.error("Error adding document: ", error);
+      })
+    const initialState = [
+      {
+        question: "What instrument would you like to play?",
+        icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
+        answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
+      },
+      {
+        question: "Who would you rather be?",
+        icebreaker:
+          "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+        answers: ["The first person on Mars", "The person that cures cancer"],
+      },
+    ];
+    initialState.forEach((question) => {
       db.collection("teams")
         .doc(
-          `${data.team.id}`
+          `${data.team.id}/weekly_questions/${question.question}`
         )
-        .collection("weekly_questions")
-        .doc(question.question)
-        .collection(answer)
-        .doc("picked_by")
-        .set({ picked_by: [] }, { merge: true })
-        .then(() => { })
+        .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
+        .then(function (docRef) {
+          console.log("Wrote default question", {
+            question: question.question,
+            icebreaker: question.icebreaker,
+            answers: question.answers
+          });
+        })
         .catch(function (error) {
           console.error("Error writing: ", error);
         });
+      question.answers.forEach((answer) => {
+        db.collection("teams")
+          .doc(
+            `${data.team.id}`
+          )
+          .collection("weekly_questions")
+          .doc(question.question)
+          .collection(answer)
+          .doc("picked_by")
+          .set({ picked_by: [] }, { merge: true })
+          .then(() => { })
+          .catch(function (error) {
+            console.error("Error writing: ", error);
+          });
+      });
     });
-  });
+  }
   return {
     props: {
       token,
