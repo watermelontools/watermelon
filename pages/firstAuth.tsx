@@ -27,7 +27,7 @@ const FirstAuth = ({ firebaseApp, token, add_to_slack_token }) => {
             <div className="w-full flex justify-center items-center my-2">
               {token && <a
                 href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
-                  }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users.read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+                  }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                   }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                   }app.watermelon.tools/wizard`}
               >
