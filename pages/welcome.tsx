@@ -31,11 +31,13 @@ const Welcome = ({ firebaseApp, token }) => {
               Use <strong>/create</strong> and watch the groups be created!
           </li>
           </ol>
-          <a
-            className="my-2 py-2 px-4 text-base rounded shadow-sm text-white bg-green-400"
-            href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>
-            Start using Watermelon🍉
+          <div className="my-2">
+            <a
+              className="py-2 px-4 text-base rounded shadow-sm text-white bg-green-400"
+              href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>
+              Start using Watermelon🍉
           </a>
+          </div>
         </div>
       </PagePadder>
     </>
