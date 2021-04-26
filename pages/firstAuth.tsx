@@ -88,11 +88,12 @@ export async function getServerSideProps(context) {
         'Authorization': `Bearer ${data?.authed_user?.access_token}`
       },
     })
+    const respJson = await response.json()
     await db.collection("teams")
       .doc(data.team.id)
       .set(
         {
-          loggedUser: response.json(),
+          loggedUser: respJson,
           sign_in_token: data,
           settings: { language: "en", category: "hobbies" },
           installation: {
