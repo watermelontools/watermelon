@@ -4,18 +4,18 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({firebaseApp, token}) => {
+const Wizard = ({firebaseApp, token, redirect}) => {
+  const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  const router = useRouter();
   let db = firebaseApp.firestore();
   let signInToken = {team: {id:""}}
   useEffect(()=>{
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
+    if(redirect) router.push("/weeklyquestions")
   })
   const saveSettings = () => {
-    let db = firebaseApp.firestore();
       db.collection("teams")
         .doc(
           `${signInToken.team
@@ -24,7 +24,6 @@ const Wizard = ({firebaseApp, token}) => {
         )
         .set({ settings: {language: lang, category: cat} }, { merge: true })
         .then(function (docRef) {
-          console.log("Wrote to db", docRef);
           router.push("/welcome");
         })
         .catch(function (error) {
@@ -149,53 +148,59 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
+  if(token.ok){
+    let db = admin.firestore();
+    await db.collection("teams")
+    .doc(token.team.id)
+    .set(
+      {
+        add_to_slack_token: token,
+      },
+      { merge: true }
+    )
+    .then(function (docRef) {
+      console.log("New install:", token.team);
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
 
-  let db = admin.firestore();
-  await db.collection("teams")
-  .doc(token.team.id)
-  .set(
-    {
-      add_to_slack_token: token,
-    },
-    { merge: true }
-  )
-  .then(function (docRef) {
-    console.log("New install:", token.team);
-  })
-  .catch(function (error) {
-    console.error("Error adding document: ", error);
-  });
+    await db.collection("teams")
+    .doc(token.team.id)
+    .update(
+      {
+          "installation.team": token.team,
+          "installation.enterprise": token.enterprise ?? false,
+          "installation.tokenType": "bot",
+          "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
+          "installation.appId": token.app_id,
+          "installation.authVersion": "v2",
+          "installation.bot": {
+            scopes: token.scope.split(","),
+            token: token.access_token,
+            userId: token.bot_user_id,
+            id: token.incoming_webhook.channel_id,
+          },
+      }
+    )
+    .then(function (docRef) {
+      console.log("New install:", token.team);
+    })
+    .catch(function (error) {
+      console.error("Error adding document: ", error);
+    });
 
-  await db.collection("teams")
-  .doc(token.team.id)
-  .update(
-    {
-        "installation.team": token.team,
-        "installation.enterprise": token.enterprise ?? false,
-        "installation.tokenType": "bot",
-        "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
-        "installation.appId": token.app_id,
-        "installation.authVersion": "v2",
-        "installation.bot": {
-          scopes: token.scope.split(","),
-          token: token.access_token,
-          userId: token.bot_user_id,
-          id: token.incoming_webhook.channel_id,
-        },
-    }
-  )
-  .then(function (docRef) {
-    console.log("New install:", token.team);
-  })
-  .catch(function (error) {
-    console.error("Error adding document: ", error);
-  });
-
-  const token_clone = Object.assign({}, token);
-  delete token_clone.access_token;
+    const token_clone = Object.assign({}, token);
+    delete token_clone.access_token;
+    return {
+      props: {
+        token:token_clone
+      }, // will be passed to the page component as props
+    };
+  }
   return {
     props: {
-      token:token_clone
+      redirect: true
     }, // will be passed to the page component as props
   };
 }

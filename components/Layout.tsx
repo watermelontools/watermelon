@@ -19,6 +19,11 @@ const Layout = ({ children }) => {
       text: "Weekly Questions",
       route: "/weeklyquestions",
     },
+    {
+      icon: "/svg/settings.svg",
+      text: "Settings",
+      route: "/settings",
+    },
   ];
   const isInitialFlow: boolean =
     router.pathname.includes("login") || router.pathname.includes("firstAuth");
@@ -43,11 +48,10 @@ const Layout = ({ children }) => {
                     <a>
                       <div
                         className={`flex w-full py-4 px-2 justify-start items-center hover:bg-gray-800 rounded
-                      ${
-                        pathname === link.route
-                          ? "bg-gray-900 border-pink-700 border-l-2"
-                          : ""
-                      }`}
+                      ${pathname === link.route
+                            ? "bg-gray-900 border-pink-700 border-l-2"
+                            : ""
+                          }`}
                       >
                         <Image
                           className="mx-1 block w-10"
@@ -78,9 +82,8 @@ const Layout = ({ children }) => {
           </nav>
         )}
         <div
-          className={`${
-            isInitialFlow ? "w-full" : "lg:w-10/12 md:w-9/12"
-          } h-full`}
+          className={`${isInitialFlow ? "w-full" : "lg:w-10/12 md:w-9/12"
+            } h-full`}
         >
           {children}
         </div>

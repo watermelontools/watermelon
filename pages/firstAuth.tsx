@@ -2,27 +2,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
-const FirstAuth = ({ firebaseApp, token }) => {
+const FirstAuth = ({ firebaseApp, token, add_to_slack_token }) => {
   const router = useRouter();
-  let db = firebaseApp.firestore();
   token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    db.collection("teams")
-      .doc(token.team.id)
-      .get()
-      .then((res) => {
-        if (res.exists) {
-          let responseData = res.data();
-          if (responseData.add_to_slack_token) {
-            window.localStorage.setItem(
-              "add_to_slack_token",
-              JSON.stringify(responseData.add_to_slack_token)
-            );
-            router.push("/wizard");
-          }
-        }
-      });
+    if (add_to_slack_token) {
+      window.localStorage.setItem(
+        "add_to_slack_token",
+        JSON.stringify(add_to_slack_token)
+      )
+      router.push("/weeklyquestions")
+    }
   }, []);
   return (
     <>
@@ -36,7 +27,7 @@ const FirstAuth = ({ firebaseApp, token }) => {
             <div className="w-full flex justify-center items-center my-2">
               {token && <a
                 href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
-                  }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+                  }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                   }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                   }app.watermelon.tools/wizard`}
               >
@@ -77,78 +68,100 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
-
   let db = admin.firestore();
-  await db.collection("teams")
-    .doc(data.team.id)
-    .set(
-      {
-        sign_in_token: data,
-        settings: { language: "en", category: "hobbies" },
-        installation: {
-          user: {
-            token: data?.authed_user?.access_token,
-            scopes: data?.authed_user?.scope,
-            id: data?.authed_user?.id,
+  let add_to_slack_token
+  db.collection("teams")
+    .doc(token.team.id)
+    .get()
+    .then((res) => {
+      if (res.exists) {
+        let responseData = res.data();
+        if (responseData.add_to_slack_token) {
+          add_to_slack_token = responseData.add_to_slack_token
+          delete add_to_slack_token.access_token;
+        }
+      }
+    });
+  if (!add_to_slack_token) {
+    const response = await fetch("https://slack.com/api/users.identity", {
+      headers: {
+        'Authorization': `Bearer ${data?.authed_user?.access_token}`
+      },
+    })
+    const respJson = await response.json()
+    await db.collection("teams")
+      .doc(data.team.id)
+      .set(
+        {
+          loggedUser: respJson,
+          sign_in_token: data,
+          settings: { language: "en", category: "hobbies" },
+          installation: {
+            user: {
+              token: data?.authed_user?.access_token,
+              scopes: data?.authed_user?.scope,
+              id: data?.authed_user?.id,
+            },
           },
         },
-      },
-      { merge: true }
-    )
-    .then(function () {
-      console.log("New signin", data.team);
-    })
-    .catch(function (error) {
-      console.error("Error adding document: ", error);
-    })
-  const initialState = [
-    {
-      question: "What instrument would you like to play?",
-      icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
-      answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
-    },
-    {
-      question: "Who would you rather be?",
-      icebreaker:
-        "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-      answers: ["The first person on Mars", "The person that cures cancer"],
-    },
-  ];
-  initialState.forEach((question) => {
-    db.collection("teams")
-      .doc(
-        `${data.team.id}/weekly_questions/${question.question}`
+        { merge: true }
       )
-      .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-      .then(function (docRef) {
-        console.log("Wrote default question", {
-          question: question.question,
-          icebreaker: question.icebreaker,
-          answers: question.answers
-        });
+      .then(function () {
+        console.log("New signin", data.team);
       })
       .catch(function (error) {
-        console.error("Error writing: ", error);
-      });
-    question.answers.forEach((answer) => {
+        console.error("Error adding document: ", error);
+      })
+    const initialState = [
+      {
+        question: "What instrument would you like to play?",
+        icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
+        answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
+      },
+      {
+        question: "Who would you rather be?",
+        icebreaker:
+          "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+        answers: ["The first person on Mars", "The person that cures cancer"],
+      },
+    ];
+    initialState.forEach((question) => {
       db.collection("teams")
         .doc(
-          `${data.team.id}`
+          `${data.team.id}/weekly_questions/${question.question}`
         )
-        .collection("weekly_questions")
-        .doc(question.question)
-        .collection(answer)
-        .doc("picked_by")
-        .set({ picked_by: [] }, { merge: true })
-        .then(() => { })
+        .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
+        .then(function (docRef) {
+          console.log("Wrote default question", {
+            question: question.question,
+            icebreaker: question.icebreaker,
+            answers: question.answers
+          });
+        })
         .catch(function (error) {
           console.error("Error writing: ", error);
         });
+      question.answers.forEach((answer) => {
+        db.collection("teams")
+          .doc(
+            `${data.team.id}`
+          )
+          .collection("weekly_questions")
+          .doc(question.question)
+          .collection(answer)
+          .doc("picked_by")
+          .set({ picked_by: [] }, { merge: true })
+          .then(() => { })
+          .catch(function (error) {
+            console.error("Error writing: ", error);
+          });
+      });
     });
-  });
+  }
   return {
     props: {
       token,
+      add_to_slack_token
     }, // will be passed to the page component as props
   };
 }

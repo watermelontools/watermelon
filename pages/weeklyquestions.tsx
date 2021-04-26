@@ -1,245 +1,78 @@
-import { useReducer } from "react";
-import Button from "../components/Button";
+import { useEffect, useState } from "react";
+import Select from 'react-select';
+
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
+import SlackQuestionDemo from "../components/SlackQuestionDemo";
 
-const personTag = "${person}";
-const answerTag = "${answer}";
+const WeeklyQuestions = ({ firebaseApp, questions }: { firebaseApp: any; questions: any[] }) => {
+  const langOpts = [
+    { value: "en", label: "English" },
+    { value: "es", label: "Español" },
+  ]
 
-const initialState = [
-  {
-    question: "What instrument would you like to play?",
-    icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
-    answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
-  },
-  {
-    question: "Who would you rather be?",
-    icebreaker:
-      "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-    answers: ["The first person on Mars", "The person that cures cancer"],
-  },
-];
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "add_question": {
-      return [
-        ...state,
-        {
-          question: "What would you like to ask?",
-          icebreaker:
-            "You may use ${person} here to randomly select a user, and ${answer} to show the answer",
-          answers: ["At least two answers", "Second answer"],
-        },
-      ];
-    }
-    case "delete_question": {
-      let newQuestions = [...state];
-      newQuestions.splice(action.questionIndex, 1);
-      return newQuestions;
-    }
-    case "add_answer": {
-      let newQuestions = [...state];
-      if (newQuestions[action.questionIndex].answers.length < 4)
-        newQuestions[action.questionIndex].answers = [
-          ...newQuestions[action.questionIndex].answers,
-          "",
-        ];
-      return newQuestions;
-    }
-    case "edit_answer": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].answers[action.answerIndex] =
-        action.answerText;
-      return newQuestions;
-    }
-    case "remove_answer": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].answers.splice(action.answerIndex, 1);
-      return newQuestions;
-    }
-    case "edit_title": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].question = action.questionText;
-      return newQuestions;
-    }
-    case "edit_icebreaker": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].icebreaker = action.icebreakerText;
-      return newQuestions;
-    }
-    case "add_person_tag": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].icebreaker =
-        newQuestions[action.questionIndex].icebreaker + personTag;
-      return newQuestions;
-    }
-    case "add_answer_tag": {
-      let newQuestions = [...state];
-      newQuestions[action.questionIndex].icebreaker =
-        newQuestions[action.questionIndex].icebreaker + answerTag;
-      return newQuestions;
-    }
-    default:
-      throw new Error();
-  }
-};
-const WeeklyQuestions = ({ firebaseApp }) => {
-  const saveQuestions = () => {
-    let db = firebaseApp.firestore();
-    state.forEach((question) => {
-      console.log(question.question);
-      db.collection("teams")
-        .doc(
-          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-            .id
-          }/weekly_questions/${question.question}`
-        )
-        .set({ icebreaker: question.icebreaker }, { merge: true })
-        .then(function (docRef) {
-          console.log("Wrote to db", docRef);
-          alert("We have saved your questions");
-        })
-        .catch(function (error) {
-          console.error("Error writing: ", error);
-        });
-      question.answers.forEach((answer) => {
-        db.collection("teams")
-          .doc(
-            `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-              .id
-            }`
-          )
-          .collection("weekly_questions")
-          .doc(question.question)
-          .collection(answer)
-          .doc("picked_by")
-          .set({ picked_by: [] }, { merge: true })
-          .then(function (docRef) {
-            console.log("Wrote to db", docRef);
-          })
-          .catch(function (error) {
-            console.error("Error writing: ", error);
-          });
-      });
-    });
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const catOpts = [
+    { value: "hobbies", label: "Hobbies" },
+    { value: "profDev", label: "Professional Development" },
+  ]
+  const [lang, setLang] = useState("en")
+  const [cat, setCat] = useState("hobbies")
+  const [filteredQuestions, setFilteredQuestions] = useState([])
+  useEffect(() => {
+    let filtered = questions.filter((question) => question.Category === cat && question.Language === lang)
+    setFilteredQuestions(filtered)
+  }, [lang, cat])
 
   return (
     <>
-      <PageTitle pageTitle="Login" />
+      <PageTitle pageTitle="Questions" />
       <PagePadder>
-        <h1>Weekly Questions</h1>
-        <p>We allow minimum 2 questions and maximum 3, each with 2 answers.</p>
-        <p>
-          You may use the text <code>{answerTag}</code> to use the user selected
-        answer and <code>{personTag}</code> to randomly select a person from the
-        group.
-      </p>
-        <form className="flex flex-col md:flex-row w-full h-full items-end">
-          <div className="w-full md:w-10/12">
-            {state.map((question, index) => (
-              <div className="my-2" key={index}>
-                <div>
-                  <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-                    <div className="flex justify-between my-1">Question</div>
-                    <input
-                      type="text"
-                      maxLength={140}
-                      value={question.question}
-                      placeholder="The question that will be asked goes here, end it with a question mark"
-                      onChange={(e) => {
-                        e.preventDefault();
-                        dispatch({
-                          type: "edit_title",
-                          questionText: e.target.value,
-                          questionIndex: index,
-                        });
-                      }}
-                      className="border rounded border-gray-200 text-base font-normal ml-1"
-                    />
-                  </label>
-                </div>
-                <div>
-                  <label className="w-full md:w-1/2 flex flex-col text-xl font-semibold">
-                    Icebreaker
-                  <input
-                      id={`icebreaker-${index}`}
-                      type="text"
-                      placeholder="This will be the first message in the created group, use ${person} to select a random user to begin a conversation"
-                      value={question.icebreaker}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        dispatch({
-                          type: "edit_icebreaker",
-                          icebreakerText: e.target.value,
-                          questionIndex: index,
-                        });
-                      }}
-                      className="border rounded border-gray-200 text-base font-normal ml-1"
-                    />
-                  </label>
-                  <button
-                    className="border border-gray-200 m-2"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      dispatch({ type: "add_person_tag", questionIndex: index });
-                    }}
-                    title="Use this button to tag a person"
-                  >
-                    Tag person
-                </button>
-                  <button
-                    className="border border-gray-200 m-2"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      dispatch({ type: "add_answer_tag", questionIndex: index });
-                    }}
-                    title="Use this button to add the selected answer"
-                  >
-                    Show Answer
-                </button>
-                </div>
-                {question.answers.map((answer, jndex) => (
-                  <div key={"answer" + jndex}>
-                    <label className="flex flex-nowrap w-full m-1 items-center">
-                      {jndex + 1}.
-                    <input
-                        type="text"
-                        maxLength={140}
-                        placeholder="Keep answers short"
-                        value={answer}
-                        onChange={(e) =>
-                          dispatch({
-                            type: "edit_answer",
-                            questionIndex: index,
-                            answerIndex: jndex,
-                            answerText: e.target.value,
-                          })
-                        }
-                        className="border rounded border-gray-200 mx-1 p-1"
-                      />
-                    </label>
-                  </div>
-                ))}
-              </div>
-            ))}
+        <p>Here you can see all the example questions we have for you</p>
+        <div className="flex sm:flex-col md:flex-row">
+          <div className="card-style flex flex-col justify-between w-80">
+            <h2 className="font-bold text-xl">Language</h2>
+            <Select onChange={e => setLang(e.value)} value={langOpts.find(el => el.value === lang)} options={langOpts} />
           </div>
-          <div className="flex justify-end h-full w-full md:w-2/12">
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                saveQuestions();
-              }}
-              text="Save"
-              color="green"
-              border
-            />
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+              <h2 className="font-bold text-xl">Question Type</h2>
+            </div>
+            <Select onChange={e => setCat(e.value)} value={catOpts.find(el => el.value === cat)} options={catOpts} />
           </div>
-        </form>
+        </div>
+        {filteredQuestions.map(question => <SlackQuestionDemo question={question} />)}
       </PagePadder>
     </>
   );
 };
 
 export default WeeklyQuestions;
+const Airtable = require('airtable');
+
+export async function getServerSideProps(context) {
+  let questions = []
+
+  Airtable.configure({
+    endpointUrl: 'https://api.airtable.com',
+    apiKey: process.env.AIRTABLE_API_KEY
+  });
+  let base = Airtable.base('appyNw8U8LEBl4iPs');
+  await base('en').select().eachPage(function page(records, fetchNextPage) {
+    records.forEach(function (record) {
+      questions.push(record.fields)
+    });
+    fetchNextPage();
+  });
+  await base('es').select().eachPage(function page(records, fetchNextPage) {
+    records.forEach(function (record) {
+      questions.push(record.fields)
+    });
+    fetchNextPage();
+  });
+
+  return {
+    props: {
+      questions
+    }, // will be passed to the page component as props
+  };
+}
