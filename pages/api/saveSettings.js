@@ -2,6 +2,7 @@ import admin from "../../utils/firebase/backend";
 export default function handler(req, res) {
     let db = admin.firestore();
     let {lang, cat, signInToken} = req.body
+    console.log("body", req.body)
     console.log("lang",lang)
     console.log("cat",cat)
     console.log("sit",signInToken)
