@@ -14,7 +14,7 @@ export default function handler(req, res) {
     })
     .catch(function (error) {
       console.error("Error writing: ", error);
-      res.status(500)..json(JSON.stringify({ok:false}))
+      res.status(500).json(JSON.stringify({ok:false}))
     });
   }
   
