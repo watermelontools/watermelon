@@ -4,32 +4,32 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({firebaseApp, token, redirect}) => {
+const Wizard = ({ token, redirect}) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  let db = firebaseApp.firestore();
   let signInToken = {team: {id:""}}
   useEffect(()=>{
     signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
     if(redirect) router.push("/weeklyquestions")
   })
   const saveSettings = () => {
-      db.collection("teams")
-        .doc(
-          `${signInToken.team
-            .id
-          }`
-        )
-        .set({ settings: {language: lang, category: cat} }, { merge: true })
-        .then(function (docRef) {
-          router.push("/welcome");
-        })
-        .catch(function (error) {
-          console.error("Error writing: ", error);
-        });
-      
+    let data ={
+      signInToken,
+      lang,
+      cat
+     }
+     fetch("/api/saveSettings",{
+       method: "POST",
+       body:JSON.stringify(data)
+     })
+     .then(function (docRef) {
+      router.push("/welcome");
+    })
+    .catch(function (error) {
+      console.error("Error writing: ", error);
+    });
   };
   useEffect(() => {
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
