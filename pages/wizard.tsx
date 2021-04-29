@@ -16,20 +16,21 @@ const Wizard = ({firebaseApp, token, redirect}) => {
     if(redirect) router.push("/weeklyquestions")
   })
   const saveSettings = () => {
-      db.collection("teams")
-        .doc(
-          `${signInToken.team
-            .id
-          }`
-        )
-        .set({ settings: {language: lang, category: cat} }, { merge: true })
-        .then(function (docRef) {
-          router.push("/welcome");
-        })
-        .catch(function (error) {
-          console.error("Error writing: ", error);
-        });
-      
+    let data ={
+      signInToken,
+      lang,
+      cat
+     }
+     fetch("/api/saveSettings",{
+       method: "POST",
+       body:JSON.stringify(data)
+     })
+     .then(function (docRef) {
+      router.push("/welcome");
+    })
+    .catch(function (error) {
+      console.error("Error writing: ", error);
+    });
   };
   useEffect(() => {
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
