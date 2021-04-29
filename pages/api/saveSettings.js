@@ -1,4 +1,4 @@
-import admin from '../utils/firebase/backend';
+import admin from "../../utils/firebase/backend";
 export default function handler(req, res) {
     let db = admin.firestore();
     let {lang, cat, signInToken} = req.body
