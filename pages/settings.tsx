@@ -1,30 +1,31 @@
 import { useEffect, useState } from "react"
 import Select from 'react-select';
-import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Settings = ({firebaseApp}) => {
+const Settings = ({}) => {
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  let db = firebaseApp.firestore();
 
   const saveSettings = () => {
-      db.collection("teams")
-        .doc(
-          `${JSON.parse(window.localStorage.getItem("add_to_slack_token")).team
-            .id
-          }`
-        )
-        .set({ settings: {language: lang, category: cat} }, { merge: true })
-        .then(function () {
-          alert("We've saved your settings");
-        })
-        .catch(function (error) {
-          console.error("Error writing: ", error);
-        });
-      
+   const signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
+
+    let data ={
+      signInToken,
+      lang,
+      cat
+     }
+     fetch("/api/saveSettings",{
+       method: "POST",
+       body:JSON.stringify(data)
+     })
+     .then(function (docRef) {
+       alert("We have saved your settings!")
+    })
+    .catch(function (error) {
+      console.error("Error writing: ", error);
+    });
   };
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
