@@ -31,9 +31,9 @@ const Layout = ({ children }) => {
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
         {!isInitialFlow && (
-          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-gray-700 sticky top-0 max-w-max">
+          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-white sticky top-0 max-w-max">
             <div className="flex flex-col h-full w-full">
-              <div className="bg-gray-900 flex justify-center">
+              <div className="divide-solid divide-gray-300 flex justify-center">
                 <Image
                   className="block"
                   src={"/imagotype-white.png"}
@@ -47,11 +47,12 @@ const Layout = ({ children }) => {
                   <Link href={link.route} key={index}>
                     <a>
                       <div
-                        className={`flex w-full py-4 px-2 justify-start items-center hover:bg-gray-800 rounded
-                      ${pathname === link.route
-                            ? "bg-gray-900 border-pink-700 border-l-2"
+                        className={`flex w-full py-4 px-2 justify-start items-center hover:ml-2 rounded`}
+                        style={{
+                          background: pathname === link.route
+                            ? "linear-gradient(42deg, rgba(173,56,56,1) 0%, rgba(219,97,97,1) 50%, rgba(249,246,244,1) 90%, rgba(255,255,255,1) 100%)"
                             : ""
-                          }`}
+                        }}
                       >
                         <Image
                           className="mx-1 block w-10"
