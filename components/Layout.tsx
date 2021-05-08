@@ -31,12 +31,12 @@ const Layout = ({ children }) => {
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
         {!isInitialFlow && (
-          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen border-r flex flex-col justify-between items-center bg-white sticky top-0 max-w-max">
+          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
             <div className="flex flex-col h-full w-full">
-              <div className="divide-solid divide-gray-300 flex justify-center">
+              <div className="border-b-2 border-gray-300 flex justify-center">
                 <Image
                   className="block"
-                  src={"/imagotype-white.png"}
+                  src={"/imagotype-black.png"}
                   width={154}
                   height={52}
                   layout="fixed"
@@ -51,7 +51,7 @@ const Layout = ({ children }) => {
                         style={{
                           background: pathname === link.route
                             ? "linear-gradient(42deg, rgba(173,56,56,1) 0%, rgba(219,97,97,1) 50%, rgba(249,246,244,1) 90%, rgba(255,255,255,1) 100%)"
-                            : ""
+                            : "white"
                         }}
                       >
                         <Image
@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
                           height={24}
                           layout="fixed"
                         />
-                        <span className="mx-1 sm:hidden md:block lg:block text-gray-300">
+                        <span className="mx-1 sm:hidden md:block lg:block text-gray-800">
                           {link.text}
                         </span>
                       </div>
