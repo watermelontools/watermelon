@@ -14,29 +14,31 @@ const Welcome = ({ firebaseApp, token }) => {
       <PagePadder>
         <div className="rounded shadow p-4">
           <p>✅You are ready to go!</p>
-          <p>
-            You may set questions over at{" "}
-            <Link href="/weeklyquestions">
-              <a>questions</a>
-            </Link>
-          , but we have added a couple for you 😉
-        </p>
-          <h3>In Slack:</h3>
+          <br/>
+          <h3>In any Slack channel:</h3>
           <ol>
             <li>
-              Use <strong>/ask</strong> to send the questions
-          </li>
-            <li>Have people answer them (you do it too, don’t miss the fun!)</li>
+              Type <strong>/watermelon-ask</strong> to send questions
+              <img src="/watermelon-ask.gif" />
+            </li>
+            <br/>
+              <li>
+                Have people answer them (you do it too, don’t miss the fun!)
+                <img src="/watermelon-respond.gif" />
+              </li>
+            <br/>
             <li>
-              Use <strong>/create</strong> and watch the groups be created!
-          </li>
+              Type <strong>/watermelon-create</strong> and let the fun begin!
+              <img src="/watermelon-create.gif" />
+            </li>
           </ol>
+          <br/>
           <div className="my-2">
             <a
               className="py-2 px-4 text-base rounded shadow-sm text-white bg-green-400"
               href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>
               Start using Watermelon🍉
-          </a>
+            </a>
           </div>
         </div>
       </PagePadder>
