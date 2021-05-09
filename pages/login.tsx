@@ -3,8 +3,10 @@ function Login() {
   return (
     <>
       <PageTitle pageTitle="Login" />
-      <div className="flex justify-center items-center h-screen w-full">
-        <div className="rounded shadow p-4">
+      <div
+        className="flex justify-center items-center h-screen w-full"
+        style={{ backgroundImage: "url(bg-pink.png)", backgroundSize: "cover" }}>
+        <div className="rounded shadow p-4 bg-white">
           <h1>Login</h1>
           <p>We need to know who you are to help you better.</p>
           <div className="w-full flex justify-center items-center my-2">
