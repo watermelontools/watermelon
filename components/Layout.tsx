@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
     <div className="w-screen h-full min-h-screen">
       <div className="w-full h-full flex min-h-screen ">
         {!isInitialFlow && (
-          <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
+          <nav className="md:w-4/12 lg:w-3/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
             <div className="flex flex-col h-full w-full">
               <div className="border-b-2 border-gray-200 border-solid	flex justify-center p-2 h-8">
                 <Image
@@ -76,14 +76,14 @@ const Layout = ({ children }) => {
                 window.localStorage.removeItem("add_to_slack_token");
                 router.push("/login");
               }}
-              className="bg-gray-600 text-gray-200 w-full"
+              className="border-t-2 border-gray-200 border-solid text-gray-400 w-full"
             >
               Logout
             </button>
           </nav>
         )}
         <div
-          className={`${isInitialFlow ? "w-full" : "lg:w-10/12 md:w-9/12"
+          className={`${isInitialFlow ? "w-full" : "lg:w-9/12 md:w-8/12"
             } h-full`}
         >
           {children}
