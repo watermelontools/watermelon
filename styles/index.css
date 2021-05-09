@@ -1,25 +1,25 @@
 @tailwind base;
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 html {
-	scroll-behavior: smooth;
+  scroll-behavior: smooth;
 }
 ::-webkit-scrollbar {
-	display: none;
+  display: none;
 }
 @layer base {
-	a{
-		@apply underline font-semibold text-green-800;
-	}
-	.card-style {
-		box-shadow:0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
-		border-radius: 6px;
-		transition: all .2s;
-		@apply p-3 m-2;
-	}
-	
+  a {
+    @apply font-semibold text-green-800;
+  }
+  .card-style {
+    box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11),
+      0 4px 16px 0 rgba(167, 175, 183, 0.33);
+    border-radius: 6px;
+    transition: all 0.2s;
+    @apply p-3 m-2;
+  }
 }
 @tailwind components;
 @tailwind utilities;

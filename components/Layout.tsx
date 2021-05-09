@@ -15,12 +15,12 @@ const Layout = ({ children }) => {
   }, []);
   const links = [
     {
-      icon: "/svg/question.svg",
+      icon: "/svg/question",
       text: "Questions",
       route: "/weeklyquestions",
     },
     {
-      icon: "/svg/settings.svg",
+      icon: "/svg/settings",
       text: "Settings",
       route: "/settings",
     },
@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
         {!isInitialFlow && (
           <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
             <div className="flex flex-col h-full w-full">
-              <div className="border-b-2 border-gray-300 border-solid	flex justify-center">
+              <div className="border-b-2 border-gray-400 border-solid	flex justify-center p-2">
                 <Image
                   className="block"
                   src={"/imagotype-black.png"}
@@ -56,7 +56,7 @@ const Layout = ({ children }) => {
                       >
                         <Image
                           className="mx-1 block w-10"
-                          src={link.icon}
+                          src={`${link.icon}${pathname === link.route ? "" : "-dark"}.svg`}
                           width={24}
                           height={24}
                           layout="fixed"
