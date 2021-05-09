@@ -83,7 +83,7 @@ const Layout = ({ children }) => {
           </nav>
         )}
         <div
-          className={`${isInitialFlow ? "w-full" : "lg:w-9/12 md:w-8/12"
+          className={`${isInitialFlow ? "w-full" : "lg:w-9/12 md:w-8/12 w-full"
             } h-full`}
         >
           {children}
