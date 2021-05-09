@@ -47,10 +47,10 @@ const Layout = ({ children }) => {
                   <Link href={link.route} key={index}>
                     <a>
                       <div
-                        className={`flex w-full py-4 px-2 justify-start items-center hover:ml-2 rounded`}
+                        className={`flex w-full py-4 px-2 justify-start items-center hover:pl-2 rounded`}
                         style={{
                           background: pathname === link.route
-                            ? "linear-gradient(42deg, rgba(173,56,56,1) 0%, rgba(219,97,97,1) 50%, rgba(249,246,244,1) 90%, rgba(255,255,255,1) 100%)"
+                            ? "linear-gradient(42deg, rgba(173,56,56,1) 0%, rgba(219,97,97,1) 50%, rgba(249,246,244,1) 99%)"
                             : "white"
                         }}
                       >
@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
                           height={24}
                           layout="fixed"
                         />
-                        <span className="mx-1 sm:hidden md:block lg:block text-gray-800">
+                        <span className="mx-1 sm:hidden md:block lg:block text-gray-200">
                           {link.text}
                         </span>
                       </div>
