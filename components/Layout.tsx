@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
         {!isInitialFlow && (
           <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
             <div className="flex flex-col h-full w-full">
-              <div className="border-b-2 border-gray-400 border-solid	flex justify-center p-2">
+              <div className="border-b-2 border-gray-200 border-solid	flex justify-center p-2 h-8">
                 <Image
                   className="block"
                   src={"/imagotype-black.png"}
@@ -61,7 +61,7 @@ const Layout = ({ children }) => {
                           height={24}
                           layout="fixed"
                         />
-                        <span className="mx-1 sm:hidden md:block lg:block text-gray-200">
+                        <span className={`mx-1 sm:hidden md:block lg:block text-gray-${pathname === link.route ? "200" : "800"}`}>
                           {link.text}
                         </span>
                       </div>
