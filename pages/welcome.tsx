@@ -38,7 +38,7 @@ const Welcome = ({ firebaseApp, token }) => {
               className="py-2 px-4 text-base rounded shadow-sm text-white bg-green-400"
               href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>
               Start using Watermelon🍉
-            </a>
+          </a>
           </div>
         </div>
       </PagePadder>
