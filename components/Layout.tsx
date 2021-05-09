@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
   const links = [
     {
       icon: "/svg/question.svg",
-      text: "Weekly Questions",
+      text: "Questions",
       route: "/weeklyquestions",
     },
     {
@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
         {!isInitialFlow && (
           <nav className="md:w-3/12 lg:w-2/12 h-full flex-grow min-h-screen flex flex-col justify-between items-center bg-white sticky top-0 max-w-max shadow">
             <div className="flex flex-col h-full w-full">
-              <div className="border-b-2 border-gray-300 flex justify-center">
+              <div className="border-b-2 border-gray-300 border-solid	flex justify-center">
                 <Image
                   className="block"
                   src={"/imagotype-black.png"}
@@ -45,7 +45,7 @@ const Layout = ({ children }) => {
               <div className="p-2">
                 {links.map((link, index) => (
                   <Link href={link.route} key={index}>
-                    <a>
+                    <a className="no-underline">
                       <div
                         className={`flex w-full py-4 px-2 justify-start items-center hover:pl-2 rounded`}
                         style={{
