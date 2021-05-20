@@ -1,4 +1,4 @@
-import admin from "../../utils/firebase/backend";
+import admin from "../../../utils/firebase/backend";
 
 import Airtable from "airtable";
 Airtable.configure({
