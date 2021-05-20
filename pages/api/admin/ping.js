@@ -45,8 +45,9 @@ const postMessage = async ({ data, token }) => {
       Authorization: `Bearer ${token}`,
     },
   })
-    .then((response3) => {
-      console.log("post Message", response3.data);
+    .then((response) => response.json())
+    .then((resjson) => {
+      console.log("postmessage", resjson);
     })
     .catch((err) => {
       console.err("post Message", err);
