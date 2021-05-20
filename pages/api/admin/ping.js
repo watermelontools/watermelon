@@ -52,7 +52,7 @@ export default function handler(req, res) {
   db.collection("teams")
     .get()
     .then(async (querySnapshot) => {
-      querySnapshot.forEach((doc) => {
+      querySnapshot.forEach(async (doc) => {
         // doc.data() is never undefined for query doc snapshots
         let data = doc.data();
         console.log(doc.id);
