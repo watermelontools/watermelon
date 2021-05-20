@@ -71,6 +71,7 @@ export default function handler(req, res) {
           });
         else console.log("no access token", data);
       });
+      res.status(200).send({ status: "finished" });
     })
     .catch(function (error) {
       console.error("Error fetching: ", error);
