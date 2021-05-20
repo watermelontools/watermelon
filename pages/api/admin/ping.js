@@ -6,8 +6,6 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 });
 const airtableBase = Airtable.base("appyNw8U8LEBl4iPs");
-let allQuestions = [];
-let db = admin.firestore();
 const getQuestions = ({ language }) => {
   airtableBase(language)
     .select({})
@@ -30,6 +28,11 @@ const getQuestions = ({ language }) => {
       }
     );
 };
+getQuestions({ language: "en" });
+getQuestions({ language: "es" });
+let allQuestions = [];
+let db = admin.firestore();
+
 const postMessage = async ({ data, token }) => {
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
@@ -42,27 +45,26 @@ const postMessage = async ({ data, token }) => {
       console.log("post Message", response3.data);
     })
     .catch((err) => {
-      console.log(err);
+      console.err("post Message", err);
     });
 };
 export default function handler(req, res) {
-  getQuestions({ language: "en" });
-  getQuestions({ language: "es" });
   db.collection("teams")
     .get()
-    .then((querySnapshot) => {
+    .then(async (querySnapshot) => {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         let data = doc.data();
         console.log(doc.id);
         if (data?.add_to_slack_token?.acces_token)
-          postMessage({
+          await postMessage({
             data: {
               text: allQuestions[0]?.Question || "Holi",
               channel: incoming_webhook.channel_id,
             },
             token: data.add_to_slack_token.acces_token,
           });
+        else console.log("no access token");
       });
     })
     .catch(function (error) {
