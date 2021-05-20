@@ -6,32 +6,11 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 });
 const airtableBase = Airtable.base("appyNw8U8LEBl4iPs");
+let allQuestions = [];
 let db = admin.firestore();
-
-export default function handler(req, res) {
-  let settings = { language: "en", category: "hobbies" };
-  let allQuestions = [];
-  db.collection("teams")
-    .doc(`T01JG9GD4JW`)
-    .get()
-    .then((fbRes) => {
-      let responseData = fbRes.data();
-      if (responseData.settings) {
-        settings = responseData.settings;
-      }
-      console.log("settings", settings);
-      res.status(200).send({ ok: "ok, firebase" });
-    })
-    .catch(function (error) {
-      console.error("Error writing: ", error);
-      res.status(500).json(JSON.stringify({ ok: false }));
-    });
-  airtableBase(settings.language)
-    .select({
-      // Selecting the first 3 records in Grid view:
-
-      filterByFormula: `({Category} = '${settings.category}')`,
-    })
+const getQuestions = ({ language }) => {
+  airtableBase(language)
+    .select({})
     .eachPage(
       function page(records, fetchNextPage) {
         // This function (`page`) will get called for each page of records.
@@ -50,4 +29,43 @@ export default function handler(req, res) {
         res.status(200).send({ ok: "ok" });
       }
     );
+};
+const postMessage = async ({ data, token }) => {
+  fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response3) => {
+      console.log("post Message", response3.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+export default function handler(req, res) {
+  getQuestions("en");
+  getQuestions("es");
+  db.collection("teams")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let data = doc.data();
+        console.log(doc.id, " => ", data);
+        postMessage({
+          data: {
+            text: allQuestions[0].Question,
+            channel: incoming_webhook.channel_id,
+          },
+          token: data.add_to_slack_token.acces_token,
+        });
+      });
+    })
+    .catch(function (error) {
+      console.error("Error fetching: ", error);
+      res.status(500).json(JSON.stringify({ ok: false }));
+    });
 }
