@@ -20,6 +20,7 @@ export default function handler(req, res) {
         settings = responseData.settings;
       }
       console.log("settings", settings);
+      res.status(200).send({ ok: "ok, firebase" });
     })
     .catch(function (error) {
       console.error("Error writing: ", error);
@@ -45,7 +46,7 @@ export default function handler(req, res) {
           console.error("errDone", err);
           return;
         }
-        console.log(allQuestions);
+        // console.log(allQuestions);
         res.status(200).send({ ok: "ok" });
       }
     );
