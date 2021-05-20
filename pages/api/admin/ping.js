@@ -54,14 +54,15 @@ export default function handler(req, res) {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         let data = doc.data();
-        console.log(doc.id, " => ", data);
-        postMessage({
-          data: {
-            text: allQuestions[0].Question,
-            channel: incoming_webhook.channel_id,
-          },
-          token: data.add_to_slack_token.acces_token,
-        });
+        console.log(doc.id);
+        if (data?.add_to_slack_token?.acces_token)
+          postMessage({
+            data: {
+              text: allQuestions[0]?.Question || "Holi",
+              channel: incoming_webhook.channel_id,
+            },
+            token: data.add_to_slack_token.acces_token,
+          });
       });
     })
     .catch(function (error) {
