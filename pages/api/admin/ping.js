@@ -64,7 +64,7 @@ export default function handler(req, res) {
         if (data?.add_to_slack_token?.access_token)
           await postMessage({
             data: {
-              text: "Holi",
+              text: "ping",
               channel: data.add_to_slack_token.incoming_webhook.channel_id,
             },
             token: data.add_to_slack_token.access_token,
