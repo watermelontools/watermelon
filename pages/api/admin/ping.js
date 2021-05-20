@@ -46,8 +46,8 @@ const postMessage = async ({ data, token }) => {
     });
 };
 export default function handler(req, res) {
-  getQuestions("en");
-  getQuestions("es");
+  getQuestions({ language: "en" });
+  getQuestions({ language: "es" });
   db.collection("teams")
     .get()
     .then((querySnapshot) => {
