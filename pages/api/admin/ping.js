@@ -9,7 +9,7 @@ const airtableBase = Airtable.base("appyNw8U8LEBl4iPs");
 let db = admin.firestore();
 
 export default function handler(req, res) {
-  const settings = { language: "en", category: "hobbies" };
+  let settings = { language: "en", category: "hobbies" };
   let allQuestions = [];
   db.collection("teams")
     .doc(`T01JG9GD4JW`)
