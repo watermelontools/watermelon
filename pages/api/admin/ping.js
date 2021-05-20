@@ -38,7 +38,7 @@ const postMessage = async ({ data, token }) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({ data }),
   })
     .then((response3) => {
       console.log("post Message", response3.data);
