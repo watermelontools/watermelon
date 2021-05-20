@@ -56,13 +56,13 @@ export default function handler(req, res) {
         // doc.data() is never undefined for query doc snapshots
         let data = doc.data();
         console.log(doc.id);
-        if (data?.add_to_slack_token?.acces_token)
+        if (data?.add_to_slack_token?.access_token)
           await postMessage({
             data: {
               text: allQuestions[0]?.Question || "Holi",
               channel: incoming_webhook.channel_id,
             },
-            token: data.add_to_slack_token.acces_token,
+            token: data.add_to_slack_token.access_token,
           });
         else console.log("no access token", data);
       });
