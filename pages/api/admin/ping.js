@@ -60,8 +60,16 @@ export default function handler(req, res) {
         if (data?.add_to_slack_token?.access_token)
           await postMessage({
             data: {
-              text: "Holi",
               channel: data.add_to_slack_token.incoming_webhook.channel_id,
+              blocks: [
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: "New Paid Time Off request from <example.com|Fred Enriquez>\n\n<https://example.com|View request>",
+                  },
+                },
+              ],
             },
             token: data.add_to_slack_token.access_token,
           });
