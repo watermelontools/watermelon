@@ -33,12 +33,14 @@ let allQuestions = [];
 let db = admin.firestore();
 
 const postMessage = async ({ data, token }) => {
+  let postData = JSON.stringify({ ...data });
+  console.log("postData", postData);
   fetch("https://slack.com/api/chat.postMessage", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ data }),
+    body: postData,
   })
     .then((response3) => {
       console.log("post Message", response3.data);
