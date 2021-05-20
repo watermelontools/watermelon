@@ -35,13 +35,17 @@ let db = admin.firestore();
 const postMessage = async ({ data, token }) => {
   let postData = { ...data };
   console.log("postData", postData);
-  fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: postData,
-  })
+  fetch(
+    `https://slack.com/api/chat.postMessage?channel=${
+      data.channel
+    }&text=${encodeURI(data.text)}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
     .then((response3) => {
       console.log("post Message", response3.data);
     })
@@ -60,7 +64,7 @@ export default function handler(req, res) {
         if (data?.add_to_slack_token?.access_token)
           await postMessage({
             data: {
-              message: { text: "Holi" },
+              text: "Holi",
               channel: data.add_to_slack_token.incoming_webhook.channel_id,
             },
             token: data.add_to_slack_token.access_token,
