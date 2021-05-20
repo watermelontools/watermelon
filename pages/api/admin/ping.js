@@ -60,9 +60,7 @@ export default function handler(req, res) {
           await postMessage({
             data: {
               text: allQuestions[0]?.Question || "Holi",
-              channel:
-                data.add_to_slack_token.access_token.incoming_webhook
-                  .channel_id,
+              channel: data.add_to_slack_token.incoming_webhook.channel_id,
             },
             token: data.add_to_slack_token.access_token,
           });
