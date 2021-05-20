@@ -23,8 +23,7 @@ const getQuestions = ({ language }) => {
           console.error("errDone", err);
           return;
         }
-        // console.log(allQuestions);
-        res.status(200).send({ ok: "ok" });
+        console.log("AllQs", allQuestions.length);
       }
     );
 };
