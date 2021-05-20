@@ -64,7 +64,7 @@ export default function handler(req, res) {
             },
             token: data.add_to_slack_token.acces_token,
           });
-        else console.log("no access token");
+        else console.log("no access token", data);
       });
     })
     .catch(function (error) {
