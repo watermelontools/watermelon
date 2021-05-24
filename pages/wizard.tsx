@@ -8,7 +8,7 @@ const Wizard = ({ token, redirect}) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
-  const [weekday, setWeekday] = useState(0)
+  const [weekday, setWeekday] = useState("THU")
   const [hour, setHour] = useState(15)
   const [timezone, setTimezone ] = useState("")
   const [exampleQuestion, setExampleQuestion] = useState(1)
@@ -21,7 +21,9 @@ const Wizard = ({ token, redirect}) => {
     let data ={
       signInToken,
       lang,
-      cat
+      cat, 
+      weekday, 
+      hour
      }
      fetch("/api/saveSettings",{
        method: "POST",
@@ -86,12 +88,12 @@ const Wizard = ({ token, redirect}) => {
     {value:"profDev", label:"Professional Development"},
   ]
   const weekdayOpts =[
-    {value:0, label:"Monday"},
-    {value:1, label:"Tuesday"},
-    {value:2, label:"Wednesday"},
-    {value:3, label:"Thursday"},
-    {value:4, label:"Friday"},
-    {value:5, label:"Saturday"},
+    {value:"MON", label:"Monday"},
+    {value:"TUE", label:"Tuesday"},
+    {value:"WED", label:"Wednesday"},
+    {value:"THU", label:"Thursday"},
+    {value:"FRI", label:"Friday"},
+    {value:"SAT", label:"Saturday"},
   ]
   const hourOpts =[
     {value:7,label:'07:00'},
@@ -124,22 +126,22 @@ const Wizard = ({ token, redirect}) => {
             <h2 className="font-bold text-xl">Question Type</h2>
             <p>Select the category of the questions to be shown</p>
             </div>
-            <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
+            <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
           </div>
           <div className="card-style flex flex-col justify-between w-80">
             <div>
             <h2 className="font-bold text-xl">Weekday to ask</h2>
             <p>Select the day of the week to send the questions</p>
+            <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
             </div>
-            <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
           </div>
           <div className="card-style flex flex-col justify-between w-80">
             <div>
             <h2 className="font-bold text-xl">Hour to ask</h2>
             <p>Select the hour of the day to send the questions</p>
-            <p>This will happen on {weekday}</p>
+            <p>This will happen on {weekdayOpts.find(el=> el.value=== weekday)}</p>
+            <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
             </div>
-            <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
           </div>
         </div>
         <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
