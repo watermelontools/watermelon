@@ -2,7 +2,7 @@ import admin from "../../utils/firebase/backend";
 export default function handler(req, res) {
   let db = admin.firestore();
   let body = JSON.parse(req.body);
-  let { lang, cat, signInToken, weekday, hour, signInToken, isWizard } = body;
+  let { lang, cat, signInToken, weekday, hour, isWizard } = body;
   let url = `https://${
     proces.env.isDev === "true" ? "dev." : ""
   }app.watermelon.tools/api/admin/ping`;
