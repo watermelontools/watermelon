@@ -240,6 +240,7 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
+  console.log(token)
   return {
     props: {
       redirect: true
