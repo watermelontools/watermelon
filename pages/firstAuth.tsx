@@ -21,9 +21,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
       <div
         className="flex justify-center items-center h-screen w-full"
         style={{ backgroundImage: "url(bg-pink.png)", backgroundSize: "cover" }}>
-        <div className="grid-rows-2">
-          <div className="row-start-1 row-end-2 bg-pink-600 w-full"></div>
-          <div className="row-start-2 row-end-3 white w-full"></div>
+        <div className="grid-rows-2 bg-white">
           <div className="flex justify-center items-center h-screen w-full row-span-full">
             <div className="rounded shadow p-4">
               <p>Please install the app on your workspace</p>
