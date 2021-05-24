@@ -95,7 +95,7 @@ export async function getServerSideProps(context) {
         {
           loggedUser: respJson,
           sign_in_token: data,
-          settings: { language: "en", category: "hobbies" },
+          settings: { language: "en", category: "hobbies", weekday: "THU", hour: "15" },
           installation: {
             user: {
               token: data?.authed_user?.access_token,
