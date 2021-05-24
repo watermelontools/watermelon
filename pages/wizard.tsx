@@ -23,7 +23,8 @@ const Wizard = ({ token, redirect}) => {
       lang,
       cat, 
       weekday, 
-      hour
+      hour,
+      isWizard: true
      }
      fetch("/api/saveSettings",{
        method: "POST",
