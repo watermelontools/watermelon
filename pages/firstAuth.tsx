@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
-const FirstAuth = ({ firebaseApp, token, add_to_slack_token }) => {
+const FirstAuth = ({ token, add_to_slack_token }) => {
   const router = useRouter();
   token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
   useEffect(() => {
@@ -18,27 +18,31 @@ const FirstAuth = ({ firebaseApp, token, add_to_slack_token }) => {
   return (
     <>
       <PageTitle pageTitle="Welcome to Watermelon!" />
-      <div className="grid-rows-2">
-        <div className="row-start-1 row-end-2 bg-pink-600 w-full"></div>
-        <div className="row-start-2 row-end-3 white w-full"></div>
-        <div className="flex justify-center items-center h-screen w-full row-span-full">
-          <div className="rounded shadow p-4">
-            <p>Please install the app on your workspace</p>
-            <div className="w-full flex justify-center items-center my-2">
-              {token && <a
-                href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
-                  }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
-                  }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
-                  }app.watermelon.tools/wizard`}
-              >
-                <img
-                  alt="Add to Slack"
-                  height="40"
-                  width="139"
-                  src="https://platform.slack-edge.com/img/add_to_slack.png"
-                  srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
-                />
-              </a>}
+      <div
+        className="flex justify-center items-center h-screen w-full"
+        style={{ backgroundImage: "url(bg-pink.png)", backgroundSize: "cover" }}>
+        <div className="grid-rows-2">
+          <div className="row-start-1 row-end-2 bg-pink-600 w-full"></div>
+          <div className="row-start-2 row-end-3 white w-full"></div>
+          <div className="flex justify-center items-center h-screen w-full row-span-full">
+            <div className="rounded shadow p-4">
+              <p>Please install the app on your workspace</p>
+              <div className="w-full flex justify-center items-center my-2">
+                {token && <a
+                  href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
+                    }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
+                    }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
+                    }app.watermelon.tools/wizard`}
+                >
+                  <img
+                    alt="Add to Slack"
+                    height="40"
+                    width="139"
+                    src="https://platform.slack-edge.com/img/add_to_slack.png"
+                    srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
+                  />
+                </a>}
+              </div>
             </div>
           </div>
         </div>
@@ -166,10 +170,11 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
-  console.log(data)
+  console.log("data=>", data)
+  console.log("token=>", token)
   return {
     props: {
-      error: "error"
+      error: "error in the data"
     }
   }
 }
