@@ -6,6 +6,13 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 });
 export default function handler(req, res) {
+    const {
+        query: { teamid },
+      } = req
+    if (!teamid){
+        console.error("no team id")
+        res.status(400).json({status: "error", error: "no team id"})
+    }
     let db = admin.firestore();
 const postMessage = async ({ data, token }) => {
     let postData = { ...data };
@@ -29,10 +36,7 @@ const postMessage = async ({ data, token }) => {
         console.error("post Message", err);
       });
   };
-    const {
-        query: { teamid },
-      } = req
-    
+
       db.collection("teams")
       .doc(teamid)
     .get()
