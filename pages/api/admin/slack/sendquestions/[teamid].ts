@@ -5,7 +5,8 @@ Airtable.configure({
   endpointUrl: "https://api.airtable.com",
   apiKey: process.env.AIRTABLE_API_KEY,
 });
-let db = admin.firestore();
+export default function handler(req, res) {
+    let db = admin.firestore();
 const postMessage = async ({ data, token }) => {
     let postData = { ...data };
     console.log("postData", postData);
@@ -22,12 +23,12 @@ const postMessage = async ({ data, token }) => {
       .then((response) => response.json())
       .then((resjson) => {
         console.log("postmessage", resjson);
+        res.status(200).send({ status: "finished", resjson });
       })
       .catch((err) => {
         console.error("post Message", err);
       });
   };
-export default function handler(req, res) {
     const {
         query: { teamid },
       } = req
@@ -41,14 +42,16 @@ export default function handler(req, res) {
         if (data?.add_to_slack_token?.access_token)
           await postMessage({
             data: {
-              text: "ping",
+              text: "Hellow from watermelon api",
               channel: data.add_to_slack_token.incoming_webhook.channel_id,
             },
             token: data.add_to_slack_token.access_token,
           });
-        else console.log("no access token", data);
+        else {
+            console.log("no access token", data);
+        res.status(500).send({ status: "error" });
     }
-    res.status(200).send({ status: "finished" });
+    }
     })
     .catch(function (error) {
       console.error("Error fetching: ", error);
