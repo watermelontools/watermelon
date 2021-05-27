@@ -4,7 +4,6 @@ export default function handler(req, res) {
 
   if (!signInToken) {
     logger.error({
-      function: "admin/cron/create/sendquestions",
       error: "no token",
     });
     return res.status(401).json({ error: "no token", code: 1 });
@@ -29,7 +28,6 @@ export default function handler(req, res) {
     .then((data) => {
       logger.log({
         data,
-        function: "admin/cron/create/sendquestions",
         ...responseObject,
       });
       res.status(200).json(JSON.stringify({ ok: "ok", ...responseObject }));
@@ -37,7 +35,6 @@ export default function handler(req, res) {
     .catch((error) => {
       logger.error({
         error,
-        function: "admin/cron/create/sendquestions",
         ...responseObject,
       });
       res.status(500).json(error);
