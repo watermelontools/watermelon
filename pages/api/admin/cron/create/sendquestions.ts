@@ -4,7 +4,7 @@ export default function handler(req, res) {
 
   if (!signInToken) {
     logger.error({
-      error: "no token",
+      message: "no token",
     });
     return res.status(401).json({ error: "no token", code: 1 });
   }
@@ -34,6 +34,7 @@ export default function handler(req, res) {
     })
     .catch((error) => {
       logger.error({
+        message: "could not create cron",
         error,
         ...responseObject,
       });

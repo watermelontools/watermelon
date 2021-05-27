@@ -1,4 +1,5 @@
 import admin from "../../../../../utils/firebase/backend";
+import logger from "../../../../../logger/logger";
 
 import Airtable from "airtable";
 Airtable.configure({
@@ -6,15 +7,17 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 });
 export default function handler(req, res) {
-    const {
-        query: { teamid },
-      } = req
-    if (!teamid){
-        console.error("no team id")
-        res.status(400).json({status: "error", error: "no team id"})
-    }
-    let db = admin.firestore();
-const postMessage = async ({ data, token }) => {
+  const {
+    query: { teamid },
+  } = req;
+  if (!teamid) {
+    logger.error({
+      message: "no teamid",
+    });
+    res.status(400).json({ status: "error", error: "no team id" });
+  }
+  let db = admin.firestore();
+  const postMessage = async ({ data, token }) => {
     let postData = { ...data };
     console.log("postData", postData);
     let postURL = `https://slack.com/api/chat.postMessage?channel=${
@@ -37,11 +40,11 @@ const postMessage = async ({ data, token }) => {
       });
   };
 
-      db.collection("teams")
-      .doc(teamid)
+  db.collection("teams")
+    .doc(teamid)
     .get()
     .then(async (fbres) => {
-        if(fbres.exists){
+      if (fbres.exists) {
         let data = fbres.data();
         if (data?.add_to_slack_token?.access_token)
           await postMessage({
@@ -52,14 +55,13 @@ const postMessage = async ({ data, token }) => {
             token: data.add_to_slack_token.access_token,
           });
         else {
-            console.log("no access token", data);
-        res.status(500).send({ status: "error" });
-    }
-    }
+          logger.error({ message: "no access token", data });
+          res.status(500).send({ status: "error", error: "no access token" });
+        }
+      }
     })
     .catch(function (error) {
-      console.error("Error fetching: ", error);
+      logger.error({ message: "Error fetching: ", error });
       res.status(500).json(JSON.stringify({ ok: false }));
     });
-    
 }
