@@ -1,11 +1,7 @@
 import admin from "../../../../../utils/firebase/backend";
 import logger from "../../../../../logger/logger";
 import { postMessage } from "../../../../../utils/slack/backend";
-import Airtable from "airtable";
-Airtable.configure({
-  endpointUrl: "https://api.airtable.com",
-  apiKey: process.env.AIRTABLE_API_KEY,
-});
+import { getAllQuestions } from "../../../../../utils/airtable/backend";
 export default async function handler(req, res) {
   const {
     query: { teamid },
@@ -16,6 +12,69 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
+  let questions = await getAllQuestions();
+  let questionsToSend = [];
+  while (questionsToSend.length < 2) {
+    let item = questions[Math.floor(Math.random() * questions.length)];
+    if (!questionsToSend.includes(item)) questionsToSend.push(item);
+  }
+  let blocks = [];
+  for (let i = 0; i < questionsToSend.length; i++) {
+    let record = questions[i];
+    let questionElements = {
+      type: "actions",
+      elements: [
+        {
+          action_id: `q${record.get("Number")}Aa`,
+          type: "button",
+          text: {
+            text: record.get("AnswerA"),
+            type: "plain_text",
+          },
+          value: record.get("AnswerA"),
+        },
+        {
+          action_id: `q${record.get("Number")}Ab`,
+          type: "button",
+          text: {
+            text: record.get("AnswerB"),
+            type: "plain_text",
+          },
+          value: record.get("AnswerB"),
+        },
+      ],
+    };
+    if (record.get("AnswerC"))
+      questionElements.elements.push({
+        action_id: `q${record.get("Number")}Ac`,
+        type: "button",
+        text: {
+          text: record.get("AnswerC"),
+          type: "plain_text",
+        },
+        value: record.get("AnswerC"),
+      });
+    if (record.get("AnswerD"))
+      questionElements.elements.push({
+        action_id: `q${record.get("Number")}Ad`,
+        type: "button",
+        text: {
+          text: record.get("AnswerD"),
+          type: "plain_text",
+        },
+        value: record.get("AnswerD"),
+      });
+    blocks.push(
+      {
+        type: "context",
+        elements: [{ text: record.get("Question"), type: "plain_text" }],
+      },
+      questionElements,
+      {
+        type: "divider",
+      }
+    );
+  }
   let db = admin.firestore();
   let fbRes = await db.collection("teams").doc(teamid).get();
   if (fbRes.exists) {
@@ -23,7 +82,8 @@ export default async function handler(req, res) {
     if (data?.add_to_slack_token?.access_token) {
       let postMessageRes = await postMessage({
         data: {
-          text: "Hellow from watermelon api aaaa",
+          text: "Time to answer some questions 🍉",
+          blocks,
           channel: data.add_to_slack_token.incoming_webhook.channel_id,
         },
         token: data.add_to_slack_token.access_token,

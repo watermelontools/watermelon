@@ -1,16 +1,20 @@
 const axios = require("axios").default;
-const postMessage = (data, token) => {
-  axios
-    .post("https://slack.com/api/chat.postMessage", data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-    .then((response3) => {
-      console.log("post Message", response3.data);
+const postMessage = async ({ data, token }) => {
+  let postURL = `https://slack.com/api/chat.postMessage?channel=${data.channel}`;
+  return fetch(postURL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((resjson) => {
+      return { status: "ok", resjson };
     })
     .catch((err) => {
-      console.log(err);
+      return { status: "error" }, err;
     });
 };
 const postEphemeral = (ephemeralData, botToken) => {
