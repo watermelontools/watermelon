@@ -26,7 +26,7 @@ export default function handler(req, res) {
   )
     .then((response) => response.json())
     .then((data) => {
-      logger.log({
+      logger.info({
         data,
         ...responseObject,
       });
