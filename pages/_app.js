@@ -2,7 +2,21 @@ import Layout from "../components/Layout";
 import "../styles/index.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import logger from "../logger/logger";
 
+function handleWebVitals(metric) {
+  return {
+    ...metric,
+    startTime: Math.round(metric.startTime),
+    value: Math.round(metric.value),
+  };
+}
+
+export function reportWebVitals(metric) {
+  const formattedMetric = handleWebVitals(metric);
+  const webVitals = logger.child({ web_vitals: formattedMetric });
+  webVitals.info("Web vitals!");
+}
 const firebaseConfig = {
   apiKey:
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
