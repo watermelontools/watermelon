@@ -11,18 +11,40 @@ export default function handler(req, res) {
 
   let url = `https://${
     process.env.isDev === "true" ? "dev." : ""
-  }app.watermelon.tools/api/admin/slack/sendquestions/${signInToken?.team?.id}`;
+  }app.watermelon.tools/api/admin/slack/createandemptygroups/${
+    signInToken?.team?.id
+  }`;
 
   let responseObject = {
     hour: hour || "no hour",
     weekday: weekday || "no weekday",
   };
-
+  const replaceDay = (day) => {
+    if (!day) return false;
+    else {
+      switch (day) {
+        case "MON":
+          return "TUE";
+        case "TUE":
+          return "WED";
+        case "WED":
+          return "THU";
+        case "THU":
+          return "FRI";
+        case "FRI":
+          return "SAT";
+        case "SAT":
+          return "MON";
+        default:
+          break;
+      }
+    }
+  };
   fetch(
     `https://www.easycron.com/rest/add?token=${process.env.EASYCRON_API_KEY}
-    &cron_expression=0 ${hour || 15} * * ${weekday || "THU"} *
+    &cron_expression=0 ${hour || 15} * * ${replaceDay(weekday) || "THU"} *
     &url=${url}
-    &cron_job_name=sendquestions-${signInToken?.team?.id}`
+    &cron_job_name=createandemptygroups-${signInToken?.team?.id}`
   )
     .then((response) => response.json())
     .then((data) => {

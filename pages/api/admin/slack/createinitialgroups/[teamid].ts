@@ -1,0 +1,51 @@
+import { createGroup } from "../../../../../utils/slack/backend";
+import logger from "../../../../../logger/logger";
+import admin from "../../../../../utils/firebase/backend";
+
+export default async function handler(req, res) {
+  const {
+    query: { teamid },
+  } = req;
+  if (!teamid) {
+    logger.error({
+      message: "no teamid",
+    });
+    res.status(400).json({ status: "error", error: "no team id" });
+  }
+  let db = admin.firestore();
+  let fbRes = await db.collection("teams").doc(teamid).get();
+  if (fbRes.exists) {
+    let data = fbRes.data();
+    if (data?.add_to_slack_token?.access_token) {
+      const createPromiseArray = [];
+      for (let index = 0; index < 4; index++) {
+        createPromiseArray.push(
+          createGroup({
+            data: {
+              name: `wmtest-${index}`,
+              is_private: false,
+            },
+            token: data.add_to_slack_token.access_token,
+          })
+        );
+      }
+      let finishedProms = Promise.all(createPromiseArray);
+      finishedProms
+        .then((settled) => {
+          console.log(settled);
+          for (let index = 0; index < settled.length; index++) {
+            const element = settled[index];
+
+            if (element.status === "ok") {
+              logger.info(element);
+            }
+            res.status(200).send({ status: "ok", message: "groups created" });
+          }
+        })
+        .catch((error) => {
+          logger.error(error);
+          res.status(500).send(error);
+        });
+    }
+  }
+}
