@@ -52,7 +52,7 @@ export default FirstAuth;
 
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
-
+import { createInitialGroups } from "./api/admin/slack/[teamId]/createinitalgroups"
 export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
@@ -61,7 +61,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
-  //fetch(`/api/slack/${data.team.id}/createinitialgroups`)
+  createInitialGroups({ token: data.team.id })
   let token = {
     team: data.team,
     app_id: data.app_id,

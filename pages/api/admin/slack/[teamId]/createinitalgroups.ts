@@ -1,7 +1,21 @@
 import { createGroup } from "../../../../../utils/slack/backend";
 import logger from "../../../../../logger/logger";
 import admin from "../../../../../utils/firebase/backend";
-
+export const createInitialGroups = ({ token }) => {
+  const createPromiseArray = [];
+  for (let index = 0; index < 4; index++) {
+    createPromiseArray.push(
+      createGroup({
+        data: {
+          name: `wmtest-${index}`,
+          is_private: false,
+        },
+        token,
+      })
+    );
+  }
+  return createPromiseArray;
+};
 export default async function handler(req, res) {
   const {
     query: { teamId },
@@ -17,18 +31,9 @@ export default async function handler(req, res) {
   if (fbRes.exists) {
     let data = fbRes.data();
     if (data?.add_to_slack_token?.access_token) {
-      const createPromiseArray = [];
-      for (let index = 0; index < 4; index++) {
-        createPromiseArray.push(
-          createGroup({
-            data: {
-              name: `wmtest-${index}`,
-              is_private: false,
-            },
-            token: data.add_to_slack_token.access_token,
-          })
-        );
-      }
+      let createPromiseArray = createInitialGroups({
+        token: data.add_to_slack_token.access_token,
+      });
       let finishedProms = Promise.all(createPromiseArray);
       finishedProms
         .then((settled) => {
