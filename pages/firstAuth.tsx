@@ -51,6 +51,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
 export default FirstAuth;
 
 import admin from '../utils/firebase/backend';
+import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
   let f = await fetch(
@@ -111,7 +112,7 @@ export async function getServerSideProps(context) {
           { merge: true }
         )
         .then(function () {
-          console.log("New signin", data.team);
+          logger.info({ message: "new-signin", data: data.team })
         })
         .catch(function (error) {
           console.error("Error adding document: ", error);
@@ -136,10 +137,12 @@ export async function getServerSideProps(context) {
           )
           .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
           .then(function (docRef) {
-            console.log("Wrote default question", {
-              question: question.question,
-              icebreaker: question.icebreaker,
-              answers: question.answers
+            logger.info({
+              message: "Wrote default question", data: {
+                question: question.question,
+                icebreaker: question.icebreaker,
+                answers: question.answers
+              }
             });
           })
           .catch(function (error) {
@@ -169,8 +172,7 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
-  console.log("data=>", data)
-  console.log("token=>", token)
+
   return {
     props: {
       error: "error in the data"

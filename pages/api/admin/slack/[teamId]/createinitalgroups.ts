@@ -32,7 +32,6 @@ export default async function handler(req, res) {
       let finishedProms = Promise.all(createPromiseArray);
       finishedProms
         .then((settled) => {
-          console.log(settled);
           for (let index = 0; index < settled.length; index++) {
             const element = settled[index];
 

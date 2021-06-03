@@ -180,6 +180,7 @@ const Wizard = ({ token, redirect}) => {
 export default Wizard
 
 import admin from '../utils/firebase/backend';
+import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
 
@@ -201,7 +202,7 @@ export async function getServerSideProps(context) {
       { merge: true }
     )
     .then(function (docRef) {
-      console.log("New install:", token.team);
+      logger.info({message: "new-add-to-slack:", data: token.team});
     })
     .catch(function (error) {
       console.error("Error adding document: ", error);
@@ -226,7 +227,7 @@ export async function getServerSideProps(context) {
       }
     )
     .then(function (docRef) {
-      console.log("New install:", token.team);
+      logger.info({message:"new-installation:", data:token.team});
     })
     .catch(function (error) {
       console.error("Error adding document: ", error);

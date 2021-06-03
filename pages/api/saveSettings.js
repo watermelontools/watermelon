@@ -1,4 +1,5 @@
 import admin from "../../utils/firebase/backend";
+import logger from "../../logger/logger";
 export default function handler(req, res) {
   let db = admin.firestore();
   let body = JSON.parse(req.body);
@@ -19,7 +20,7 @@ export default function handler(req, res) {
         )
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
+            logger.info({ message: "cron-created", data });
             res.status(200).json(JSON.stringify({ ok: "ok" }));
           });
     })
