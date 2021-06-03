@@ -61,7 +61,6 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
-  createInitialGroups({ token: data.team.id })
   let token = {
     team: data.team,
     app_id: data.app_id,
@@ -72,6 +71,7 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
+  createInitialGroups({ token: token.team.id })
   let db = admin.firestore();
   let add_to_slack_token
   if (data.ok) {
