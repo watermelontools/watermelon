@@ -61,7 +61,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/firstAuth`
   );
   let data = await f.json();
-  fetch(`/api/slack/${data.team.id}/createinitialgroups`)
+  //fetch(`/api/slack/${data.team.id}/createinitialgroups`)
   let token = {
     team: data.team,
     app_id: data.app_id,
