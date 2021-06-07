@@ -52,7 +52,7 @@ export default FirstAuth;
 
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
-import { createInitialGroups } from "./api/admin/slack/[teamId]/createinitalgroups"
+
 export async function getServerSideProps(context) {
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
@@ -71,16 +71,19 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
-  console.log("-------------")
-  console.log(token.team)
-  console.log(token.team.id)
-  console.log("-------------")
+  let teamId = token.team.id
+  console.log("-------------", data.authed_user?.id,)
 
+  console.log(token.team)
+  console.log(teamId)
+  console.log("-------------")
+  fetch(`https://${process.env.IS_DEV === "true" ? "dev." : ""
+    }app.watermelon.tools/api/admin/slack/${teamId}/createinitialgroups`)
   let db = admin.firestore();
   let add_to_slack_token
   if (data.ok) {
     db.collection("teams")
-      .doc(token.team.id)
+      .doc(teamId)
       .get()
       .then((res) => {
         if (res.exists) {
@@ -99,7 +102,7 @@ export async function getServerSideProps(context) {
       })
       const respJson = await response.json()
       await db.collection("teams")
-        .doc(data.team.id)
+        .doc(teamId)
         .set(
           {
             loggedUser: respJson,
@@ -137,7 +140,7 @@ export async function getServerSideProps(context) {
       initialState.forEach((question) => {
         db.collection("teams")
           .doc(
-            `${data.team.id}/weekly_questions/${question.question}`
+            `${teamId}/weekly_questions/${question.question}`
           )
           .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
           .then(function (docRef) {
@@ -155,7 +158,7 @@ export async function getServerSideProps(context) {
         question.answers.forEach((answer) => {
           db.collection("teams")
             .doc(
-              `${data.team.id}`
+              `${teamId}`
             )
             .collection("weekly_questions")
             .doc(question.question)
