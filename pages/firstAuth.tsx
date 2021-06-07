@@ -6,6 +6,8 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
   const router = useRouter();
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
+    console.log(token)
+    console.log(add_to_slack_token)
     if (add_to_slack_token) {
       window.localStorage.setItem(
         "add_to_slack_token",
