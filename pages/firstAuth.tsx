@@ -4,7 +4,6 @@ import PageTitle from "../components/PageTitle";
 
 const FirstAuth = ({ token, add_to_slack_token }) => {
   const router = useRouter();
-  token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
     if (add_to_slack_token) {
@@ -15,6 +14,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
       router.push("/weeklyquestions")
     }
   }, []);
+
   return (
     <>
       <PageTitle pageTitle="Welcome to Watermelon!" />
@@ -82,7 +82,7 @@ export async function getServerSideProps(context) {
   let db = admin.firestore();
   let add_to_slack_token
   if (data.ok) {
-    db.collection("teams")
+    await db.collection("teams")
       .doc(teamId)
       .get()
       .then((res) => {
