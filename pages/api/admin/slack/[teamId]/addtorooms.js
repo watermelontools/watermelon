@@ -15,6 +15,7 @@ async function getInstallationToken (teamId) {
 }
 
 export default async function handler(req, res) {
+
   const {
     query: { teamId },
   } = req;
@@ -24,11 +25,28 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
-async function createRooms(channelId) {
+  let accessToken = await getInstallationToken(teamId)
+  let room_ids = []
+
+    // Get list of room ids
+    const teamRef = db.collection('teams').doc(teamId);
+    const doc = await teamRef.get();
+    if (!doc.exists) {
+      console.log('No such document!');
+    } else {  
+      // For each room id, execute what we have on Glitch
+      room_ids = doc.data().room_ids
+    }
+
+    let alreadyPopulated = []
+
+    
+
+async function populateRooms() {
       // returned object
       let groups = [];
       // saves the answerer's ID locally. An array of arrays
-      let pickedByIdsArray = [];
+      // let pickedByIdsArray = [];
       // The question titles, used for accessing the doc on the DB.
       let questions = [];
   
@@ -55,10 +73,12 @@ async function createRooms(channelId) {
       let allQuestions = await weeklyQuestionsRef.get();
       let final = allQuestions.forEach(async doc => {
         questions.push(doc.id);
-        let questionName = doc.id;
-  
+        let questionName = doc.id;  
         let answerTitles = await getAnswers(teamId, questionName);
+
         for (let i = 0; i < answerTitles.length; i++) {
+          console.log('answer title: ', answerTitles[i])
+          // For each answer, assign a watermelon room
           let currentAnswerers = [];
           let answerTitle = answerTitles[i];
           let weeklyQsPickedByRef = db
@@ -78,71 +98,63 @@ async function createRooms(channelId) {
   
           let icebreaker = (await icebreakerRef.get()).data().icebreaker;
 
-          console.log('respondents.data(): ', respondents.data())
           currentAnswerers = respondents.data().picked_by;
+          
+          let usersParsed = currentAnswerers.toString()
+
+          let channelId = ""
+
+            for (let j=0; j<room_ids.length; j++) {
+              if (!alreadyPopulated.includes(room_ids[j])) {
+                channelId = room_ids[j]
+                alreadyPopulated.push(channelId)
+                break
+              }
+            }
 
           const watermelonRoomData = {
             channel: channelId,
-            users: currentAnswerers,
+            users: usersParsed,
           };
 
-          console.log('watermelonRoomData: ', watermelonRoomData)
-
-          axios
-          .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
-            headers: {
-              Authorization: `Bearer ${getInstallationToken()}`
-            }
-          })
-          .then(response2 => {
-            console.log('conversation.invite promise resolved')
-            const icebreakerData = {
-              channel: channelId,
-              text: icebreaker
-                .replace(/\$\{answer}/g, answerTitle)
-                .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`)
-            };
-
+          if (usersParsed != "") {
             axios
-              .post("https://slack.com/api/chat.postMessage", icebreakerData, {
-                headers: {
-                  Authorization: `Bearer ${getInstallationToken()}`
-                }
-              })
-              .then(response3 => {
-                console.log("created groups and sent icebreakers");
-              })
-              .catch(err => {
-                console.log(err);
-              });
-          })
-          .catch(err => {
-            console.log(err);
-          });
+            .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`
+              }
+            })
+            .then(response2 => {
+              const icebreakerData = {
+                channel: channelId,
+                text: icebreaker
+                  .replace(/\$\{answer}/g, answerTitle)
+                  .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`)
+              };
+  
+              axios
+                .post("https://slack.com/api/chat.postMessage", icebreakerData, {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`
+                  }
+                })
+                .then(response3 => {
+                  res.status(200).json(JSON.stringify({ ok: "ok", ...response3.data }));
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+  
+          }
+          }
 
-          pickedByIdsArray.push(currentAnswerers);
-        }
-        return groups;
+
       });
 }
 
-// Get list of room ids
-
-  console.log('teamId: ', teamId)
-  const teamRef = db.collection('teams').doc(teamId);
-  const doc = await teamRef.get();
-  if (!doc.exists) {
-    console.log('No such document!');
-  } else {
-    console.log('Document data:', doc.data().room_ids);
-
-    // For each room id, execute what we have on Glitch
-    let room_ids = doc.data().room_ids
-
-    console.log('room_ids: ', room_ids)
-    room_ids.forEach(room => {
-      createRooms(room)
-    })
-  }
+  populateRooms()
 }
-
