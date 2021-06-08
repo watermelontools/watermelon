@@ -9,7 +9,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
   const [localToken, setLocalToken] = useState<any>({})
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    setLocalToken(localToken)
+    setLocalToken(token)
     if (add_to_slack_token) {
       window.localStorage.setItem(
         "add_to_slack_token",
