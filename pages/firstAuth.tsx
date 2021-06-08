@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
 const FirstAuth = ({ token, add_to_slack_token }) => {
+  console.log("token", token)
+  console.log("add_to_slack_token", add_to_slack_token)
   const router = useRouter();
-  token = token ?? JSON.parse(window.localStorage.getItem("sign_in_token"))
+  const [localToken, setLocalToken] = useState<any>({})
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
+    setLocalToken(token)
     if (add_to_slack_token) {
       window.localStorage.setItem(
         "add_to_slack_token",
@@ -15,6 +18,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
       router.push("/weeklyquestions")
     }
   }, []);
+
   return (
     <>
       <PageTitle pageTitle="Welcome to Watermelon!" />
@@ -27,7 +31,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
               <p>Please install the app on your workspace</p>
               <div className="w-full flex justify-center items-center my-2">
                 {token && <a
-                  href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
+                  href={`https://slack.com/oauth/v2/authorize?team=${localToken.team.id
                     }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                     }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                     }app.watermelon.tools/wizard`}
@@ -51,14 +55,22 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
 export default FirstAuth;
 
 import admin from '../utils/firebase/backend';
+import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
-  let f = await fetch(
-    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
-    }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-    }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
-    }app.watermelon.tools/firstAuth`
-  );
+  let f
+  if (context.query.code)
+    f = await fetch(
+      `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
+      }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
+      }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
+      }app.watermelon.tools/firstAuth`
+    )
+  else return {
+    props: {
+      error: "no code"
+    }
+  }
   let data = await f.json();
   let token = {
     team: data.team,
@@ -70,11 +82,15 @@ export async function getServerSideProps(context) {
     enterprise: data.enterprise,
     is_enterprise_install: data.is_enterprise_install
   }
+  let teamId = token.team.id
+
+  fetch(`https://${process.env.IS_DEV === "true" ? "dev." : ""
+    }app.watermelon.tools/api/admin/slack/${teamId}/createinitialgroups`)
   let db = admin.firestore();
   let add_to_slack_token
   if (data.ok) {
-    db.collection("teams")
-      .doc(token.team.id)
+    await db.collection("teams")
+      .doc(teamId)
       .get()
       .then((res) => {
         if (res.exists) {
@@ -93,7 +109,7 @@ export async function getServerSideProps(context) {
       })
       const respJson = await response.json()
       await db.collection("teams")
-        .doc(data.team.id)
+        .doc(teamId)
         .set(
           {
             loggedUser: respJson,
@@ -110,7 +126,7 @@ export async function getServerSideProps(context) {
           { merge: true }
         )
         .then(function () {
-          console.log("New signin", data.team);
+          logger.info({ message: "new-signin", data: data.team })
         })
         .catch(function (error) {
           console.error("Error adding document: ", error);
@@ -131,14 +147,16 @@ export async function getServerSideProps(context) {
       initialState.forEach((question) => {
         db.collection("teams")
           .doc(
-            `${data.team.id}/weekly_questions/${question.question}`
+            `${teamId}/weekly_questions/${question.question}`
           )
           .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-          .then(function (docRef) {
-            console.log("Wrote default question", {
-              question: question.question,
-              icebreaker: question.icebreaker,
-              answers: question.answers
+          .then(function () {
+            logger.info({
+              message: "Wrote default question", data: {
+                question: question.question,
+                icebreaker: question.icebreaker,
+                answers: question.answers
+              }
             });
           })
           .catch(function (error) {
@@ -147,7 +165,7 @@ export async function getServerSideProps(context) {
         question.answers.forEach((answer) => {
           db.collection("teams")
             .doc(
-              `${data.team.id}`
+              `${teamId}`
             )
             .collection("weekly_questions")
             .doc(question.question)
@@ -161,6 +179,8 @@ export async function getServerSideProps(context) {
         });
       });
     }
+    console.log("token", token)
+    console.log("add_to_slack_token", add_to_slack_token)
     return {
       props: {
         token,
@@ -168,8 +188,7 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
-  console.log("data=>", data)
-  console.log("token=>", token)
+
   return {
     props: {
       error: "error in the data"

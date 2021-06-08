@@ -4,9 +4,9 @@ import { postMessage } from "../../../../../utils/slack/backend";
 import { getAllQuestions } from "../../../../../utils/airtable/backend";
 export default async function handler(req, res) {
   const {
-    query: { teamid },
+    query: { teamId },
   } = req;
-  if (!teamid) {
+  if (!teamId) {
     logger.error({
       message: "no teamid",
     });
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
     );
   }
   let db = admin.firestore();
-  let fbRes = await db.collection("teams").doc(teamid).get();
+  let fbRes = await db.collection("teams").doc(teamId).get();
   if (fbRes.exists) {
     let data = fbRes.data();
     if (data?.add_to_slack_token?.access_token) {
