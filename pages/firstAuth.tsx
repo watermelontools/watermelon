@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
 const FirstAuth = ({ token, add_to_slack_token }) => {
+  console.log("token", token)
+  console.log("add_to_slack_token", add_to_slack_token)
   const router = useRouter();
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
@@ -72,11 +74,7 @@ export async function getServerSideProps(context) {
     is_enterprise_install: data.is_enterprise_install
   }
   let teamId = token.team.id
-  console.log("-------------", data.authed_user?.id,)
 
-  console.log(token.team)
-  console.log(teamId)
-  console.log("-------------")
   fetch(`https://${process.env.IS_DEV === "true" ? "dev." : ""
     }app.watermelon.tools/api/admin/slack/${teamId}/createinitialgroups`)
   let db = admin.firestore();
@@ -172,6 +170,8 @@ export async function getServerSideProps(context) {
         });
       });
     }
+    console.log("token", token)
+    console.log("add_to_slack_token", add_to_slack_token)
     return {
       props: {
         token,
