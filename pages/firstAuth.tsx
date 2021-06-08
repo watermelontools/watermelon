@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
@@ -6,8 +6,10 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
   console.log("token", token)
   console.log("add_to_slack_token", add_to_slack_token)
   const router = useRouter();
+  const [localToken, setLocalToken] = useState<any>({})
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
+    setLocalToken(localToken)
     if (add_to_slack_token) {
       window.localStorage.setItem(
         "add_to_slack_token",
@@ -29,7 +31,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
               <p>Please install the app on your workspace</p>
               <div className="w-full flex justify-center items-center my-2">
                 {token && <a
-                  href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
+                  href={`https://slack.com/oauth/v2/authorize?team=${localToken.team.id
                     }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                     }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                     }app.watermelon.tools/wizard`}
@@ -56,12 +58,19 @@ import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
-  let f = await fetch(
-    `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
-    }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-    }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
-    }app.watermelon.tools/firstAuth`
-  );
+  let f
+  if (context.query.code)
+    f = await fetch(
+      `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
+      }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
+      }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
+      }app.watermelon.tools/firstAuth`
+    )
+  else return {
+    props: {
+      error: "no code"
+    }
+  }
   let data = await f.json();
   let token = {
     team: data.team,
@@ -141,7 +150,7 @@ export async function getServerSideProps(context) {
             `${teamId}/weekly_questions/${question.question}`
           )
           .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-          .then(function (docRef) {
+          .then(function () {
             logger.info({
               message: "Wrote default question", data: {
                 question: question.question,
