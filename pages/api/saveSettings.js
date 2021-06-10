@@ -38,7 +38,7 @@ export default function handler(req, res) {
           { route: "clearooms", hour: hour - 1, weekday: nextWeekday(weekday) },
           { route: "addtorooms", hour: hour, weekday: nextWeekday(weekday) },
         ];
-        urls.forEach((element) => {
+        urls.forEach(async (element) => {
           await fetch(
             `https://www.easycron.com/rest/add?token=${
               process.env.EASYCRON_API_KEY
