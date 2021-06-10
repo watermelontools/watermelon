@@ -6,10 +6,8 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
   console.log("token", token)
   console.log("add_to_slack_token", add_to_slack_token)
   const router = useRouter();
-  const [localToken, setLocalToken] = useState<any>({})
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    setLocalToken(token)
     if (add_to_slack_token) {
       window.localStorage.setItem(
         "add_to_slack_token",
@@ -31,7 +29,7 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
               <p>Please install the app on your workspace</p>
               <div className="w-full flex justify-center items-center my-2">
                 {token && <a
-                  href={`https://slack.com/oauth/v2/authorize?team=${localToken.team.id
+                  href={`https://slack.com/oauth/v2/authorize?team=${token.team.id
                     }&scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
                     }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                     }app.watermelon.tools/wizard`}
