@@ -55,7 +55,7 @@ export default async function handler(req, res) {
       )
       .then((res1) => {
         console.log("res1.data: ", res1.data);
-        // let channelMembers = res1.data.members
+        let channelMembers = res1.data.members;
         // console.log('channel members: ', channelMembers)
 
         // if (channelMembers !== []) {
