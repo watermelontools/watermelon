@@ -12,14 +12,19 @@ const Wizard = ({ token, redirect}) => {
   const [hour, setHour] = useState(15)
   const [timezone, setTimezone ] = useState("")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  let signInToken = {team: {id:""}}
   useEffect(()=>{
-    signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
     if(redirect) router.push("/weeklyquestions")
   })
+  
+  useEffect(() => {
+    window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
+  }, []);
+  useEffect(() => {
+    setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
+  }, [lang, cat])
   const saveSettings = () => {
     let data ={
-      signInToken,
+      signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
       lang,
       cat, 
       weekday, 
@@ -37,12 +42,6 @@ const Wizard = ({ token, redirect}) => {
       console.error("Error writing: ", error);
     });
   };
-  useEffect(() => {
-    window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
-  }, []);
-  useEffect(() => {
-    setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
-  }, [lang, cat])
   const person = "{person}"
   const answer= "{answer}"
   const questions = [
@@ -181,6 +180,7 @@ export default Wizard
 
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
+import { redirect } from "next/dist/next-server/server/api-utils";
 
 export async function getServerSideProps(context) {
 
@@ -237,7 +237,8 @@ export async function getServerSideProps(context) {
     delete token_clone.access_token;
     return {
       props: {
-        token:token_clone
+        token:token_clone, 
+        redirect: false
       }, // will be passed to the page component as props
     };
   }
