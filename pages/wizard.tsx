@@ -226,15 +226,16 @@ export async function getServerSideProps(context) {
           },
       }
     )
-    .then(function (docRef) {
+    .then(function () {
       logger.info({message:"new-installation:", data:token.team});
     })
     .catch(function (error) {
-      console.error("Error adding document: ", error);
+      logger.error("Error adding document: ", error);
     });
 
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;
+    console.log("sending token", token_clone)
     return {
       props: {
         token:token_clone, 
@@ -242,6 +243,7 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
+  console.log("redir",redirect)
   return {
     props: {
       redirect: true
