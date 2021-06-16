@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({ token, redirect}) => {
+const Wizard = ({ token }) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
@@ -15,7 +15,7 @@ const Wizard = ({ token, redirect}) => {
 
   
   useEffect(() => {
-    if(redirect) router.push("/weeklyquestions")
+
     if(token)
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
   }, []);
@@ -180,7 +180,6 @@ export default Wizard
 
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
-import { redirect } from "next/dist/next-server/server/api-utils";
 
 export async function getServerSideProps(context) {
 
@@ -244,10 +243,11 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
-  console.log("redir",redirect)
+  
   return {
-    props: {
-      redirect: true
+      redirect: {
+        destination: '/weeklyquestions',
+        permanent: false,
     }, // will be passed to the page component as props
   };
 }
