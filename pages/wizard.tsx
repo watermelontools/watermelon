@@ -12,11 +12,11 @@ const Wizard = ({ token, redirect}) => {
   const [hour, setHour] = useState(15)
   const [timezone, setTimezone ] = useState("")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  useEffect(()=>{
-    if(redirect) router.push("/weeklyquestions")
-  },[])
+
   
   useEffect(() => {
+    if(redirect) router.push("/weeklyquestions")
+    if(token)
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
   }, []);
   useEffect(() => {
@@ -191,6 +191,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
+  console.log(token)
   if(token.ok){
     let db = admin.firestore();
     await db.collection("teams")
