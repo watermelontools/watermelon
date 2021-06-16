@@ -10,8 +10,7 @@ const Layout = ({ children }) => {
     let { isLoggedIn, hasAddedToSlack } = useCheckLogin();
 
     if (!isLoggedIn) router.push("/login");
-    else if (!hasAddedToSlack && !(router.pathname.includes("firstAuth") || router.pathname.includes("wizard")))
-      router.push("/firstAuth");
+
   }, []);
   const links = [
     {
