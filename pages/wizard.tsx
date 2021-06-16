@@ -205,7 +205,7 @@ export async function getServerSideProps(context) {
       logger.info({message: "new-add-to-slack:", data: token.team});
     })
     .catch(function (error) {
-      console.error("Error adding document: ", error);
+      logger.error("Error adding document: ", error);
     });
 
     await db.collection("teams")
