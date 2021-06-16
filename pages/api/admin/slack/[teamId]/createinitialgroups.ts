@@ -51,5 +51,8 @@ export default async function handler(req, res) {
           res.status(500).send(error);
         });
     }
+    else{
+      logger.error({message: "no data", data})
+    }
   }
 }
