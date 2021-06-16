@@ -14,7 +14,7 @@ const Wizard = ({ token, redirect}) => {
   const [exampleQuestion, setExampleQuestion] = useState(1)
   useEffect(()=>{
     if(redirect) router.push("/weeklyquestions")
-  })
+  },[])
   
   useEffect(() => {
     window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
