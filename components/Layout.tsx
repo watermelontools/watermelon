@@ -72,7 +72,6 @@ const Layout = ({ children }) => {
             <button
               onClick={() => {
                 window.localStorage.removeItem("sign_in_token");
-                window.localStorage.removeItem("add_to_slack_token");
                 router.push("/login");
               }}
               className="border-t-2 border-gray-200 border-solid text-gray-400 w-full"

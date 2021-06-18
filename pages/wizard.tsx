@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({ token }) => {
+const Wizard = ({  }) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
@@ -13,12 +13,6 @@ const Wizard = ({ token }) => {
   const [timezone, setTimezone ] = useState("")
   const [exampleQuestion, setExampleQuestion] = useState(1)
 
-  
-  useEffect(() => {
-
-    if(token)
-    window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
-  }, []);
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])

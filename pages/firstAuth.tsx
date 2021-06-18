@@ -91,7 +91,16 @@ export async function getServerSideProps(context) {
           }
         }
       });
-    if (!add_to_slack_token) {
+    if (add_to_slack_token) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false
+        }
+      }
+    }
+    else {
+
       const response = await fetch("https://slack.com/api/users.identity", {
         headers: {
           'Authorization': `Bearer ${data?.authed_user?.access_token}`
