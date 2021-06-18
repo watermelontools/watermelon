@@ -185,6 +185,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
+  console.log(token)
   //createInitialGroups({token})
   if(token.ok){
     let db = admin.firestore();
@@ -238,11 +239,12 @@ export async function getServerSideProps(context) {
       }, // will be passed to the page component as props
     };
   }
-  
-  return {
+  else{
+    return {
       redirect: {
         destination: '/weeklyquestions',
         permanent: false,
-    }, // will be passed to the page component as props
-  };
+      }, // will be passed to the page component as props
+    };
+  }
 }
