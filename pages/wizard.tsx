@@ -108,7 +108,7 @@ const Wizard = ({  }) => {
       <PageTitle pageTitle="The finishing touches" />
       <PagePadder>
       <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
-        <div className="flex sm:flex-col md:flex-row">
+        <div className="flex sm:flex-col md:flex-row flex-wrap">
           <div className="card-style flex flex-col justify-between w-80">
             <h2 className="font-bold text-xl">Language</h2>
             <p>Select the language in which the questions will be sent:</p>
