@@ -74,8 +74,6 @@ export async function getServerSideProps(context) {
   }
   let teamId = token.team.id
 
-  fetch(`https://${process.env.IS_DEV === "true" ? "dev." : ""
-    }app.watermelon.tools/api/admin/slack/${teamId}/createinitialgroups`)
   let db = admin.firestore();
   let add_to_slack_token
   if (data.ok) {

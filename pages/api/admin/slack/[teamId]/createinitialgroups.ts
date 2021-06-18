@@ -3,11 +3,11 @@ import logger from "../../../../../logger/logger";
 import admin from "../../../../../utils/firebase/backend";
 export const createInitialGroups = ({ token }) => {
   const createPromiseArray = [];
-  for (let index = 0; index < 4; index++) {
+  for (let index = 0; index < 8; index++) {
     createPromiseArray.push(
       createGroup({
         data: {
-          name: `wmtest-${index}`,
+          name: `wm-${index}`,
           is_private: false,
         },
         token,
