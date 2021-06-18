@@ -133,7 +133,7 @@ const Wizard = ({  }) => {
             <div>
             <h2 className="font-bold text-xl">Hour to ask</h2>
             <p>Select the hour of the day to send the questions</p>
-            <p>This will happen on </p>
+            <p>This will happen on {weekdayOpts.find(el=> el.value=== weekday).label}</p>
             <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
             </div>
           </div>
