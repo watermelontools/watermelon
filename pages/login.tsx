@@ -1,5 +1,7 @@
 import PageTitle from "../components/PageTitle";
 function Login() {
+  const localeTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(localeTz);
   return (
     <>
       <PageTitle pageTitle="Login" />

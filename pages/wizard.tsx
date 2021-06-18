@@ -103,6 +103,8 @@ const Wizard = ({  }) => {
     {value:17,label:'17:00'},
     {value:18,label:'18:00'},
   ]
+  const localeTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+console.log(localeTz);
   return (
     <>
       <PageTitle pageTitle="The finishing touches" />
