@@ -108,6 +108,36 @@ const Wizard = ({  }) => {
       <PageTitle pageTitle="The finishing touches" />
       <PagePadder>
       <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
+        <div className="flex sm:flex-col md:flex-row">
+          <div className="card-style flex flex-col justify-between w-80">
+            <h2 className="font-bold text-xl">Language</h2>
+            <p>Select the language in which the questions will be sent:</p>
+            <p>This dashboard will stay in English</p>
+            <Select onChange={e => setLang(e.value)} value={langOpts.find(el=> el.value=== lang)} options={langOpts} />
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+            <h2 className="font-bold text-xl">Question Type</h2>
+            <p>Select the category of the questions to be shown</p>
+            </div>
+            <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+            <h2 className="font-bold text-xl">Weekday to ask</h2>
+            <p>Select the day of the week to send the questions</p>
+            <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
+            </div>
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+            <h2 className="font-bold text-xl">Hour to ask</h2>
+            <p>Select the hour of the day to send the questions</p>
+            <p>This will happen on </p>
+            <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
+            </div>
+          </div>
+        </div>
         <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
           <div className="rounded mx-2" style={{width: "3em", height: "3em"}}>
           <img src="/wmslack.png" />
