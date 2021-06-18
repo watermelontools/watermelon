@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
   const router = useRouter();
   let { pathname } = router;
   useEffect(() => {
-    let { isLoggedIn, hasAddedToSlack } = useCheckLogin();
+    let { isLoggedIn } = useCheckLogin();
 
     if (!isLoggedIn) router.push("/login");
 

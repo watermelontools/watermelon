@@ -2,17 +2,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
-const FirstAuth = ({ token, add_to_slack_token }) => {
+const FirstAuth = ({ token }) => {
   const router = useRouter();
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
-    if (add_to_slack_token) {
-      window.localStorage.setItem(
-        "add_to_slack_token",
-        JSON.stringify(add_to_slack_token)
-      )
-      router.push("/weeklyquestions")
-    }
   }, []);
 
   return (
@@ -28,8 +21,9 @@ const FirstAuth = ({ token, add_to_slack_token }) => {
               <div className="w-full flex justify-center items-center my-2">
                 {token && <a
                   href={`https://slack.com/oauth/v2/authorize${token?.team?.id ? "?team=" + token.team.id + "&" : "?"
-                    }scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
-                    }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
+                    }scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read,groups:read
+                    &client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}
+                    &redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
                     }app.watermelon.tools/wizard`}
                 >
                   <img
@@ -177,8 +171,7 @@ export async function getServerSideProps(context) {
     }
     return {
       props: {
-        token,
-        add_to_slack_token
+        token
       }, // will be passed to the page component as props
     };
   }
