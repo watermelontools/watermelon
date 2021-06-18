@@ -187,6 +187,7 @@ export async function getServerSideProps(context) {
   let token = await f.json();
   //createInitialGroups({token})
   if(token.ok){
+    createInitialGroups({token})
     let db = admin.firestore();
     await db.collection("teams")
     .doc(token.team.id)
