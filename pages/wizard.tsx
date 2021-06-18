@@ -176,7 +176,7 @@ export default Wizard
 
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
-import { createInitialGroups } from "./api/admin/slack/[teamId]/createinitialgroups";
+import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
 
 export async function getServerSideProps(context) {
 
@@ -187,9 +187,8 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  createInitialGroups({token})
   if(token.ok){
-    createInitialGroups({token})
+    createAndSave({teamId: token.team.id, access_token: token.access_token})
     let db = admin.firestore();
     await db.collection("teams")
     .doc(token.team.id)

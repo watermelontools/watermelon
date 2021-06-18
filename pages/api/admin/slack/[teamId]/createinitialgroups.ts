@@ -8,7 +8,7 @@ async function getTeam(teamId:string) {
   return fbRes
 }
 
-export const createInitialGroups = ({ token }) => {
+ const createInitialGroups = ({ token }) => {
   const createPromiseArray = [];
   for (let index = 0; index < 8; index++) {
     createPromiseArray.push(
@@ -23,7 +23,7 @@ export const createInitialGroups = ({ token }) => {
   }
   return createPromiseArray;
 };
-const createAndSave = async ({access_token,teamId}:{access_token:string, teamId: string})=>{   
+export const createAndSave = async ({access_token,teamId}:{access_token:string, teamId: string})=>{   
      let createPromiseArray = createInitialGroups({
   token: access_token,
 });
