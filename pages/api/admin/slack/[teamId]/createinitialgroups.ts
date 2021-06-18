@@ -1,6 +1,13 @@
 import { createGroup } from "../../../../../utils/slack/backend";
 import logger from "../../../../../logger/logger";
 import admin from "../../../../../utils/firebase/backend";
+
+let db = admin.firestore();
+async function getTeam(teamId:string) {
+  let fbRes = await db.collection("teams").doc(teamId).get();
+  return fbRes
+}
+
 export const createInitialGroups = ({ token }) => {
   const createPromiseArray = [];
   for (let index = 0; index < 8; index++) {
@@ -16,6 +23,27 @@ export const createInitialGroups = ({ token }) => {
   }
   return createPromiseArray;
 };
+const createAndSave = async ({access_token,teamId}:{access_token:string, teamId: string})=>{   
+     let createPromiseArray = createInitialGroups({
+  token: access_token,
+});
+let finishedProms = Promise.all(createPromiseArray);
+await db.collection("teams")
+.doc(teamId)
+.set(
+  {
+    room_ids: finishedProms
+  },
+  { merge: true }
+)
+.then(function () {
+  logger.info({ message: "rooms-created", data: finishedProms })
+})
+.catch(function (error) {
+  console.error("Error adding document: ", error);
+})
+return finishedProms
+}
 export default async function handler(req, res) {
   const {
     query: { teamId },
@@ -26,16 +54,12 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
-  let db = admin.firestore();
-  let fbRes = await db.collection("teams").doc(teamId).get();
+  let fbRes = await getTeam(teamId)
   if (fbRes.exists) {
     let data = fbRes.data();
     if (data?.add_to_slack_token?.access_token) {
-      let createPromiseArray = createInitialGroups({
-        token: data.add_to_slack_token.access_token,
-      });
-      let finishedProms = Promise.all(createPromiseArray);
-      finishedProms
+
+       createAndSave (data.token.access_token)
         .then((settled) => {
           for (let index = 0; index < settled.length; index++) {
             const element = settled[index];
