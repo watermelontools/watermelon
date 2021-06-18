@@ -187,7 +187,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  //createInitialGroups({token})
+  createInitialGroups({token})
   if(token.ok){
     createInitialGroups({token})
     let db = admin.firestore();
