@@ -4,9 +4,9 @@ import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
 const Welcome = ({ firebaseApp, token }) => {
-  const [addToSlackToken, setAddToSlackToken] = useState(undefined)
+  const [loginToken, setLoginToken] = useState(undefined)
   useEffect(() => {
-    setAddToSlackToken(JSON.parse(window.localStorage.getItem("add_to_slack_token")))
+    setLoginToken(JSON.parse(window.localStorage.getItem("sign_in_token")))
   }, [])
   return (
     <>
@@ -14,29 +14,29 @@ const Welcome = ({ firebaseApp, token }) => {
       <PagePadder>
         <div className="rounded shadow p-4">
           <p>✅You are ready to go!</p>
-          <br/>
+          <br />
           <h3>In any Slack channel:</h3>
           <ol>
             <li>
               Type <strong>/watermelon-ask</strong> to send questions
               <img src="/watermelon-ask.gif" />
             </li>
-            <br/>
-              <li>
-                Have people answer them (you do it too, don’t miss the fun!)
+            <br />
+            <li>
+              Have people answer them (you do it too, don’t miss the fun!)
                 <img src="/watermelon-respond.gif" />
-              </li>
-            <br/>
+            </li>
+            <br />
             <li>
               Type <strong>/watermelon-create</strong> and let the fun begin!
               <img src="/watermelon-create.gif" />
             </li>
           </ol>
-          <br/>
+          <br />
           <div className="my-2">
             <a
               className="py-2 px-4 text-base rounded shadow-sm text-white bg-green-400"
-              href={`slack://app?team=${addToSlackToken?.team?.id}&id=${addToSlackToken?.app_id}`}>
+              href={`slack://app?team=${loginToken?.team?.id}&id=${loginToken?.app_id}`}>
               Start using Watermelon🍉
           </a>
           </div>
