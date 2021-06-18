@@ -8,7 +8,7 @@ export const createInitialGroups = ({ token }) => {
       createGroup({
         data: {
           name: `wm-${index}`,
-          is_private: false,
+          is_private: true,
         },
         token,
       })
