@@ -188,7 +188,9 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
   if(token.ok){
-    createAndSave({teamId: token.team.id, access_token: token.access_token})
+    console.log("calling func")
+    await createAndSave({teamId: token.team.id, access_token: token.access_token})
+    console.log("func ended")
     let db = admin.firestore();
     await db.collection("teams")
     .doc(token.team.id)

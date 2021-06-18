@@ -24,6 +24,7 @@ async function getTeam(teamId:string) {
   return createPromiseArray;
 };
 export const createAndSave = async ({access_token,teamId}:{access_token:string, teamId: string})=>{   
+  console.log("func called")
      let createPromiseArray = createInitialGroups({
   token: access_token,
 });
