@@ -185,7 +185,7 @@ export async function getServerSideProps(context) {
     }app.watermelon.tools/wizard`
   );
   let token = await f.json();
-  createInitialGroups({token})
+  //createInitialGroups({token})
   if(token.ok){
     let db = admin.firestore();
     await db.collection("teams")
@@ -229,8 +229,8 @@ export async function getServerSideProps(context) {
     });
 
     const token_clone = Object.assign({}, token);
-    delete token_clone.access_token;
     console.log("sending token", token_clone)
+    delete token_clone.access_token;
     return {
       props: {
         token:token_clone, 
