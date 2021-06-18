@@ -27,17 +27,18 @@ export const createAndSave = async ({access_token,teamId}:{access_token:string, 
      let createPromiseArray = createInitialGroups({
   token: access_token,
 });
-let finishedProms = Promise.all(createPromiseArray);
+let finishedProms = await Promise.all(createPromiseArray);
+console.log(finishedProms)
 await db.collection("teams")
 .doc(teamId)
 .set(
   {
-    room_ids: await finishedProms
+    room_ids:  finishedProms
   },
   { merge: true }
 )
 .then(async function () {
-  logger.info({ message: "rooms-created", data: await finishedProms })
+  logger.info({ message: "rooms-created", data:  finishedProms })
 })
 .catch(function (error) {
   console.error("Error adding document: ", error);
