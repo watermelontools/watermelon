@@ -32,12 +32,12 @@ await db.collection("teams")
 .doc(teamId)
 .set(
   {
-    room_ids: finishedProms
+    room_ids: await finishedProms
   },
   { merge: true }
 )
-.then(function () {
-  logger.info({ message: "rooms-created", data: finishedProms })
+.then(async function () {
+  logger.info({ message: "rooms-created", data: await finishedProms })
 })
 .catch(function (error) {
   console.error("Error adding document: ", error);
