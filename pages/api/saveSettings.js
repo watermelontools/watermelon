@@ -5,7 +5,7 @@ export default function handler(req, res) {
   let body = JSON.parse(req.body);
   let { lang, cat, signInToken, weekday, hour, isWizard } = body;
   const baseurl = `https://${
-    proces.env.isDev === "true" ? "dev." : ""
+    process.env.isDev === "true" ? "dev." : ""
   }app.watermelon.tools/api/admin/`;
   let nextWeekday = (weekday) => {
     switch (weekday) {
