@@ -1,6 +1,6 @@
 export default function handler(req, res) {
     let {body} = req
-    console.log(body)
+    Object.keys(body).map(key=> console.log(key, body[key]))
     fetch(body.response_url,{
         method: "POST",
         headers: {
