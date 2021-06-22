@@ -1,7 +1,7 @@
 export default function handler(req, res) {
-    let {body} = req
-    Object.keys(body).map(key=> console.log(key))
-    fetch(body.response_url,{
+    let {payload} = req.body
+    Object.keys(payload).map(key=> console.log(key))
+    fetch(payload.response_url,{
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
