@@ -2,7 +2,7 @@ export default async function handler(req, res) {
     let {payload} = req.body
     let slackResponse= await JSON.parse(payload)
     console.log(slackResponse.response_url)
-    fetch(slackResponse.response_url,
+    await fetch(slackResponse.response_url,
         {
         method: "POST",
         headers: {
@@ -14,7 +14,8 @@ export default async function handler(req, res) {
         })
     })
     .then(response => response.json())
-  .then(data => console.log(data))
+  .then(data => {
+      res.status(200).json({status: "ok"})
+      console.log(data)})
   .catch(error=> console.error(error))
-    res.status(200).json({status: "ok"})
 }
