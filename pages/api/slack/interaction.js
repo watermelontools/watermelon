@@ -1,4 +1,4 @@
-export default function handler(req, res) {
+export default async function handler(req, res) {
     let {payload} = req.body
     let slackResponse= await JSON.parse(payload)
     Object.keys(slackResponse).map(key=> console.log(key))
