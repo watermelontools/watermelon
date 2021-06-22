@@ -1,7 +1,8 @@
 export default function handler(req, res) {
     let {payload} = req.body
-    Object.keys(payload).map(key=> console.log(key))
-    fetch(payload.response_url,{
+    let slackResponse= await JSON.parse(payload)
+    Object.keys(slackResponse).map(key=> console.log(key))
+    fetch(slackResponse.response_url,{
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
