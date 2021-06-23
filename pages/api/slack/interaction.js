@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     };
     Slack.postEphemeral(ephimeralMessageData, context.botToken);
   } */
-  const res = await respondentsRef.update({
+  await respondentsRef.update({
     respondents: admin.firestore.FieldValue.arrayUnion(userId),
   });
 
