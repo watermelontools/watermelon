@@ -17,14 +17,38 @@ export default async function handler(req, res) {
       picked_by: admin.firestore.FieldValue.arrayUnion(userId),
     });
   }
+  let questionName =
+    slackResponse.message.blocks[
+      slackResponse.message.blocks.findIndex(
+        (block) => block.block_id == slackResponse.actions[0].block_id
+      ) - 1
+    ].elements[0].text;
+  let respondentsRef = db
+    .collection("teams")
+    .doc(slackResponse.message.team)
+    .collection("weekly_questions")
+    .doc(questionName);
+
+  /*   const respondents = await respondentsRef.get();
+  const respondentsArray = respondents.data().respondents; */
+  /*   if (respondentsArray.includes(userId)) {
+    // console.log('user id included')
+    const ephimeralMessageData = {
+      attachments:
+        '[{"text": "Try answering the other question.", "color": "#75b855"}]',
+      channel: body.channel.id,
+      text: `You have already responded this question`,
+      user: body.user.id,
+    };
+    Slack.postEphemeral(ephimeralMessageData, context.botToken);
+  } */
+  const res = await respondentsRef.update({
+    respondents: admin.firestore.FieldValue.arrayUnion(userId),
+  });
+
   savePickedBy({
     teamId: slackResponse.message.team,
-    questionName:
-      slackResponse.message.blocks[
-        slackResponse.message.blocks.findIndex(
-          (block) => block.block_id == slackResponse.actions[0].block_id
-        ) - 1
-      ].elements[0].text,
+    questionName,
     answerTitle: slackResponse.actions[0].value,
     userId: slackResponse.user.id,
   });

@@ -18,9 +18,26 @@ export default async function handler(req, res) {
     let item = questions[Math.floor(Math.random() * questions.length)];
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
+  const setQuestion = (record, answer) => {
+    db.collection("teams")
+      .doc(`${teamId}`)
+      .collection("weekly_questions")
+      .doc(record.get("Question"))
+      .collection(answer)
+      .doc("picked_by")
+      .set({ picked_by: [] }, { merge: true })
+      .then(() => {})
+      .catch(function (error) {
+        console.error("Error writing: ", error);
+      });
+  };
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
     let record = questions[i];
+    setQuestion(questionsToSend, record.get("AnswerA"));
+    setQuestion(questionsToSend, record.get("AnswerB"));
+    setQuestion(questionsToSend, record.get("AnswerC"));
+    setQuestion(questionsToSend, record.get("AnswerD"));
     let questionElements = {
       type: "actions",
       elements: [
