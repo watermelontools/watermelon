@@ -35,10 +35,10 @@ export default async function handler(req, res) {
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
     let record = questions[i];
-    setQuestion(questionsToSend, record.get("AnswerA"));
-    setQuestion(questionsToSend, record.get("AnswerB"));
-    setQuestion(questionsToSend, record.get("AnswerC"));
-    setQuestion(questionsToSend, record.get("AnswerD"));
+    setQuestion(record, record.get("AnswerA"));
+    setQuestion(record, record.get("AnswerB"));
+    setQuestion(record, record.get("AnswerC"));
+    setQuestion(record, record.get("AnswerD"));
     let questionElements = {
       type: "actions",
       elements: [
