@@ -21,15 +21,28 @@ export default async function handler(req, res) {
   }
   const setQuestion = (record, answer) => {
     db.collection("teams")
-      .doc(`${teamId}`)
-      .collection("weekly_questions")
-      .doc(record.get("Question"))
-      .collection(answer)
-      .doc("picked_by")
-      .set({ picked_by: [] }, { merge: true })
-      .then(() => {})
-      .catch(function (error) {
-        console.error("Error writing: ", error);
+      .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
+      .set(
+        { icebreaker: record.get("Icebreaker"), respondents: [] },
+        { merge: true }
+      )
+      .then((fbres) => {
+        db.collection("teams")
+          .doc(`${teamId}`)
+          .collection("weekly_questions")
+          .doc(record.get("Question"))
+          .collection(answer)
+          .doc("picked_by")
+          .set(
+            {
+              picked_by: [],
+            },
+            { merge: true }
+          )
+          .then(() => {})
+          .catch(function (error) {
+            console.error("Error writing: ", error);
+          });
       });
   };
   let blocks = [];
@@ -39,6 +52,7 @@ export default async function handler(req, res) {
     setQuestion(record, record.get("AnswerB"));
     setQuestion(record, record.get("AnswerC"));
     setQuestion(record, record.get("AnswerD"));
+
     let questionElements = {
       type: "actions",
       elements: [
