@@ -3,6 +3,7 @@ import logger from "../../../../../logger/logger";
 import { postMessage } from "../../../../../utils/slack/backend";
 import { getAllQuestions } from "../../../../../utils/airtable/backend";
 export default async function handler(req, res) {
+  let db = admin.firestore();
   const {
     query: { teamId },
   } = req;
@@ -92,7 +93,6 @@ export default async function handler(req, res) {
       }
     );
   }
-  let db = admin.firestore();
   let fbRes = await db.collection("teams").doc(teamId).get();
   if (fbRes.exists) {
     let data = fbRes.data();
