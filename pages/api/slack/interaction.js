@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       .collection(answerTitle)
       .doc("picked_by");
     const res = await testWeeklyQuestionsRef.update({
-      picked_by: admin.firestore.FieldValue.arrayUnion(userId),
+      picked_by: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
     });
   }
   let questionName =
