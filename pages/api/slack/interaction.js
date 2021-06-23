@@ -29,8 +29,8 @@ export default async function handler(req, res) {
     .collection("weekly_questions")
     .doc(questionName);
 
-  /*   const respondents = await respondentsRef.get();
-  const respondentsArray = respondents.data().respondents; */
+  const respondents = await respondentsRef.get();
+  const respondentsArray = respondents.data().respondents;
   /*   if (respondentsArray.includes(userId)) {
     // console.log('user id included')
     const ephimeralMessageData = {
@@ -65,7 +65,7 @@ export default async function handler(req, res) {
           type: "section",
           text: {
             type: "plain_text",
-            text: "🍉 question answered 1 time",
+            text: `🍉 question answered ${respondentsArray.length} time`,
             emoji: true,
           },
         },
