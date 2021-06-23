@@ -1,4 +1,8 @@
+import admin from "../../../utils/firebase/backend";
+
 export default async function handler(req, res) {
+  let db = admin.firestore();
+
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
   async function savePickedBy({ teamId, questionName, answerTitle, userId }) {
