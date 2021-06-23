@@ -10,6 +10,17 @@ export default async function handler(req, res) {
     },
     body: JSON.stringify({
       text: "Watermelon question answered.",
+      blocks: [
+        ...slackResponse.message.blocks,
+        {
+          type: "section",
+          text: {
+            type: "plain_text",
+            text: "🍉 question answered 1 time",
+            emoji: true,
+          },
+        },
+      ],
     }),
   })
     .then((response) => response.json())
