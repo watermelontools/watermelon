@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
-  async function savePickedBy({ teamId, questionName, answerTitle, userId }) {
+  async function savePickedBy({ teamId, questionName, answerTitle }) {
     let testWeeklyQuestionsRef = db
       .collection("teams")
       .doc(teamId)
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     Slack.postEphemeral(ephimeralMessageData, context.botToken);
   } */
   await respondentsRef.update({
-    respondents: admin.firestore.FieldValue.arrayUnion(userId),
+    respondents: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
   });
 
   savePickedBy({
