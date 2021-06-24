@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     body: JSON.stringify({
       text: "Watermelon question answered.",
       blocks: [
-        ...slackResponse.message.blocks,
+        ...slackResponse.message.blocks.slice(0, -1),
         {
           type: "section",
           text: {
