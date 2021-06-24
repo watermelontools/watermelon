@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   };
   await db
     .collection("teams")
-    .doc(teamId)
+    .doc(slackResponse.team.id)
     .get()
     .then((res) => {
       if (res.exists) {
