@@ -43,7 +43,8 @@ export default async function handler(req, res) {
       if (res.exists) {
         let responseData = res.data();
         if (responseData.add_to_slack_token) {
-          fetch("https://slack.com/api/chat.postEphemeral", {
+          console.log(responseData.add_to_slack_token);
+          await fetch("https://slack.com/api/chat.postEphemeral", {
             method: "POST",
             headers: {
               Authorization: `Bearer ${responseData.add_to_slack_token}`,
