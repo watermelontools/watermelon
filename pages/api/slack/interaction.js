@@ -28,7 +28,20 @@ export default async function handler(req, res) {
     .doc(slackResponse.message.team)
     .collection("weekly_questions")
     .doc(questionName);
-
+  const ephimeralMessageData = {
+    attachments:
+      '[{"text": "This response is anonymous.", "color": "#75b855"}]',
+    channel: slackResponse.channel.id,
+    text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
+    user: slackResponse.user.id,
+  };
+  fetch("https://slack.com/api/chat.postEphemeral", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${botToken}`,
+    },
+    body: ephimeralMessageData,
+  });
   const respondents = await respondentsRef.get();
   const respondentsArray = respondents.data().respondents;
   /*   if (respondentsArray.includes(userId)) {
