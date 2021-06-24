@@ -35,6 +35,7 @@ export default async function handler(req, res) {
     text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
     user: slackResponse.user.id,
   };
+  console.log(slackResponse.token);
   fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
