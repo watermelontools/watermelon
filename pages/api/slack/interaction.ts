@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
-  async function savePickedBy({ teamId, questionName, answerTitle }) {
+  async function savePickedBy({ teamId, questionName, answerTitle, userId }) {
     let testWeeklyQuestionsRef = db
       .collection("teams")
       .doc(teamId)
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       .collection(answerTitle)
       .doc("picked_by");
     const res = await testWeeklyQuestionsRef.update({
-      picked_by: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
+      picked_by: admin.firestore.FieldValue.arrayUnion(userId),
     });
   }
   let questionName =
