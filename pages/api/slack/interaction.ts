@@ -31,7 +31,7 @@ export default async function handler(req, res) {
     .doc(questionName);
   const ephimeralMessageData = {
     attachments:
-      '[{"text": "This response is anonymous.", "color": "#75b855"}]',
+      "[{'text': 'This response is anonymous.', 'color': '#75b855'}]",
     channel: slackResponse.channel.id,
     text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
     user: slackResponse.user.id,
@@ -50,6 +50,7 @@ export default async function handler(req, res) {
             method: "POST",
             headers: {
               Authorization: `Bearer ${responseData.add_to_slack_token.access_token}`,
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(ephimeralMessageData),
           })
