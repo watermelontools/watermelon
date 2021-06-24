@@ -35,14 +35,24 @@ export default async function handler(req, res) {
     text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
     user: slackResponse.user.id,
   };
-  console.log(slackResponse.token);
-  fetch("https://slack.com/api/chat.postEphemeral", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${slackResponse.token}`,
-    },
-    body: ephimeralMessageData,
-  });
+  await db
+    .collection("teams")
+    .doc(teamId)
+    .get()
+    .then((res) => {
+      if (res.exists) {
+        let responseData = res.data();
+        if (responseData.add_to_slack_token) {
+          fetch("https://slack.com/api/chat.postEphemeral", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${esponseData.add_to_slack_token}`,
+            },
+            body: ephimeralMessageData,
+          });
+        }
+      }
+    });
   const respondents = await respondentsRef.get();
   const respondentsArray = respondents.data().respondents;
   /*   if (respondentsArray.includes(userId)) {
