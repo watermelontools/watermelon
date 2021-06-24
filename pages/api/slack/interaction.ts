@@ -1,3 +1,4 @@
+import logger from "../../../logger/logger";
 import admin from "../../../utils/firebase/backend";
 
 export default async function handler(req, res) {
@@ -51,7 +52,13 @@ export default async function handler(req, res) {
               Authorization: `Bearer ${responseData.add_to_slack_token.access_token}`,
             },
             body: JSON.stringify(ephimeralMessageData),
-          });
+          })
+            .then(function (resp) {
+              logger.info({ message: "sent-ephemeral", data: resp });
+            })
+            .catch(function (error) {
+              logger.error("error-sending-ephemeral ", error);
+            });
         }
       }
     });
