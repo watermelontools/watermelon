@@ -38,7 +38,7 @@ export default async function handler(req, res) {
   fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${botToken}`,
+      Authorization: `Bearer ${slackResponse.token}`,
     },
     body: ephimeralMessageData,
   });
