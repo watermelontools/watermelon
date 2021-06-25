@@ -61,6 +61,9 @@ export default async function handler(req, res) {
         }
       }
     });
+  respondentsRef.update({
+    respondents: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
+  });
   const respondents = await respondentsRef.get();
   const respondentsArray = respondents.data().respondents;
   /*   if (respondentsArray.includes(userId)) {
@@ -74,9 +77,6 @@ export default async function handler(req, res) {
     };
     Slack.postEphemeral(ephimeralMessageData, context.botToken);
   } */
-  respondentsRef.update({
-    respondents: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
-  });
 
   savePickedBy({
     teamId: slackResponse.message.team,
@@ -97,7 +97,7 @@ export default async function handler(req, res) {
           type: "section",
           text: {
             type: "plain_text",
-            text: `🍉 question answered ${respondentsArray.length} time`,
+            text: `🍉 question answered ${respondentsArray.length + 1} time`,
             emoji: true,
           },
         },
