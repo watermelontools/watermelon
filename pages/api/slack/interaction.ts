@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       .doc(questionName)
       .collection(answerTitle)
       .doc("picked_by");
-    const res = await testWeeklyQuestionsRef.update({
+    await testWeeklyQuestionsRef.update({
       picked_by: admin.firestore.FieldValue.arrayUnion(userId),
     });
   }
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
     };
     Slack.postEphemeral(ephimeralMessageData, context.botToken);
   } */
-  await respondentsRef.update({
+  respondentsRef.update({
     respondents: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
   });
 
@@ -106,7 +106,8 @@ export default async function handler(req, res) {
   })
     .then((response) => response.json())
     .then((data) => {
-      res.status(200).json({ status: "ok" });
+      logger.info({ message: "question-answered", data });
     })
     .catch((error) => console.error(error));
+  res.status(200).json({ status: "ok" });
 }
