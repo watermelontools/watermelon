@@ -36,7 +36,6 @@ export default async function handler(req, res) {
     text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
     user: slackResponse.user.id,
   };
-  console.log("EPMD", ephimeralMessageData);
   await db
     .collection("teams")
     .doc(slackResponse.team.id)
@@ -45,7 +44,6 @@ export default async function handler(req, res) {
       if (res.exists) {
         let responseData = res.data();
         if (responseData.add_to_slack_token) {
-          console.log("tk", responseData.add_to_slack_token.access_token);
           await fetch("https://slack.com/api/chat.postEphemeral", {
             method: "POST",
             headers: {
@@ -109,7 +107,6 @@ export default async function handler(req, res) {
     .then((response) => response.json())
     .then((data) => {
       res.status(200).json({ status: "ok" });
-      console.log(data);
     })
     .catch((error) => console.error(error));
 }
