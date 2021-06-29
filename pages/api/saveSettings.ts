@@ -44,7 +44,7 @@ export default function handler(req, res) {
               process.env.EASYCRON_API_KEY
             }
           &cron_expression=0 ${element.hour} * * ${element.weekday} *
-          &url=${baseurl + element.url}
+          &url=${baseurl + element.route}
           &cron_job_name=${signInToken.team.id}`
           )
             .then((response) => response.json())
