@@ -1,4 +1,6 @@
 export async function savePickedBy({
+  admin,
+  db,
   teamId,
   questionName,
   answerTitle,

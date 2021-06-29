@@ -69,6 +69,8 @@ export default async function handler(req, res) {
   } */
 
   savePickedBy({
+    admin,
+    db,
     teamId: slackResponse.message.team,
     questionName,
     answerTitle: slackResponse.actions[0].value,
