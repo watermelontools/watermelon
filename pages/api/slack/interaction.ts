@@ -1,23 +1,13 @@
 import logger from "../../../logger/logger";
 import admin from "../../../utils/firebase/backend";
+import { savePickedBy } from "../../../utils/firebase/functions";
 
 export default async function handler(req, res) {
   let db = admin.firestore();
 
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
-  async function savePickedBy({ teamId, questionName, answerTitle, userId }) {
-    let testWeeklyQuestionsRef = db
-      .collection("teams")
-      .doc(teamId)
-      .collection("weekly_questions")
-      .doc(questionName)
-      .collection(answerTitle)
-      .doc("picked_by");
-    await testWeeklyQuestionsRef.update({
-      picked_by: admin.firestore.FieldValue.arrayUnion(userId),
-    });
-  }
+
   let questionName =
     slackResponse.message.blocks[
       slackResponse.message.blocks.findIndex(
