@@ -3,6 +3,14 @@ import "../styles/index.css";
 import firebase from "firebase/app";
 import "firebase/firestore";
 
+function handleWebVitals(metric) {
+  return {
+    ...metric,
+    startTime: Math.round(metric.startTime),
+    value: Math.round(metric.value),
+  };
+}
+
 const firebaseConfig = {
   apiKey:
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||

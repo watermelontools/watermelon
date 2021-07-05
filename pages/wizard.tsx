@@ -4,21 +4,26 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({ token, redirect}) => {
+const Wizard = ({  }) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
+  const [weekday, setWeekday] = useState("THU")
+  const [hour, setHour] = useState(15)
+  const [timezone, setTimezone ] = useState("")
   const [exampleQuestion, setExampleQuestion] = useState(1)
-  let signInToken = {team: {id:""}}
-  useEffect(()=>{
-    signInToken=JSON.parse(window.localStorage.getItem("sign_in_token"))
-    if(redirect) router.push("/weeklyquestions")
-  })
+
+  useEffect(() => {
+    setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
+  }, [lang, cat])
   const saveSettings = () => {
     let data ={
-      signInToken,
+      signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
       lang,
-      cat
+      cat, 
+      weekday, 
+      hour,
+      isWizard: true
      }
      fetch("/api/saveSettings",{
        method: "POST",
@@ -31,12 +36,6 @@ const Wizard = ({ token, redirect}) => {
       console.error("Error writing: ", error);
     });
   };
-  useEffect(() => {
-    window.localStorage.setItem("add_to_slack_token", JSON.stringify(token));
-  }, []);
-  useEffect(() => {
-    setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
-  }, [lang, cat])
   const person = "{person}"
   const answer= "{answer}"
   const questions = [
@@ -82,12 +81,36 @@ const Wizard = ({ token, redirect}) => {
     {value:"hobbies", label:"Hobbies"},
     {value:"profDev", label:"Professional Development"},
   ]
+  const weekdayOpts =[
+    {value:"MON", label:"Monday"},
+    {value:"TUE", label:"Tuesday"},
+    {value:"WED", label:"Wednesday"},
+    {value:"THU", label:"Thursday"},
+    {value:"FRI", label:"Friday"},
+    {value:"SAT", label:"Saturday"},
+  ]
+  const hourOpts =[
+    {value:7,label:'07:00'},
+    {value:8,label:'08:00'},
+    {value:9,label:'09:00'},
+    {value:10,label:'10:00'},
+    {value:11,label:'11:00'},
+    {value:12,label:'12:00'},
+    {value:13,label:'13:00'},
+    {value:14,label:'14:00'},
+    {value:15,label:'15:00'},
+    {value:16,label:'16:00'},
+    {value:17,label:'17:00'},
+    {value:18,label:'18:00'},
+  ]
+  const localeTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+console.log(localeTz);
   return (
     <>
       <PageTitle pageTitle="The finishing touches" />
       <PagePadder>
       <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
-        <div className="flex sm:flex-col md:flex-row">
+        <div className="flex sm:flex-col md:flex-row flex-wrap">
           <div className="card-style flex flex-col justify-between w-80">
             <h2 className="font-bold text-xl">Language</h2>
             <p>Select the language in which the questions will be sent:</p>
@@ -96,11 +119,25 @@ const Wizard = ({ token, redirect}) => {
           </div>
           <div className="card-style flex flex-col justify-between w-80">
             <div>
-
             <h2 className="font-bold text-xl">Question Type</h2>
             <p>Select the category of the questions to be shown</p>
             </div>
             <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+            <h2 className="font-bold text-xl">Weekday to ask</h2>
+            <p>Select the day of the week to send the questions</p>
+            <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
+            </div>
+          </div>
+          <div className="card-style flex flex-col justify-between w-80">
+            <div>
+            <h2 className="font-bold text-xl">Hour to ask</h2>
+            <p>Select the hour of the day to send the questions</p>
+            <p>This will happen on {weekdayOpts.find(el=> el.value=== weekday).label}</p>
+            <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
+            </div>
           </div>
         </div>
         <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
@@ -138,6 +175,8 @@ const Wizard = ({ token, redirect}) => {
 export default Wizard
 
 import admin from '../utils/firebase/backend';
+import logger from "../logger/logger";
+import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
 
 export async function getServerSideProps(context) {
 
@@ -149,6 +188,9 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
   if(token.ok){
+    console.log("calling func")
+    await createAndSave({teamId: token.team.id, access_token: token.access_token})
+    console.log("func ended")
     let db = admin.firestore();
     await db.collection("teams")
     .doc(token.team.id)
@@ -159,10 +201,10 @@ export async function getServerSideProps(context) {
       { merge: true }
     )
     .then(function (docRef) {
-      console.log("New install:", token.team);
+      logger.info({message: "new-add-to-slack:", data: token.team});
     })
     .catch(function (error) {
-      console.error("Error adding document: ", error);
+      logger.error("Error adding document: ", error);
     });
 
     await db.collection("teams")
@@ -183,24 +225,29 @@ export async function getServerSideProps(context) {
           },
       }
     )
-    .then(function (docRef) {
-      console.log("New install:", token.team);
+    .then(function () {
+      logger.info({message:"new-installation:", data:token.team});
     })
     .catch(function (error) {
-      console.error("Error adding document: ", error);
+      logger.error("Error adding document: ", error);
     });
 
     const token_clone = Object.assign({}, token);
+    console.log("sending token", token_clone)
     delete token_clone.access_token;
     return {
       props: {
-        token:token_clone
+        token:token_clone, 
+        redirect: false
       }, // will be passed to the page component as props
     };
   }
-  return {
-    props: {
-      redirect: true
-    }, // will be passed to the page component as props
-  };
+  else{
+    return {
+      redirect: {
+        destination: '/weeklyquestions',
+        permanent: false,
+      }, // will be passed to the page component as props
+    };
+  }
 }

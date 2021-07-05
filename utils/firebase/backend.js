@@ -4,9 +4,9 @@ import * as admin from 'firebase-admin'
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert({
-      projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      projectId: "wm-dev-6e6a9",
+      clientEmail: "firebase-adminsdk-rinna@wm-dev-6e6a9.iam.gserviceaccount.com",
+      privateKey: '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDKZKSy1nGMb+IE\nBP52i2ODZ7i8uSJeF/TU6gjsJMPK9qzLeWIpF42BBUOa/XJoK6QaGF9Gzc5HBGXw\nwMQUXX0l0YW45DAG2Hbz6bzOKuilU0oOnZELGFHnNvqHBd43PSA7hR2gDGRvYu7m\nVkm9QyLzSeTeQtTjQWluJIVCCcx+B1pZNrY7BYTVCpHWBmasGc5p3qDZsSz8m+D7\nb6HRB87uMBMdwQAqk0qEmUwQD73Dz8JQaPpb2FuSakCeQWWwBjzaN3760TtFjbAm\nU/omSRFWbR/oCt86+EnaAoz32z38VVHiBCRBc0MAY1RrQC1ehfwtZN9WMuOPCoWX\npX7XGTSPAgMBAAECggEAPX3BemJj4la11SHNTCgCZpCzVIdtFShzJuMqLdDnubkj\ne7iX5cM1p175kNPzGAo2VAVWoTTzOKlx7WkrycIzvTNAzRFrNBE9ZtL7nan0wBIj\nnHgr8rKDY9vU1wQl5SOJsPu7Kf7J3vuweMP7qGiG7GLlic/FTXx4s1GeORewDRPV\nKxNJViaq0Y1WutcJJ/5FUIuqDjJNAbZCzDF6dF1xYi3/am3Gez0BpGulu/w4ZPkM\nQXWZE3nR7TqtiQX/VzzzS6dyHQo7fQuImJrSwteShpzzVe6407c5ztk9kwFfAqrT\nSUYy2KSqmSNry3CeZdKFIVGEQlk40aKE2qmC6zHWyQKBgQD0PtT1IN6GHRaf4j/U\n2VqXK3AirJpb3j9PeKS8HCR4sitjSnIxGJoX3yINNRfW0EntvFJg0LwLVa5OL3eR\n3QLmhy+OeYQDvb/v88O0lGyBkK752bljPotRKrZXSF8bg28U3ESeyMH3N8A9gf9A\n8Z4FPGb8TzXEdMQK9kTDW3F8dwKBgQDUIi4doKk8Vr1r/nZ2/ZL9lURvyoLBGUeZ\nQ6LOvwbqRGIcNcAoCIYVzy0foXQiJ56g3jKBVTqMM37B9a62yLEPIMHpNX/XLw1j\n/HGKAT/YH0ju2zsO/hcHe2m/2VJp8XeMLLRnsMSKKVVgeuXIenIKtFmvHOdQZdZc\nUwk/IObGqQKBgEfqrEfVOtBghkXjl4nzyfHTD3yWOAku4pNi4Zal7rM/OvlMdV0x\nckXvJJag+Hj+8ZW3qsXpEEWCIAXTgjCH1A/O5FjePNnhKD/eFdT5Ew3/bRYSXrzz\nMJBgtDn1DFQMmkuZI/dhA4PofYle2qrjufSuuWA3box/GS5lHxAqv7q3AoGBAJHk\nL/MQW1O0E/IBv1d2bXEZB0ga7nH/AM7XRVEK76aOASuFi/H8arr1EQN/9m7G8MGS\nDwoDo5BomfSrEs2CmMLetH2+3X0QTxVEuJFA6reoTHB5NdTJyuzKY6AdxiA2gRFW\nbXwihgi/BIil/QIzs9rIziUwq6UPZK16LhHMfuqBAoGAQIrBYCactqw0bBh8yFzj\ni4O8XZM6VST/0TUwqeuad1kbU0PYJwxlPwomDAtmJ+ayI01z/f8FMIU5qe2/T5AE\nI1EoT2Vr3pmKlJAu+0lSZ1BZR68mVR+0USVwfxC9WAAQrAXKxYq7kb50M/NdcGo6\nZecuEdfGxOUTX0sf6WUIKaM=\n-----END PRIVATE KEY-----\n',
     }),
   })
 }
