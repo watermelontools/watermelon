@@ -86,96 +86,92 @@ export async function getServerSideProps(context) {
           if (responseData.add_to_slack_token) {
             add_to_slack_token = responseData.add_to_slack_token
             delete add_to_slack_token.access_token;
+            return {
+              redirect: {
+                destination: "/",
+                permanent: false
+              }
+            }
           }
         }
       });
-    if (add_to_slack_token) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false
-        }
-      }
-    }
-    else {
 
-      const response = await fetch("https://slack.com/api/users.identity", {
-        headers: {
-          'Authorization': `Bearer ${data?.authed_user?.access_token}`
-        },
-      })
-      const respJson = await response.json()
-      await db.collection("teams")
-        .doc(teamId)
-        .set(
-          {
-            loggedUser: respJson,
-            sign_in_token: data,
-            settings: { language: "en", category: "hobbies", weekday: "THU", hour: "15" },
-            installation: {
-              user: {
-                token: data?.authed_user?.access_token,
-                scopes: data?.authed_user?.scope,
-                id: data?.authed_user?.id,
-              },
+    const response = await fetch("https://slack.com/api/users.identity", {
+      headers: {
+        'Authorization': `Bearer ${data?.authed_user?.access_token}`
+      },
+    })
+    const respJson = await response.json()
+    await db.collection("teams")
+      .doc(teamId)
+      .set(
+        {
+          loggedUser: respJson,
+          sign_in_token: data,
+          settings: { language: "en", category: "hobbies", weekday: "THU", hour: "15" },
+          installation: {
+            user: {
+              token: data?.authed_user?.access_token,
+              scopes: data?.authed_user?.scope,
+              id: data?.authed_user?.id,
             },
           },
-          { merge: true }
+        },
+        { merge: true }
+      )
+      .then(function () {
+        logger.info({ message: "new-signin", data: data.team })
+      })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      })
+    const initialState = [
+      {
+        question: "What instrument would you like to play?",
+        icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
+        answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
+      },
+      {
+        question: "Who would you rather be?",
+        icebreaker:
+          "Hey ${person} would you rather be rich or famous due to being ${answer}?",
+        answers: ["The first person on Mars", "The person that cures cancer"],
+      },
+    ];
+    initialState.forEach((question) => {
+      db.collection("teams")
+        .doc(
+          `${teamId}/weekly_questions/${question.question}`
         )
+        .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
         .then(function () {
-          logger.info({ message: "new-signin", data: data.team })
+          logger.info({
+            message: "Wrote default question", data: {
+              question: question.question,
+              icebreaker: question.icebreaker,
+              answers: question.answers
+            }
+          });
         })
         .catch(function (error) {
-          console.error("Error adding document: ", error);
-        })
-      const initialState = [
-        {
-          question: "What instrument would you like to play?",
-          icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
-          answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
-        },
-        {
-          question: "Who would you rather be?",
-          icebreaker:
-            "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-          answers: ["The first person on Mars", "The person that cures cancer"],
-        },
-      ];
-      initialState.forEach((question) => {
+          console.error("Error writing: ", error);
+        });
+      question.answers.forEach((answer) => {
         db.collection("teams")
           .doc(
-            `${teamId}/weekly_questions/${question.question}`
+            `${teamId}`
           )
-          .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-          .then(function () {
-            logger.info({
-              message: "Wrote default question", data: {
-                question: question.question,
-                icebreaker: question.icebreaker,
-                answers: question.answers
-              }
-            });
-          })
+          .collection("weekly_questions")
+          .doc(question.question)
+          .collection(answer)
+          .doc("picked_by")
+          .set({ picked_by: [] }, { merge: true })
+          .then(() => { })
           .catch(function (error) {
             console.error("Error writing: ", error);
           });
-        question.answers.forEach((answer) => {
-          db.collection("teams")
-            .doc(
-              `${teamId}`
-            )
-            .collection("weekly_questions")
-            .doc(question.question)
-            .collection(answer)
-            .doc("picked_by")
-            .set({ picked_by: [] }, { merge: true })
-            .then(() => { })
-            .catch(function (error) {
-              console.error("Error writing: ", error);
-            });
-        });
       });
-    }
+    });
     return {
       props: {
         token
