@@ -128,6 +128,7 @@ console.log(localeTz);
             <div>
             <h2 className="font-bold text-xl">Weekday to ask</h2>
             <p>Select the day of the week to send the questions</p>
+            <p>We suggest the middle of the week</p>
             <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
             </div>
           </div>
