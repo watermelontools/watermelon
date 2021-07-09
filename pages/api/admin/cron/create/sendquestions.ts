@@ -31,7 +31,9 @@ export default function handler(req, res) {
         data,
         ...responseObject,
       });
-      res.status(200).json(JSON.stringify({ ok: "ok", ...responseObject }));
+      res
+        .status(200)
+        .json(JSON.stringify({ ok: "ok", ...responseObject, data }));
     })
     .catch((error) => {
       logger.error({
