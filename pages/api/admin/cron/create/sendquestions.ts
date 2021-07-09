@@ -1,6 +1,7 @@
 import logger from "../../../../../logger/logger";
 export default function handler(req, res) {
-  let { signInToken, weekday, hour } = req.body;
+  let body = JSON.parse(req.body);
+  let { signInToken, weekday, hour } = body;
 
   if (!signInToken) {
     logger.error({
