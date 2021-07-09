@@ -1,6 +1,14 @@
 import logger from "../../../../../logger/logger";
+export default function handler(req, res) {
+  let { signInToken, weekday, hour } = req.body;
 
-export const createCron = async ({ signInToken, weekday, hour }) => {
+  if (!signInToken) {
+    logger.error({
+      message: "no token",
+    });
+    return res.status(401).json({ error: "no token", code: 1 });
+  }
+
   let url = `https://${
     process.env.isDev === "true" ? "dev." : ""
   }app.watermelon.tools/api/admin/slack/createandemptygroups/${
@@ -32,7 +40,7 @@ export const createCron = async ({ signInToken, weekday, hour }) => {
       }
     }
   };
-  await fetch(
+  fetch(
     `https://www.easycron.com/rest/add?token=${process.env.EASYCRON_API_KEY}
     &cron_expression=0 ${hour || 15} * * ${replaceDay(weekday) || "THU"} *
     &url=${url}
@@ -44,7 +52,7 @@ export const createCron = async ({ signInToken, weekday, hour }) => {
         data,
         ...responseObject,
       });
-      return { ok: "ok", ...responseObject };
+      res.status(200).json(JSON.stringify({ ok: "ok", ...responseObject }));
     })
     .catch((error) => {
       logger.error({
@@ -52,18 +60,6 @@ export const createCron = async ({ signInToken, weekday, hour }) => {
         error,
         ...responseObject,
       });
-      return error;
+      res.status(500).json(error);
     });
-};
-export default async function handler(req, res) {
-  let { signInToken, weekday, hour } = req.body;
-  if (!signInToken) {
-    logger.error({
-      message: "no token",
-    });
-    return res.status(401).json({ error: "no token", code: 1 });
-  }
-  await createCron({ signInToken, weekday, hour })
-    .then((creation) => res.send(creation))
-    .catch((err) => res.send(err));
 }

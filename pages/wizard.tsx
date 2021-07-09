@@ -25,6 +25,14 @@ const Wizard = ({  }) => {
       hour,
       isWizard: true
      }
+     fetch("/api/admin/cron/createandemptygroups",{
+       method: "POST",
+       body:JSON.stringify({
+         signInToken: window.localStorage.getItem("sign_in_token"),
+         weekday,
+         hour
+        })
+      })
      fetch("/api/saveSettings",{
        method: "POST",
        body:JSON.stringify(data)
@@ -178,7 +186,6 @@ export default Wizard
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
 import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
-import { createCron } from "./api/admin/cron/create/createandemptygroups";
 
 export async function getServerSideProps(context) {
 
@@ -231,8 +238,7 @@ export async function getServerSideProps(context) {
     .catch(function (error) {
       logger.error("Error adding document: ", error);
     });
-    let cron = await createCron({signInToken: token, weekday: "THU", hour: 15})
-    console.log(cron)
+
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;
     return {
