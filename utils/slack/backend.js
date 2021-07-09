@@ -29,7 +29,7 @@ const createGroup = async ({ data, token }) => {
   })
     .then((response) => response.json())
     .then((resjson) => {
-      return { status: "ok", resjson };
+      return resjson.channel.id;
     })
     .catch((err) => {
       return { status: "error" }, err;

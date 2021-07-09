@@ -14,7 +14,7 @@ const createInitialGroups = ({ token }) => {
     createPromiseArray.push(
       createGroup({
         data: {
-          name: `wm-${index}`,
+          name: `watermelon-${index + 1}`,
           is_private: true,
         },
         token,
