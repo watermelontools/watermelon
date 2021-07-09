@@ -25,7 +25,7 @@ const Wizard = ({  }) => {
       hour,
       isWizard: true
      }
-     fetch("/api/admin/cron/createandemptygroups",{
+     fetch("/api/admin/cron/create/createandemptygroups",{
       method: "POST",
       body:JSON.stringify({
         signInToken: window.localStorage.getItem("sign_in_token"),
@@ -33,7 +33,7 @@ const Wizard = ({  }) => {
         hour
        })
      })
-     fetch("/api/admin/cron/sendquestions",{
+     fetch("/api/admin/cron/create/sendquestions",{
       method: "POST",
       body:JSON.stringify({
         signInToken: window.localStorage.getItem("sign_in_token"),
