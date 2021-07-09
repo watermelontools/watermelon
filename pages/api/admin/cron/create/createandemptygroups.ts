@@ -12,9 +12,9 @@ export default function handler(req, res) {
 
   let url = `https://${
     process.env.isDev === "true" ? "dev." : ""
-  }app.watermelon.tools/api/admin/slack/createandemptygroups/${
+  }app.watermelon.tools/api/admin/slack/${
     signInToken?.team?.id
-  }`;
+  }/createandemptygroups`;
 
   let responseObject = {
     hour: hour || "no hour",
