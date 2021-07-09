@@ -178,6 +178,7 @@ export default Wizard
 import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
 import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
+import { createCron } from "./api/admin/cron/create/createandemptygroups";
 
 export async function getServerSideProps(context) {
 
@@ -189,9 +190,7 @@ export async function getServerSideProps(context) {
   );
   let token = await f.json();
   if(token.ok){
-    console.log("calling func")
     await createAndSave({teamId: token.team.id, access_token: token.access_token})
-    console.log("func ended")
     let db = admin.firestore();
     await db.collection("teams")
     .doc(token.team.id)
@@ -232,9 +231,9 @@ export async function getServerSideProps(context) {
     .catch(function (error) {
       logger.error("Error adding document: ", error);
     });
-
+    let cron = await createCron({signInToken: token, weekday: "THU", hour: 15})
+    console.log(cron)
     const token_clone = Object.assign({}, token);
-    console.log("sending token", token_clone)
     delete token_clone.access_token;
     return {
       props: {
