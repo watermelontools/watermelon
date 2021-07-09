@@ -28,7 +28,7 @@ const Wizard = ({  }) => {
      fetch("/api/admin/cron/create/createandemptygroups",{
       method: "POST",
       body:JSON.stringify({
-        signInToken: window.localStorage.getItem("sign_in_token"),
+        signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
         weekday,
         hour
        })
@@ -36,7 +36,7 @@ const Wizard = ({  }) => {
      fetch("/api/admin/cron/create/sendquestions",{
       method: "POST",
       body:JSON.stringify({
-        signInToken: window.localStorage.getItem("sign_in_token"),
+        signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
         weekday,
         hour
        })

@@ -1,7 +1,7 @@
 import logger from "../../../../../logger/logger";
 export default function handler(req, res) {
   let { signInToken, weekday, hour } = req.body;
-
+  console.log(signInToken);
   if (!signInToken) {
     logger.error({
       message: "no token",
