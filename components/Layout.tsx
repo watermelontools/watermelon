@@ -24,6 +24,11 @@ const Layout = ({ children }) => {
       text: "Settings",
       route: "/settings",
     },
+    {
+      icon: "/svg/",
+      test: "Billing",
+      route: "/billing"
+    }
   ];
   const isInitialFlow: boolean =
     router.pathname.includes("login") || router.pathname.includes("firstAuth");
