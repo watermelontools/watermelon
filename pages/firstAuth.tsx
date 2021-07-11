@@ -108,6 +108,17 @@ export async function getServerSideProps(context) {
         },
       })
       const respJson = await response.json()
+
+      // TODO: Pass insallation channel id to his http request
+      const workspaceResp = await fetch("https://slack.com/api/conversations.members", {
+        headers: {
+          'Authorization': `Bearer ${data?.authed_user?.access_token}`
+        },
+      })
+      const workspaceRespJson = await workspaceResp.json()
+
+      const workspaceSize = workspaceRespJson.members.length()
+
       await db.collection("teams")
         .doc(teamId)
         .set(
@@ -122,6 +133,7 @@ export async function getServerSideProps(context) {
                 id: data?.authed_user?.id,
               },
             },
+            workspace_size: workspaceSize
           },
           { merge: true }
         )
