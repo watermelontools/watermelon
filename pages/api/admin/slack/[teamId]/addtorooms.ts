@@ -39,6 +39,7 @@ export default async function handler(req, res) {
 
   let alreadyPopulated = [];
 
+  let responses = []
   async function populateRooms() {
     // returned object
     let groups = [];
@@ -144,9 +145,7 @@ export default async function handler(req, res) {
                   }
                 )
                 .then((response3) => {
-                  res
-                    .status(200)
-                    .json(JSON.stringify({ ok: "ok", ...response3.data }));
+                  responses.push({ ...response3.data });
                 })
                 .catch((err) => {
                   console.log(err);
@@ -160,5 +159,6 @@ export default async function handler(req, res) {
     });
   }
 
-  populateRooms();
+  await populateRooms();
+  res.send(responses)
 }
