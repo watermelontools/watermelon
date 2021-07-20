@@ -13,7 +13,24 @@ async function getInstallationToken(teamId) {
     return doc.data().add_to_slack_token.access_token;
   }
 }
-
+const sendIcebreaker = ({ icebreakerData, accessToken }) => {
+  return fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(icebreakerData),
+  });
+};
+const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
+  return fetch("https://slack.com/api/conversations.invite", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(watermelonRoomData),
+  });
+};
 export default async function handler(req, res) {
   const {
     query: { teamId },
@@ -39,7 +56,7 @@ export default async function handler(req, res) {
 
   let alreadyPopulated = [];
 
-  let responses = []
+  let responses = [];
   async function populateRooms() {
     // returned object
     let groups = [];
@@ -110,55 +127,24 @@ export default async function handler(req, res) {
           }
         }
 
-        const watermelonRoomData = {
-          channel: channelId,
-          users: usersParsed,
-        };
-
         if (usersParsed != "") {
-          axios
-            .post(
-              "https://slack.com/api/conversations.invite",
-              watermelonRoomData,
-              {
-                headers: {
-                  Authorization: `Bearer ${accessToken}`,
-                },
-              }
-            )
-            .then((response2) => {
-              const icebreakerData = {
-                channel: channelId,
-                text: icebreaker
-                  .replace(/\$\{answer}/g, answerTitle)
-                  .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
-              };
-
-              axios
-                .post(
-                  "https://slack.com/api/chat.postMessage",
-                  icebreakerData,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${accessToken}`,
-                    },
-                  }
-                )
-                .then((response3) => {
-                  responses.push({ ...response3.data });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          const watermelonRoomData = {
+            channel: channelId,
+            users: usersParsed,
+          };
+          await inviteToRoom({ watermelonRoomData, accessToken });
+          const icebreakerData = {
+            channel: channelId,
+            text: icebreaker
+              .replace(/\$\{answer}/g, answerTitle)
+              .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
+          };
+          await sendIcebreaker({ icebreakerData, accessToken });
         }
       }
     });
   }
 
   await populateRooms();
-  res.send(responses)
+  res.send(responses);
 }
