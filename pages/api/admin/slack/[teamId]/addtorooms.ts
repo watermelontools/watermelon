@@ -31,6 +31,20 @@ const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
     body: JSON.stringify(watermelonRoomData),
   });
 };
+const getAnswers = async (teamId, questionName) => {
+  let answerTitles = [];
+  const answersRef = db
+    .collection("teams")
+    .doc(teamId)
+    .collection("weekly_questions")
+    .doc(questionName);
+  const collections = await answersRef.listCollections();
+  collections.forEach(async (collection) => {
+    answerTitles.push(collection.id);
+  });
+  return answerTitles;
+};
+
 export default async function handler(req, res) {
   const {
     query: { teamId },
@@ -58,27 +72,9 @@ export default async function handler(req, res) {
 
   let responses = [];
   async function populateRooms() {
-    // returned object
-    let groups = [];
-    // saves the answerer's ID locally. An array of arrays
-    // let pickedByIdsArray = [];
     // The question titles, used for accessing the doc on the DB.
-    let questions = [];
 
     // returns the answers in an array for a given question
-    const getAnswers = async (teamId, questionName) => {
-      let answerTitles = [];
-      const answersRef = db
-        .collection("teams")
-        .doc(teamId)
-        .collection("weekly_questions")
-        .doc(questionName);
-      const collections = await answersRef.listCollections();
-      collections.forEach(async (collection) => {
-        answerTitles.push(collection.id);
-      });
-      return answerTitles;
-    };
 
     let weeklyQuestionsRef = db
       .collection("teams")
@@ -86,16 +82,15 @@ export default async function handler(req, res) {
       .collection("weekly_questions");
 
     let allQuestions = await weeklyQuestionsRef.get();
-    let final = allQuestions.forEach(async (doc) => {
-      questions.push(doc.id);
+    allQuestions.forEach(async (doc) => {
       let questionName = doc.id;
       let answerTitles = await getAnswers(teamId, questionName);
 
       for (let i = 0; i < answerTitles.length; i++) {
+        let answerTitle = answerTitles[i];
         console.log("answer title: ", answerTitles[i]);
         // For each answer, assign a watermelon room
         let currentAnswerers = [];
-        let answerTitle = answerTitles[i];
         let weeklyQsPickedByRef = db
           .collection("teams")
           .doc(teamId)
@@ -140,6 +135,7 @@ export default async function handler(req, res) {
               .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
           };
           await sendIcebreaker({ icebreakerData, accessToken });
+          responses.push({ channelId, icebreaker, usersParsed });
         }
       }
     });
