@@ -15,10 +15,13 @@ export default async function handler(req, res) {
   }
   let questions = await getAllQuestions();
   let questionsToSend = [];
+  console.log("questions", questions);
   while (questionsToSend.length < 2) {
     let item = questions[Math.floor(Math.random() * questions.length)];
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
+  console.log("questionsToSend", questionsToSend);
+
   const setQuestion = (record, answer) => {
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
