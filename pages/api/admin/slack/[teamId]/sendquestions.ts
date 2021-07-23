@@ -120,7 +120,7 @@ export default async function handler(req, res) {
               type: "section",
               text: {
                 type: "mrkdwn",
-                text: "hello @here, time to answer some questions :watermelon:",
+                text: "Hey! I'm Watermelon 🍉 I'll help you meet like minded co-workers. All you have to do is answer the questions <!here>",
               },
             },
             ...blocks,
