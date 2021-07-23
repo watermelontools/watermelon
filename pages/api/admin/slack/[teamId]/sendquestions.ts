@@ -114,7 +114,16 @@ export default async function handler(req, res) {
       let postMessageRes = await postMessage({
         data: {
           text: "Time to answer some questions 🍉",
-          blocks,
+          blocks: [
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: "hello @here, time to answer some questions :watermelon:",
+              },
+            },
+            ...blocks,
+          ],
           channel: data.add_to_slack_token.incoming_webhook.channel_id,
         },
         token: data.add_to_slack_token.access_token,
