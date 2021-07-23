@@ -15,10 +15,8 @@ export default async function handler(req, res) {
   }
   let questions = await getAllQuestions();
   let questionsToSend = [];
-  console.log("questions.length", questions.length);
   while (questionsToSend.length < 2) {
     let item = questions[Math.floor(Math.random() * questions.length)];
-    console.log("questionsToSend", item.fields.Question);
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
 
@@ -50,7 +48,7 @@ export default async function handler(req, res) {
   };
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
-    let record = questions[i];
+    let record = questionsToSend[i];
     setQuestion(record, record.get("AnswerA"));
     setQuestion(record, record.get("AnswerB"));
     setQuestion(record, record.get("AnswerC"));
