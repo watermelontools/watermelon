@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
   let questions = await getAllQuestions();
   let questionsToSend = [];
-  console.log("questions", questions);
+  console.log("questions.length", questions.length);
   while (questionsToSend.length < 2) {
     let item = questions[Math.floor(Math.random() * questions.length)];
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
