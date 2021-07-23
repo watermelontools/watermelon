@@ -18,9 +18,9 @@ export default async function handler(req, res) {
   console.log("questions.length", questions.length);
   while (questionsToSend.length < 2) {
     let item = questions[Math.floor(Math.random() * questions.length)];
+    console.log("questionsToSend", item.fields.Question);
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
-  console.log("questionsToSend", questionsToSend);
 
   const setQuestion = (record, answer) => {
     db.collection("teams")
