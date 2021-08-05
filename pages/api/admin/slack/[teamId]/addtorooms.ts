@@ -1,6 +1,5 @@
 import admin from "../../../../../utils/firebase/backend";
 import logger from "../../../../../logger/logger";
-import { Console } from "console";
 const axios = require("axios").default;
 
 let db = admin.firestore();
@@ -70,7 +69,6 @@ export default async function handler(req, res) {
   }
 
   let alreadyPopulated = [];
-  console.log(room_ids);
   let responses = [];
   // The question titles, used for accessing the doc on the DB.
 
@@ -107,7 +105,7 @@ export default async function handler(req, res) {
         .doc(questionName);
 
       let icebreaker = (await icebreakerRef.get()).data().icebreaker;
-
+      console.log("icebreaker", icebreaker);
       currentAnswerers = respondents.data().picked_by;
 
       let usersParsed = currentAnswerers.toString();
@@ -121,8 +119,9 @@ export default async function handler(req, res) {
           break;
         }
       }
-      console.log(channelId);
-      if (usersParsed != "") {
+      console.log("channelId", channelId);
+      console.log("answerers", currentAnswerers);
+      if (usersParsed !== "") {
         const watermelonRoomData = {
           channel: channelId,
           users: usersParsed,
