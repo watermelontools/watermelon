@@ -80,6 +80,7 @@ export default async function handler(req, res) {
     .collection("weekly_questions");
 
   let allQuestions = await weeklyQuestionsRef.get();
+
   allQuestions.forEach(async (doc) => {
     let questionName = doc.id;
     let answerTitles = await getAnswers(teamId, questionName);
@@ -98,6 +99,7 @@ export default async function handler(req, res) {
         .doc("picked_by");
 
       let respondents = await weeklyQsPickedByRef.get();
+      console.log("respondents", respondents);
       let icebreakerRef = db
         .collection("teams")
         .doc(teamId)
