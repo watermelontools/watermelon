@@ -1,5 +1,6 @@
 import admin from "../../../../../utils/firebase/backend";
 import logger from "../../../../../logger/logger";
+import { Console } from "console";
 const axios = require("axios").default;
 
 let db = admin.firestore();
@@ -121,7 +122,7 @@ export default async function handler(req, res) {
             break;
           }
         }
-
+        console.log(channelId);
         if (usersParsed != "") {
           const watermelonRoomData = {
             channel: channelId,
@@ -139,8 +140,8 @@ export default async function handler(req, res) {
         }
       }
     });
+    res.send(responses);
   }
 
   await populateRooms();
-  res.send(responses);
 }
