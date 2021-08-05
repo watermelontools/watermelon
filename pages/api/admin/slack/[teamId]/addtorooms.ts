@@ -69,78 +69,76 @@ export default async function handler(req, res) {
   }
 
   let alreadyPopulated = [];
-
   let responses = [];
-  async function populateRooms() {
-    // The question titles, used for accessing the doc on the DB.
+  // The question titles, used for accessing the doc on the DB.
 
-    // returns the answers in an array for a given question
+  // returns the answers in an array for a given question
 
-    let weeklyQuestionsRef = db
-      .collection("teams")
-      .doc(teamId)
-      .collection("weekly_questions");
+  let weeklyQuestionsRef = db
+    .collection("teams")
+    .doc(teamId)
+    .collection("weekly_questions");
 
-    let allQuestions = await weeklyQuestionsRef.get();
-    allQuestions.forEach(async (doc) => {
-      let questionName = doc.id;
-      let answerTitles = await getAnswers(teamId, questionName);
+  let allQuestions = await weeklyQuestionsRef.get();
 
-      for (let i = 0; i < answerTitles.length; i++) {
-        let answerTitle = answerTitles[i];
-        console.log("answer title: ", answerTitles[i]);
-        // For each answer, assign a watermelon room
-        let currentAnswerers = [];
-        let weeklyQsPickedByRef = db
-          .collection("teams")
-          .doc(teamId)
-          .collection("weekly_questions")
-          .doc(questionName)
-          .collection(answerTitle)
-          .doc("picked_by");
+  allQuestions.forEach(async (doc) => {
+    let questionName = doc.id;
+    let answerTitles = await getAnswers(teamId, questionName);
+    // console.log(doc.data());
+    for (let i = 0; i < answerTitles.length; i++) {
+      let answerTitle = answerTitles[i];
+      // console.log("answer title: ", answerTitles[i]);
+      // For each answer, assign a watermelon room
+      let currentAnswerers = [];
+      let weeklyQsPickedByRef = db
+        .collection("teams")
+        .doc(teamId)
+        .collection("weekly_questions")
+        .doc(questionName)
+        .collection(answerTitle)
+        .doc("picked_by");
 
-        let respondents = await weeklyQsPickedByRef.get();
-        let icebreakerRef = db
-          .collection("teams")
-          .doc(teamId)
-          .collection("weekly_questions")
-          .doc(questionName);
+      let respondents = await weeklyQsPickedByRef.get();
+      // console.log("respondents", respondents.data());
+      let icebreakerRef = db
+        .collection("teams")
+        .doc(teamId)
+        .collection("weekly_questions")
+        .doc(questionName);
 
-        let icebreaker = (await icebreakerRef.get()).data().icebreaker;
+      let icebreaker = (await icebreakerRef.get()).data().icebreaker;
+      // console.log("icebreaker", icebreaker);
+      currentAnswerers = respondents.data().picked_by;
 
-        currentAnswerers = respondents.data().picked_by;
+      let usersParsed = currentAnswerers.toString();
 
-        let usersParsed = currentAnswerers.toString();
+      let channelId = "";
 
-        let channelId = "";
-
-        for (let j = 0; j < room_ids.length; j++) {
-          if (!alreadyPopulated.includes(room_ids[j])) {
-            channelId = room_ids[j];
-            alreadyPopulated.push(channelId);
-            break;
-          }
-        }
-
-        if (usersParsed != "") {
-          const watermelonRoomData = {
-            channel: channelId,
-            users: usersParsed,
-          };
-          await inviteToRoom({ watermelonRoomData, accessToken });
-          const icebreakerData = {
-            channel: channelId,
-            text: icebreaker
-              .replace(/\$\{answer}/g, answerTitle)
-              .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
-          };
-          await sendIcebreaker({ icebreakerData, accessToken });
-          responses.push({ channelId, icebreaker, usersParsed });
+      for (let j = 0; j < room_ids.length; j++) {
+        if (!alreadyPopulated.includes(room_ids[j])) {
+          channelId = room_ids[j];
+          alreadyPopulated.push(channelId);
+          break;
         }
       }
-    });
-  }
-
-  await populateRooms();
+      // console.log("channelId", channelId);
+      // console.log("answerers", currentAnswerers);
+      if (usersParsed !== "") {
+        const watermelonRoomData = {
+          channel: channelId,
+          users: usersParsed,
+        };
+        await inviteToRoom({ watermelonRoomData, accessToken });
+        const icebreakerData = {
+          channel: channelId,
+          text: icebreaker
+            .replace(/\$\{answer}/g, answerTitle)
+            .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
+        };
+        await sendIcebreaker({ icebreakerData, accessToken });
+        responses.push({ channelId, icebreaker, usersParsed });
+      }
+    }
+  });
   res.send(responses);
 }
