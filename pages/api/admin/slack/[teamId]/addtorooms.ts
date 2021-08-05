@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         .doc("picked_by");
 
       let respondents = await weeklyQsPickedByRef.get();
-      console.log("respondents", respondents);
+      console.log("respondents", respondents.data());
       let icebreakerRef = db
         .collection("teams")
         .doc(teamId)
