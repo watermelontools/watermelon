@@ -84,7 +84,7 @@ export default async function handler(req, res) {
   allQuestions.forEach(async (doc) => {
     let questionName = doc.id;
     let answerTitles = await getAnswers(teamId, questionName);
-    console.log(doc);
+    console.log(doc.data());
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
       // console.log("answer title: ", answerTitles[i]);
