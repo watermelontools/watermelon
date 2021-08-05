@@ -84,10 +84,10 @@ export default async function handler(req, res) {
   allQuestions.forEach(async (doc) => {
     let questionName = doc.id;
     let answerTitles = await getAnswers(teamId, questionName);
-
+    console.log(doc);
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
-      console.log("answer title: ", answerTitles[i]);
+      // console.log("answer title: ", answerTitles[i]);
       // For each answer, assign a watermelon room
       let currentAnswerers = [];
       let weeklyQsPickedByRef = db
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         .doc("picked_by");
 
       let respondents = await weeklyQsPickedByRef.get();
-      console.log("respondents", respondents.data());
+      // console.log("respondents", respondents.data());
       let icebreakerRef = db
         .collection("teams")
         .doc(teamId)
@@ -107,7 +107,7 @@ export default async function handler(req, res) {
         .doc(questionName);
 
       let icebreaker = (await icebreakerRef.get()).data().icebreaker;
-      console.log("icebreaker", icebreaker);
+      // console.log("icebreaker", icebreaker);
       currentAnswerers = respondents.data().picked_by;
 
       let usersParsed = currentAnswerers.toString();
@@ -121,8 +121,8 @@ export default async function handler(req, res) {
           break;
         }
       }
-      console.log("channelId", channelId);
-      console.log("answerers", currentAnswerers);
+      // console.log("channelId", channelId);
+      // console.log("answerers", currentAnswerers);
       if (usersParsed !== "") {
         const watermelonRoomData = {
           channel: channelId,
