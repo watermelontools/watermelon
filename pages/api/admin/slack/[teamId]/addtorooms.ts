@@ -23,6 +23,8 @@ const sendIcebreaker = ({ icebreakerData, accessToken }) => {
   });
 };
 const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
+  console.log('inviteToRoom called')
+  console.log('watermelonRoomData: ', watermelonRoomData)
   return fetch("https://slack.com/api/conversations.invite", {
     method: "POST",
     headers: {
@@ -66,6 +68,7 @@ export default async function handler(req, res) {
   } else {
     // For each room id, execute what we have on Glitch
     room_ids = doc.data().room_ids;
+    console.log('room ids: ', room_ids)
   }
 
   let alreadyPopulated = [];
