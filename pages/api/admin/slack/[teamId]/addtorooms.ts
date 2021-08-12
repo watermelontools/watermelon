@@ -14,15 +14,6 @@ async function getInstallationToken(teamId) {
   }
 }
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  // return fetch("https://slack.com/api/chat.postMessage", {
-  //   method: "POST",
-  //   headers: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //   },
-  //   body: JSON.stringify(icebreakerData),
-  // });
-
-
   axios.post('https://slack.com/api/chat.postMessage', icebreakerData,{
     headers: {
       'Authorization': `Bearer ${accessToken}` 
@@ -107,7 +98,7 @@ export default async function handler(req, res) {
     // console.log(doc.data());
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
-      // console.log("answer title: ", answerTitles[i]);
+      console.log("answer title: ", answerTitles[i]);
       // For each answer, assign a watermelon room
       let currentAnswerers = [];
       let weeklyQsPickedByRef = db
