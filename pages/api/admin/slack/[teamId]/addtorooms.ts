@@ -25,13 +25,23 @@ const sendIcebreaker = ({ icebreakerData, accessToken }) => {
 const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
   console.log('inviteToRoom called')
   console.log('watermelonRoomData: ', watermelonRoomData)
-  return fetch("https://slack.com/api/conversations.invite", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify(watermelonRoomData),
+
+  // return fetch("https://slack.com/api/conversations.invite", {
+  //   method: "POST",
+  //   headers: {
+  //     Authorization: `Bearer ${accessToken}`,
+  //   },
+  //   body: JSON.stringify(watermelonRoomData),
+  // });
+
+  axios.post('https://slack.com/api/conversations.invite',watermelonRoomData)
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
   });
+
 };
 const getAnswers = async (teamId, questionName) => {
   let answerTitles = [];
