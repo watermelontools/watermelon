@@ -14,26 +14,30 @@ async function getInstallationToken(teamId) {
   }
 }
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  return fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify(icebreakerData),
-  });
-};
-const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  console.log('inviteToRoom called')
-  console.log('watermelonRoomData: ', watermelonRoomData)
-
-  // return fetch("https://slack.com/api/conversations.invite", {
+  // return fetch("https://slack.com/api/chat.postMessage", {
   //   method: "POST",
   //   headers: {
   //     Authorization: `Bearer ${accessToken}`,
   //   },
-  //   body: JSON.stringify(watermelonRoomData),
+  //   body: JSON.stringify(icebreakerData),
   // });
 
+
+  axios.post('https://slack.com/api/chat.postMessage', icebreakerData,{
+    headers: {
+      'Authorization': `Bearer ${accessToken}` 
+    }
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+};
+const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
   axios.post('https://slack.com/api/conversations.invite', watermelonRoomData,{
     headers: {
       'Authorization': `Bearer ${accessToken}` 
@@ -82,7 +86,6 @@ export default async function handler(req, res) {
   } else {
     // For each room id, execute what we have on Glitch
     room_ids = doc.data().room_ids;
-    console.log('room ids: ', room_ids)
   }
 
   let alreadyPopulated = [];
@@ -104,7 +107,6 @@ export default async function handler(req, res) {
     // console.log(doc.data());
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
-      console.log('current answer title: ', answerTitle)
       // console.log("answer title: ", answerTitles[i]);
       // For each answer, assign a watermelon room
       let currentAnswerers = [];
@@ -141,8 +143,7 @@ export default async function handler(req, res) {
       }
       // console.log("channelId", channelId);
       // console.log("answerers", currentAnswerers);
-      if (usersParsed != "") {
-        console.log('if users parsed')
+      if (usersParsed !=="") {
         const watermelonRoomData = {
           channel: channelId,
           users: usersParsed,
