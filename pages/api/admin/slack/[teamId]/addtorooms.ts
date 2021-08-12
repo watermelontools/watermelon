@@ -90,6 +90,7 @@ export default async function handler(req, res) {
     // console.log(doc.data());
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
+      console.log('current answer title: ', answerTitle)
       // console.log("answer title: ", answerTitles[i]);
       // For each answer, assign a watermelon room
       let currentAnswerers = [];
@@ -127,6 +128,7 @@ export default async function handler(req, res) {
       // console.log("channelId", channelId);
       // console.log("answerers", currentAnswerers);
       if (usersParsed !== "") {
+        console.log('if users parsed')
         const watermelonRoomData = {
           channel: channelId,
           users: usersParsed,
