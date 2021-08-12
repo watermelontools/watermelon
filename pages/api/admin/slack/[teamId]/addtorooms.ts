@@ -127,7 +127,7 @@ export default async function handler(req, res) {
       }
       // console.log("channelId", channelId);
       // console.log("answerers", currentAnswerers);
-      if (usersParsed !== "") {
+      // if (usersParsed !== "") { BECAREFUL
         console.log('if users parsed')
         const watermelonRoomData = {
           channel: channelId,
@@ -142,7 +142,7 @@ export default async function handler(req, res) {
         };
         await sendIcebreaker({ icebreakerData, accessToken });
         responses.push({ channelId, icebreaker, usersParsed });
-      }
+      // } BECAREFUL
     }
   });
   res.send(responses);
