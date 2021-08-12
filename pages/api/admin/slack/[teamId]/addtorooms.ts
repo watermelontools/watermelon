@@ -34,7 +34,11 @@ const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
   //   body: JSON.stringify(watermelonRoomData),
   // });
 
-  axios.post('https://slack.com/api/conversations.invite',watermelonRoomData)
+  axios.post('https://slack.com/api/conversations.invite', watermelonRoomData,{
+    headers: {
+      'Authorization': `Bearer ${accessToken}` 
+    }
+  })
   .then(function (response) {
     console.log(response);
   })
