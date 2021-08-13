@@ -14,22 +14,32 @@ async function getInstallationToken(teamId) {
   }
 }
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  return fetch("https://slack.com/api/chat.postMessage", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify(icebreakerData),
-  });
+  axios
+    .post("https://slack.com/api/chat.postMessage", icebreakerData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  return fetch("https://slack.com/api/conversations.invite", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    body: JSON.stringify(watermelonRoomData),
-  });
+  axios
+    .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 const getAnswers = async (teamId, questionName) => {
   let answerTitles = [];
@@ -87,7 +97,7 @@ export default async function handler(req, res) {
     // console.log(doc.data());
     for (let i = 0; i < answerTitles.length; i++) {
       let answerTitle = answerTitles[i];
-      // console.log("answer title: ", answerTitles[i]);
+
       // For each answer, assign a watermelon room
       let currentAnswerers = [];
       let weeklyQsPickedByRef = db
@@ -123,6 +133,7 @@ export default async function handler(req, res) {
       }
       // console.log("channelId", channelId);
       // console.log("answerers", currentAnswerers);
+
       if (usersParsed !== "") {
         const watermelonRoomData = {
           channel: channelId,
