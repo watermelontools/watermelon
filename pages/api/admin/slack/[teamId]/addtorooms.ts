@@ -14,33 +14,32 @@ async function getInstallationToken(teamId) {
   }
 }
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  axios.post('https://slack.com/api/chat.postMessage', icebreakerData,{
-    headers: {
-      'Authorization': `Bearer ${accessToken}` 
-    }
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
-
+  axios
+    .post("https://slack.com/api/chat.postMessage", icebreakerData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  axios.post('https://slack.com/api/conversations.invite', watermelonRoomData,{
-    headers: {
-      'Authorization': `Bearer ${accessToken}` 
-    }
-  })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-
+  axios
+    .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 const getAnswers = async (teamId, questionName) => {
   let answerTitles = [];
