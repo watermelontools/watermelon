@@ -24,7 +24,7 @@ export default async function handler(req, res) {
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
       .set(
-        { icebreaker: record.get("Icebreaker"), respondents: [] },
+        { icebreaker: record.get("Icebreaker"), respondents: [], last_week: true },
         { merge: true }
       )
       .then((fbres) => {

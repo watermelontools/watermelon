@@ -155,7 +155,6 @@ export default async function handler(req, res) {
           responses.push({ channelId, icebreaker, usersParsed });
         }
       } else {
-        console.log ('question isnt from last week')
         continue
       }
     }
