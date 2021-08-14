@@ -122,6 +122,7 @@ export default async function handler(req, res) {
       let lastWeek = (await icebreakerRef.get()).data().last_week;
 
       if (lastWeek === true) {
+        console.log('entered lastWeek conditional')
         // console.log("icebreaker", icebreaker);
         currentAnswerers = respondents.data().picked_by;
 
