@@ -20,7 +20,27 @@ export default async function handler(req, res) {
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
 
-  const setQuestion = (record, answer) => {
+  const setQuestion = async (record, answer) => {
+    // Turn last_week boolean to false in all other questions
+    let weeklyQuestionsRef = db
+      .collection("teams")
+      .doc(teamId)
+      .collection("weekly_questions");
+
+    let allQuestions = await weeklyQuestionsRef.get();
+
+    allQuestions.forEach(async (doc) => {
+      let questionName = doc.id;
+
+      let questionRef = db
+        .collection("teams")
+        .doc(teamId)
+        .collection("weekly_questions")
+        .doc(questionName);
+
+      questionRef.set({last_week: false}, {merge: true})
+    });
+    // Turn last_week boolean to false in all other questions
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
       .set(
