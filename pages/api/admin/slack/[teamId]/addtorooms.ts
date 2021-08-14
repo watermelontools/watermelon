@@ -117,37 +117,46 @@ export default async function handler(req, res) {
         .doc(questionName);
 
       let icebreaker = (await icebreakerRef.get()).data().icebreaker;
-      // console.log("icebreaker", icebreaker);
-      currentAnswerers = respondents.data().picked_by;
 
-      let usersParsed = currentAnswerers.toString();
+      // add to rooms if it has the last_week boolean equal to true
+      let lastWeek = (await icebreakerRef.get()).data().last_week;
 
-      let channelId = "";
+      if (lastWeek === true) {
+        // console.log("icebreaker", icebreaker);
+        currentAnswerers = respondents.data().picked_by;
 
-      for (let j = 0; j < room_ids.length; j++) {
-        if (!alreadyPopulated.includes(room_ids[j])) {
-          channelId = room_ids[j];
-          alreadyPopulated.push(channelId);
-          break;
+        let usersParsed = currentAnswerers.toString();
+
+        let channelId = "";
+
+        for (let j = 0; j < room_ids.length; j++) {
+          if (!alreadyPopulated.includes(room_ids[j])) {
+            channelId = room_ids[j];
+            alreadyPopulated.push(channelId);
+            break;
+          }
         }
-      }
-      // console.log("channelId", channelId);
-      // console.log("answerers", currentAnswerers);
+        // console.log("channelId", channelId);
+        // console.log("answerers", currentAnswerers);
 
-      if (usersParsed !== "") {
-        const watermelonRoomData = {
-          channel: channelId,
-          users: usersParsed,
-        };
-        await inviteToRoom({ watermelonRoomData, accessToken });
-        const icebreakerData = {
-          channel: channelId,
-          text: icebreaker
-            .replace(/\$\{answer}/g, answerTitle)
-            .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
-        };
-        await sendIcebreaker({ icebreakerData, accessToken });
-        responses.push({ channelId, icebreaker, usersParsed });
+        if (usersParsed !== "") {
+          const watermelonRoomData = {
+            channel: channelId,
+            users: usersParsed,
+          };
+          await inviteToRoom({ watermelonRoomData, accessToken });
+          const icebreakerData = {
+            channel: channelId,
+            text: icebreaker
+              .replace(/\$\{answer}/g, answerTitle)
+              .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
+          };
+          await sendIcebreaker({ icebreakerData, accessToken });
+          responses.push({ channelId, icebreaker, usersParsed });
+        }
+      } else {
+        console.log ('question isnt from last week')
+        continue
       }
     }
   });
