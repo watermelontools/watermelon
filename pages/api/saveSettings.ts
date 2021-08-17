@@ -28,7 +28,7 @@ export default function handler(req, res) {
   db.collection("teams")
     .doc(`${signInToken.team.id}`)
     .set(
-      { settings: { language: lang, category: cat, weekday, hour } },
+      { settings: { language: lang, category: cat, weekday, hour, timezone } },
       { merge: true }
     )
     .then(function () {
