@@ -3,7 +3,7 @@ import logger from "../../logger/logger";
 export default function handler(req, res) {
   let db = admin.firestore();
   let body = JSON.parse(req.body);
-  let { lang, cat, signInToken, weekday, hour, isWizard } = body;
+  let { lang, cat, signInToken, weekday, hour, isWizard, timezone } = body;
   const baseurl = `https://${
     process.env.isDev === "true" ? "dev." : ""
   }app.watermelon.tools/api/admin/`;
@@ -45,7 +45,13 @@ export default function handler(req, res) {
             }
           &cron_expression=0 ${element.hour} * * ${element.weekday} *
           &url=${baseurl + element.route}
-          &cron_job_name=${signInToken.team.id}`
+          &cron_job_name=${signInToken.team.id}
+          ${
+            timezone
+              ? `&timezone_from=2
+                &timezone=${timezone}`
+              : ""
+          }`
           )
             .then((response) => response.json())
             .then((data) => {
