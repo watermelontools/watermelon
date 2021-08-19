@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
 
-  const setQuestion = async (record, answer) => {
+  const setQuestion = async (record, answer, icebreakerImageUrl) => {
     // Turn last_week boolean to false in all other questions
     let weeklyQuestionsRef = db
       .collection("teams")
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
       questionRef.set({last_week: false}, {merge: true})
     });
-    // Turn last_week boolean to false in all other questions
+
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
       .set(
@@ -57,6 +57,7 @@ export default async function handler(req, res) {
           .set(
             {
               picked_by: [],
+              icebreakerImage: icebreakerImageUrl
             },
             { merge: true }
           )
@@ -69,10 +70,10 @@ export default async function handler(req, res) {
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
     let record = questionsToSend[i];
-    setQuestion(record, record.get("AnswerA"));
-    setQuestion(record, record.get("AnswerB"));
-    setQuestion(record, record.get("AnswerC"));
-    setQuestion(record, record.get("AnswerD"));
+    setQuestion(record, record.get("AnswerA"), record.get("ImageA"));
+    setQuestion(record, record.get("AnswerB"), record.get("ImageB"));
+    setQuestion(record, record.get("AnswerC"), record.get("ImageC"));
+    setQuestion(record, record.get("AnswerD"), record.get("ImageD"));
 
     let questionElements = {
       type: "actions",

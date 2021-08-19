@@ -13,6 +13,20 @@ async function getInstallationToken(teamId) {
     return doc.data().add_to_slack_token.access_token;
   }
 }
+const sendExplanation = ({ explanationData, accessToken }) => {
+  axios
+    .post("https://slack.com/api/chat.postMessage", explanationData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
   axios
     .post("https://slack.com/api/chat.postMessage", icebreakerData, {
@@ -108,7 +122,16 @@ export default async function handler(req, res) {
         .collection(answerTitle)
         .doc("picked_by");
 
+      let icebreakerImageRef = db
+        .collection("teams")
+        .doc(teamId)
+        .collection("weekly_questions")
+        .doc(questionName)
+        .collection(answerTitle)
+        .doc("icebreakerImage");
+
       let respondents = await weeklyQsPickedByRef.get();
+      let icebreakerImageUrl = await icebreakerImageRef.get();
       // console.log("respondents", respondents.data());
       let icebreakerRef = db
         .collection("teams")
@@ -116,7 +139,7 @@ export default async function handler(req, res) {
         .collection("weekly_questions")
         .doc(questionName);
 
-      let icebreaker = (await icebreakerRef.get()).data().icebreaker;
+      let icebreaker = ((await icebreakerRef.get()).data().icebreaker) + icebreakerImageUrl;
 
       // add to rooms if it has the last_week boolean equal to true
       let lastWeek = (await icebreakerRef.get()).data().last_week;
@@ -152,7 +175,13 @@ export default async function handler(req, res) {
               .replace(/\$\{answer}/g, answerTitle)
               .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
           };
-          await sendIcebreaker({ icebreakerData, accessToken });
+          const explanation = `Hello this is a 🍉 room to meet new people! You all answered ${questionName} with ${answerTitle}! Remember to be nice :)`;
+          const explanationData = {
+            channel: channelId, 
+            text: explanation
+          };
+          await sendExplanation({ explanationData, accessToken });
+          await sendIcebreaker({ icebreakerData, accessToken });          
           responses.push({ channelId, icebreaker, usersParsed });
         }
       } else {
