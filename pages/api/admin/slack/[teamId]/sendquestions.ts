@@ -41,6 +41,9 @@ export default async function handler(req, res) {
       questionRef.set({last_week: false}, {merge: true})
     });
 
+
+    console.log('icebreakerImageUrl: ', icebreakerImageUrl)
+
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
       .set(
