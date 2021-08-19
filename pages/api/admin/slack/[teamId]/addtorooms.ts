@@ -122,16 +122,9 @@ export default async function handler(req, res) {
         .collection(answerTitle)
         .doc("picked_by");
 
-      let icebreakerImageRef = db
-        .collection("teams")
-        .doc(teamId)
-        .collection("weekly_questions")
-        .doc(questionName)
-        .collection(answerTitle)
-        .doc("icebreakerImage");
-
       let respondents = await weeklyQsPickedByRef.get();
-      let icebreakerImageUrl = await icebreakerImageRef.get();
+      let icebreakerImageUrl = respondents.data().icebreakerImage;
+      console.log('addtorooms icebreakerImageUrl: ', icebreakerImageUrl)
       // console.log("respondents", respondents.data());
       let icebreakerRef = db
         .collection("teams")
