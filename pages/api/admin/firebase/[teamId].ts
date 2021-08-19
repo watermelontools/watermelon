@@ -15,4 +15,6 @@ export default async function handler(req, res) {
     }
   }
   let data = await getInstallationToken(teamId);
+  console.log(data);
+  res.send(data);
 }
