@@ -13,6 +13,20 @@ async function getInstallationToken(teamId) {
     return doc.data().add_to_slack_token.access_token;
   }
 }
+const sendExplanation = ({ explanationData, accessToken }) => {
+  axios
+    .post("https://slack.com/api/chat.postMessage", explanationData, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
 const sendIcebreaker = ({ icebreakerData, accessToken }) => {
   axios
     .post("https://slack.com/api/chat.postMessage", icebreakerData, {
@@ -109,6 +123,8 @@ export default async function handler(req, res) {
         .doc("picked_by");
 
       let respondents = await weeklyQsPickedByRef.get();
+      let icebreakerImageUrl = respondents.data().icebreakerImage;
+      console.log('addtorooms icebreakerImageUrl: ', icebreakerImageUrl)
       // console.log("respondents", respondents.data());
       let icebreakerRef = db
         .collection("teams")
@@ -116,38 +132,53 @@ export default async function handler(req, res) {
         .collection("weekly_questions")
         .doc(questionName);
 
-      let icebreaker = (await icebreakerRef.get()).data().icebreaker;
-      // console.log("icebreaker", icebreaker);
-      currentAnswerers = respondents.data().picked_by;
+      let icebreaker = ((await icebreakerRef.get()).data().icebreaker) + icebreakerImageUrl;
 
-      let usersParsed = currentAnswerers.toString();
+      // add to rooms if it has the last_week boolean equal to true
+      let lastWeek = (await icebreakerRef.get()).data().last_week;
 
-      let channelId = "";
+      if (lastWeek === true) {
+        console.log('entered lastWeek conditional')
+        // console.log("icebreaker", icebreaker);
+        currentAnswerers = respondents.data().picked_by;
 
-      for (let j = 0; j < room_ids.length; j++) {
-        if (!alreadyPopulated.includes(room_ids[j])) {
-          channelId = room_ids[j];
-          alreadyPopulated.push(channelId);
-          break;
+        let usersParsed = currentAnswerers.toString();
+
+        let channelId = "";
+
+        for (let j = 0; j < room_ids.length; j++) {
+          if (!alreadyPopulated.includes(room_ids[j])) {
+            channelId = room_ids[j];
+            alreadyPopulated.push(channelId);
+            break;
+          }
         }
-      }
-      // console.log("channelId", channelId);
-      // console.log("answerers", currentAnswerers);
+        // console.log("channelId", channelId);
+        // console.log("answerers", currentAnswerers);
 
-      if (usersParsed !== "") {
-        const watermelonRoomData = {
-          channel: channelId,
-          users: usersParsed,
-        };
-        await inviteToRoom({ watermelonRoomData, accessToken });
-        const icebreakerData = {
-          channel: channelId,
-          text: icebreaker
-            .replace(/\$\{answer}/g, answerTitle)
-            .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
-        };
-        await sendIcebreaker({ icebreakerData, accessToken });
-        responses.push({ channelId, icebreaker, usersParsed });
+        if (usersParsed !== "") {
+          const watermelonRoomData = {
+            channel: channelId,
+            users: usersParsed,
+          };
+          await inviteToRoom({ watermelonRoomData, accessToken });
+          const icebreakerData = {
+            channel: channelId,
+            text: icebreaker
+              .replace(/\$\{answer}/g, answerTitle)
+              .replace(/\$\{person}/g, `<@${currentAnswerers[0]}>`),
+          };
+          const explanation = `Hello this is a 🍉 room to meet new people! You all answered ${questionName} with ${answerTitle}! Remember to be nice :)`;
+          const explanationData = {
+            channel: channelId, 
+            text: explanation
+          };
+          await sendExplanation({ explanationData, accessToken });
+          await sendIcebreaker({ icebreakerData, accessToken });          
+          responses.push({ channelId, icebreaker, usersParsed });
+        }
+      } else {
+        continue
       }
     }
   });

@@ -20,11 +20,34 @@ export default async function handler(req, res) {
     if (!questionsToSend.includes(item)) questionsToSend.push(item);
   }
 
-  const setQuestion = (record, answer) => {
+  const setQuestion = async (record, answer, icebreakerImageUrl) => {
+    // Turn last_week boolean to false in all other questions
+    let weeklyQuestionsRef = db
+      .collection("teams")
+      .doc(teamId)
+      .collection("weekly_questions");
+
+    let allQuestions = await weeklyQuestionsRef.get();
+
+    allQuestions.forEach(async (doc) => {
+      let questionName = doc.id;
+
+      let questionRef = db
+        .collection("teams")
+        .doc(teamId)
+        .collection("weekly_questions")
+        .doc(questionName);
+
+      questionRef.set({last_week: false}, {merge: true})
+    });
+
+
+    console.log('icebreakerImageUrl: ', icebreakerImageUrl)
+
     db.collection("teams")
       .doc(`${teamId}/weekly_questions/${record.get("Question")}`)
       .set(
-        { icebreaker: record.get("Icebreaker"), respondents: [] },
+        { icebreaker: record.get("Icebreaker"), respondents: [], last_week: true },
         { merge: true }
       )
       .then((fbres) => {
@@ -37,6 +60,7 @@ export default async function handler(req, res) {
           .set(
             {
               picked_by: [],
+              icebreakerImage: icebreakerImageUrl
             },
             { merge: true }
           )
@@ -49,10 +73,10 @@ export default async function handler(req, res) {
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
     let record = questionsToSend[i];
-    setQuestion(record, record.get("AnswerA"));
-    setQuestion(record, record.get("AnswerB"));
-    setQuestion(record, record.get("AnswerC"));
-    setQuestion(record, record.get("AnswerD"));
+    setQuestion(record, record.get("AnswerA"), record.get("ImageA"));
+    setQuestion(record, record.get("AnswerB"), record.get("ImageB"));
+    setQuestion(record, record.get("AnswerC"), record.get("ImageC"));
+    setQuestion(record, record.get("AnswerD"), record.get("ImageD"));
 
     let questionElements = {
       type: "actions",
