@@ -1,5 +1,5 @@
 import Airtable from "airtable";
-import { Admin, Settings, Workspace } from "./models";
+import { Admin, Settings, Workspace, IncompleteWorkspace } from "./models";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
   apiKey: process.env.AIRTABLE_API_KEY,
@@ -102,4 +102,31 @@ export const saveWorkspace = async ({
       });
     }
   );
+};
+export const findWorkspaceForLogin = async ({ adminId }: { adminId: string }) =>
+  await airtableBase("Admins")
+    .select({
+      // Selecting the first 3 records in Grid view:
+      maxRecords: 1,
+      filterByFormula: `AdminId='${adminId}'`,
+    })
+    .firstPage()
+    .then((record) => record);
+export const createUser = async ({ admin }: { admin: Admin }) => {
+  return await airtableBase("Admins").create([
+    {
+      fields: admin,
+    },
+  ]);
+};
+export const createWorkspace = async ({
+  workspace,
+}: {
+  workspace: IncompleteWorkspace;
+}) => {
+  return await airtableBase("Workspaces").create([
+    {
+      fields: workspace,
+    },
+  ]);
 };

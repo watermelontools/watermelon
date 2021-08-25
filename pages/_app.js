@@ -13,7 +13,7 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <>
       <Layout>
-        <Component {...pageProps} firebaseApp={firebaseApp} />
+        <Component {...pageProps} />
       </Layout>
     </>
   );

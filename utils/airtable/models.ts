@@ -16,8 +16,17 @@ export type Workspace = {
   Scope: string;
   ChannelName: string;
   ImageOriginal: string;
+  Domain: string;
 };
-
+export type IncompleteWorkspace = {
+  WorkspaceId: string;
+  Name: string;
+  HasPaid: boolean;
+  Enterprise?: string;
+  ImageOriginal: string;
+  Domain: string;
+  Admins: string[];
+};
 export type Admin = {
   AdminId: string;
   Name: string;
