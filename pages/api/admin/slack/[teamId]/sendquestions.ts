@@ -120,14 +120,13 @@ export default async function handler(req, res) {
               type: "section",
               text: {
                 type: "mrkdwn",
-                text: `Hi everyone,
-Welcome to Watermelon!
-Working remotely has isolated us from office interactions and socially active environments. While some may enjoy that, most of us miss being able to chat with our colleagues by just rolling our chairs. 
-Here, we will help you discover interesting, smart, and open-minded people like you. Not only will you be having fun in your spare time, but you will also get to help us bring the Lean Tech family even closer. So, let’s get started! 
-Here’s how it works: 
-In a minute, I will send you a question for you to select or write an answer. Based on your response, you will get paired with co-workers who share the same interests in separate water-cooler rooms. 
-You can use this platform to chat for a week, and then I’ll flush the groups and re-start the cycle. Let us know if you have any questions, and make sure to stay tuned for more information.
-Stay fresh! <!here>`,
+                text: `*Welcome to Watermelon :watermelon:!*
+We will help you discover interesting, smart, and open-minded people like you.
+*Here’s how it works:*
+I will send you a question for you to select an answer.
+Tomorrow, you will get paired with co-workers who share the same interests in separate water-cooler rooms.
+Pick one below! 
+<!here>`,
               },
             },
             ...blocks,
