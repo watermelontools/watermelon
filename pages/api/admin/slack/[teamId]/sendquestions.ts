@@ -121,8 +121,8 @@ export default async function handler(req, res) {
               text: {
                 type: "mrkdwn",
                 text: `*Welcome to Watermelon :watermelon:!*
-Working remotely has isolated us from office interactions and socially active environments. While some may enjoy that, most of us miss being able to chat with our colleagues by just rolling our chairs.
 We will help you discover interesting, smart, and open-minded people like you.
+Answer the question below, and tomorrow you'll be added to a room with others to chat. We'll flush and refill the rooms every week.
 Let’s get started, pick one answer below :point_down:
 <!here>`,
               },
