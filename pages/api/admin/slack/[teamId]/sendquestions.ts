@@ -121,11 +121,9 @@ export default async function handler(req, res) {
               text: {
                 type: "mrkdwn",
                 text: `*Welcome to Watermelon :watermelon:!*
-We will help you discover interesting, smart, and open-minded people like you.
-*Here’s how it works:*
-I will send you a question for you to select an answer.
-Tomorrow, you will get paired with co-workers who share the same interests in separate water-cooler rooms.
-Pick one below! 
+Working remotely has isolated us from office interactions and socially active environments. While some may enjoy that, most of us miss being able to chat with our colleagues by just rolling our chairs.
+We will help you discover interesting, smart, and open-minded people like you.Let’s get started!
+Pick one answer below! 
 <!here>`,
               },
             },
