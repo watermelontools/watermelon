@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import PageTitle from "../components/PageTitle";
 
 const FirstAuth = ({ token }) => {
-  const router = useRouter();
   useEffect(() => {
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
   }, []);
@@ -65,8 +64,8 @@ export async function getServerSideProps(context) {
   let teamId = data.team.id
 
   let found = await findWorkspaceForLogin({ adminId: teamId })
+  console.log(found)
   if (found[0]) {
-    console.log(found)
     return {
       redirect: {
         destination: "/",
