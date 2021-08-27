@@ -66,6 +66,7 @@ export async function getServerSideProps(context) {
 
   let found = await findWorkspaceForLogin({ adminId: teamId })
   if (found[0]) {
+    console.log(found)
     return {
       redirect: {
         destination: "/",
