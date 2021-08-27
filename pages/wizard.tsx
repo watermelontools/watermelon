@@ -10,7 +10,7 @@ const Wizard = ({  }) => {
   const [cat, setCat] = useState("hobbies")
   const [weekday, setWeekday] = useState("THU")
   const [hour, setHour] = useState(15)
-  const [timezone, setTimezone ] = useState("")
+  const [timezone, setTimezone ] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [exampleQuestion, setExampleQuestion] = useState(1)
 
   useEffect(() => {
@@ -23,7 +23,8 @@ const Wizard = ({  }) => {
       cat, 
       weekday, 
       hour,
-      isWizard: true
+      isWizard: true,
+      timezone
      }
      fetch("/api/admin/cron/create/createandemptygroups",{
       method: "POST",
@@ -111,8 +112,7 @@ const Wizard = ({  }) => {
     {value:17,label:'17:00'},
     {value:18,label:'18:00'},
   ]
-  const localeTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-console.log(localeTz);
+
   return (
     <>
       <PageTitle pageTitle="The finishing touches" />
