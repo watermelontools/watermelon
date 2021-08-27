@@ -63,11 +63,18 @@ export async function getServerSideProps(context) {
   }
   let data = await f.json();
   let teamId = data.team.id
-  console.log(teamId)
 
   let found = await findWorkspaceForLogin({ adminId: teamId })
-  console.log(found)
   if (found[0]) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+        props: { token: found[0] }
+      }
+    }
+  }
+  else {
     const response = await fetch("https://slack.com/api/users.identity", {
       headers: {
         'Authorization': `Bearer ${data?.authed_user?.access_token}`
@@ -96,11 +103,5 @@ export async function getServerSideProps(context) {
       }
     })
     return { props: { token: found[0].fields } }
-  }
-  else return {
-    redirect: {
-      destination: "/",
-      permanent: false
-    }
   }
 }
