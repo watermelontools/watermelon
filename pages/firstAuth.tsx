@@ -99,7 +99,7 @@ export async function getServerSideProps(context) {
   }
   else return {
     redirect: {
-      destination: "/firstAuth",
+      destination: "/",
       permanent: false
     }
   }
