@@ -108,7 +108,7 @@ export const findWorkspaceForLogin = async ({ adminId }: { adminId: string }) =>
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
-      filterByFormula: `AdminId='${adminId}'`,
+      filterByFormula: `WorkspaceId='${adminId}'`,
     })
     .firstPage()
     .then((record) => record);
