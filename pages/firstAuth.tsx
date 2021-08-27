@@ -44,7 +44,7 @@ const FirstAuth = ({ token }) => {
 };
 export default FirstAuth;
 
-import admin from '../utils/firebase/backend';
+import { createUser, findWorkspaceForLogin, createWorkspace } from '../utils/airtable/backend'
 import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
@@ -62,126 +62,45 @@ export async function getServerSideProps(context) {
     }
   }
   let data = await f.json();
-  let token = {
-    team: data.team,
-    app_id: data.app_id,
-    authed_user: {
-      id: data.authed_user?.id,
-      scope: data.authed_user?.scope
-    },
-    enterprise: data.enterprise,
-    is_enterprise_install: data.is_enterprise_install
-  }
-  let teamId = token.team.id
+  let teamId = data.team.id
+  console.log(teamId)
 
-  let db = admin.firestore();
-  let add_to_slack_token
-  if (data.ok) {
-    await db.collection("teams")
-      .doc(teamId)
-      .get()
-      .then((res) => {
-        if (res.exists) {
-          let responseData = res.data();
-          if (responseData.add_to_slack_token) {
-            add_to_slack_token = responseData.add_to_slack_token
-            delete add_to_slack_token.access_token;
-            return {
-              redirect: {
-                destination: "/",
-                permanent: false
-              }
-            }
-          }
-        }
-      });
-
+  let found = await findWorkspaceForLogin({ adminId: teamId })
+  console.log(found)
+  if (found[0]) {
     const response = await fetch("https://slack.com/api/users.identity", {
       headers: {
         'Authorization': `Bearer ${data?.authed_user?.access_token}`
       },
     })
     const respJson = await response.json()
-    await db.collection("teams")
-      .doc(teamId)
-      .set(
-        {
-          loggedUser: respJson,
-          sign_in_token: data,
-          settings: { language: "en", category: "hobbies", weekday: "THU", hour: "15" },
-          installation: {
-            user: {
-              token: data?.authed_user?.access_token,
-              scopes: data?.authed_user?.scope,
-              id: data?.authed_user?.id,
-            },
-          },
-        },
-        { merge: true }
-      )
-      .then(function () {
-        logger.info({ message: "new-signin", data: data.team })
-      })
-      .catch(function (error) {
-        console.error("Error adding document: ", error);
-      })
-    const initialState = [
-      {
-        question: "What instrument would you like to play?",
-        icebreaker: "Hey ${person}, what song would you play with your ${answer}?",
-        answers: ["Guitar in a hard rock band", "Violin in an orchestra"],
-      },
-      {
-        question: "Who would you rather be?",
-        icebreaker:
-          "Hey ${person} would you rather be rich or famous due to being ${answer}?",
-        answers: ["The first person on Mars", "The person that cures cancer"],
-      },
-    ];
-    initialState.forEach((question) => {
-      db.collection("teams")
-        .doc(
-          `${teamId}/weekly_questions/${question.question}`
-        )
-        .set({ icebreaker: question.icebreaker, respondents: [] }, { merge: true })
-        .then(function () {
-          logger.info({
-            message: "Wrote default question", data: {
-              question: question.question,
-              icebreaker: question.icebreaker,
-              answers: question.answers
-            }
-          });
-        })
-        .catch(function (error) {
-          console.error("Error writing: ", error);
-        });
-      question.answers.forEach((answer) => {
-        db.collection("teams")
-          .doc(
-            `${teamId}`
-          )
-          .collection("weekly_questions")
-          .doc(question.question)
-          .collection(answer)
-          .doc("picked_by")
-          .set({ picked_by: [] }, { merge: true })
-          .then(() => { })
-          .catch(function (error) {
-            console.error("Error writing: ", error);
-          });
-      });
-    });
-    return {
-      props: {
-        token
-      }, // will be passed to the page component as props
-    };
+    let createdUser = await createUser({
+      admin: {
+        AdminId: respJson.user.id,
+        Name: respJson.user.name,
+        Token: data.authed_user.access_token,
+        Scope: data.authed_user.scope,
+        Email: respJson.user.email,
+        Image1024: respJson.user.image_1024,
+      }
+    })
+    await createWorkspace({
+      workspace: {
+        WorkspaceId: respJson.team.id,
+        Name: respJson.team.name,
+        HasPaid: true,
+        Enterprise: data.enterprise,
+        Admins: [createdUser[0].id],
+        ImageOriginal: respJson.team.image_original,
+        Domain: respJson.team.domain
+      }
+    })
+    return { props: found[0].fields }
   }
-
-  return {
-    props: {
-      error: "error in the data"
+  else return {
+    redirect: {
+      destination: "/firstAuth",
+      permanent: false
     }
   }
 }
