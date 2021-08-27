@@ -111,7 +111,10 @@ export const findWorkspaceForLogin = async ({ adminId }: { adminId: string }) =>
       filterByFormula: `AdminId='${adminId}'`,
     })
     .firstPage()
-    .then((record) => record);
+    .then((record) => {
+      console.log(record);
+      return record;
+    });
 export const createUser = async ({ admin }: { admin: Admin }) => {
   return await airtableBase("Admins").create([
     {
