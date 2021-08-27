@@ -103,6 +103,6 @@ export async function getServerSideProps(context) {
         Domain: respJson.team.domain
       }
     })
-    return { props: { token: found[0].fields } }
+    return { props: { token: createdUser[0].fields } }
   }
 }
