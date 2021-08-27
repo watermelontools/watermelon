@@ -65,7 +65,7 @@ export async function getServerSideProps(context) {
   let teamId = data.team.id
 
   let found = await findWorkspaceForLogin({ adminId: teamId })
-
+  console.log(found)
   if (found[0]) {
     const response = await fetch("https://slack.com/api/users.identity", {
       headers: {
