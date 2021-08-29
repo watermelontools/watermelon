@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
   let data = await f.json();
   let teamId = data.team.id
 
-  let found = await findWorkspaceForLogin({ adminId: teamId })
+  let found = await findWorkspaceForLogin({ workspaceId: teamId })
   console.log(found)
   if (found[0]) {
     return {

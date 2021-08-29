@@ -103,12 +103,16 @@ export const saveWorkspace = async ({
     }
   );
 };
-export const findWorkspaceForLogin = async ({ adminId }: { adminId: string }) =>
+export const findWorkspaceForLogin = async ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) =>
   await airtableBase("Admins")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
-      filterByFormula: `WorkspaceId='${adminId}'`,
+      filterByFormula: `WorkspaceId='${workspaceId}'`,
     })
     .firstPage()
     .then((record) => record);
