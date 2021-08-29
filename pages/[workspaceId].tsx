@@ -6,7 +6,6 @@ import { findWorkspaceForLogin } from "../utils/airtable/backend";
 
 function HomePage({ token }) {
     useEffect(() => {
-        console.log(token)
         window.localStorage.setItem("sign_in_token", JSON.stringify(token));
     }, []);
     return (
@@ -16,7 +15,7 @@ function HomePage({ token }) {
                 <p>
                     Watermelon is the best way to connect your coworkers through shared
                     interests.
-        </p>
+                </p>
                 <p>You can change the language and question type over at <Link href="/settings"><a>Settings</a></Link></p>
                 <p>You can view a selection of questions at <Link href="/weeklyQuestions"><a>Questions</a></Link></p>
                 <p>(Coming soon)Understand your workspace</p>
