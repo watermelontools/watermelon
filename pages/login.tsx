@@ -14,8 +14,7 @@ function Login() {
           <div className="w-full flex justify-center items-center my-2">
             <a
               href={`https://slack.com/oauth/v2/authorize?user_scope=identity.basic,identity.email,identity.team,identity.avatar&client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID
-                }&redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
-                }app.watermelon.tools/firstAuth`}
+                }&redirect_uri=https://${process.env.VERCEL_URL}/firstAuth`}
             >
               <img
                 alt="Sign in with Slack"

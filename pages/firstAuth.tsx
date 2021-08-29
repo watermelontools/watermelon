@@ -22,8 +22,7 @@ const FirstAuth = ({ token }) => {
                   href={`https://slack.com/oauth/v2/authorize${token?.team?.id ? "?team=" + token.team.id + "&" : "?"
                     }scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read,groups:read
                     &client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}
-                    &redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? "dev." : ""
-                    }app.watermelon.tools/wizard`}
+                    &redirect_uri=https://${process.env.VERCEL_URL}/wizard`}
                 >
                   <img
                     alt="Add to Slack"
@@ -52,8 +51,7 @@ export async function getServerSideProps(context) {
     f = await fetch(
       `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
       }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-      }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
-      }app.watermelon.tools/firstAuth`
+      }&redirect_uri=https://${process.env.VERCEL_URL}/firstAuth`
     )
   else return {
     props: {

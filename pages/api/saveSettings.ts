@@ -4,9 +4,7 @@ export default function handler(req, res) {
   let db = admin.firestore();
   let body = JSON.parse(req.body);
   let { lang, cat, signInToken, weekday, hour, isWizard, timezone } = body;
-  const baseurl = `https://${
-    process.env.isDev === "true" ? "dev." : ""
-  }app.watermelon.tools/api/admin/`;
+  const baseurl = `https://${process.env.VERCEL_URL}/api/admin/`;
   let nextWeekday = (weekday) => {
     switch (weekday) {
       case "MON":
