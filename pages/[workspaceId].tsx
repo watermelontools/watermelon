@@ -28,9 +28,6 @@ function HomePage({ token }) {
 export default HomePage;
 export async function getServerSideProps(context) {
     const { workspaceId } = context.params;
-    console.log("wid", workspaceId)
-    let found = await findWorkspaceForLogin({ workspaceId: workspaceId })
-    console.log(found)
+    let found = await findWorkspaceForLogin({ workspaceId })
     return { props: { token: found[0].fields } }
-
 }
