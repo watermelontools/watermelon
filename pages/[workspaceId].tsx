@@ -28,10 +28,10 @@ function HomePage({ token }) {
 export default HomePage;
 export async function getServerSideProps(context) {
     const {
-        query: { teamId },
+        query: { workspaceId },
     } = context.req;
 
-    let found = await findWorkspaceForLogin({ workspaceId: teamId })
+    let found = await findWorkspaceForLogin({ workspaceId: workspaceId })
     return { props: { token: found[0].fields } }
 
 }
