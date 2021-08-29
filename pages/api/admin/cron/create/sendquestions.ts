@@ -10,9 +10,7 @@ export default function handler(req, res) {
     return res.status(401).json({ error: "no token", code: 1 });
   }
 
-  let url = `https://${
-    process.env.isDev === "true" ? "dev." : ""
-  }app.watermelon.tools/api/admin/slack/${signInToken?.team?.id}/sendquestions`;
+  let url = `https://${process.env.VERCEL_URL}/api/admin/slack/${signInToken?.team?.id}/sendquestions`;
 
   let responseObject = {
     hour: hour || "no hour",

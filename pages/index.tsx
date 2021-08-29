@@ -1,8 +1,13 @@
 import Link from "next/link";
 import PageTitle from "../components/PageTitle";
 import PagePadder from "../components/PagePadder";
+import { useEffect } from "react";
 
-function HomePage() {
+function HomePage({ token }) {
+  useEffect(() => {
+    console.log(token)
+    window.localStorage.setItem("sign_in_token", JSON.stringify(token));
+  }, []);
   return (
     <>
       <PageTitle pageTitle="Welcome to Watermelon🍉!" />
