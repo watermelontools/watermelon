@@ -65,7 +65,7 @@ export async function getServerSideProps(context) {
   if (found[0]) {
     return {
       redirect: {
-        destination: "/",
+        destination: `/${teamId}`,
         permanent: false,
         props: { token: found[0].fields }
       }
