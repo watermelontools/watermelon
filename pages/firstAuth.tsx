@@ -62,13 +62,12 @@ export async function getServerSideProps(context) {
   let teamId = data.team.id
 
   let found = await findWorkspaceForLogin({ workspaceId: teamId })
-  console.log(found)
   if (found[0]) {
     return {
       redirect: {
         destination: "/",
         permanent: false,
-        props: { token: found[0] }
+        props: { token: found[0].fields }
       }
     }
   }
