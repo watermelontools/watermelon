@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "airtable": "^0.11.0",
-    "firebase": "^8.2.1",
     "firebase-admin": "^9.5.0",
     "next": "latest",
     "pino-logflare": "^0.3.8",
