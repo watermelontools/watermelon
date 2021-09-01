@@ -67,7 +67,6 @@ export async function getServerSideProps(context) {
       redirect: {
         destination: `/${teamId}`,
         permanent: false,
-        props: { token: found[0].fields }
       }
     }
   }
@@ -99,6 +98,8 @@ export async function getServerSideProps(context) {
         Domain: respJson.team.domain
       }
     })
-    return { props: { token: createdUser[0].fields } }
+    let token = createdUser[0].fields
+    delete token.Token
+    return { props: { token } }
   }
 }
