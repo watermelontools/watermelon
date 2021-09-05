@@ -3,11 +3,8 @@ import { useEffect, useState } from "react";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Welcome = ({ firebaseApp, token }) => {
-  const [loginToken, setLoginToken] = useState(undefined)
-  useEffect(() => {
-    setLoginToken(JSON.parse(window.localStorage.getItem("sign_in_token")))
-  }, [])
+const Welcome = ({ }) => {
+
   return (
     <>
       <PageTitle pageTitle="Congratulations" />
