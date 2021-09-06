@@ -183,9 +183,9 @@ const Wizard = ({  }) => {
 
 export default Wizard
 
-import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
 import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
+import { updateWorkspace } from "../utils/airtable/backend";
 
 export async function getServerSideProps(context) {
 
@@ -197,46 +197,7 @@ export async function getServerSideProps(context) {
   let token = await f.json();
   if(token.ok){
     await createAndSave({teamId: token.team.id, access_token: token.access_token})
-    let db = admin.firestore();
-    await db.collection("teams")
-    .doc(token.team.id)
-    .set(
-      {
-        add_to_slack_token: token,
-      },
-      { merge: true }
-    )
-    .then(function (docRef) {
-      logger.info({message: "new-add-to-slack:", data: token.team});
-    })
-    .catch(function (error) {
-      logger.error("Error adding document: ", error);
-    });
-
-    await db.collection("teams")
-    .doc(token.team.id)
-    .update(
-      {
-          "installation.team": token.team,
-          "installation.enterprise": token.enterprise ?? false,
-          "installation.tokenType": "bot",
-          "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
-          "installation.appId": token.app_id,
-          "installation.authVersion": "v2",
-          "installation.bot": {
-            scopes: token.scope.split(","),
-            token: token.access_token,
-            userId: token.bot_user_id,
-            id: token.incoming_webhook.channel_id,
-          },
-      }
-    )
-    .then(function () {
-      logger.info({message:"new-installation:", data:token.team});
-    })
-    .catch(function (error) {
-      logger.error("Error adding document: ", error);
-    });
+    await updateWorkspace({add_to_slack_token: token, workspaceId: token.team.id})
 
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;

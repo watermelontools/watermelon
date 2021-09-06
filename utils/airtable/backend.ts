@@ -7,6 +7,20 @@ Airtable.configure({
 
 const airtableBase = Airtable.base("appyNw8U8LEBl4iPs");
 
+export const findWorkspaceRecord = async ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
+  return await airtableBase("Workspaces")
+    .select({
+      // Selecting the first 3 records in Grid view:
+
+      filterByFormula: `({WorkspaceId} = '${workspaceId}')`,
+    })
+    .firstPage()
+    .then((record) => record);
+};
 export const getAllQuestions = async () => {
   let allQuestions = [];
   await airtableBase("en")
@@ -117,20 +131,55 @@ export const findWorkspaceForLogin = async ({
     .firstPage()
     .then((record) => record);
 export const createUser = async ({ admin }: { admin: Admin }) => {
-  return await airtableBase("Admins").create([
-    {
-      fields: admin,
-    },
-  ]);
+  return await airtableBase("Admins").create([{ fields: admin }]);
 };
 export const createWorkspace = async ({
   workspace,
 }: {
   workspace: IncompleteWorkspace;
 }) => {
-  return await airtableBase("Workspaces").create([
+  return await airtableBase("Workspaces").create([{ fields: workspace }]);
+};
+export const createSettings = async ({
+  settings,
+  workspaceId,
+}: {
+  settings: Settings;
+  workspaceId: string;
+}) => {
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId });
+  return await airtableBase("Settings").create([
+    { fields: { ...settings, WorkspaceId: [workspaceRecord[0].id] } },
+  ]);
+};
+export const updateWorkspace = async ({
+  workspaceId,
+  add_to_slack_token,
+}: {
+  workspaceId: String;
+  add_to_slack_token: any;
+}) => {
+  let workspaceRecord = await airtableBase("Workspaces")
+    .select({
+      // Selecting the first 3 records in Grid view:
+      maxRecords: 1,
+      filterByFormula: `WorkspaceId='${workspaceId}'`,
+    })
+    .firstPage()
+    .then((record) => record);
+  airtableBase("Workspaces").update([
     {
-      fields: workspace,
+      id: workspaceRecord[0].id,
+      fields: {
+        AccessToken: add_to_slack_token.access_token,
+        BotUserId: add_to_slack_token.bot_user_id,
+        Scope: add_to_slack_token.scope,
+        ChannelName: add_to_slack_token.incoming_webhook.channel,
+        ChannelId: add_to_slack_token.incoming_webhook.channel_id,
+        IncomingWebhookConfigurationURL:
+          add_to_slack_token.incoming_webhook.configuration_url,
+        IncomingWebhookURL: add_to_slack_token.incoming_webhook.url,
+      },
     },
   ]);
 };
