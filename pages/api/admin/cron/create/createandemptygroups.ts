@@ -1,4 +1,5 @@
 import logger from "../../../../../logger/logger";
+import { nextWeekday } from "../../../../../utils/cronUtils";
 export default function handler(req, res) {
   let body = JSON.parse(req.body);
   let { signInToken, weekday, hour } = body;
@@ -16,30 +17,9 @@ export default function handler(req, res) {
     hour: hour || "no hour",
     weekday: weekday || "no weekday",
   };
-  const replaceDay = (day) => {
-    if (!day) return false;
-    else {
-      switch (day) {
-        case "MON":
-          return "TUE";
-        case "TUE":
-          return "WED";
-        case "WED":
-          return "THU";
-        case "THU":
-          return "FRI";
-        case "FRI":
-          return "SAT";
-        case "SAT":
-          return "MON";
-        default:
-          break;
-      }
-    }
-  };
   fetch(
     `https://www.easycron.com/rest/add?token=${process.env.EASYCRON_API_KEY}
-    &cron_expression=0 ${hour || 15} * * ${replaceDay(weekday) || "THU"} *
+    &cron_expression=0 ${hour || 15} * * ${nextWeekday(weekday) || "THU"} *
     &url=${url}
     &cron_job_name=createandemptygroups-${signInToken?.team?.id}`
   )
