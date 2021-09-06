@@ -179,6 +179,7 @@ export const updateWorkspace = async ({
         IncomingWebhookConfigurationURL:
           add_to_slack_token.incoming_webhook.configuration_url,
         IncomingWebhookURL: add_to_slack_token.incoming_webhook.url,
+        Enterprise: add_to_slack_token.enterprise,
       },
     },
   ]);

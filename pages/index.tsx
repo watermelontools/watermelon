@@ -5,7 +5,6 @@ import { useEffect } from "react";
 
 function HomePage({ token }) {
   useEffect(() => {
-    console.log(token)
     window.localStorage.setItem("sign_in_token", JSON.stringify(token));
   }, []);
   return (
