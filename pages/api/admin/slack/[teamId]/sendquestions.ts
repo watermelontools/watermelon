@@ -121,13 +121,18 @@ export default async function handler(req, res) {
               text: {
                 type: "mrkdwn",
                 text: `*Welcome to Watermelon :watermelon:!*
-We will help you discover interesting, smart, and open-minded people like you.
-Answer the question below, and tomorrow you'll be added to a room with others to chat. We'll flush and refill the rooms every week.
-Let’s get started, pick one answer below :point_down:
+1. Answer the question below :point_down:
+2. Get added to a Watermelon room
+3. Start chatting with like-minded co-workers 
 <!here>`,
               },
             },
             ...blocks,
+{
+			"type": "image",
+			"image_url": "https://app.watermelon.tools/images/questionsHappyTulia.png",
+			"alt_text": "Tulia, the watermelon mascot in front of a computer"
+		}
           ],
           channel: data.add_to_slack_token.incoming_webhook.channel_id,
         },
