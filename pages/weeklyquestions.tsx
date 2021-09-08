@@ -5,7 +5,7 @@ import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 import SlackQuestionDemo from "../components/SlackQuestionDemo";
 
-const WeeklyQuestions = ({ firebaseApp, questions }: { firebaseApp: any; questions: any[] }) => {
+const WeeklyQuestions = ({ questions }: { questions: any[] }) => {
   const langOpts = [
     { value: "en", label: "English" },
     { value: "es", label: "Español" },
