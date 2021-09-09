@@ -19,7 +19,7 @@ export const findWorkspaceRecord = async ({
       filterByFormula: `({WorkspaceId} = '${workspaceId}')`,
     })
     .firstPage()
-    .then((record) => record);
+    .then((record) => record[0].fields);
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
@@ -33,6 +33,27 @@ export const getAllQuestions = async () => {
       // This function (`page`) will get called for each page of records.
       records.forEach(function (record) {
         allQuestions.push(record);
+      });
+      fetchNextPage();
+    });
+  return allQuestions;
+};
+export const getAllUnusedQuestions = async ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
+  let allQuestions = [];
+  await airtableBase("Questions")
+    .select({
+      // Selecting the first 3 records in Grid view:
+
+      filterByFormula: `({UsedWorkspaceId} != '${workspaceId}')`,
+    })
+    .eachPage(function page(records, fetchNextPage) {
+      // This function (`page`) will get called for each page of records.
+      records.forEach(function (record) {
+        allQuestions.push({ fields: record.fields, id: record.id });
       });
       fetchNextPage();
     });
@@ -149,7 +170,7 @@ export const createSettings = async ({
 }) => {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
-    { fields: { ...settings, WorkspaceId: [workspaceRecord[0].id] } },
+    { fields: { ...settings, WorkspaceId: workspaceRecord.WorkspaceId } },
   ]);
 };
 export const updateWorkspace = async ({
