@@ -205,3 +205,20 @@ export const updateWorkspace = async ({
     },
   ]);
 };
+export const getSingleQuestion = async ({ questionRecord }) => {
+  return await (
+    await airtableBase("Questions").find(questionRecord)
+  ).fields;
+};
+export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
+  let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
+  return await airtableBase("Questions").update([
+    {
+      id: questionRecord,
+      fields: {
+        //@ts-ignore
+        WorkspacesUsed: usedArray ? [...usedArray, WorkspaceId] : [WorkspaceId],
+      },
+    },
+  ]);
+};

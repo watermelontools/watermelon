@@ -3,6 +3,7 @@ import { postMessage } from "../../../../../utils/slack/backend";
 import {
   findWorkspaceRecord,
   getAllUnusedQuestions,
+  markQuestionUsed,
 } from "../../../../../utils/airtable/backend";
 export default async function handler(req, res) {
   const {
@@ -14,6 +15,7 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({ workspaceId: teamId });
   let questionsToSend = [];
   while (questionsToSend.length < 2) {
@@ -46,14 +48,18 @@ export default async function handler(req, res) {
       {
         type: "section",
         text: { text: "*" + record.fields["Question"] + "*", type: "mrkdwn" },
+        block_id: record.id,
       },
       questionElements,
       {
         type: "divider",
       }
     );
+    await markQuestionUsed({
+      questionRecord: record.id,
+      WorkspaceId: workspaceRecord.RecordId,
+    });
   }
-  let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
 
   let postMessageRes = await postMessage({
     data: {
