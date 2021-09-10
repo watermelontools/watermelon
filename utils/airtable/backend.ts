@@ -151,7 +151,7 @@ export const findWorkspaceForLogin = async ({
     })
     .firstPage()
     .then((record) => record);
-export const createUser = async ({ admin }: { admin: Admin }) => {
+export const createAdmin = async ({ admin }: { admin: Admin }) => {
   return await airtableBase("Admins").create([{ fields: admin }]);
 };
 export const createWorkspace = async ({
@@ -221,4 +221,19 @@ export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
       },
     },
   ]);
+};
+export const createUser = async ({ userId, username, workspaceRecord }) => {
+  return await airtableBase("Users").create([
+    {
+      fields: {
+        Name: username,
+        SlackId: userId,
+        Workspace: [workspaceRecord],
+      },
+    },
+  ]);
+};
+
+export const saveAnswerPicked = async ({ questionId, userId }) => {
+  return await airtableBase("Answerers").create([{}]);
 };

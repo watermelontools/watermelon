@@ -42,7 +42,7 @@ const FirstAuth = ({ token }) => {
 };
 export default FirstAuth;
 
-import { createUser, findWorkspaceForLogin, createWorkspace } from '../utils/airtable/backend'
+import { createAdmin, findWorkspaceForLogin, createWorkspace } from '../utils/airtable/backend'
 import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
@@ -77,7 +77,7 @@ export async function getServerSideProps(context) {
       },
     })
     const respJson = await response.json()
-    let createdUser = await createUser({
+    let createdUser = await createAdmin({
       admin: {
         AdminId: respJson.user.id,
         Name: respJson.user.name,
