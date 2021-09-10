@@ -222,18 +222,100 @@ export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
     },
   ]);
 };
-export const createUser = async ({ userId, username, workspaceRecord }) => {
-  return await airtableBase("Users").create([
+export const createUser = async ({
+  userId,
+  username,
+  workspaceId,
+  workspaceRecord,
+}: {
+  userId: string;
+  username: string;
+  workspaceId?: string;
+  workspaceRecord?: string;
+}) => {
+  if (workspaceRecord)
+    return (
+      await airtableBase("Users").create([
+        {
+          fields: {
+            Name: username,
+            SlackId: userId,
+            Workspace: [workspaceRecord],
+          },
+        },
+      ])
+    )[0].fields;
+  else {
+    let record = await (await findWorkspaceRecord({ workspaceId })).RecordId;
+    return (
+      //@ts-ignore
+      await airtableBase("Users").create([
+        {
+          fields: {
+            Name: username,
+            SlackId: userId,
+            Workspace: [record],
+          },
+        },
+      ])[0].fields
+    );
+  }
+};
+export const findUser = async ({
+  userId,
+  workspaceId,
+}: {
+  userId: string;
+  username: string;
+  workspaceId?: string;
+}) => {
+  return await airtableBase("Users")
+    .select({
+      // Selecting the first 3 records in Grid view:
+      maxRecords: 1,
+      filterByFormula: `AND(FIND('${userId}', SlackId)>0, WorkspaceId='${workspaceId}') `,
+    })
+    .firstPage()
+    .then((record) => {
+      return {
+        id: record[0].id,
+        fields: record[0].fields,
+      };
+    });
+};
+export const findOrCreateUser = async ({
+  userId,
+  username,
+  workspaceId = "",
+}: {
+  userId: string;
+  username: string;
+  workspaceId?: string;
+}) => {
+  let found = await findUser({
+    userId,
+    username,
+    workspaceId,
+  });
+
+  if (found) return found;
+  return await createUser({ userId, username, workspaceId });
+};
+export const saveAnswerPicked = async ({
+  questionRecordId,
+  answerRecordId,
+  workspaceId,
+  userId,
+  username,
+}) => {
+  let user = await findOrCreateUser({ userId, username, workspaceId });
+  return await airtableBase("Answerers").create([
     {
       fields: {
-        Name: username,
-        SlackId: userId,
-        Workspace: [workspaceRecord],
+        Answer: answerRecordId,
+        Question: questionRecordId,
+        User: user[0].id,
       },
     },
   ]);
-};
-
-export const saveAnswerPicked = async ({ questionId, userId }) => {
-  return await airtableBase("Answerers").create([{}]);
 };
