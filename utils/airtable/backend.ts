@@ -217,7 +217,10 @@ export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
       id: questionRecord,
       fields: {
         //@ts-ignore
-        WorkspacesUsed: usedArray ? [...usedArray, WorkspaceId] : [WorkspaceId],
+        WorkspacesUsed: usedArray
+          ? //@ts-ignore
+            [...new Set(...usedArray, WorkspaceId)]
+          : [WorkspaceId],
       },
     },
   ]);
