@@ -1,9 +1,7 @@
-import admin from "../../utils/firebase/backend";
 import logger from "../../logger/logger";
 import { nextWeekday } from "../../utils/cronUtils";
 import { createSettings } from "../../utils/airtable/backend";
 export default async function handler(req, res) {
-  let db = admin.firestore();
   let body = JSON.parse(req.body);
   let { lang, cat, signInToken, weekday, hour, isWizard, timezone } = body;
   const baseurl = `https://${process.env.VERCEL_URL}/api/admin/`;
