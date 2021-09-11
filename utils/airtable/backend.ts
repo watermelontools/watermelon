@@ -212,15 +212,18 @@ export const getSingleQuestion = async ({ questionRecord }) => {
 };
 export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
   let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
+  console.log("usedArray", usedArray);
+  let wsUsed = usedArray
+    ? //@ts-ignore
+      [...new Set(...usedArray, WorkspaceId)]
+    : [WorkspaceId];
+  console.log("Wsused", wsUsed);
   return await airtableBase("Questions").update([
     {
       id: questionRecord,
       fields: {
         //@ts-ignore
-        WorkspacesUsed: usedArray
-          ? //@ts-ignore
-            [...new Set(...usedArray, WorkspaceId)]
-          : [WorkspaceId],
+        WorkspacesUsed: wsUsed,
       },
     },
   ]);
