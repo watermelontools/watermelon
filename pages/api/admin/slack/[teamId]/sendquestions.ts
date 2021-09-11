@@ -34,6 +34,8 @@ export default async function handler(req, res) {
 
     for (let index = 0; index < possibleAnswers.length; index++) {
       const element = possibleAnswers[index];
+      console.log(record.fields[`Answer${element}`]);
+      console.log(record.fields[`Answer${element}Record`]);
       questionElements.elements.push({
         action_id: `${record.id}-${element}`,
         type: "button",
