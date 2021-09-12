@@ -18,11 +18,14 @@ export default async function handler(req, res) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({ workspaceId: teamId });
   let questionsToSend = [];
-  while (questionsToSend.length < 2) {
-    let item = questions[Math.floor(Math.random() * questions.length)];
-    if (!questionsToSend.includes(item)) questionsToSend.push(item);
+  if(questions.length > 2) {
+    while (questionsToSend.length < 2) {
+      let item = questions[Math.floor(Math.random() * questions.length)];
+      if (!questionsToSend.includes(item)) questionsToSend.push(item);
+    }
+  } else {
+  return res.status(400).json({ status: "error", error: "questions exhausted" });
   }
-
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
     let record = questionsToSend[i];
@@ -34,8 +37,7 @@ export default async function handler(req, res) {
 
     for (let index = 0; index < possibleAnswers.length; index++) {
       const element = possibleAnswers[index];
-      console.log(record.fields[`Answer${element}`]);
-      console.log(record.fields[`Answer${element}Record`]);
+      console.log("recordfilds", record.fields[`Answer${element}Record`]);
       questionElements.elements.push({
         action_id: `${record.id}-${element}`,
         type: "button",
