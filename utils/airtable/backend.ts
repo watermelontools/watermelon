@@ -47,8 +47,7 @@ export const getAllUnusedQuestions = async ({
   await airtableBase("Questions")
     .select({
       // Selecting the first 3 records in Grid view:
-
-      filterByFormula: `({UsedWorkspaceId} != '${workspaceId}')`,
+      filterByFormula: `FIND("${workspaceId}", {UsedWorkspaceId}) = 0`,
     })
     .eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
@@ -211,13 +210,11 @@ export const getSingleQuestion = async ({ questionRecord }) => {
   ).fields;
 };
 export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
-  let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
-  console.log("usedArray", usedArray);
+  let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;  
   let wsUsed = usedArray
-    ? //@ts-ignore
-      [...new Set(...usedArray, WorkspaceId)]
+  //@ts-ignore
+    ? [...new Set([...usedArray, WorkspaceId])]
     : [WorkspaceId];
-  console.log("Wsused", wsUsed);
   return await airtableBase("Questions").update([
     {
       id: questionRecord,
