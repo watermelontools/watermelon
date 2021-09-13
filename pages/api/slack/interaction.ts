@@ -26,7 +26,7 @@ export default async function handler(req, res) {
   console.log("qr2",qrecord2)
   await saveAnswerPicked({
     questionRecordId: qrecord,
-    answerRecordId: slackResponse.message.actions[0].value,
+    answerRecordId: slackResponse.actions[0].value,
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
