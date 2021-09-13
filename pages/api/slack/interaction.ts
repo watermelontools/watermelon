@@ -21,20 +21,14 @@ export default async function handler(req, res) {
   let qrecord = slackResponse.message.blocks.find(
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
-  console.log("qr1",{
+
+  /* await saveAnswerPicked({
     questionRecordId: qrecord,
     answerRecordId: slackResponse.actions[0].value,
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
-  })
-  await saveAnswerPicked({
-    questionRecordId: qrecord,
-    answerRecordId: slackResponse.actions[0].value,
-    workspaceId: slackResponse.team.id,
-    userId: slackResponse.user.id,
-    username: slackResponse.user.username,
-  });
+  }); */
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
