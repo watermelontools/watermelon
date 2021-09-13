@@ -7,7 +7,7 @@ import {
 export default async function handler(req, res) {
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
-
+console.log(slackResponse)
   const ephimeralMessageData = {
     attachments:
       "[{'text': 'This response is anonymous.', 'color': '#75b855'}]",
@@ -58,5 +58,5 @@ export default async function handler(req, res) {
       logger.info({ message: "question-answered", data });
     })
     .catch((error) => console.error(error));
-  res.status(200).json({ status: "ok" });
+  res.status(200).json({ slackResponse });
 }
