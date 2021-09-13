@@ -21,9 +21,13 @@ export default async function handler(req, res) {
   let qrecord = slackResponse.message.blocks.find(
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
-  let qrecord2 = slackResponse.actions[0].action_id
-  console.log("qr1",qrecord)
-  console.log("qr2",qrecord2)
+  console.log("qr1",{
+    questionRecordId: qrecord,
+    answerRecordId: slackResponse.actions[0].value,
+    workspaceId: slackResponse.team.id,
+    userId: slackResponse.user.id,
+    username: slackResponse.user.username,
+  })
   await saveAnswerPicked({
     questionRecordId: qrecord,
     answerRecordId: slackResponse.actions[0].value,
