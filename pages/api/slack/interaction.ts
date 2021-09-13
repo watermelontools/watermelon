@@ -7,28 +7,28 @@ import {
 export default async function handler(req, res) {
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
-console.log(slackResponse)
-console.log(slackResponse.actions)
-console.log(slackResponse.actions[0])
-console.log(slackResponse.actions[0].value)
 
-  res.status(200).json({ status: "ok" });
   const ephimeralMessageData = {
     attachments:
       "[{'text': 'This response is anonymous.', 'color': '#75b855'}]",
     channel: slackResponse.channel.id,
-    text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
+    text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].text.text}*`,
     user: slackResponse.user.id,
   };
+  console.log(ephimeralMessageData)
   let workspaceRecord = await findWorkspaceRecord({
     workspaceId: slackResponse.user.team_id,
   });
+  console.log(workspaceRecord.AccessToken)
   let qrecord = slackResponse.message.blocks.find(
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
+  let qrecord2 = slackResponse.message.actions[0].action_id.split("-")[0]
+  console.log(qrecord)
+  console.log(qrecord2)
   await saveAnswerPicked({
     questionRecordId: qrecord,
-    answerRecordId: slackResponse.message.actions.value,
+    answerRecordId: slackResponse.message.actions[0].value,
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
