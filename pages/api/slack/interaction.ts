@@ -15,17 +15,15 @@ export default async function handler(req, res) {
     text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].text.text}*`,
     user: slackResponse.user.id,
   };
-  console.log(ephimeralMessageData)
   let workspaceRecord = await findWorkspaceRecord({
     workspaceId: slackResponse.user.team_id,
   });
-  console.log(workspaceRecord.AccessToken)
   let qrecord = slackResponse.message.blocks.find(
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
-  let qrecord2 = slackResponse.message.actions[0].action_id.split("-")[0]
-  console.log(qrecord)
-  console.log(qrecord2)
+  let qrecord2 = slackResponse.message.actions[0].action_id
+  console.log("qr1",qrecord)
+  console.log("qr2",qrecord2)
   await saveAnswerPicked({
     questionRecordId: qrecord,
     answerRecordId: slackResponse.message.actions[0].value,
