@@ -319,6 +319,7 @@ export const createAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
+  console.log("createAnswerer")
   let created = await airtableBase("Answerers").create([
     {
       fields: {
@@ -328,6 +329,8 @@ export const createAnswerer = async ({
       },
     },
   ]);
+  console.log("created", created)
+  
   return {
     id: created[0].id,
     fields: created[0].fields,
@@ -355,7 +358,7 @@ export const findAnswerer = async ({
     })
     .firstPage()
     .then((record) => {
-      if(record.length>0){
+      if(record?.length>0){
       return {
         id: record[0].id,
         fields: record[0].fields,
@@ -373,12 +376,14 @@ export const CreateOrEditAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
+  console.log("CreateOrEditAnswerer")
   let found = await findAnswerer({
     userId,
     questionRecord,
     answerRecord,
   });
   if (found){
+console.log("found",found)
     await airtableBase('Users').update([{
       id: found.id,
       fields:{
@@ -403,6 +408,7 @@ export const saveAnswerPicked = async ({
   userId: string;
   username: string;
 }) => {
+  console.log("saveAnswerPicked")
   let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord });
   return answerer
 };
