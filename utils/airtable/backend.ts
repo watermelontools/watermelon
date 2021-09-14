@@ -264,7 +264,7 @@ export const createUser = async ({
             Workspace: [record],
           },
         },
-      ])[0].fields
+      ])
     );
   }
 };
