@@ -274,7 +274,10 @@ export const findUser = async ({
   username: string;
   workspaceId?: string;
 }) => {
-  return await airtableBase("Users")
+  console.log("findUser")
+  console.log("userId", userId)
+  console.log("workspaceId", workspaceId)
+    return await airtableBase("Users")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
@@ -282,6 +285,7 @@ export const findUser = async ({
     })
     .firstPage()
     .then((record) => {
+      console.log("record", record)
       return {
         id: record[0].id,
         fields: record[0].fields,
