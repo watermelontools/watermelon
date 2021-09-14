@@ -329,7 +329,7 @@ export const saveAnswerPicked = async ({
       fields: {
         Answer: [answerRecordId],
         Question: [questionRecordId],
-        User: user.id,
+        User: [user.id],
       },
     },
   ]);
