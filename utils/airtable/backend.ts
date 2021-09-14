@@ -348,9 +348,9 @@ export const findAnswerer = async ({
       maxRecords: 1,
       filterByFormula: 
       `AND(
-          FIND('${userId}', SlackId)>0,
-          FIND('${questionRecord}', Question)>0,
-          FIND('${answerRecord}', Answer)>0,
+          SlackId='${userId}',
+          QuestionRecordId='${questionRecord}',
+          AnswerRecordId='${answerRecord}',
         )`,
     })
     .firstPage()
