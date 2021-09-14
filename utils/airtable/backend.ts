@@ -345,6 +345,11 @@ export const findAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
+  console.log({
+    userId,
+    questionRecord,
+    answerRecord
+  })
     return await airtableBase("Answerers")
     .select({
       // Selecting the first 3 records in Grid view:
