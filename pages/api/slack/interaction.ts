@@ -23,8 +23,8 @@ export default async function handler(req, res) {
   ).block_id;
 
   await saveAnswerPicked({
-    questionRecordId: qrecord,
-    answerRecordId: slackResponse.actions[0].value,
+    questionRecord: qrecord,
+    answerRecord: slackResponse.actions[0].value,
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
