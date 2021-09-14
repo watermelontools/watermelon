@@ -237,9 +237,9 @@ export const createUser = async ({
   workspaceId?: string;
   workspaceRecord?: string;
 }) => {
+  let created 
   if (workspaceRecord)
-    return (
-      await airtableBase("Users").create([
+      created = await airtableBase("Users").create([
         {
           fields: {
             Name: username,
@@ -248,12 +248,11 @@ export const createUser = async ({
           },
         },
       ])
-    );
   else {
     let record = await (await findWorkspaceRecord({ workspaceId })).RecordId;
-    return (
+
       //@ts-ignore
-      await airtableBase("Users").create([
+     created = await airtableBase("Users").create([
         {
           fields: {
             Name: username,
@@ -262,8 +261,10 @@ export const createUser = async ({
           },
         },
       ])
-    );
+    
   }
+  console.log("created", created)
+  return created
 };
 export const findUser = async ({
   userId,
