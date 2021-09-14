@@ -310,8 +310,22 @@ export const saveAnswerPicked = async ({
   workspaceId,
   userId,
   username,
+}:{
+  questionRecordId:string;
+  answerRecordId: string;
+  workspaceId: string;
+  userId: string;
+  username: string;
 }) => {
+  console.log("sanpicjed", {
+    questionRecordId,
+    answerRecordId,
+    workspaceId,
+    userId,
+    username,
+  })
   let user = await findOrCreateUser({ userId, username, workspaceId });
+  console.log("user", user)
   return await airtableBase("Answerers").create([
     {
       fields: {

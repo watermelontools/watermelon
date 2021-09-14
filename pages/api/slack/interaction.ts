@@ -22,13 +22,13 @@ export default async function handler(req, res) {
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
 
-  /* await saveAnswerPicked({
+  await saveAnswerPicked({
     questionRecordId: qrecord,
     answerRecordId: slackResponse.actions[0].value,
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
-  }); */
+  });
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
