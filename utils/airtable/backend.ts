@@ -264,7 +264,10 @@ export const createUser = async ({
     
   }
   console.log("created", created)
-  return created
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  }
 };
 export const findUser = async ({
   userId,
@@ -328,7 +331,7 @@ export const saveAnswerPicked = async ({
       fields: {
         Answer: answerRecordId,
         Question: questionRecordId,
-        User: user[0].id,
+        User: user.id,
       },
     },
   ]);
