@@ -355,11 +355,10 @@ export const findAnswerer = async ({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
       filterByFormula: 
-      `AND(
-          SlackId='${userId}',
+
+      `AND(SlackId='${userId}',
           QuestionRecordId='${questionRecord}',
-          AnswerRecordId='${answerRecord}',
-        )`,
+          AnswerRecordId='${answerRecord}')`,
     })
     .firstPage()
     .then((record) => {
