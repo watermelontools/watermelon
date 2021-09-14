@@ -1,4 +1,5 @@
 import Airtable from "airtable";
+import { cpuUsage } from "process";
 import { Admin, Settings, Workspace, IncompleteWorkspace } from "./models";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -252,6 +253,7 @@ export const createUser = async ({
   else {
     console.log("no workspace record")
     let record = await (await findWorkspaceRecord({ workspaceId })).RecordId;
+   console.log(record)
     return (
       //@ts-ignore
       await airtableBase("Users").create([
