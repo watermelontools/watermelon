@@ -20,7 +20,7 @@ export const findWorkspaceRecord = async ({
       filterByFormula: `({WorkspaceId} = '${workspaceId}')`,
     })
     .firstPage()
-    .then((record) => record[0].fields);
+    .then((record) => {return {id: record[0].id, fields:record[0].fields}});
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
@@ -398,3 +398,18 @@ export const saveAnswerPicked = async ({
   let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord });
   return answerer
 };
+export const getRooms = async({workspaceId}:{workspaceId: string})=>{
+  let rooms=[]
+   await airtableBase("Rooms")
+  .select({
+    filterByFormula: `FIND('${workspaceId}', {WorkspaceId})>0`,
+  })
+  .firstPage()
+  .then((records) => {
+    records.map(record =>{
+
+      rooms.push ({id: record.id, fields: record.fields})
+    })
+  })
+  return rooms
+}
