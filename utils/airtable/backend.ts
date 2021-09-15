@@ -345,31 +345,17 @@ export const findAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
-  console.log({
-    userId,
-    questionRecord,
-    answerRecord
-  })
+
+  let filterFormula =`AND(SlackId='${userId}',
+  QuestionRecordId='${questionRecord}',
+  TimeSinceAnswered<1440)`
     return await airtableBase("Answerers")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
-      filterByFormula: 
-
-      `AND(SlackId='${userId}',
-          QuestionRecordId='${questionRecord}',
-          AnswerRecordId='${answerRecord}')`,
-    })
-    .firstPage()
-    .then((record) => {
-      if(record?.length>0){
-      return {
-        id: record[0].id,
-        fields: record[0].fields,
-      };
-    }
-      return false
-    });
+      filterByFormula: filterFormula,
+    }).firstPage()
+    .then((record) => { return { id: record[0].id, fields: record[0].fields}});
 };
 export const CreateOrEditAnswerer = async ({
   userId,
@@ -380,14 +366,12 @@ export const CreateOrEditAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
-  console.log("CreateOrEditAnswerer")
   let found = await findAnswerer({
     userId,
     questionRecord,
     answerRecord,
   });
   if (found){
-console.log("found",found)
     await airtableBase('Users').update([{
       id: found.id,
       fields:{
@@ -412,7 +396,6 @@ export const saveAnswerPicked = async ({
   userId: string;
   username: string;
 }) => {
-  console.log("saveAnswerPicked")
   let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord });
   return answerer
 };
