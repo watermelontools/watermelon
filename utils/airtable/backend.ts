@@ -372,7 +372,7 @@ export const CreateOrEditAnswerer = async ({
     answerRecord,
   });
   if (found){
-    await airtableBase('Users').update([{
+    await airtableBase('Answerers').update([{
       id: found.id,
       fields:{
         ...found.fields,
