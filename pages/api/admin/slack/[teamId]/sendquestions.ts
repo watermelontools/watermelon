@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     );
     await markQuestionUsed({
       questionRecord: record.id,
-      WorkspaceId: workspaceRecord.RecordId,
+      WorkspaceId: workspaceRecord.fields.RecordId,
     });
   }
 
@@ -94,9 +94,9 @@ export default async function handler(req, res) {
           alt_text: "Tulia, the watermelon mascot in front of a computer",
         },
       ],
-      channel: workspaceRecord.ChannelId,
+      channel: workspaceRecord.fields.ChannelId,
     },
-    token: workspaceRecord.AccessToken,
+    token: workspaceRecord.fields.AccessToken,
   });
   if (postMessageRes.status === "ok") {
     logger.info(postMessageRes);

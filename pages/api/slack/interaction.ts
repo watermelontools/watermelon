@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${workspaceRecord.AccessToken}`,
+      Authorization: `Bearer ${workspaceRecord.fields.AccessToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(ephimeralMessageData),
