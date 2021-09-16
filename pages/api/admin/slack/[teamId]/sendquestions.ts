@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     }
   } else {
   return res.status(400).json({ status: "error", error: "questions exhausted" });
+
   }
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
             text: "Welcome to Watermelon!",
             emoji: true,
           },
+
         },
         {
           type: "section",
