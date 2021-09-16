@@ -170,7 +170,7 @@ export const createSettings = async ({
 }) => {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
-    { fields: { ...settings, WorkspaceId: workspaceRecord.WorkspaceId } },
+    { fields: { ...settings, WorkspaceId: workspaceRecord.fields.WorkspaceId } },
   ]);
 };
 export const updateWorkspace = async ({
@@ -249,7 +249,7 @@ export const createUser = async ({
         },
       ])
   else {
-    let record = await (await findWorkspaceRecord({ workspaceId })).RecordId;
+    let record = await (await findWorkspaceRecord({ workspaceId })).fields.RecordId;
 
       //@ts-ignore
      created = await airtableBase("Users").create([
@@ -413,3 +413,21 @@ export const getRooms = async({workspaceId}:{workspaceId: string})=>{
   })
   return rooms
 }
+export const getLastWeekAnswerers = async({workspaceId}:{workspaceId: string})=>{
+  let answerers=[]
+  await airtableBase("Answerers")
+ .select({
+   filterByFormula: `AND(
+     FIND('${workspaceId}', {WorkspaceId})>0,
+     TimeSinceAnswered<10080
+     )`,
+ })
+ .firstPage()
+ .then((records) => {
+   records.map(record =>{
+
+     answerers.push ({id: record.id, fields: record.fields})
+   })
+ })
+ return answerers
+} 
