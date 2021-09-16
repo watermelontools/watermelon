@@ -1,17 +1,9 @@
-import admin from "../../../../../utils/firebase/backend";
 import logger from "../../../../../logger/logger";
+import { findWorkspaceRecord } from "../../../../../utils/airtable/backend";
 const axios = require("axios").default;
 
-let db = admin.firestore();
-
 async function getInstallationToken(teamId) {
-  const teamRef = db.collection("teams").doc(teamId);
-  const doc = await teamRef.get();
-  if (!doc.exists) {
-    console.log("No such document!");
-  } else {
-    return doc.data().add_to_slack_token.access_token;
-  }
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
 }
 
 export default async function handler(req, res) {
@@ -30,14 +22,6 @@ export default async function handler(req, res) {
   let room_ids = [];
 
   // Get list of room ids
-  const teamRef = db.collection("teams").doc(teamId);
-  const doc = await teamRef.get();
-  if (!doc.exists) {
-    console.log("No such document!");
-  } else {
-    // For each room id, execute what we have on Glitch
-    room_ids = doc.data().room_ids;
-  }
 
   room_ids.forEach((room) => {
     let roomData = { channel: room };

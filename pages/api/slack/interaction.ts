@@ -1,81 +1,49 @@
 import logger from "../../../logger/logger";
-import admin from "../../../utils/firebase/backend";
-import { savePickedBy } from "../../../utils/firebase/functions";
+import {
+  findWorkspaceRecord,
+  saveAnswerPicked,
+} from "../../../utils/airtable/backend";
 
 export default async function handler(req, res) {
-  let db = admin.firestore();
-
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
 
-  let questionName =
-    slackResponse.message.blocks[
-      slackResponse.message.blocks.findIndex(
-        (block) => block.block_id == slackResponse.actions[0].block_id
-      ) - 1
-    ].elements[0].text;
-  let respondentsRef = db
-    .collection("teams")
-    .doc(slackResponse.message.team)
-    .collection("weekly_questions")
-    .doc(questionName);
   const ephimeralMessageData = {
     attachments:
       "[{'text': 'This response is anonymous.', 'color': '#75b855'}]",
     channel: slackResponse.channel.id,
-    text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].value}*`,
+    text: `🍉 Ahoy from Watermelon! You selected *${slackResponse.actions[0].text.text}*`,
     user: slackResponse.user.id,
   };
-  await db
-    .collection("teams")
-    .doc(slackResponse.team.id)
-    .get()
-    .then(async (res) => {
-      if (res.exists) {
-        let responseData = res.data();
-        if (responseData.add_to_slack_token) {
-          await fetch("https://slack.com/api/chat.postEphemeral", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${responseData.add_to_slack_token.access_token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(ephimeralMessageData),
-          })
-            .then(function (resp) {
-              logger.info({ message: "sent-ephemeral", data: resp });
-            })
-            .catch(function (error) {
-              logger.error("error-sending-ephemeral ", error);
-            });
-        }
-      }
-    });
-  respondentsRef.update({
-    respondents: admin.firestore.FieldValue.arrayUnion(slackResponse.user.id),
+  let workspaceRecord = await findWorkspaceRecord({
+    workspaceId: slackResponse.user.team_id,
   });
-  const respondents = await respondentsRef.get();
-  const respondentsArray = respondents.data().respondents;
-  /*   if (respondentsArray.includes(userId)) {
-    // console.log('user id included')
-    const ephimeralMessageData = {
-      attachments:
-        '[{"text": "Try answering the other question.", "color": "#75b855"}]',
-      channel: body.channel.id,
-      text: `You have already responded this question`,
-      user: body.user.id,
-    };
-    Slack.postEphemeral(ephimeralMessageData, context.botToken);
-  } */
+  let qrecord = slackResponse.message.blocks.find(
+    (el) => el.type === "section" && el.block_id.startsWith("rec")
+  ).block_id;
 
-  savePickedBy({
-    admin,
-    db,
-    teamId: slackResponse.message.team,
-    questionName,
-    answerTitle: slackResponse.actions[0].value,
+  await saveAnswerPicked({
+    questionRecord: qrecord,
+    answerRecord: slackResponse.actions[0].value,
+    workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
+    username: slackResponse.user.username,
   });
+  await fetch("https://slack.com/api/chat.postEphemeral", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${workspaceRecord.AccessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(ephimeralMessageData),
+  })
+    .then(function (resp) {
+      logger.info({ message: "sent-ephemeral", data: resp });
+    })
+    .catch(function (error) {
+      logger.error("error-sending-ephemeral ", error);
+    });
+
   await fetch(slackResponse.response_url, {
     method: "POST",
     headers: {

@@ -10,7 +10,7 @@ const Wizard = ({  }) => {
   const [cat, setCat] = useState("hobbies")
   const [weekday, setWeekday] = useState("THU")
   const [hour, setHour] = useState(15)
-  const [timezone, setTimezone ] = useState("")
+  const [timezone, setTimezone ] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [exampleQuestion, setExampleQuestion] = useState(1)
 
   useEffect(() => {
@@ -23,7 +23,8 @@ const Wizard = ({  }) => {
       cat, 
       weekday, 
       hour,
-      isWizard: true
+      isWizard: true,
+      timezone
      }
      fetch("/api/admin/cron/create/createandemptygroups",{
       method: "POST",
@@ -111,8 +112,7 @@ const Wizard = ({  }) => {
     {value:17,label:'17:00'},
     {value:18,label:'18:00'},
   ]
-  const localeTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-console.log(localeTz);
+
   return (
     <>
       <PageTitle pageTitle="The finishing touches" />
@@ -183,61 +183,21 @@ console.log(localeTz);
 
 export default Wizard
 
-import admin from '../utils/firebase/backend';
 import logger from "../logger/logger";
 import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
+import { updateWorkspace } from "../utils/airtable/backend";
 
 export async function getServerSideProps(context) {
 
   let f = await fetch(
     `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
     }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-    }&redirect_uri=https://${process.env.IS_DEV === "true" ? "dev." : ""
-    }app.watermelon.tools/wizard`
+    }&redirect_uri=https://${process.env.NEXT_PUBLIC_VERCEL_URL}/wizard`
   );
   let token = await f.json();
   if(token.ok){
     await createAndSave({teamId: token.team.id, access_token: token.access_token})
-    let db = admin.firestore();
-    await db.collection("teams")
-    .doc(token.team.id)
-    .set(
-      {
-        add_to_slack_token: token,
-      },
-      { merge: true }
-    )
-    .then(function (docRef) {
-      logger.info({message: "new-add-to-slack:", data: token.team});
-    })
-    .catch(function (error) {
-      logger.error("Error adding document: ", error);
-    });
-
-    await db.collection("teams")
-    .doc(token.team.id)
-    .update(
-      {
-          "installation.team": token.team,
-          "installation.enterprise": token.enterprise ?? false,
-          "installation.tokenType": "bot",
-          "installation.isEnterpriseInstall": token.is_enterprise_install ?? false,
-          "installation.appId": token.app_id,
-          "installation.authVersion": "v2",
-          "installation.bot": {
-            scopes: token.scope.split(","),
-            token: token.access_token,
-            userId: token.bot_user_id,
-            id: token.incoming_webhook.channel_id,
-          },
-      }
-    )
-    .then(function () {
-      logger.info({message:"new-installation:", data:token.team});
-    })
-    .catch(function (error) {
-      logger.error("Error adding document: ", error);
-    });
+    await updateWorkspace({add_to_slack_token: token, workspaceId: token.team.id})
 
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;

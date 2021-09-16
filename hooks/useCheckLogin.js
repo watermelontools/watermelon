@@ -3,6 +3,6 @@ const useCheckLogin = () => {
   if (typeof window !== "undefined") {
     isLoggedIn = window?.localStorage?.getItem("sign_in_token");
   }
-  return { isLoggedIn  };
+  return { isLoggedIn };
 };
 export default useCheckLogin;

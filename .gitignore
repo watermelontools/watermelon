@@ -3,3 +3,10 @@ package-lock.json
 .next/
 deleteme
 .env.local
+.DS_Store
+public/images/gcp.png
+next-env.d.ts
+localhost.pem
+localhost-key.pem
+next-env.d.ts
+next-env.d.ts
