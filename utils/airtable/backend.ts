@@ -355,7 +355,13 @@ export const findAnswerer = async ({
       maxRecords: 1,
       filterByFormula: filterFormula,
     }).firstPage()
-    .then((record) => { console.log(record) ;return { id: record[0].id, fields: record[0].fields}});
+    .then((record) => { 
+      if(record[0])
+      return { id: record[0].id, fields: record[0].fields}
+      else
+      return false
+    }
+      );
 };
 export const CreateOrEditAnswerer = async ({
   userId,
