@@ -27,6 +27,7 @@ export default async function handler(req, res) {
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
+    workspaceRecordId: workspaceRecord.id
   });
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",

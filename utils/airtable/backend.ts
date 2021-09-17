@@ -325,7 +325,7 @@ export const createAnswerer = async ({
       fields: {
         Answer: [answerRecord],
         Question: [questionRecord],
-        User: [userId],
+        User: userId,
       },
     },
   ]);
@@ -367,10 +367,12 @@ export const CreateOrEditAnswerer = async ({
   userId,
   questionRecord,
   answerRecord,
+  workspaceRecordId
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
+  workspaceRecordId: string;
 }) => {
   let found = await findAnswerer({
     userId,
@@ -394,14 +396,16 @@ export const saveAnswerPicked = async ({
   workspaceId,
   userId,
   username,
+  workspaceRecordId
 }:{
   questionRecord:string;
   answerRecord: string;
   workspaceId: string;
   userId: string;
   username: string;
+  workspaceRecordId: string;
 }) => {
-  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord });
+  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord, workspaceRecordId });
   return answerer
 };
 export const getRooms = async({workspaceId}:{workspaceId: string})=>{
