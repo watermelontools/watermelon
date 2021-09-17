@@ -313,19 +313,24 @@ export const findOrCreateUser = async ({
 export const createAnswerer = async ({
   userId,
   questionRecord,
-  answerRecord
+  answerRecord,
+  username,
+  workspaceRecord
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
+  username:string;
+  workspaceRecord:string;
 }) => {
   console.log("createAnswerer")
+  let createdUser = await createUser({userId, username, workspaceRecord})
   let created = await airtableBase("Answerers").create([
     {
       fields: {
         Answer: [answerRecord],
         Question: [questionRecord],
-        User: userId,
+        User: [createdUser.id],
       },
     },
   ]);
@@ -367,12 +372,14 @@ export const CreateOrEditAnswerer = async ({
   userId,
   questionRecord,
   answerRecord,
-  workspaceRecordId
+  workspaceRecordId,
+  username
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
   workspaceRecordId: string;
+  username: string;
 }) => {
   let found = await findAnswerer({
     userId,
@@ -388,7 +395,7 @@ export const CreateOrEditAnswerer = async ({
     }])
       return found;
     }
-  return await createAnswerer({ userId, questionRecord, answerRecord });
+  return await createAnswerer({ userId, questionRecord, answerRecord, workspaceRecord: workspaceRecordId, username });
 };
 export const saveAnswerPicked = async ({
   questionRecord,
@@ -405,7 +412,7 @@ export const saveAnswerPicked = async ({
   username: string;
   workspaceRecordId: string;
 }) => {
-  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord, workspaceRecordId });
+  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord, workspaceRecordId, username });
   return answerer
 };
 export const getRooms = async({workspaceId}:{workspaceId: string})=>{
