@@ -28,11 +28,14 @@ export default async function handler(req, res) {
     workspaceId: slackResponse.team.id,
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
+    workspaceRecordId: workspaceRecord.id
+
   });
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${workspaceRecord.AccessToken}`,
+      Authorization: `Bearer ${workspaceRecord.fields.AccessToken}`,
+
       "Content-Type": "application/json",
     },
     body: JSON.stringify(ephimeralMessageData),

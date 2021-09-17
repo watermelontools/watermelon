@@ -18,13 +18,17 @@ export default async function handler(req, res) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({ workspaceId: teamId });
   let questionsToSend = [];
-  if(questions.length >= 1) {
+  
+  if (questions.length >= 1) {
+
     while (questionsToSend.length < 1) {
       let item = questions[Math.floor(Math.random() * questions.length)];
       if (!questionsToSend.includes(item)) questionsToSend.push(item);
     }
   } else {
-  return res.status(400).json({ status: "error", error: "questions exhausted" });
+    return res
+      .status(400)
+      .json({ status: "error", error: "questions exhausted" });
 
   }
   let blocks = [];
@@ -61,7 +65,7 @@ export default async function handler(req, res) {
     );
     await markQuestionUsed({
       questionRecord: record.id,
-      WorkspaceId: workspaceRecord.RecordId,
+      WorkspaceId: workspaceRecord.fields.RecordId,
     });
   }
 
@@ -96,9 +100,10 @@ export default async function handler(req, res) {
           alt_text: "Tulia, the watermelon mascot in front of a computer",
         },
       ],
-      channel: workspaceRecord.ChannelId,
+      channel: workspaceRecord.fields.ChannelId,
     },
-    token: workspaceRecord.AccessToken,
+    token: workspaceRecord.fields.AccessToken,
+
   });
   if (postMessageRes.status === "ok") {
     logger.info(postMessageRes);

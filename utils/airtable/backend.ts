@@ -20,7 +20,8 @@ export const findWorkspaceRecord = async ({
       filterByFormula: `({WorkspaceId} = '${workspaceId}')`,
     })
     .firstPage()
-    .then((record) => record[0].fields);
+    .then((record) => {return {id: record[0].id, fields:record[0].fields}});
+
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
@@ -170,7 +171,8 @@ export const createSettings = async ({
 }) => {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
-    { fields: { ...settings, WorkspaceId: workspaceRecord.WorkspaceId } },
+    { fields: { ...settings, WorkspaceId: workspaceRecord.fields.WorkspaceId } },
+
   ]);
 };
 export const updateWorkspace = async ({
@@ -249,7 +251,8 @@ export const createUser = async ({
         },
       ])
   else {
-    let record = await (await findWorkspaceRecord({ workspaceId })).RecordId;
+    let record = await (await findWorkspaceRecord({ workspaceId })).fields.RecordId;
+
 
       //@ts-ignore
      created = await airtableBase("Users").create([
@@ -313,19 +316,27 @@ export const findOrCreateUser = async ({
 export const createAnswerer = async ({
   userId,
   questionRecord,
-  answerRecord
+  answerRecord,
+  username,
+  workspaceRecord
+
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
+  username:string;
+  workspaceRecord:string;
 }) => {
   console.log("createAnswerer")
+  let createdUser = await createUser({userId, username, workspaceRecord})
+
   let created = await airtableBase("Answerers").create([
     {
       fields: {
         Answer: [answerRecord],
         Question: [questionRecord],
-        User: [userId],
+        User: [createdUser.id],
+
       },
     },
   ]);
@@ -355,16 +366,29 @@ export const findAnswerer = async ({
       maxRecords: 1,
       filterByFormula: filterFormula,
     }).firstPage()
-    .then((record) => { return { id: record[0].id, fields: record[0].fields}});
+    .then((record) => { 
+      if(record[0])
+      return { id: record[0].id, fields: record[0].fields}
+      else
+      return false
+    }
+      );
+
 };
 export const CreateOrEditAnswerer = async ({
   userId,
   questionRecord,
   answerRecord,
+  workspaceRecordId,
+  username
+
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
+  workspaceRecordId: string;
+  username: string;
+
 }) => {
   let found = await findAnswerer({
     userId,
@@ -380,7 +404,8 @@ export const CreateOrEditAnswerer = async ({
     }])
       return found;
     }
-  return await createAnswerer({ userId, questionRecord, answerRecord });
+  return await createAnswerer({ userId, questionRecord, answerRecord, workspaceRecord: workspaceRecordId, username });
+
 };
 export const saveAnswerPicked = async ({
   questionRecord,
@@ -388,13 +413,50 @@ export const saveAnswerPicked = async ({
   workspaceId,
   userId,
   username,
+  workspaceRecordId
+
 }:{
   questionRecord:string;
   answerRecord: string;
   workspaceId: string;
   userId: string;
   username: string;
+  workspaceRecordId: string;
 }) => {
-  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord });
+  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord, workspaceRecordId, username });
   return answerer
 };
+export const getRooms = async({workspaceId}:{workspaceId: string})=>{
+  let rooms=[]
+   await airtableBase("Rooms")
+  .select({
+    filterByFormula: `FIND('${workspaceId}', {WorkspaceId})>0`,
+  })
+  .firstPage()
+  .then((records) => {
+    records.map(record =>{
+
+      rooms.push ({id: record.id, fields: record.fields})
+    })
+  })
+  return rooms
+}
+export const getLastWeekAnswerers = async({workspaceId}:{workspaceId: string})=>{
+  let answerers=[]
+  await airtableBase("Answerers")
+ .select({
+   filterByFormula: `AND(
+     FIND('${workspaceId}', {WorkspaceId})>0,
+     TimeSinceAnswered<10080
+     )`,
+ })
+ .firstPage()
+ .then((records) => {
+   records.map(record =>{
+
+     answerers.push ({id: record.id, fields: record.fields})
+   })
+ })
+ return answerers
+} 
+
