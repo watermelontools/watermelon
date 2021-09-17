@@ -18,7 +18,9 @@ export default async function handler(req, res) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({ workspaceId: teamId });
   let questionsToSend = [];
+  
   if (questions.length >= 1) {
+
     while (questionsToSend.length < 1) {
       let item = questions[Math.floor(Math.random() * questions.length)];
       if (!questionsToSend.includes(item)) questionsToSend.push(item);
@@ -27,6 +29,7 @@ export default async function handler(req, res) {
     return res
       .status(400)
       .json({ status: "error", error: "questions exhausted" });
+
   }
   let blocks = [];
   for (let i = 0; i < questionsToSend.length; i++) {
@@ -77,6 +80,7 @@ export default async function handler(req, res) {
             text: "Welcome to Watermelon!",
             emoji: true,
           },
+
         },
         {
           type: "section",
@@ -99,6 +103,7 @@ export default async function handler(req, res) {
       channel: workspaceRecord.fields.ChannelId,
     },
     token: workspaceRecord.fields.AccessToken,
+
   });
   if (postMessageRes.status === "ok") {
     logger.info(postMessageRes);

@@ -21,6 +21,7 @@ export const findWorkspaceRecord = async ({
     })
     .firstPage()
     .then((record) => {return {id: record[0].id, fields:record[0].fields}});
+
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
@@ -171,6 +172,7 @@ export const createSettings = async ({
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
     { fields: { ...settings, WorkspaceId: workspaceRecord.fields.WorkspaceId } },
+
   ]);
 };
 export const updateWorkspace = async ({
@@ -251,6 +253,7 @@ export const createUser = async ({
   else {
     let record = await (await findWorkspaceRecord({ workspaceId })).fields.RecordId;
 
+
       //@ts-ignore
      created = await airtableBase("Users").create([
         {
@@ -316,6 +319,7 @@ export const createAnswerer = async ({
   answerRecord,
   username,
   workspaceRecord
+
 }: {
   userId: string;
   questionRecord: string;
@@ -325,12 +329,14 @@ export const createAnswerer = async ({
 }) => {
   console.log("createAnswerer")
   let createdUser = await createUser({userId, username, workspaceRecord})
+
   let created = await airtableBase("Answerers").create([
     {
       fields: {
         Answer: [answerRecord],
         Question: [questionRecord],
         User: [createdUser.id],
+
       },
     },
   ]);
@@ -367,6 +373,7 @@ export const findAnswerer = async ({
       return false
     }
       );
+
 };
 export const CreateOrEditAnswerer = async ({
   userId,
@@ -374,12 +381,14 @@ export const CreateOrEditAnswerer = async ({
   answerRecord,
   workspaceRecordId,
   username
+
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
   workspaceRecordId: string;
   username: string;
+
 }) => {
   let found = await findAnswerer({
     userId,
@@ -396,6 +405,7 @@ export const CreateOrEditAnswerer = async ({
       return found;
     }
   return await createAnswerer({ userId, questionRecord, answerRecord, workspaceRecord: workspaceRecordId, username });
+
 };
 export const saveAnswerPicked = async ({
   questionRecord,
@@ -404,6 +414,7 @@ export const saveAnswerPicked = async ({
   userId,
   username,
   workspaceRecordId
+
 }:{
   questionRecord:string;
   answerRecord: string;
@@ -448,3 +459,4 @@ export const getLastWeekAnswerers = async({workspaceId}:{workspaceId: string})=>
  })
  return answerers
 } 
+

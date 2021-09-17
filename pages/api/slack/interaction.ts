@@ -21,6 +21,7 @@ export default async function handler(req, res) {
   let qrecord = slackResponse.message.blocks.find(
     (el) => el.type === "section" && el.block_id.startsWith("rec")
   ).block_id;
+
   await saveAnswerPicked({
     questionRecord: qrecord,
     answerRecord: slackResponse.actions[0].value,
@@ -28,11 +29,13 @@ export default async function handler(req, res) {
     userId: slackResponse.user.id,
     username: slackResponse.user.username,
     workspaceRecordId: workspaceRecord.id
+
   });
   await fetch("https://slack.com/api/chat.postEphemeral", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${workspaceRecord.fields.AccessToken}`,
+
       "Content-Type": "application/json",
     },
     body: JSON.stringify(ephimeralMessageData),
