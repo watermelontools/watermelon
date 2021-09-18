@@ -18,6 +18,7 @@ export default async function handler(req, res) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({ workspaceId: teamId });
   let questionsToSend = [];
+
   if (questions.length >= 1) {
     while (questionsToSend.length < 1) {
       let item = questions[Math.floor(Math.random() * questions.length)];

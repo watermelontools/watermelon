@@ -20,7 +20,9 @@ export const findWorkspaceRecord = async ({
       filterByFormula: `({WorkspaceId} = '${workspaceId}')`,
     })
     .firstPage()
-    .then((record) => {return {id: record[0].id, fields:record[0].fields}});
+    .then((record) => {
+      return { id: record[0].id, fields: record[0].fields };
+    });
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
@@ -170,7 +172,9 @@ export const createSettings = async ({
 }) => {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
-    { fields: { ...settings, WorkspaceId: workspaceRecord.fields.WorkspaceId } },
+    {
+      fields: { ...settings, WorkspaceId: workspaceRecord.fields.WorkspaceId },
+    },
   ]);
 };
 export const updateWorkspace = async ({
@@ -211,10 +215,10 @@ export const getSingleQuestion = async ({ questionRecord }) => {
   ).fields;
 };
 export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
-  let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;  
+  let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
   let wsUsed = usedArray
-  //@ts-ignore
-    ? [...new Set([...usedArray, WorkspaceId])]
+    ? //@ts-ignore
+      [...new Set([...usedArray, WorkspaceId])]
     : [WorkspaceId];
   return await airtableBase("Questions").update([
     {
@@ -237,36 +241,37 @@ export const createUser = async ({
   workspaceId?: string;
   workspaceRecord?: string;
 }) => {
-  let created 
+  let created;
   if (workspaceRecord)
-      created = await airtableBase("Users").create([
-        {
-          fields: {
-            Name: username,
-            SlackId: userId,
-            Workspace: [workspaceRecord],
-          },
+    created = await airtableBase("Users").create([
+      {
+        fields: {
+          Name: username,
+          SlackId: userId,
+          Workspace: [workspaceRecord],
         },
-      ])
+      },
+    ]);
   else {
-    let record = await (await findWorkspaceRecord({ workspaceId })).fields.RecordId;
+    let record = await (
+      await findWorkspaceRecord({ workspaceId })
+    ).fields.RecordId;
 
-      //@ts-ignore
-     created = await airtableBase("Users").create([
-        {
-          fields: {
-            Name: username,
-            SlackId: userId,
-            Workspace: [record],
-          },
+    //@ts-ignore
+    created = await airtableBase("Users").create([
+      {
+        fields: {
+          Name: username,
+          SlackId: userId,
+          Workspace: [record],
         },
-      ])
-    
+      },
+    ]);
   }
   return {
     id: created[0].id,
     fields: created[0].fields,
-  }
+  };
 };
 export const findUser = async ({
   userId,
@@ -276,7 +281,7 @@ export const findUser = async ({
   username: string;
   workspaceId?: string;
 }) => {
-    return await airtableBase("Users")
+  return await airtableBase("Users")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
@@ -284,13 +289,13 @@ export const findUser = async ({
     })
     .firstPage()
     .then((record) => {
-      if(record.length>0){
-      return {
-        id: record[0].id,
-        fields: record[0].fields,
-      };
-    }
-      return false
+      if (record.length > 0) {
+        return {
+          id: record[0].id,
+          fields: record[0].fields,
+        };
+      }
+      return false;
     });
 };
 export const findOrCreateUser = async ({
@@ -315,16 +320,17 @@ export const createAnswerer = async ({
   questionRecord,
   answerRecord,
   username,
-  workspaceRecord
+  workspaceRecord,
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
-  username:string;
-  workspaceRecord:string;
+  username: string;
+  workspaceRecord: string;
 }) => {
-  console.log("createAnswerer")
-  let createdUser = await createUser({userId, username, workspaceRecord})
+  console.log("createAnswerer");
+  let createdUser = await createUser({ userId, username, workspaceRecord });
+
   let created = await airtableBase("Answerers").create([
     {
       fields: {
@@ -334,46 +340,43 @@ export const createAnswerer = async ({
       },
     },
   ]);
-  console.log("created", created)
-  
+  console.log("created", created);
+
   return {
     id: created[0].id,
     fields: created[0].fields,
-  }
+  };
 };
 export const findAnswerer = async ({
   userId,
   questionRecord,
-  answerRecord
+  answerRecord,
 }: {
   userId: string;
   questionRecord: string;
   answerRecord: string;
 }) => {
-
-  let filterFormula =`AND(SlackId='${userId}',
+  let filterFormula = `AND(SlackId='${userId}',
   QuestionRecordId='${questionRecord}',
-  TimeSinceAnswered<1440)`
-    return await airtableBase("Answerers")
+  TimeSinceAnswered<1440)`;
+  return await airtableBase("Answerers")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
       filterByFormula: filterFormula,
-    }).firstPage()
-    .then((record) => { 
-      if(record[0])
-      return { id: record[0].id, fields: record[0].fields}
-      else
-      return false
-    }
-      );
+    })
+    .firstPage()
+    .then((record) => {
+      if (record[0]) return { id: record[0].id, fields: record[0].fields };
+      else return false;
+    });
 };
 export const CreateOrEditAnswerer = async ({
   userId,
   questionRecord,
   answerRecord,
   workspaceRecordId,
-  username
+  username,
 }: {
   userId: string;
   questionRecord: string;
@@ -386,16 +389,24 @@ export const CreateOrEditAnswerer = async ({
     questionRecord,
     answerRecord,
   });
-  if (found){
-    await airtableBase('Answerers').update([{
-      id: found.id,
-      fields:{
-        Answer:[answerRecord]
-      }
-    }])
-      return found;
-    }
-  return await createAnswerer({ userId, questionRecord, answerRecord, workspaceRecord: workspaceRecordId, username });
+  if (found) {
+    await airtableBase("Answerers").update([
+      {
+        id: found.id,
+        fields: {
+          Answer: [answerRecord],
+        },
+      },
+    ]);
+    return found;
+  }
+  return await createAnswerer({
+    userId,
+    questionRecord,
+    answerRecord,
+    workspaceRecord: workspaceRecordId,
+    username,
+  });
 };
 export const saveAnswerPicked = async ({
   questionRecord,
@@ -403,47 +414,56 @@ export const saveAnswerPicked = async ({
   workspaceId,
   userId,
   username,
-  workspaceRecordId
-}:{
-  questionRecord:string;
+  workspaceRecordId,
+}: {
+  questionRecord: string;
   answerRecord: string;
   workspaceId: string;
   userId: string;
   username: string;
   workspaceRecordId: string;
 }) => {
-  let answerer = await CreateOrEditAnswerer({ userId, questionRecord, answerRecord, workspaceRecordId, username });
-  return answerer
+  let answerer = await CreateOrEditAnswerer({
+    userId,
+    questionRecord,
+    answerRecord,
+    workspaceRecordId,
+    username,
+  });
+  return answerer;
 };
-export const getRooms = async({workspaceId}:{workspaceId: string})=>{
-  let rooms=[]
-   await airtableBase("Rooms")
-  .select({
-    filterByFormula: `FIND('${workspaceId}', {WorkspaceId})>0`,
-  })
-  .firstPage()
-  .then((records) => {
-    records.map(record =>{
-      rooms.push ({id: record.id, fields: record.fields})
+export const getRooms = async ({ workspaceId }: { workspaceId: string }) => {
+  let rooms = [];
+  await airtableBase("Rooms")
+    .select({
+      filterByFormula: `FIND('${workspaceId}', {WorkspaceId})>0`,
     })
-  })
-  return rooms
-}
-export const getLastWeekAnswerers = async({workspaceId}:{workspaceId: string})=>{
-  let answerers=[]
+    .firstPage()
+    .then((records) => {
+      records.map((record) => {
+        rooms.push({ id: record.id, fields: record.fields });
+      });
+    });
+  return rooms;
+};
+export const getLastWeekAnswerers = async ({
+  workspaceId,
+}: {
+  workspaceId: string;
+}) => {
+  let answerers = [];
   await airtableBase("Answerers")
- .select({
-   filterByFormula: `AND(
+    .select({
+      filterByFormula: `AND(
      FIND('${workspaceId}', {WorkspaceId})>0,
      TimeSinceAnswered<10080
      )`,
- })
- .firstPage()
- .then((records) => {
-   records.map(record =>{
-
-     answerers.push ({id: record.id, fields: record.fields})
-   })
- })
- return answerers
-} 
+    })
+    .firstPage()
+    .then((records) => {
+      records.map((record) => {
+        answerers.push({ id: record.id, fields: record.fields });
+      });
+    });
+  return answerers;
+};
