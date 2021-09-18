@@ -424,7 +424,6 @@ export const getRooms = async({workspaceId}:{workspaceId: string})=>{
   .firstPage()
   .then((records) => {
     records.map(record =>{
-
       rooms.push ({id: record.id, fields: record.fields})
     })
   })

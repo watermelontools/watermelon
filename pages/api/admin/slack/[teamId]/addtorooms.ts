@@ -1,55 +1,12 @@
 import logger from "../../../../../logger/logger";
 import { findWorkspaceRecord, getLastWeekAnswerers, getRooms } from "../../../../../utils/airtable/backend";
+import { inviteToRoom, kickFromRoom, listRoomMembers, sendDM, sendIcebreaker } from "../../../../../utils/slack/backend";
 const axios = require("axios").default;
 
-async function getInstallationToken(teamId) {
-  let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
+async function getInstallationToken({workspaceId}) {
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return workspaceRecord.fields.AccessToken
 }
-const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  axios
-    .post("https://slack.com/api/chat.postMessage", icebreakerData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  axios
-    .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
-const listRoomMembers =async ({ accessToken, channel }) => {
-  return (await axios
-    .get(`https://slack.com/api/conversations.members?channel=${channel}`,  {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })).data
-};
-const kickFromRoom =async ({ accessToken, channel, user }) => {
-  return (await axios
-    .post(`https://slack.com/api/conversations.members?channel=${channel}&user=${user}`,  {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }))
-};
 export default async function handler(req, res) {
   const {
     query: { teamId },
@@ -60,19 +17,10 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
-/*   let accessToken = await getInstallationToken(teamId);
-  let roomIds = await getRooms(teamId) */
+   let accessToken = await getInstallationToken({workspaceId:teamId});
+  let roomIds = await getRooms({workspaceId:teamId}) 
   let responses = await getLastWeekAnswerers({workspaceId:teamId})
-/*   for (let index = 0; index < roomIds.length; index++) {
-    const element = roomIds[index];
-    let roomMembers = await listRoomMembers({accessToken, channel:"C029NA3V4E4"})
-    for (let j = 0; j < roomMembers.members.length; j++) {
-      const member = roomMembers.members[j];
-      await kickFromRoom({accessToken, channel: element.fields.RoomId, user: member})
-    }
-  } */
-let questions = {}
-console.log(responses.length)
+  let questions = {}
   responses.map(response=>{
     if(questions[response.fields.Question]){
     let foundAnswer=  questions[response.fields.Question].answers.findIndex(q=> 
@@ -81,10 +29,12 @@ console.log(responses.length)
     if(foundAnswer>-1){
     questions[response.fields.Question].answers[foundAnswer].users.push(
      ...response.fields.SlackId)
+     questions[response.fields.Question].answers[foundAnswer].icebreaker= response.fields.IcebreakerToSend
     }
     else{
       questions[response.fields.Question].answers.push  ({
           answerRecord: response.fields.Answer,
+          icebreaker: response.fields.IcebreakerToSend,
           answerText: response.fields.AnswerText,
           users:response.fields.SlackId
       }
@@ -100,5 +50,30 @@ console.log(responses.length)
       }]      
     }}
   })
+  for (let index = 0; index < roomIds.length; index++) {
+    const element = roomIds[index];
+    let roomMembers = await listRoomMembers({accessToken, channel: element.fields.RoomId})
+    for (let j = 0; j < roomMembers.members.length; j++) {
+      const member = roomMembers.members[j];
+      await kickFromRoom({accessToken, channel: element.fields.RoomId, user: member})
+      await sendDM({accessToken, channel: member, text: "You have been removed from last's week :watermelon: room, we're starting a new round."})
+    }
+  }  
+  let questionNames =Object.keys(questions)
+  for (let index = 0; index < questionNames.length; index++) {
+    let element = questions[questionNames[index]]
+    for (let j = 0; j < element.answers.length; j++) {
+      const answer = element.answers[j]; 
+      let room = roomIds.shift()
+      let icebreakerData= {
+        text: `
+          Welcome to this :watermelon: room, you answered the question "${element.questionText[0]}".
+          ${answer.icebreaker[0].replace("${answer}", `*${answer.answerText[0]}*`)}
+        `}
+        let watermelonRoomData= {channel: room.fields.RoomId, users:answer.users }
+      await inviteToRoom({accessToken, watermelonRoomData})
+      await sendIcebreaker({accessToken, icebreakerData})
+    }
+  } 
   res.send({questions});
 }
