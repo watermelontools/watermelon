@@ -22,7 +22,7 @@ const FirstAuth = ({ token }) => {
                   href={`https://slack.com/oauth/v2/authorize${token?.team?.id ? "?team=" + token.team.id + "&" : "?"
                     }scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read,groups:read
                     &client_id=${process.env.NEXT_PUBLIC_SLACK_CLIENT_ID}
-                    &redirect_uri=https://${process.env.NEXT_PUBLIC_VERCEL_URL}/wizard`}
+                    &redirect_uri=https://${process.env.NEXT_PUBLIC_IS_DEV === "true" ? process.env.NEXT_PUBLIC_VERCEL_URL: ""}/wizard`}
                 >
                   <img
                     alt="Add to Slack"
