@@ -8,6 +8,8 @@ export default async function handler(req, res) {
   let { payload } = req.body;
   let slackResponse = await JSON.parse(payload);
 
+  logger.info({message: "NEW_INTERACTION", payload})
+  
   const ephimeralMessageData = {
     attachments:
       "[{'text': 'This response is anonymous.', 'color': '#75b855'}]",
