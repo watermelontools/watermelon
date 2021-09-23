@@ -1,5 +1,5 @@
 import Airtable from "airtable";
-import { cpuUsage } from "process";
+import logger from "../../logger/logger";
 import { Admin, Settings, Workspace, IncompleteWorkspace } from "./models";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -13,6 +13,7 @@ export const findWorkspaceRecord = async ({
 }: {
   workspaceId: string;
 }) => {
+  logger.info({ message: "AIRTABLE-FUNC_FIND_WORKSPACE_RECORD", input: { workspaceId } })
   return await airtableBase("Workspaces")
     .select({
       // Selecting the first 3 records in Grid view:
@@ -26,6 +27,7 @@ export const findWorkspaceRecord = async ({
 };
 export const getAllQuestions = async () => {
   let allQuestions = [];
+  logger.info({ message: "AIRTABLE-FUNC_GET_ALL_QUESTIONS" })
   await airtableBase("en")
     .select({
       // Selecting the first 3 records in Grid view:
@@ -47,6 +49,7 @@ export const getAllUnusedQuestions = async ({
   workspaceId: string;
 }) => {
   let allQuestions = [];
+  logger.info({ message: "AIRTABLE-FUNC_GET_ALL_UNUSED_QUESTIONS" })
   await airtableBase("Questions")
     .select({
       // Selecting the first 3 records in Grid view:
@@ -74,6 +77,15 @@ export const saveWorkspace = async ({
   settings: Settings;
   crons: any;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_SAVE_WORKSPACE", input: {
+      workspace,
+      admin,
+      rooms,
+      settings,
+      crons
+    }
+  })
   airtableBase("Workspaces").create(
     [
       {
@@ -144,8 +156,9 @@ export const findWorkspaceForLogin = async ({
   workspaceId,
 }: {
   workspaceId: string;
-}) =>
-  await airtableBase("Admins")
+}) => {
+  logger.info({ message: "AIRTABLE-FUNC_FIND_WORKSPACE_FOR_LOGIN", input: { workspaceId } })
+  return await airtableBase("Admins")
     .select({
       // Selecting the first 3 records in Grid view:
       maxRecords: 1,
@@ -153,7 +166,9 @@ export const findWorkspaceForLogin = async ({
     })
     .firstPage()
     .then((record) => record);
+}
 export const createAdmin = async ({ admin }: { admin: Admin }) => {
+  logger.info({ message: "AIRTABLE-FUNC_CREATE_ADMIN", input: { admin } })
   return await airtableBase("Admins").create([{ fields: admin }]);
 };
 export const createWorkspace = async ({
@@ -161,6 +176,7 @@ export const createWorkspace = async ({
 }: {
   workspace: IncompleteWorkspace;
 }) => {
+  logger.info({ message: "AIRTABLE-FUNC_CREATE_WORKSPACE", input: { workspace } })
   return await airtableBase("Workspaces").create([{ fields: workspace }]);
 };
 export const createSettings = async ({
@@ -170,6 +186,12 @@ export const createSettings = async ({
   settings: Settings;
   workspaceId: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_SETTINGS", input: {
+      settings,
+      workspaceId
+    }
+  })
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
   return await airtableBase("Settings").create([
     {
@@ -184,6 +206,11 @@ export const updateWorkspace = async ({
   workspaceId: String;
   add_to_slack_token: any;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_UPDATE_WORKSPACE", input: {
+      workspaceId
+    }
+  })
   let workspaceRecord = await airtableBase("Workspaces")
     .select({
       // Selecting the first 3 records in Grid view:
@@ -210,16 +237,26 @@ export const updateWorkspace = async ({
   ]);
 };
 export const getSingleQuestion = async ({ questionRecord }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_GET_SINGLE_QUESTION", input: {
+      questionRecord
+    }
+  })
   return await (
     await airtableBase("Questions").find(questionRecord)
   ).fields;
 };
-export const markQuestionUsed = async ({ questionRecord, WorkspaceId }) => {
+export const markQuestionUsed = async ({ questionRecord, workspaceId }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_MARK_QUESTION_USED", input: {
+      questionRecord, workspaceId
+    }
+  })
   let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
   let wsUsed = usedArray
     ? //@ts-ignore
-      [...new Set([...usedArray, WorkspaceId])]
-    : [WorkspaceId];
+    [...new Set([...usedArray, workspaceId])]
+    : [workspaceId];
   return await airtableBase("Questions").update([
     {
       id: questionRecord,
@@ -241,6 +278,14 @@ export const createUser = async ({
   workspaceId?: string;
   workspaceRecord?: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_USER", input: {
+      userId,
+      username,
+      workspaceId,
+      workspaceRecord,
+    }
+  })
   let created;
   if (workspaceRecord)
     created = await airtableBase("Users").create([
@@ -281,6 +326,12 @@ export const findUser = async ({
   username: string;
   workspaceId?: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_FIND_USER", input: {
+      userId,
+      workspaceId,
+    }
+  })
   return await airtableBase("Users")
     .select({
       // Selecting the first 3 records in Grid view:
@@ -307,6 +358,12 @@ export const findOrCreateUser = async ({
   username: string;
   workspaceId?: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_FIND_OR_CREATE_USER", input: {
+      userId,
+      workspaceId,
+    }
+  })
   let found = await findUser({
     userId,
     username,
@@ -328,7 +385,15 @@ export const createAnswerer = async ({
   username: string;
   workspaceRecord: string;
 }) => {
-  console.log("createAnswerer");
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_ANSWERER", input: {
+      userId,
+      questionRecord,
+      answerRecord,
+      username,
+      workspaceRecord,
+    }
+  })
   let createdUser = await createUser({ userId, username, workspaceRecord });
 
   let created = await airtableBase("Answerers").create([
@@ -340,8 +405,6 @@ export const createAnswerer = async ({
       },
     },
   ]);
-  console.log("created", created);
-
   return {
     id: created[0].id,
     fields: created[0].fields,
@@ -356,6 +419,13 @@ export const findAnswerer = async ({
   questionRecord: string;
   answerRecord: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_FIND_ANSWERER", input: {
+      userId,
+      questionRecord,
+      answerRecord,
+    }
+  })
   let filterFormula = `AND(SlackId='${userId}',
   QuestionRecordId='${questionRecord}',
   TimeSinceAnswered<1440)`;
@@ -384,6 +454,15 @@ export const CreateOrEditAnswerer = async ({
   workspaceRecordId: string;
   username: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_OR_EDIT_ANSWERER", input: {
+      userId,
+      questionRecord,
+      answerRecord,
+      workspaceRecordId,
+      username,
+    }
+  })
   let found = await findAnswerer({
     userId,
     questionRecord,
@@ -423,6 +502,16 @@ export const saveAnswerPicked = async ({
   username: string;
   workspaceRecordId: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_SAVE_ANSWER_PICKED", input: {
+      questionRecord,
+      answerRecord,
+      workspaceId,
+      userId,
+      username,
+      workspaceRecordId,
+    }
+  })
   let answerer = await CreateOrEditAnswerer({
     userId,
     questionRecord,
@@ -433,6 +522,11 @@ export const saveAnswerPicked = async ({
   return answerer;
 };
 export const getRooms = async ({ workspaceId }: { workspaceId: string }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_GET_ROOMS", input: {
+      workspaceId,
+    }
+  })
   let rooms = [];
   await airtableBase("Rooms")
     .select({
@@ -451,6 +545,11 @@ export const getLastWeekAnswerers = async ({
 }: {
   workspaceId: string;
 }) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_GET_LAST_WEEK_ANSWERERS", input: {
+      workspaceId,
+    }
+  })
   let answerers = [];
   await airtableBase("Answerers")
     .select({
