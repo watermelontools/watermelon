@@ -40,7 +40,7 @@ export const getAllQuestions = async () => {
     .eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
       records.forEach(function (record) {
-        allQuestions.push(record);
+        allQuestions.push({ fields: record.fields, id: record.id });
       });
       fetchNextPage();
     });
@@ -270,7 +270,7 @@ export const markQuestionUsed = async ({ questionRecord, workspaceId }) => {
   let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
   let wsUsed = usedArray
     ? //@ts-ignore
-      [...new Set([...usedArray, workspaceId])]
+    [...new Set([...usedArray, workspaceId])]
     : [workspaceId];
   return await airtableBase("Questions").update([
     {
