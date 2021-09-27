@@ -692,3 +692,36 @@ export const createAnswer = async ({
     fields: created[0].fields,
   };
 };
+
+export const createRoom = async ({
+  roomId,
+  workspaceId,
+  name
+}: {
+  roomId: string;
+  workspaceId: string;
+  name: string;
+}) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_ANSWER",
+    input: {
+      roomId,
+      workspaceId,
+      name
+    },
+  });
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId })
+  let created = await airtableBase("Rooms").create([
+    {
+      fields: {
+        RoomId: roomId,
+        Workspace: [workspaceRecord.id],
+        Name: name
+      },
+    },
+  ]);
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  };
+};

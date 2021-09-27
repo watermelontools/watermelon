@@ -1,5 +1,6 @@
 import { createGroup } from "../../../../../utils/slack/backend";
 import logger from "../../../../../logger/logger";
+import { createRoom } from "../../../../../utils/airtable/backend";
 
 const createInitialGroups = ({ token }) => {
   const createPromiseArray = [];
@@ -23,12 +24,14 @@ export const createAndSave = async ({
   access_token: string;
   teamId: string;
 }) => {
-  console.log("func called");
   let createPromiseArray = createInitialGroups({
     token: access_token,
   });
   let finishedProms = await Promise.all(createPromiseArray);
-
+  for (let index = 0; index < finishedProms.length; index++) {
+    const element = finishedProms[index];
+    await createRoom({ roomId: element.channel.id, workspaceId: teamId, name: element.channel.name })
+  }
   return finishedProms;
 };
 export default async function handler(req, res) {
