@@ -14,7 +14,7 @@ export const postMessage = async ({ data, token }) => {
       return { status: "ok", resjson };
     })
     .catch((err) => {
-      return { status: "error" , err};
+      return { status: "error", err };
     });
 };
 export const createGroup = async ({ data, token }) => {
@@ -29,10 +29,10 @@ export const createGroup = async ({ data, token }) => {
   })
     .then((response) => response.json())
     .then((resjson) => {
-      return resjson.channel.id;
+      return resjson;
     })
     .catch((err) => {
-      return { status: "error" , err};
+      return { status: "error", err };
     });
 };
 export const postEphemeral = (ephemeralData, botToken) => {
@@ -78,25 +78,25 @@ export const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
       console.log(error);
     });
 };
-export const listRoomMembers =async ({ accessToken, channel }) => {
+export const listRoomMembers = async ({ accessToken, channel }) => {
   return (await axios
-    .get(`https://slack.com/api/conversations.members?channel=${channel}`,  {
+    .get(`https://slack.com/api/conversations.members?channel=${channel}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     })).data
 };
-export const kickFromRoom =async ({ accessToken, channel, user }) => {
+export const kickFromRoom = async ({ accessToken, channel, user }) => {
   return (await axios
-    .post(`https://slack.com/api/conversations.members?channel=${channel}&user=${user}`,  {
+    .post(`https://slack.com/api/conversations.members?channel=${channel}&user=${user}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     }))
 };
-export const sendDM =async ({ accessToken, channel, text}) => {
+export const sendDM = async ({ accessToken, channel, text }) => {
   return (await axios
-    .post(`https://slack.com/api/chat.postMessage?channel=${channel}&text=${text}`,  {
+    .post(`https://slack.com/api/chat.postMessage?channel=${channel}&text=${text}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

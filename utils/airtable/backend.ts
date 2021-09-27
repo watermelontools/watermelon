@@ -40,7 +40,7 @@ export const getAllQuestions = async () => {
     .eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
       records.forEach(function (record) {
-        allQuestions.push(record);
+        allQuestions.push({ fields: record.fields, id: record.id });
       });
       fetchNextPage();
     });
@@ -270,7 +270,7 @@ export const markQuestionUsed = async ({ questionRecord, workspaceId }) => {
   let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
   let wsUsed = usedArray
     ? //@ts-ignore
-      [...new Set([...usedArray, workspaceId])]
+    [...new Set([...usedArray, workspaceId])]
     : [workspaceId];
   return await airtableBase("Questions").update([
     {
@@ -589,4 +589,139 @@ export const getLastWeekAnswerers = async ({
       });
     });
   return answerers;
+};
+
+export const createQuestion = async ({
+  Question,
+  Language,
+  Icebreaker1,
+  Icebreaker2,
+  Icebreaker3,
+  ContrarianIcebreaker1,
+  ContrarianIcebreaker2,
+  ContrarianIcebreaker3,
+}: {
+  Question: string;
+  Language: string;
+  Icebreaker1: string;
+  Icebreaker2: string;
+  Icebreaker3: string;
+  ContrarianIcebreaker1: string;
+  ContrarianIcebreaker2: string;
+  ContrarianIcebreaker3: string;
+}) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_QUESTION",
+    input: {
+      Question,
+      Language,
+      Icebreaker1,
+      Icebreaker2,
+      Icebreaker3,
+      ContrarianIcebreaker1,
+      ContrarianIcebreaker2,
+      ContrarianIcebreaker3,
+    },
+  });
+
+  let created = await airtableBase("Questions").create([
+    {
+      fields: {
+        Question,
+        Language,
+        Icebreaker1,
+        Icebreaker2,
+        Icebreaker3,
+        ContrarianIcebreaker1,
+        ContrarianIcebreaker2,
+        ContrarianIcebreaker3,
+      },
+    },
+  ]);
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  };
+};
+
+export const createAnswer = async ({
+  AnswerTitle,
+  Image,
+  IsContrarian,
+  QuestionsA,
+  QuestionsB,
+  QuestionsC,
+  QuestionsD,
+}: {
+  AnswerTitle: string;
+  Image: string;
+  IsContrarian: boolean;
+  QuestionsA?: string[];
+  QuestionsB?: string[];
+  QuestionsC?: string[];
+  QuestionsD?: string[];
+}) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_ANSWER",
+    input: {
+      AnswerTitle,
+      Image,
+      IsContrarian,
+      QuestionsA,
+      QuestionsB,
+      QuestionsC,
+      QuestionsD,
+    },
+  });
+
+  let created = await airtableBase("Answers").create([
+    {
+      fields: {
+        AnswerTitle,
+        Image,
+        IsContrarian,
+        QuestionsA,
+        QuestionsB,
+        QuestionsC,
+        QuestionsD,
+      },
+    },
+  ]);
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  };
+};
+
+export const createRoom = async ({
+  roomId,
+  workspaceId,
+  name
+}: {
+  roomId: string;
+  workspaceId: string;
+  name: string;
+}) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_ANSWER",
+    input: {
+      roomId,
+      workspaceId,
+      name
+    },
+  });
+  let workspaceRecord = await findWorkspaceRecord({ workspaceId })
+  let created = await airtableBase("Rooms").create([
+    {
+      fields: {
+        RoomId: roomId,
+        Workspace: [workspaceRecord.id],
+        Name: name
+      },
+    },
+  ]);
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  };
 };
