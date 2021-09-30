@@ -28,7 +28,9 @@ export default HomePage;
 export async function getServerSideProps(context) {
     const { workspaceId } = context.params;
     let found = await findWorkspaceForLogin({ workspaceId })
-    let token = found[0].fields
-    delete token.Token
-    return { props: { token } }
+    if (found && found[0]) {
+        let token = found[0].fields
+        delete token.Token
+        return { props: { token } }
+    }
 }
