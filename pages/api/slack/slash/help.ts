@@ -1,4 +1,4 @@
-import logger from "../../../logger/logger";
+import logger from "../../../../logger/logger";
 
 export default async function handler(req, res) {
     let { payload } = req.body;
