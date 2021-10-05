@@ -60,9 +60,14 @@ export async function getServerSideProps(context) {
       error: "no code"
     }
   }
+  console.log(f)
+
   let data = await f.json();
   console.log(data)
   console.log(data.team)
+  return ({
+    props: {}
+  })
   /* let teamId = data.team.id
   logger.info({ teamId })
   let found = await findWorkspaceForLogin({ workspaceId: teamId })
