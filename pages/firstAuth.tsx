@@ -51,7 +51,7 @@ export async function getServerSideProps(context) {
     f = await fetch(
       `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
       }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
-      }&redirect_uri=https://${process.env.VERCEL_URL}/firstAuth`
+      }&redirect_uri=https://${process.env.IS_DEV == "true" ? process.env.NEXT_PUBLIC_VERCEL_URL : "app.watermelon.tools"}/firstAuth`
     )
   else return {
     props: {
