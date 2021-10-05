@@ -231,7 +231,7 @@ export const updateWorkspace = async ({
     })
     .firstPage()
     .then((record) => record);
-  airtableBase("Workspaces").update([
+  await airtableBase("Workspaces").update([
     {
       id: workspaceRecord[0].id,
       fields: {
@@ -703,7 +703,7 @@ export const createRoom = async ({
   name: string;
 }) => {
   logger.info({
-    message: "AIRTABLE-FUNC_CREATE_ANSWER",
+    message: "AIRTABLE-FUNC_CREATE_ROOM",
     input: {
       roomId,
       workspaceId,
