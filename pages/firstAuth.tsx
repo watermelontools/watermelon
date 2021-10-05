@@ -47,20 +47,23 @@ import logger from "../logger/logger";
 
 export async function getServerSideProps(context) {
   let f
-  if (context.query.code)
+  if (context.query.code) {
+    console.log(context.query.code)
     f = await fetch(
       `https://slack.com/api/oauth.v2.access?client_id=${process.env.SLACK_CLIENT_ID
       }&client_secret=${process.env.SLACK_CLIENT_SECRET}&code=${context.query.code
       }&redirect_uri=https://${process.env.VERCEL_URL}/firstAuth`
     )
+  }
   else return {
     props: {
       error: "no code"
     }
   }
   let data = await f.json();
+  console.log(data)
   console.log(data.team)
-  let teamId = data.team.id
+  /* let teamId = data.team.id
   logger.info({ teamId })
   let found = await findWorkspaceForLogin({ workspaceId: teamId })
   if (found && found[0]) {
@@ -102,5 +105,5 @@ export async function getServerSideProps(context) {
     let token = createdUser[0].fields
     delete token.Token
     return { props: { token } }
-  }
+  } */
 }
