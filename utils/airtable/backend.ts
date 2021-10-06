@@ -90,7 +90,7 @@ export const saveWorkspace = async ({
       crons,
     },
   });
-  airtableBase("Workspaces").create(
+  await airtableBase("Workspaces").create(
     [
       {
         fields: workspace,
@@ -695,27 +695,26 @@ export const createAnswer = async ({
 
 export const createRoom = async ({
   roomId,
-  workspaceId,
+  workspaceRecordId,
   name
 }: {
   roomId: string;
-  workspaceId: string;
+  workspaceRecordId: string;
   name: string;
 }) => {
   logger.info({
     message: "AIRTABLE-FUNC_CREATE_ROOM",
     input: {
       roomId,
-      workspaceId,
+      workspaceRecordId,
       name
     },
   });
-  let workspaceRecord = await findWorkspaceRecord({ workspaceId })
   let created = await airtableBase("Rooms").create([
     {
       fields: {
         RoomId: roomId,
-        Workspace: [workspaceRecord.id],
+        Workspace: [workspaceRecordId],
         Name: name
       },
     },
