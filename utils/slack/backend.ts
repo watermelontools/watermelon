@@ -51,12 +51,13 @@ export const postEphemeral = (ephemeralData, botToken) => {
 };
 
 export const sendIcebreaker = ({ icebreakerData, accessToken }) => {
-  axios
-    .post("https://slack.com/api/chat.postMessage", icebreakerData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+  return fetch("https://slack.com/api/chat.postMessage", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    ...icebreakerData,
+  })
     .then(function (response) {
       console.log(response);
     })
@@ -65,18 +66,19 @@ export const sendIcebreaker = ({ icebreakerData, accessToken }) => {
     });
 };
 export const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  axios
-    .post("https://slack.com/api/conversations.invite", watermelonRoomData, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
+  return fetch("https://slack.com/api/conversations.invite", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    ...watermelonRoomData,
+  })
     .then(function (response) {
       console.log(response);
     })
     .catch(function (error) {
       console.log(error);
-    });
+    })
 };
 export const listRoomMembers = async ({ accessToken, channel }) => {
   return (await axios
@@ -87,18 +89,16 @@ export const listRoomMembers = async ({ accessToken, channel }) => {
     })).data
 };
 export const kickFromRoom = async ({ accessToken, channel, user }) => {
-  return (await axios
-    .post(`https://slack.com/api/conversations.members?channel=${channel}&user=${user}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }))
+  return (fetch(`https://slack.com/api/conversations.kick?channel=${channel}&user=${user}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }))
 };
 export const sendDM = async ({ accessToken, channel, text }) => {
-  return (await axios
-    .post(`https://slack.com/api/chat.postMessage?channel=${channel}&text=${text}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }))
+  return (fetch(`https://slack.com/api/chat.postMessage?channel=${channel}&text=${text}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }))
 };

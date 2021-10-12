@@ -70,24 +70,21 @@ export default async function handler(req, res) {
       let roomMembers = element.fields.TextMembers.split(",")
       for (let j = 0; j < roomMembers.length; j++) {
         const member = roomMembers[j];
-        let kick = await kickFromRoom({
+        await kickFromRoom({
           accessToken,
           channel: element.fields.RoomId,
           user: member,
         });
-        console.log(kick)
-        let senmessage = await sendDM({
+        await sendDM({
           accessToken,
           channel: member,
           text: "You have been removed from last's week :watermelon: room, we're starting a new round.",
         });
-        console.log(senmessage)
       }
     }
     let questionNames = Object.keys(questions);
     for (let index = 0; index < questionNames.length; index++) {
       let element = questions[questionNames[index]];
-      console.log("qtosend", element)
       for (let j = 0; j < element.answers.length; j++) {
         const answer = element.answers[j];
         let room = roomIds.shift();
