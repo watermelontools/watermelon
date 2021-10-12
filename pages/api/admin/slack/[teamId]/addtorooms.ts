@@ -28,7 +28,6 @@ export default async function handler(req, res) {
     res.status(400).json({ status: "error", error: "no team id" });
   }
   let responses = await getLastWeekAnswerers({ workspaceId: teamId });
-  console.log("responses", responses)
   if (responses.length > 0) {
     let accessToken = await getInstallationToken({ workspaceId: teamId });
     let roomIds = await getRooms({ workspaceId: teamId });
@@ -65,13 +64,12 @@ export default async function handler(req, res) {
         };
       }
     });
+    console.log("questions", questions)
+
     for (let index = 0; index < roomIds.length; index++) {
       const element = roomIds[index];
       console.log("room", element)
-      let roomMembers = await listRoomMembers({
-        accessToken,
-        channel: element.fields.RoomId,
-      });
+      let roomMembers = element.fields.TextMembers.split(",")
       console.log("roomMembers", roomMembers)
       for (let j = 0; j < roomMembers.members.length; j++) {
         const member = roomMembers.members[j];
