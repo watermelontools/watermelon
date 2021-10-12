@@ -70,9 +70,8 @@ export default async function handler(req, res) {
       const element = roomIds[index];
       console.log("room", element)
       let roomMembers = element.fields.TextMembers.split(",")
-      console.log("roomMembers", roomMembers)
-      for (let j = 0; j < roomMembers.members.length; j++) {
-        const member = roomMembers.members[j];
+      for (let j = 0; j < roomMembers.length; j++) {
+        const member = roomMembers[j];
         await kickFromRoom({
           accessToken,
           channel: element.fields.RoomId,
