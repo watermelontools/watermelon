@@ -27,28 +27,25 @@ export default async function handler(req, res) {
     });
     res.status(400).json({ status: "error", error: "no team id" });
   }
-  let responses = await getLastWeekAnswerers({ workspaceId: teamId });
-  if (responses.length > 0) {
-    let accessToken = await getInstallationToken({ workspaceId: teamId });
-    let roomIds = await getRooms({ workspaceId: teamId });
+  let accessToken = await getInstallationToken({ workspaceId: teamId });
+  let roomIds = await getRooms({ workspaceId: teamId });
 
-    for (let index = 0; index < roomIds.length; index++) {
-      const element = roomIds[index];
-      let roomMembers = element.fields.TextMembers.split(",")
-      for (let j = 0; j < roomMembers.length; j++) {
-        const member = roomMembers[j];
-        await kickFromRoom({
-          accessToken,
-          channel: element.fields.RoomId,
-          user: member,
-        });
-        await sendDM({
-          accessToken,
-          channel: member,
-          text: "You have been removed from last's week :watermelon: room, we're starting a new round.",
-        });
-      }
+  for (let index = 0; index < roomIds.length; index++) {
+    const element = roomIds[index];
+    let roomMembers = element.fields.TextMembers.split(",")
+    for (let j = 0; j < roomMembers.length; j++) {
+      const member = roomMembers[j];
+      await kickFromRoom({
+        accessToken,
+        channel: element.fields.RoomId,
+        user: member,
+      });
+      await sendDM({
+        accessToken,
+        channel: member,
+        text: "You have been removed from last's week :watermelon: room, we're starting a new round.",
+      });
     }
-    res.status(200).send({ ok: "ok" });
   }
+  res.status(200).send({ ok: "ok" });
 }
