@@ -65,23 +65,6 @@ export default async function handler(req, res) {
       }
     });
 
-    for (let index = 0; index < roomIds.length; index++) {
-      const element = roomIds[index];
-      let roomMembers = element.fields.TextMembers.split(",")
-      for (let j = 0; j < roomMembers.length; j++) {
-        const member = roomMembers[j];
-        await kickFromRoom({
-          accessToken,
-          channel: element.fields.RoomId,
-          user: member,
-        });
-        await sendDM({
-          accessToken,
-          channel: member,
-          text: "You have been removed from last's week :watermelon: room, we're starting a new round.",
-        });
-      }
-    }
     let questionNames = Object.keys(questions);
     for (let index = 0; index < questionNames.length; index++) {
       let element = questions[questionNames[index]];
@@ -93,7 +76,7 @@ export default async function handler(req, res) {
           Welcome to this :watermelon: room, you answered the question "${element.questionText[0]
             }".
           ${answer.icebreaker[0].replace(
-              "${answer}",
+              `${answer}`,
               `*${answer.answerText[0]}*`
             )}
         `,
