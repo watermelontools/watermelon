@@ -90,5 +90,5 @@ export default async function handler(req, res) {
       }
     }
     res.status(200).send({ ok: "ok" });
-  } else res.status(500).send({ error: "No responses last week" });
+  } else res.status(417).send({ error: "No responses last week" });
 }
