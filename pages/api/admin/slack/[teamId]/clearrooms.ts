@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   for (let index = 0; index < roomIds.length; index++) {
     const element = roomIds[index];
-    let roomMembers = element.fields.TextMembers.split(",")
+    let roomMembers = element.fields.TextMembers?.split(",")
     for (let j = 0; j < roomMembers.length; j++) {
       const member = roomMembers[j];
       await kickFromRoom({
