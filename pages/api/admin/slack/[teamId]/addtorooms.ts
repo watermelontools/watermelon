@@ -6,12 +6,8 @@ import {
 } from "../../../../../utils/airtable/backend";
 import {
   inviteToRoom,
-  kickFromRoom,
-  listRoomMembers,
-  sendDM,
   sendIcebreaker,
 } from "../../../../../utils/slack/backend";
-const axios = require("axios").default;
 
 async function getInstallationToken({ workspaceId }) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
@@ -42,12 +38,12 @@ export default async function handler(req, res) {
             ...response.fields.SlackId
           );
           questions[response.fields.Question].answers[foundAnswer].icebreaker =
-            response.fields.IcebreakerToSend;
+            response.fields.IcebreakerToSend[0];
         } else {
           questions[response.fields.Question].answers.push({
-            answerRecord: response.fields.Answer,
-            icebreaker: response.fields.IcebreakerToSend,
-            answerText: response.fields.AnswerText,
+            answerRecord: response.fields.Answer[0],
+            icebreaker: response.fields.IcebreakerToSend[0],
+            answerText: response.fields.AnswerText[0],
             users: response.fields.SlackId,
           });
         }
@@ -56,8 +52,8 @@ export default async function handler(req, res) {
           questionText: response.fields.QuestionText,
           answers: [
             {
-              answerRecord: response.fields.Answer,
-              answerText: response.fields.AnswerText,
+              answerRecord: response.fields.Answer[0],
+              answerText: response.fields.AnswerText[0],
               users: response.fields.SlackId,
             },
           ],
@@ -73,13 +69,12 @@ export default async function handler(req, res) {
         let room = roomIds.shift();
         let icebreakerData = {
           text: `
-          Welcome to this :watermelon: room, you answered the question "${element.questionText[0]
-            }".
-          ${answer.icebreaker[0].replace(
-              `${answer}`,
-              `*${answer.answerText[0]}*`
-            )}
-        `,
+           Welcome to this :watermelon: room, you answered the question "${element.questionText}".
+           ${answer.icebreaker.replace(
+            `${answer}`,
+            `*${answer.answerText[0]}*`
+          )}
+         `,
         };
         let watermelonRoomData = {
           channel: room.fields.RoomId,
@@ -90,5 +85,7 @@ export default async function handler(req, res) {
       }
     }
     res.status(200).send({ ok: "ok" });
+
+
   } else res.status(417).send({ error: "No responses last week" });
 }
