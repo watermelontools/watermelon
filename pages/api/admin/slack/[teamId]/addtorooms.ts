@@ -78,7 +78,7 @@ export default async function handler(req, res) {
         };
         let watermelonRoomData = {
           channel: room.fields.RoomId,
-          users: answer.users,
+          users: answer.users.join(),
         };
         await inviteToRoom({ accessToken, watermelonRoomData });
         await sendIcebreaker({ accessToken, icebreakerData });
