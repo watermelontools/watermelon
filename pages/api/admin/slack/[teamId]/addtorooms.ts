@@ -5,13 +5,12 @@ import {
   getRooms,
 } from "../../../../../utils/airtable/backend";
 import {
-  inviteToRoom,
-  sendIcebreaker,
+  inviteToOfficeChat
 } from "../../../../../utils/slack/backend";
 
 async function getInstallationToken({ workspaceId }) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
-  return workspaceRecord.fields.AccessToken;
+  return { accessToken: workspaceRecord.fields.AccessToken, channel: workspaceRecord.fields.ChannelId };
 }
 export default async function handler(req, res) {
   const {
@@ -26,7 +25,6 @@ export default async function handler(req, res) {
   let responses = await getLastWeekAnswerers({ workspaceId: teamId });
   if (responses.length > 0) {
     let accessToken = await getInstallationToken({ workspaceId: teamId });
-    let roomIds = await getRooms({ workspaceId: teamId });
     let questions = {};
     responses.map((response) => {
       if (questions[response.fields.Question]) {
@@ -54,6 +52,7 @@ export default async function handler(req, res) {
             {
               answerRecord: response.fields.Answer[0],
               answerText: response.fields.AnswerText[0],
+              icebreaker: response.fields.IcebreakerToSend[0],
               users: response.fields.SlackId,
             },
           ],
@@ -66,22 +65,15 @@ export default async function handler(req, res) {
       let element = questions[questionNames[index]];
       for (let j = 0; j < element.answers.length; j++) {
         const answer = element.answers[j];
-        let room = roomIds.shift();
         let icebreakerData = {
           text: `
-           Welcome to this :watermelon: room, you answered the question "${element.questionText}".
-           ${answer.icebreaker.replace(
-            `${answer}`,
-            `*${answer.answerText[0]}*`
-          )}
+           Welcome to this :watermelon: chat, you answered the question "${element.questionText}".
+           For the answer: *${answer.answerText}*
          `,
+          icebreaker: answer.icebreaker
         };
-        let watermelonRoomData = {
-          channel: room.fields.RoomId,
-          users: answer.users.join(),
-        };
-        await inviteToRoom({ accessToken, watermelonRoomData });
-        await sendIcebreaker({ accessToken, icebreakerData });
+        let users = answer.users
+        await inviteToOfficeChat({ accessToken, users, icebreakerData });
       }
     }
     res.status(200).send({ ok: "ok" });

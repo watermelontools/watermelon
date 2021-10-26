@@ -66,19 +66,49 @@ export const sendIcebreaker = ({ icebreakerData, accessToken }) => {
     });
 };
 export const inviteToRoom = ({ accessToken, watermelonRoomData }) => {
-  return fetch("https://slack.com/api/conversations.invite", {
+  return fetch(`https://slack.com/api/conversations.invite
+  ?channel=${watermelonRoomData.channel}
+  &users=${watermelonRoomData.users}`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
     ...watermelonRoomData,
   })
-    .then(function (response) {
-      console.log(response);
+};
+export const inviteToOfficeChat = async ({ accessToken, users, icebreakerData }) => {
+  let originalMsg = await fetch(`https://slack.com/api/chat.postMessage?channel=${accessToken.channel}&text=${icebreakerData.text}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken.accessToken}`,
+      }
     })
-    .catch(function (error) {
-      console.log(error);
+  const msgJson = await originalMsg.json()
+  const taggedUsers = users.map(user => {
+    return {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `<@${user}>`,
+      }
+    }
+  })
+  const blocksToSend = [{
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: `${icebreakerData.icebreaker}`,
+    }
+  }, ...taggedUsers]
+  await fetch(`https://slack.com/api/chat.postMessage?channel=${accessToken.channel}&blocks=${JSON.stringify(blocksToSend)}&thread_ts=${msgJson.ts}`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken.accessToken}`,
+      }
     })
+
 };
 export const listRoomMembers = async ({ accessToken, channel }) => {
   return (await axios
