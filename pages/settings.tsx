@@ -77,7 +77,6 @@ const Settings = ({}) => {
 
   const catOpts =[
     {value:"hobbies", label:"Hobbies"},
-    {value:"profDev", label:"Professional Development"},
   ]
   const weekdayOpts =[
     {value:"MON", label:"Monday"},
