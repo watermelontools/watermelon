@@ -4,49 +4,49 @@ import { useRouter } from "next/router";
 import PagePadder from "../components/PagePadder";
 import PageTitle from "../components/PageTitle";
 
-const Wizard = ({  }) => {
+const Wizard = ({ }) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
   const [weekday, setWeekday] = useState("THU")
   const [hour, setHour] = useState(15)
-  const [timezone, setTimezone ] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
+  const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [exampleQuestion, setExampleQuestion] = useState(1)
 
   useEffect(() => {
     setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
   }, [lang, cat])
   const saveSettings = () => {
-    let data ={
+    let data = {
       signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
       lang,
-      cat, 
-      weekday, 
+      cat,
+      weekday,
       hour,
       isWizard: true,
       timezone
-     }
-     fetch("/api/admin/cron/create/createandemptygroups",{
+    }
+    fetch("/api/admin/cron/create/createandemptygroups", {
       method: "POST",
-      body:JSON.stringify(data)
-     })
-     fetch("/api/admin/cron/create/sendquestions",{
-      method: "POST",
-      body:JSON.stringify(data)
-     })
-     fetch("/api/saveSettings",{
-       method: "POST",
-       body:JSON.stringify(data)
-     })
-     .then(function (docRef) {
-      router.push("/welcome");
+      body: JSON.stringify(data)
     })
-    .catch(function (error) {
-      console.error("Error writing: ", error);
-    });
+    fetch("/api/admin/cron/create/sendquestions", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+    fetch("/api/saveSettings", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+      .then(function (docRef) {
+        router.push("/welcome");
+      })
+      .catch(function (error) {
+        console.error("Error writing: ", error);
+      });
   };
   const person = "{person}"
-  const answer= "{answer}"
+  const answer = "{answer}"
   const questions = [
     {
       question: "What do you value more in a workplace?",
@@ -82,100 +82,100 @@ const Wizard = ({  }) => {
     },
   ]
   const langOpts = [
-   { value:"en", label:"English"},
-   { value:"es", label:"Español"},
+    { value: "en", label: "English" },
+    { value: "es", label: "Español" },
   ]
 
-  const catOpts =[
-    {value:"hobbies", label:"Hobbies"},
-    {value:"profDev", label:"Professional Development"},
+  const catOpts = [
+    { value: "hobbies", label: "Hobbies" },
+    { value: "profDev", label: "Professional Development" },
   ]
-  const weekdayOpts =[
-    {value:"MON", label:"Monday"},
-    {value:"TUE", label:"Tuesday"},
-    {value:"WED", label:"Wednesday"},
-    {value:"THU", label:"Thursday"},
-    {value:"FRI", label:"Friday"},
-    {value:"SAT", label:"Saturday"},
+  const weekdayOpts = [
+    { value: "MON", label: "Monday" },
+    { value: "TUE", label: "Tuesday" },
+    { value: "WED", label: "Wednesday" },
+    { value: "THU", label: "Thursday" },
+    { value: "FRI", label: "Friday" },
+    { value: "SAT", label: "Saturday" },
   ]
-  const hourOpts =[
-    {value:7,label:'07:00'},
-    {value:8,label:'08:00'},
-    {value:9,label:'09:00'},
-    {value:10,label:'10:00'},
-    {value:11,label:'11:00'},
-    {value:12,label:'12:00'},
-    {value:13,label:'13:00'},
-    {value:14,label:'14:00'},
-    {value:15,label:'15:00'},
-    {value:16,label:'16:00'},
-    {value:17,label:'17:00'},
-    {value:18,label:'18:00'},
+  const hourOpts = [
+    { value: 7, label: '07:00' },
+    { value: 8, label: '08:00' },
+    { value: 9, label: '09:00' },
+    { value: 10, label: '10:00' },
+    { value: 11, label: '11:00' },
+    { value: 12, label: '12:00' },
+    { value: 13, label: '13:00' },
+    { value: 14, label: '14:00' },
+    { value: 15, label: '15:00' },
+    { value: 16, label: '16:00' },
+    { value: 17, label: '17:00' },
+    { value: 18, label: '18:00' },
   ]
 
   return (
     <>
       <PageTitle pageTitle="The finishing touches" />
       <PagePadder>
-      <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
-        <div className="flex sm:flex-col md:flex-row flex-wrap">
-          <div className="card-style flex flex-col justify-between w-80">
-            <h2 className="font-bold text-xl">Language</h2>
-            <p>Select the language in which the questions will be sent:</p>
-            <p>This dashboard will stay in English</p>
-            <Select onChange={e => setLang(e.value)} value={langOpts.find(el=> el.value=== lang)} options={langOpts} />
-          </div>
-          <div className="card-style flex flex-col justify-between w-80">
-            <div>
-            <h2 className="font-bold text-xl">Question Type</h2>
-            <p>Select the category of the questions to be shown</p>
+        <div className="flex justify-start items-start h-screen w-full flex-col flex-wrap">
+          <div className="flex sm:flex-col md:flex-row flex-wrap">
+            <div className="card-style flex flex-col justify-between w-80">
+              <h2 className="font-bold text-xl">Language</h2>
+              <p>Select the language in which the questions will be sent:</p>
+              <p>This dashboard will stay in English</p>
+              <Select onChange={e => setLang(e.value)} value={langOpts.find(el => el.value === lang)} options={langOpts} />
             </div>
-            <Select onChange={e => setCat(e.value)} value={catOpts.find(el=> el.value=== cat)} options={catOpts} />
-          </div>
-          <div className="card-style flex flex-col justify-between w-80">
-            <div>
-            <h2 className="font-bold text-xl">Weekday to ask</h2>
-            <p>Select the day of the week to send the questions</p>
-            <p>We suggest the middle of the week</p>
-            <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el=> el.value=== weekday)} options={weekdayOpts} />
+            <div className="card-style flex flex-col justify-between w-80">
+              <div>
+                <h2 className="font-bold text-xl">Question Type</h2>
+                <p>Select the category of the questions to be shown</p>
+              </div>
+              <Select onChange={e => setCat(e.value)} value={catOpts.find(el => el.value === cat)} options={catOpts} />
+            </div>
+            <div className="card-style flex flex-col justify-between w-80">
+              <div>
+                <h2 className="font-bold text-xl">Weekday to ask</h2>
+                <p>Select the day of the week to send the questions</p>
+                <p>We suggest the middle of the week</p>
+                <Select onChange={e => setWeekday(e.value)} value={weekdayOpts.find(el => el.value === weekday)} options={weekdayOpts} />
+              </div>
+            </div>
+            <div className="card-style flex flex-col justify-between w-80">
+              <div>
+                <h2 className="font-bold text-xl">Hour to ask</h2>
+                <p>Select the hour of the day to send the questions</p>
+                <p>This will happen on {weekdayOpts.find(el => el.value === weekday).label}</p>
+                <Select onChange={e => setHour(e.value)} value={hourOpts.find(el => el.value === hour)} options={hourOpts} />
+              </div>
             </div>
           </div>
-          <div className="card-style flex flex-col justify-between w-80">
-            <div>
-            <h2 className="font-bold text-xl">Hour to ask</h2>
-            <p>Select the hour of the day to send the questions</p>
-            <p>This will happen on {weekdayOpts.find(el=> el.value=== weekday).label}</p>
-            <Select onChange={e => setHour(e.value)} value={hourOpts.find(el=> el.value=== hour)} options={hourOpts} />
+          <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
+            <div className="rounded mx-2" style={{ width: "3em", height: "3em" }}>
+              <img src="/wmslack.png" />
             </div>
+            <div>
+              <div className="flex">
+
+                <p className="font-bold text-lg">Watermelon</p>
+                <div className="flex-col flex justify-center">
+
+                  <p className="bg-gray-200 rounded-sm text-xs ml-2 px-1 text-gray-500 leading-1">APP</p>
+                </div>
+              </div>
+              <p className="font-semibold">{questions[exampleQuestion].question}</p>
+              <div className="flex justify-start my-1">
+                <p className="border border-gray-200 rounded px-2 py-1 mr-2 hover:bg-gray-100">{questions[exampleQuestion].ansA}</p>
+                <p className="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100">{questions[exampleQuestion].ansB}</p>
+              </div>
+              <p>{questions[exampleQuestion].icebreaker}</p>
+            </div>
+          </div>
+          <div className="my-2 flex justify-end w-full">
+            <button onClick={(e) => saveSettings()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
+              Finish
+            </button>
           </div>
         </div>
-        <div className="flex hover:bg-gray-50 border-gray-200 border-t-2 w-full mt-2">
-          <div className="rounded mx-2" style={{width: "3em", height: "3em"}}>
-          <img src="/wmslack.png" />
-          </div>
-          <div>
-            <div className="flex">
-
-          <p className="font-bold text-lg">Watermelon</p>
-          <div className="flex-col flex justify-center">
-
-          <p className="bg-gray-200 rounded-sm text-xs ml-2 px-1 text-gray-500 leading-1">APP</p>
-          </div>
-            </div>
-          <p className="font-semibold">{questions[exampleQuestion].question}</p>
-          <div className="flex justify-start my-1">
-          <p className="border border-gray-200 rounded px-2 py-1 mr-2 hover:bg-gray-100">{questions[exampleQuestion].ansA}</p>
-          <p className="border border-gray-200 rounded px-2 py-1 hover:bg-gray-100">{questions[exampleQuestion].ansB}</p>
-          </div>
-          <p>{questions[exampleQuestion].icebreaker}</p>
-          </div>
-        </div>
-        <div className="my-2 flex justify-end w-full">
-         <button onClick={(e)=> saveSettings()} className="text-white font-semibold bg-green-400 rounded shadow-sm py-2 px-3">
-           Finish
-         </button>
-       </div>
-      </div>
       </PagePadder>
     </>
   )
@@ -184,7 +184,6 @@ const Wizard = ({  }) => {
 export default Wizard
 
 import logger from "../logger/logger";
-import { createAndSave } from "./api/admin/slack/[teamId]/createinitialgroups";
 import { updateWorkspace } from "../utils/airtable/backend";
 
 export async function getServerSideProps(context) {
@@ -195,20 +194,19 @@ export async function getServerSideProps(context) {
     }&redirect_uri=https://${process.env.IS_DEV == "true" ? process.env.NEXT_PUBLIC_VERCEL_URL : "app.watermelon.tools"}/wizard`
   );
   let token = await f.json();
-  if(token.ok){
-    await createAndSave({teamId: token.team.id, access_token: token.access_token})
-    await updateWorkspace({add_to_slack_token: token, workspaceId: token.team.id})
+  if (token.ok) {
+    await updateWorkspace({ add_to_slack_token: token, workspaceId: token.team.id })
 
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;
     return {
       props: {
-        token:token_clone, 
+        token: token_clone,
         redirect: false
       }, // will be passed to the page component as props
     };
   }
-  else{
+  else {
     return {
       redirect: {
         destination: '/weeklyquestions',
