@@ -199,6 +199,7 @@ export async function getServerSideProps(context) {
 
     const token_clone = Object.assign({}, token);
     delete token_clone.access_token;
+    // now token_clone does not have the access_token
     return {
       props: {
         token: token_clone,
