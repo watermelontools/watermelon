@@ -98,7 +98,7 @@ export const inviteToOfficeChat = async ({ accessToken, users, icebreakerData })
     type: "section",
     text: {
       type: "mrkdwn",
-      text: `${icebreakerData.icebreaker}`,
+      text: `${icebreakerData.icebreaker.replace("${answer}", icebreakerData.answer)}`,
     }
   }, ...taggedUsers]
   await fetch(`https://slack.com/api/chat.postMessage?channel=${accessToken.channel}&blocks=${JSON.stringify(blocksToSend)}&thread_ts=${msgJson.ts}`,
