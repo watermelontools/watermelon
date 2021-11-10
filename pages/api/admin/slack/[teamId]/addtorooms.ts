@@ -4,13 +4,14 @@ import {
   getLastWeekAnswerers,
   getRooms,
 } from "../../../../../utils/airtable/backend";
-import {
-  inviteToOfficeChat
-} from "../../../../../utils/slack/backend";
+import { inviteToOfficeChat } from "../../../../../utils/slack/backend";
 
 async function getInstallationToken({ workspaceId }) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId });
-  return { accessToken: workspaceRecord.fields.AccessToken, channel: workspaceRecord.fields.ChannelId };
+  return {
+    accessToken: workspaceRecord.fields.AccessToken,
+    channel: workspaceRecord.fields.ChannelId,
+  };
 }
 export default async function handler(req, res) {
   const {
@@ -70,14 +71,13 @@ export default async function handler(req, res) {
            Welcome to this :watermelon: chat, you answered the question "${element.questionText}".
            For the answer: *${answer.answerText}*
          `,
-          icebreaker: answer.icebreaker
+          icebreaker: answer.icebreaker.replace("${answer}", answer.answerText),
+          answer: answer.answerText,
         };
-        let users = answer.users
+        let users = answer.users;
         await inviteToOfficeChat({ accessToken, users, icebreakerData });
       }
     }
     res.status(200).send({ ok: "ok" });
-
-
   } else res.status(417).send({ error: "No responses last week" });
 }
