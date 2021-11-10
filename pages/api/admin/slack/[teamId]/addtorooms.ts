@@ -70,7 +70,7 @@ export default async function handler(req, res) {
            Welcome to this :watermelon: chat, you answered the question "${element.questionText}".
            For the answer: *${answer.answerText}*
          `,
-          icebreaker: answer.icebreaker,
+          icebreaker: answer.icebreaker.replace("${answer}", answer.answerText),
           answer: answer.answerText
         };
         let users = answer.users
