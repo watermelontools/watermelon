@@ -72,7 +72,7 @@ export default async function handler(req, res) {
            For the answer: *${answer.answerText}*
          `,
           icebreaker: answer.icebreaker.replace("${answer}", answer.answerText),
-          answer: answer.answerText
+          answer: answer.answerText,
         };
         let users = answer.users;
         await inviteToOfficeChat({ accessToken, users, icebreakerData });
