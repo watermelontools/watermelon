@@ -51,7 +51,7 @@ export const getAllUnusedQuestions = async ({
   lang,
 }: {
   workspaceId: string;
-  lang: "es" | "en";
+  lang: string;
 }) => {
   let allQuestions = [];
   logger.info({ message: "AIRTABLE-FUNC_GET_ALL_UNUSED_QUESTIONS" });
