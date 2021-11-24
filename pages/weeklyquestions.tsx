@@ -13,7 +13,7 @@ const WeeklyQuestions = ({ questions }: { questions: any[] }) => {
 
   const catOpts = [
     { value: "hobbies", label: "Hobbies" },
-    { value: "profDev", label: "Professional Development" },
+    // { value: "profDev", label: "Professional Development" },
   ]
   const [lang, setLang] = useState("en")
   const [cat, setCat] = useState("hobbies")
