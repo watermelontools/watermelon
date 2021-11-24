@@ -87,8 +87,8 @@ export default async function handler(req, res) {
           text: {
             type: "mrkdwn",
             text: `:one:. Answer the question below :point_down:
-:two:. Get added to a Watermelon room
-:three:. Start chatting with like-minded co-workers 
+:two:. Get added to a Watermelon thread
+:three:. Start chatting with like-minded coworkers 
 :watermelon: <!here>`,
           },
         },
