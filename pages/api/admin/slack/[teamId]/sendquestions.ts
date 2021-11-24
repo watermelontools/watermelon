@@ -16,7 +16,10 @@ export default async function handler(req, res) {
     res.status(400).json({ status: "error", error: "no team id" });
   }
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
-  let questions = await getAllUnusedQuestions({ workspaceId: teamId });
+  let questions = await getAllUnusedQuestions({
+    workspaceId: teamId,
+    lang: workspaceRecord.fields.Language,
+  });
   let questionsToSend = [];
   let questionNumber = 2;
 

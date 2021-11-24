@@ -48,15 +48,16 @@ export const getAllQuestions = async () => {
 };
 export const getAllUnusedQuestions = async ({
   workspaceId,
+  lang,
 }: {
   workspaceId: string;
+  lang: "es" | "en";
 }) => {
   let allQuestions = [];
   logger.info({ message: "AIRTABLE-FUNC_GET_ALL_UNUSED_QUESTIONS" });
   await airtableBase("Questions")
     .select({
-      // Selecting the first 3 records in Grid view:
-      filterByFormula: `FIND("${workspaceId}", {UsedWorkspaceId}) = 0`,
+      filterByFormula: `AND(FIND("${workspaceId}", {UsedWorkspaceId}) = 0,{Language}= "${lang}")`,
     })
     .eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
@@ -270,7 +271,7 @@ export const markQuestionUsed = async ({ questionRecord, workspaceId }) => {
   let usedArray = (await getSingleQuestion({ questionRecord })).WorkspacesUsed;
   let wsUsed = usedArray
     ? //@ts-ignore
-    [...new Set([...usedArray, workspaceId])]
+      [...new Set([...usedArray, workspaceId])]
     : [workspaceId];
   return await airtableBase("Questions").update([
     {
@@ -696,7 +697,7 @@ export const createAnswer = async ({
 export const createRoom = async ({
   roomId,
   workspaceRecordId,
-  name
+  name,
 }: {
   roomId: string;
   workspaceRecordId: string;
@@ -707,7 +708,7 @@ export const createRoom = async ({
     input: {
       roomId,
       workspaceRecordId,
-      name
+      name,
     },
   });
   let created = await airtableBase("Rooms").create([
@@ -715,7 +716,7 @@ export const createRoom = async ({
       fields: {
         RoomId: roomId,
         Workspace: [workspaceRecordId],
-        Name: name
+        Name: name,
       },
     },
   ]);
