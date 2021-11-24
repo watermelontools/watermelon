@@ -47,7 +47,8 @@ export const getAllQuestions = async () => {
   return allQuestions;
 };
 export const getAllUnusedQuestions = async ({
-  workspaceId, lang
+  workspaceId,
+  lang,
 }: {
   workspaceId: string;
   lang: "es" | "en";
@@ -696,7 +697,7 @@ export const createAnswer = async ({
 export const createRoom = async ({
   roomId,
   workspaceRecordId,
-  name
+  name,
 }: {
   roomId: string;
   workspaceRecordId: string;
@@ -707,7 +708,7 @@ export const createRoom = async ({
     input: {
       roomId,
       workspaceRecordId,
-      name
+      name,
     },
   });
   let created = await airtableBase("Rooms").create([
@@ -715,7 +716,7 @@ export const createRoom = async ({
       fields: {
         RoomId: roomId,
         Workspace: [workspaceRecordId],
-        Name: name
+        Name: name,
       },
     },
   ]);

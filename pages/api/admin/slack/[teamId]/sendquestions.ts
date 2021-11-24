@@ -16,14 +16,15 @@ export default async function handler(req, res) {
     res.status(400).json({ status: "error", error: "no team id" });
   }
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
-  let questions = await getAllUnusedQuestions({ workspaceId: teamId, lang: workspaceRecord.fields.Language });
+  let questions = await getAllUnusedQuestions({
+    workspaceId: teamId,
+    lang: workspaceRecord.fields.Language,
+  });
   let questionsToSend = [];
-  let questionNumber = 1;
-  if (workspaceRecord.fields.IsSmallTeam > 0) {
-    questionNumber = 2
-  }
+  let questionNumber = 2;
+
   if (questions.length >= questionNumber) {
-    while (questionsToSend.length < 1) {
+    while (questionsToSend.length < 2) {
       let item = questions[Math.floor(Math.random() * questions.length)];
       if (!questionsToSend.includes(item)) questionsToSend.push(item);
     }
