@@ -11,6 +11,7 @@ async function getInstallationToken({ workspaceId }) {
   return {
     accessToken: workspaceRecord.fields.AccessToken,
     channel: workspaceRecord.fields.ChannelId,
+    workspaceId: workspaceRecord.fields.RecordId
   };
 }
 export default async function handler(req, res) {
@@ -48,6 +49,7 @@ export default async function handler(req, res) {
         }
       } else {
         questions[response.fields.Question] = {
+          questionRecord: response.fields.Question,
           questionText: response.fields.QuestionText,
           answers: [
             {
@@ -73,6 +75,8 @@ export default async function handler(req, res) {
          `,
           icebreaker: answer.icebreaker.replace("${answer}", answer.answerText),
           answer: answer.answerText,
+          answerId: answer.answerRecord,
+          questionId: element.questionRecord
         };
         let users = answer.users;
         await inviteToOfficeChat({ accessToken, users, icebreakerData });

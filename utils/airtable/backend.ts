@@ -724,3 +724,43 @@ export const createRoom = async ({
     fields: created[0].fields,
   };
 };
+
+export const createThread = async ({
+  messageId,
+  answerRecordId,
+  workspaceRecordId,
+  questionRecordId,
+  channel
+}: {
+  messageId: string;
+  answerRecordId: string;
+  workspaceRecordId: string;
+  questionRecordId: string;
+  channel: string;
+}) => {
+  logger.info({
+    message: "AIRTABLE-FUNC_CREATE_THREAD",
+    input: {
+      messageId,
+      answerRecordId,
+      workspaceRecordId,
+      questionRecordId,
+      channel
+    },
+  });
+  let created = await airtableBase("Threads").create([
+    {
+      fields: {
+        MessageId: messageId,
+        Answer: [answerRecordId],
+        Workspace: [workspaceRecordId],
+        Question: questionRecordId,
+        Channel: channel
+      },
+    },
+  ]);
+  return {
+    id: created[0].id,
+    fields: created[0].fields,
+  };
+};

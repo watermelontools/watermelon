@@ -1,3 +1,5 @@
+import { createThread } from "../airtable/backend";
+
 const axios = require("axios").default;
 export const postMessage = async ({ data, token }) => {
   let postURL = `https://slack.com/api/chat.postMessage?channel=${data.channel}`;
@@ -94,6 +96,7 @@ export const inviteToOfficeChat = async ({
     }
   );
   const msgJson = await originalMsg.json();
+  await createThread({ messageId: msgJson.ts, channel: accessToken.channel, workspaceRecordId: accessToken.workspaceId, questionRecordId: icebreakerData.questionId, answerRecordId: icebreakerData.answerId })
   const taggedUsers = users.map((user) => {
     return {
       type: "section",
@@ -117,8 +120,7 @@ export const inviteToOfficeChat = async ({
     ...taggedUsers,
   ];
   await fetch(
-    `https://slack.com/api/chat.postMessage?channel=${
-      accessToken.channel
+    `https://slack.com/api/chat.postMessage?channel=${accessToken.channel
     }&blocks=${JSON.stringify(blocksToSend)}&thread_ts=${msgJson.ts}`,
     {
       method: "POST",
