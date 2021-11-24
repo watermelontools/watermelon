@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   let workspaceRecord = await findWorkspaceRecord({ workspaceId: teamId });
   let questions = await getAllUnusedQuestions({
     workspaceId: teamId,
-    lang: workspaceRecord.fields.Language,
+    lang: `${workspaceRecord.fields.Language}`,
   });
   let questionsToSend = [];
   let questionNumber = 2;
