@@ -1,7 +1,7 @@
 # Watermelon.tools
 
 ```
-yarn i
+yarn
 yarn dev
 ```
 
