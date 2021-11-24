@@ -47,16 +47,16 @@ export const getAllQuestions = async () => {
   return allQuestions;
 };
 export const getAllUnusedQuestions = async ({
-  workspaceId,
+  workspaceId, lang
 }: {
   workspaceId: string;
+  lang: "es" | "en";
 }) => {
   let allQuestions = [];
   logger.info({ message: "AIRTABLE-FUNC_GET_ALL_UNUSED_QUESTIONS" });
   await airtableBase("Questions")
     .select({
-      // Selecting the first 3 records in Grid view:
-      filterByFormula: `FIND("${workspaceId}", {UsedWorkspaceId}) = 0`,
+      filterByFormula: `AND(FIND("${workspaceId}", {UsedWorkspaceId}) = 0,{Language}= "${lang}")`,
     })
     .eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
