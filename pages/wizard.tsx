@@ -7,33 +7,23 @@ import PageTitle from "../components/PageTitle";
 const Wizard = ({ }) => {
   const router = useRouter();
   const [lang, setLang] = useState("en")
-  const [cat, setCat] = useState("hobbies")
   const [weekday, setWeekday] = useState("THU")
   const [hour, setHour] = useState(15)
   const [timezone, setTimezone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone)
   const [exampleQuestion, setExampleQuestion] = useState(1)
 
   useEffect(() => {
-    setExampleQuestion(questions.findIndex(element => element.cat === cat && element.lang === lang))
-  }, [lang, cat])
+    setExampleQuestion(questions.findIndex(element => element.lang === lang))
+  }, [lang])
   const saveSettings = () => {
     let data = {
       signInToken: JSON.parse(window.localStorage.getItem("sign_in_token")),
       lang,
-      cat,
       weekday,
       hour,
       isWizard: true,
       timezone
     }
-    fetch("/api/admin/cron/create/createandemptygroups", {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
-    fetch("/api/admin/cron/create/sendquestions", {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
     fetch("/api/saveSettings", {
       method: "POST",
       body: JSON.stringify(data)
@@ -86,10 +76,6 @@ const Wizard = ({ }) => {
     { value: "es", label: "Español" },
   ]
 
-  const catOpts = [
-    { value: "hobbies", label: "Hobbies" },
-    { value: "profDev", label: "Professional Development" },
-  ]
   const weekdayOpts = [
     { value: "MON", label: "Monday" },
     { value: "TUE", label: "Tuesday" },
@@ -124,13 +110,6 @@ const Wizard = ({ }) => {
               <p>Select the language in which the questions will be sent:</p>
               <p>This dashboard will stay in English</p>
               <Select onChange={e => setLang(e.value)} value={langOpts.find(el => el.value === lang)} options={langOpts} />
-            </div>
-            <div className="card-style flex flex-col justify-between w-80">
-              <div>
-                <h2 className="font-bold text-xl">Question Type</h2>
-                <p>Select the category of the questions to be shown</p>
-              </div>
-              <Select onChange={e => setCat(e.value)} value={catOpts.find(el => el.value === cat)} options={catOpts} />
             </div>
             <div className="card-style flex flex-col justify-between w-80">
               <div>
