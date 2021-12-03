@@ -75,7 +75,6 @@ const Wizard = ({ }) => {
     { value: "en", label: "English" },
     { value: "es", label: "Español" },
   ]
-
   const weekdayOpts = [
     { value: "MON", label: "Monday" },
     { value: "TUE", label: "Tuesday" },
