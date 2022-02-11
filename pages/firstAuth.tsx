@@ -17,7 +17,7 @@ const FirstAuth = ({ token }) => {
           <div className="flex justify-center items-center h-screen w-full row-span-full">
             <div className="rounded shadow p-4 bg-white">
               <p>Please install the app on your workspace</p>
-              <div className="w-full flex justify-center items-center my-2">
+              {/* <div className="w-full flex justify-center items-center my-2">
                 {token && <a
                   href={`https://slack.com/oauth/v2/authorize${token?.team?.id ? "?team=" + token.team.id + "&" : "?"
                     }scope=incoming-webhook,groups:write,channels:manage,channels:read,chat:write,commands,chat:write.public,users.profile:read,users:read.email,users:read,groups:read
@@ -32,7 +32,10 @@ const FirstAuth = ({ token }) => {
                     srcSet="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"
                   />
                 </a>}
-              </div>
+              </div> */}
+                <a id="github-button" className="btn btn-block btn-social btn-github">
+                  <i className="fa fa-github"></i> Sign in with Github
+                </a>
             </div>
           </div>
         </div>
