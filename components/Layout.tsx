@@ -1,17 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import useCheckLogin from "../hooks/useCheckLogin";
 import { useEffect } from "react";
 const Layout = ({ children }) => {
   const router = useRouter();
   let { pathname } = router;
-  useEffect(() => {
-    let { isLoggedIn } = useCheckLogin();
 
-    if (!isLoggedIn) router.push("/login");
-
-  }, []);
   const links = [
     {
       icon: "/svg/question",
