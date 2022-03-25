@@ -12,17 +12,17 @@ export default async function handler(req, res) {
   let organizationCount = -1;
   let organizationPlan = "";
   await base("Organizations")
-  .select({
-    filterByFormula: `{OrganizationName} = "${organizationName}"`,
-  })
-  .eachPage(function page(records: any[], fetchNextPage: () => void) {
-    records.forEach(function (record) {
-      organization = { ...record.fields, id: record.id };
-      organizationCount = organization.Count;
-      organizationPlan = organization.Plan;
+    .select({
+      filterByFormula: `{OrganizationName} = "${organizationName}"`,
+    })
+    .eachPage(function page(records: any[], fetchNextPage: () => void) {
+      records.forEach(function (record) {
+        organization = { ...record.fields, id: record.id };
+        organizationCount = organization.Count;
+        organizationPlan = organization.Plan;
+      });
+      fetchNextPage();
     });
-    fetchNextPage();
-  });
 
   if (organizationPlan === "Free") {
     if (organizationCount < 50) {

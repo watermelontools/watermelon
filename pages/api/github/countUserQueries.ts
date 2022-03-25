@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       {
         OrganizationName: organizationName,
         Count: 1,
-        Plan: "Free"
+        Plan: "Free",
       },
       function (err, record) {
         if (err) {
