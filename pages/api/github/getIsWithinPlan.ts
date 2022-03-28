@@ -18,8 +18,6 @@ export default async function handler(req, res) {
       organization = { ...record.fields, id: record.id };
       isWithinPlan = organization.IsInPlan;
     });
-    fetchNextPage();
-  });
 
   res.status(200).json({
     organizationIsWithinPlan: isWithinPlan,
