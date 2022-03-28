@@ -10,17 +10,17 @@ export default async function handler(req, res) {
   let organization;
   let isWithinPlan = false;
   await base("Organizations")
-  .select({
-    filterByFormula: `{OrganizationName} = "${organizationName}"`,
-  })
-  .eachPage(function page(records: any[], fetchNextPage: () => void) {
-    records.forEach(function (record) {
-      organization = { ...record.fields, id: record.id };
-      isWithinPlan = organization.IsInPlan;
-    });
+    .select({
+      filterByFormula: `{OrganizationName} = "${organizationName}"`,
+    })
+    .eachPage(function page(records: any[], fetchNextPage: () => void) {
+      records.forEach(function (record) {
+        organization = { ...record.fields, id: record.id };
+        isWithinPlan = organization.IsInPlan;
+      });
 
-  res.status(200).json({
-    organizationIsWithinPlan: isWithinPlan,
-  });
-  })
+      res.status(200).json({
+        organizationIsWithinPlan: isWithinPlan,
+      });
+    });
 }
