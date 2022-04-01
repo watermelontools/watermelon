@@ -3,6 +3,7 @@ package-lock.json
 .next/
 deleteme
 .env.local
+.env.*
 .DS_Store
 public/images/gcp.png
 next-env.d.ts
