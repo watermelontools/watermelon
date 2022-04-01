@@ -11,7 +11,7 @@ export default async function handler(req, res) {
     Type: searchType,
     Owner: owner,
     Repo: repo,
-    Username: localUser
+    Username: localUser,
   });
   res.status(200).json(createdRecord.fields);
 }
