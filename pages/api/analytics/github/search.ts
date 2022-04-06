@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     Owner: owner,
     Repo: repo,
     Username: localUser,
-    Email: userEmail
+    Email: userEmail,
   });
   res.status(200).json(createdRecord.fields);
 }
