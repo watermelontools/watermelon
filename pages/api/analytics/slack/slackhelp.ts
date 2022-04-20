@@ -2,7 +2,7 @@ import Airtable from "airtable";
 import PostHog from 'posthog-node'
 
 const client = new PostHog(
-    'phc_2DGQMWWnUeyB2KHFEXp77ciaW6RScF7DFWdMppsdvSI',
+    process.env.POSTHOG_API_KEY,
     { host: 'https://app.posthog.com' }
 )
 
