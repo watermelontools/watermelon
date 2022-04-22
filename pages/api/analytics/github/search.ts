@@ -2,7 +2,7 @@ import Airtable from "airtable";
 import PostHog from 'posthog-node'
 
 const client = new PostHog(
-    PROCESS.ENV.POSTHOG_API_KEY,
+    process.env.POSTHOG_API_KEY,
     { host: 'https://app.posthog.com' }
 )
 
@@ -16,8 +16,8 @@ const base = require("airtable").base("appDpKitgxjDIUwZ3");
 export default async function handler(req, res) {
   const { searchType, owner, repo, localUser, userEmail } = req.body;
   client.capture({
-    distinctId: 'test-id',
-    event: `${owner} test-event`
+    distinctId: 'run-watermelon',
+    event: `${owner} search`
   })
   let createdRecord = await base("Searches").create({
     Type: searchType,

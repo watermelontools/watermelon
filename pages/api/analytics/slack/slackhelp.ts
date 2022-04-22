@@ -14,7 +14,7 @@ const base = require("airtable").base("appDpKitgxjDIUwZ3");
 
 export default async function handler(req, res) {
   client.capture({
-    distinctId: 'test-id',
+    distinctId: 'slack',
     event: `slack-help`
   })
   let createdRecord = await base("Slackhelp").create({
