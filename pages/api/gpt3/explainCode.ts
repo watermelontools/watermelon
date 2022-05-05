@@ -22,9 +22,9 @@ export default async function handler(req, res) {
 
   const response = await openai.createCompletion("text-davinci-002", {
     prompt: "Explain code: " + req.body.codeBlock,
-    temperature: 0.7,
-    max_tokens: 64,
-    top_p: 1.0,
+    temperature: process.env.OPENAI_TEMPERATURE,
+    max_tokens: process.env.OPENAI_MAX_TOKENS,
+    top_p: process.env.OPERAI_TOP_P,
   });
 
   // Analytics
