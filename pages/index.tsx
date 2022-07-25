@@ -5,8 +5,8 @@ function HomePage() {
 export default HomePage;
 export async function getServerSideProps(context) {
   let f;
-  if (context.query.code)
-  console.log(context.query.code);
+  if (context.query.code) {
+    console.log(context.query.code);
     f = await fetch(`https://auth.atlassian.com/oauth/token`, {
       method: "POST",
       headers: {
@@ -17,10 +17,10 @@ export async function getServerSideProps(context) {
         code: context.query.code,
         redirect_uri: "https://app.watermelon.tools",
         client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
-        client_secret: process.env.NEXT_PUBLIC_JIRA_CLIENT_SECRET,
+        client_secret: process.env.JIRA_CLIENT_SECRET,
       }),
     });
-  else
+  } else
     return {
       props: {
         error: "no code",
