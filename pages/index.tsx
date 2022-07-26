@@ -1,3 +1,5 @@
+import { supabase } from "../utils/supabase";
+
 function HomePage() {
   return <div>Home</div>;
 }
@@ -27,16 +29,24 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json);
   if (json.error)
     return {
       props: {
         error: json.error,
       },
     };
+  supabase.from("Jira").insert({
+    access_token: json.access_token,
+    jira_id: json.id,
+    organization: json.name,
+    url: json.url,
+    avatar_url: json.avatarUrl,
+    scopes: json.scopes,
+  });
+
   return {
     props: {
-      accessToken: json.access_token,
+      accessToken: json.access_token ? true : false,
     },
   };
 }
