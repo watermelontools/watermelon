@@ -40,7 +40,7 @@ export async function getServerSideProps(context) {
     const orgInfo = await fetch(
       "https://api.atlassian.com/oauth/token/accessible-resources",
       {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${access_token}`,
