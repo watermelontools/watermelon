@@ -29,25 +29,42 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  if (json.error)
+  if (json.error) {
     return {
       props: {
         error: json.error,
       },
     };
-  let { data, error, status } = await supabase.from("Jira").insert({
-    access_token: json.access_token,
-    jira_id: json.id,
-    organization: json.name,
-    url: json.url,
-    avatar_url: json.avatarUrl,
-    scopes: json.scopes,
-  });
-  if (error) console.error(error);
-  else console.log(data);
-  return {
-    props: {
-      accessToken: json.access_token ? true : false,
-    },
-  };
+  } else {
+    const { access_token } = json;
+    const orgInfo = await fetch(
+      "https://api.atlassian.com/oauth/token/accessible-resources",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    );
+    const orgInfoJson = await orgInfo.json();
+    let { data, error, status } = await supabase.from("Jira").insert({
+      access_token: json.access_token,
+      jira_id: orgInfoJson.id,
+      organization: orgInfoJson.name,
+      url: orgInfoJson.url,
+      avatar_url: orgInfoJson.avatarUrl,
+      scopes: orgInfoJson.scopes,
+    });
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(data);
+    }
+    return {
+      props: {
+        organization: orgInfoJson?.name,
+      },
+    };
+  }
 }
