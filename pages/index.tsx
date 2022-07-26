@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
         error: json.error,
       },
     };
-  supabase.from("Jira").insert({
+  let { data, error, status } = await supabase.from("Jira").insert({
     access_token: json.access_token,
     jira_id: json.id,
     organization: json.name,
@@ -43,7 +43,8 @@ export async function getServerSideProps(context) {
     avatar_url: json.avatarUrl,
     scopes: json.scopes,
   });
-
+  if (error) console.error(error);
+  else console.log(data);
   return {
     props: {
       accessToken: json.access_token ? true : false,
