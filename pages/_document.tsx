@@ -11,6 +11,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <meta charSet="utf-8" />
+          <link rel="manifest" href="/favicon/site.webmanifest"></link>
           <link
             rel="shortcut icon"
             href="/favicon/favicon.ico"
