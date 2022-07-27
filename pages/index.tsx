@@ -8,7 +8,6 @@ export default HomePage;
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    console.log(context.query.code);
     f = await fetch(`https://auth.atlassian.com/oauth/token`, {
       method: "POST",
       headers: {
@@ -48,6 +47,7 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
+    console.log(orgInfoJson);
     let { data, error, status } = await supabase.from("Jira").insert({
       access_token: json.access_token,
       jira_id: orgInfoJson[0].id,
