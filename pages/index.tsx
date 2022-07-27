@@ -47,15 +47,14 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
-    console.log(orgInfoJson);
     let { data, error, status } = await supabase.from("Jira").insert({
       access_token: json.access_token,
+      refresh_token: json.refresh_token,
       jira_id: orgInfoJson[0].id,
       organization: orgInfoJson[0].name,
       url: orgInfoJson[0].url,
       avatar_url: orgInfoJson[0].avatarUrl,
       scopes: orgInfoJson[0].scopes,
-      refresh_token: orgInfoJson[0].refresh_token,
     });
     if (error) {
       console.error(error);
