@@ -2,7 +2,7 @@ import { supabase } from "../utils/supabase";
 import Auth from "../components/Auth";
 import Account from "../components/Account";
 import { useState, useEffect } from "react";
-function HomePage() {
+function HomePage({ organization }) {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -12,13 +12,16 @@ function HomePage() {
       setSession(session);
     });
   }, []);
-  console.log(session);
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
       {!session ? (
         <Auth />
       ) : (
-        <Account key={session.user.id} session={session} />
+        <Account
+          key={session.user.id}
+          session={session}
+          jiraOrg={organization}
+        />
       )}
     </div>
   );
