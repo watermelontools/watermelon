@@ -12,7 +12,7 @@ export default function Account({ session }) {
   useEffect(() => {
     getProfile();
   }, [session]);
-  let [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(null);
   async function getProfile() {
     try {
       setLoading(true);
@@ -27,7 +27,7 @@ export default function Account({ session }) {
       if (error && status !== 406) {
         throw error;
       }
-
+      console.log(user.id);
       if (data) {
         setUserId(user.id);
         setUsername(data.username);
@@ -110,15 +110,11 @@ export default function Account({ session }) {
         </button>
       </div>
       <div>
-        <Link
-          href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelon.tools&state=${
-            userId || ""
-          }&response_type=code&prompt=consent`}
-        >
-          <a className="button block">Login with Jira</a>
-          Login
+        <Link href="/jira/login">
+          <a className="button block">login to Jira</a>
         </Link>
       </div>
+      <p>{userId}</p>
       <div>
         <button
           style={{ marginTop: "20px" }}
