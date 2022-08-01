@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import Avatar from "./Avatar";
@@ -107,9 +108,14 @@ export default function Account({ session }) {
           {loading ? "Loading ..." : "Update"}
         </button>
       </div>
-
+      <div>
+        <Link href="/jira/login">
+          <a className="button block">login to Jira</a>
+        </Link>
+      </div>
       <div>
         <button
+          style={{ marginTop: "20px" }}
           className="button block"
           onClick={() => supabase.auth.signOut()}
         >
