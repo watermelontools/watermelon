@@ -1,24 +1,52 @@
-export default function Login() {
+import { supabase } from "../utils/supabase";
+import { useState } from "react";
+
+export default function Auth() {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const handleLogin = async (email) => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signIn({ email });
+      if (error) throw error;
+      alert("Check your email for the login link!");
+    } catch (error) {
+      alert(error.error_description || error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      <h1>Login</h1>
-      <form action="/api/login" method="post">
-        <label htmlFor="email">
-          Email:
-          <input type="email" name="email" required id="email" />
-        </label>
-        <label htmlFor="password">
-          Password:
+    <div className="row flex flex-center">
+      <div className="col-6 form-widget">
+        <h1 className="header">Supabase + Next.js</h1>
+        <p className="description">
+          Sign in via magic link with your email below
+        </p>
+        <div>
           <input
-            type="password"
-            name="password"
-            required
-            id="password"
-            minLength={6}
+            className="inputField"
+            type="email"
+            placeholder="Your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-        </label>
-        <button type="submit">Login</button>
-      </form>
+        </div>
+        <div>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              handleLogin(email);
+            }}
+            className="button block"
+            disabled={loading}
+          >
+            <span>{loading ? "Loading" : "Send magic link"}</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
