@@ -1,6 +1,6 @@
 import { supabase } from "../utils/supabase";
-import Auth from "./components/Auth";
-import Account from "./components/Account";
+import Auth from "../components/Auth";
+import Account from "../components/Account";
 import { useState, useEffect } from "react";
 function HomePage() {
   const [session, setSession] = useState(null);
