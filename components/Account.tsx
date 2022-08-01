@@ -109,8 +109,13 @@ export default function Account({ session }) {
         </button>
       </div>
       <div>
-        <Link href="/jira/login">
-          <a className="button block">login to Jira</a>
+        <Link
+          href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelon.tools&state=${
+            supabase.auth.user()?.id
+          }&response_type=code&prompt=consent`}
+        >
+          <a className="button block">Login with Jira</a>
+          Login
         </Link>
       </div>
       <div>
