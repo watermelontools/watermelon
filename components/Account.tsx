@@ -43,7 +43,12 @@ export default function Account({ session, jiraOrg }) {
   }
   async function getJiraOrg() {
     try {
-      fetch("/api/jira/getOrganization")
+      fetch("/api/jira/getOrganization", {
+        method: "POST",
+        body: JSON.stringify({
+          user: supabase.auth.user().id,
+        }),
+      })
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
