@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
+import Link from "next/link";
 export default function Jira({ organization, avatar_url }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
@@ -21,7 +22,10 @@ export default function Jira({ organization, avatar_url }) {
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click <a href="/">here</a>
+          If you are not redirected, please click{" "}
+          <Link href="/">
+            <a>here</a>
+          </Link>
         </p>
       </div>
     </div>
