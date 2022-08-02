@@ -28,7 +28,6 @@ export default function Account({ session, jiraOrg }) {
       if (error && status !== 406) {
         throw error;
       }
-      console.log(user.id);
       if (data) {
         setUserId(user.id);
         setUsername(data.username);
@@ -57,6 +56,7 @@ export default function Account({ session, jiraOrg }) {
           if (data.error) {
             setDBJiraOrg(null);
           } else {
+            console.log(data);
             setDBJiraOrg(data);
           }
         });
