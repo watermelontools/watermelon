@@ -56,8 +56,7 @@ export default function Account({ session, jiraOrg }) {
           if (data.error) {
             setDBJiraOrg(null);
           } else {
-            console.log(data);
-            setDBJiraOrg(data);
+            setDBJiraOrg(data.organization);
           }
         });
     } catch (error) {
