@@ -6,11 +6,11 @@ const updateTokens = async ({ access_token, refresh_token, user }) => {
     .match({ user });
 };
 export default async function handler(req, res) {
-  let { userId } = req.body;
+  let { user } = req.body;
   let { data, error, status } = await supabase
     .from("Jira")
     .select("refresh_token")
-    .eq("user", userId);
+    .eq("user", user);
   if (error) res.send(error);
   console.log(data[0].refresh_token);
   let newAccessTokens = await fetch("https://auth.atlassian.com/oauth/token", {
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       refresh_token: data[0].refresh_token,
     }),
   }).then((response) => response.json());
-
-  console.log(newAccessTokens);
-  res.send(newAccessTokens);
+  const { access_token, refresh_token } = newAccessTokens;
+  updateTokens({ access_token, refresh_token, user });
+  res.send(access_token);
 }
