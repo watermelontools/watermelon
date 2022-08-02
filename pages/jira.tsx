@@ -1,16 +1,10 @@
 import { useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-export default function Jira() {
-  useEffect(() => {
-    const router = useRouter();
-    setTimeout(() => {
-      router.push("/");
-    }, 3000);
-  }, []);
+export default function Jira({ organization }) {
   return (
     <div>
-      <h1>You have logged in with Jira</h1>
+      <h1>You have logged in with Jira to {organization}</h1>
       <div>
         <p>You will be redirected in a moment</p>
         <p>
