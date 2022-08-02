@@ -12,7 +12,6 @@ export default async function handler(req, res) {
     .select("refresh_token")
     .eq("user", user);
   if (error) res.send(error);
-  console.log(data[0].refresh_token);
   let newAccessTokens = await fetch("https://auth.atlassian.com/oauth/token", {
     method: "POST",
     headers: {
@@ -26,6 +25,6 @@ export default async function handler(req, res) {
     }),
   }).then((response) => response.json());
   const { access_token, refresh_token } = newAccessTokens;
-  updateTokens({ access_token, refresh_token, user });
+  await updateTokens({ access_token, refresh_token, user });
   res.send(access_token);
 }
