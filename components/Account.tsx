@@ -4,7 +4,8 @@ import { supabase } from "../utils/supabase";
 import Avatar from "./Avatar";
 import useSWR from "swr";
 
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+const fetcher = (url, params) => fetch(url, params).then((res) => res.json());
+
 export default function Account({ session, jiraOrg }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
@@ -46,7 +47,7 @@ export default function Account({ session, jiraOrg }) {
   async function getJiraOrg() {
     try {
       useSWR("/api/jira/getOrganization", fetcher);
-      let { data, error } = await fetcher({
+      let { data, error } = await fetcher("/api/jira/getOrganization", {
         method: "POST",
         body: JSON.stringify({
           user: supabase.auth.user().id,
