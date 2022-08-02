@@ -7,5 +7,6 @@ export default async function handler(req, res) {
     .select("organization")
     .eq("user", user);
   if (error) res.send(error);
+  console.log(data);
   res.send(data[0]?.organization || { error: "no results" });
 }
