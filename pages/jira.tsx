@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
-export default function Jira({ organization, url }) {
+export default function Jira({ organization, avatar_url }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Jira({ organization, url }) {
   return (
     <div>
       <h1>You have logged in with Jira to {organization}</h1>
-      <img src={url} alt="jira organization image" />
+      <img src={avatar_url} alt="jira organization image" />
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
@@ -88,7 +88,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         organization: orgInfoJson[0]?.name,
-        url: orgInfoJson[0]?.url,
+        avatar_url: orgInfoJson[0]?.avatar_url,
       },
     };
   }
