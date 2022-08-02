@@ -1,12 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 export default function Jira({ organization }) {
+  const [timeToRedirect, setTimeToRedirect] = useState(5);
+  const router = useRouter();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeToRedirect(timeToRedirect - 1);
+      if (timeToRedirect === 0) {
+        router.push("/");
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeToRedirect]);
+
   return (
     <div>
       <h1>You have logged in with Jira to {organization}</h1>
       <div>
-        <p>You will be redirected in a moment</p>
+        <p>You will be redirected in {timeToRedirect}...</p>
         <p>
           If you are not redirected, please click <a href="/">here</a>
         </p>
