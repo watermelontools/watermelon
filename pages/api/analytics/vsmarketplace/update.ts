@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         InstallCount: counts?.installCount ?? undefined,
         UninstallCount: counts?.uninstallCount ?? undefined,
         AverageRating: counts?.averageRating ?? undefined,
+        "Web-DownloadCount": counts?.webDownloadCount ?? undefined,
       },
     });
   }
