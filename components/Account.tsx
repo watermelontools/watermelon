@@ -148,9 +148,7 @@ export default function Account({ session, jiraOrg }) {
       </div>
       <div>
         <Link
-          href={`https://github.com/login/oauth/authorize?client_id=${
-            process.env.GITHUB_CLIENT_ID
-          }&redirect_uri=https://app.watermelon.tools/github&state=${
+          href={`https://github.com/login/oauth/authorize?client_id=8543242e428085df968c&redirect_uri=https://app.watermelon.tools/github&state=${
             userId ? userId : ""
           }&scope=repo%20user%20notifications`}
         >
