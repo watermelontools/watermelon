@@ -53,7 +53,9 @@ export async function getServerSideProps(context) {
         error: "no code",
       },
     };
+  console.log(f);
   const json = await f.json();
+  console.log(json);
   if (json.error) {
     return {
       props: {
