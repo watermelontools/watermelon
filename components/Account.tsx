@@ -146,6 +146,17 @@ export default function Account({ session, jiraOrg }) {
           </Link>
         )}
       </div>
+      <div>
+        <Link
+          href={`https://github.com/login/oauth/authorize?client_id=${
+            process.env.GITHUB_CLIENT_ID
+          }&redirect_uri=https://app.watermelon.tools/github&state=${
+            userId ? userId : ""
+          }&scope=repo%20user%20notifications`}
+        >
+          <a>Sign in with GitHub</a>
+        </Link>
+      </div>
       <p>{userId}</p>
       <div>
         <button
