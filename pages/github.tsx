@@ -38,6 +38,7 @@ export async function getServerSideProps(context) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
@@ -45,7 +46,6 @@ export async function getServerSideProps(context) {
         redirect_uri: "https://app.watermelon.tools",
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
-        Accept: "application/json",
       }),
     });
   } else
