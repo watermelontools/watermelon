@@ -45,6 +45,7 @@ export async function getServerSideProps(context) {
         redirect_uri: "https://app.watermelon.tools",
         client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
         client_secret: process.env.JIRA_CLIENT_SECRET,
+        Accept: "application/json",
       }),
     });
   } else
@@ -53,7 +54,6 @@ export async function getServerSideProps(context) {
         error: "no code",
       },
     };
-  console.log(f);
   const json = await f.json();
   console.log(json);
   if (json.error) {
