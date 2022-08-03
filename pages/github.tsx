@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import Link from "next/link";
-export default function Github({ organization, avatar_url }) {
+export default function Github({ loggedIn }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -17,8 +17,7 @@ export default function Github({ organization, avatar_url }) {
 
   return (
     <div>
-      <h1>You have logged in with Jira to {organization}</h1>
-      <img src={avatar_url} alt="jira organization image" />
+      <h1>You have logged in with GitHub </h1>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
@@ -55,7 +54,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json);
   if (json.error) {
     return {
       props: {
@@ -63,10 +61,10 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    const { access_token } = json;
-    console.log(json);
     let { data, error, status } = await supabase.from("GitHub").insert({
-      access_token,
+      access_token: json.access_token,
+      scopes: json.scope,
+      user: context.query.state,
     });
     if (error) {
       console.error(error);
@@ -74,7 +72,7 @@ export async function getServerSideProps(context) {
       console.log(data);
     }
     return {
-      props: {},
+      props: { loggedIn: true },
     };
   }
 }
