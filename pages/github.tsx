@@ -43,8 +43,8 @@ export async function getServerSideProps(context) {
         grant_type: "authorization_code",
         code: context.query.code,
         redirect_uri: "https://app.watermelon.tools",
-        client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
-        client_secret: process.env.JIRA_CLIENT_SECRET,
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
         Accept: "application/json",
       }),
     });
