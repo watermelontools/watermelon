@@ -20,12 +20,18 @@ export default function Account({ session, jiraOrg }) {
       setLoading(true);
       const user = supabase.auth.user();
 
-      let userProfile = getUserProfile(user.id).then((res) => {
-        console.log(res);
-        setUsername(res.username);
-        setWebsite(res.website);
-        setAvatarUrl(res.profileImage);
-      });
+      let userProfile = await fetch("/api/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: supabase.auth.user().id,
+        }),
+      }).then((res) => res.json());
+      setUsername(userProfile.username);
+      setWebsite(userProfile.website);
+      setAvatarUrl(userProfile.profileImage);
     } catch (error) {
       alert(error.message);
     } finally {
