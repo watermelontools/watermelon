@@ -26,3 +26,5 @@ We have a `utils` folder that includes all the business logic. We have an `api` 
 The developer has to match the `utils` folder structure to the `api` route schema. This makes it easier to maintain.
 
 > As an example, we have `utils/user/getProfile.ts` that is imported in `pages/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
+
+We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
