@@ -20,8 +20,8 @@ export default function Account({ session, jiraOrg }) {
       setLoading(true);
       const user = supabase.auth.user();
 
-      let userProfile = await fetch("/api/user", {
-        method: "GET",
+      let userProfile = await fetch("/api/user/getProfile", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
