@@ -1,5 +1,5 @@
-import { supabase } from "../supabase";
-import { UserProfile } from "../types/UserProfile";
+import { supabase } from "../../supabase";
+import { UserProfile } from "../../../types/UserProfile";
 
 export default async function getUserProfile(
   userId: string
