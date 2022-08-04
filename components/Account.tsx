@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import getUserProfile from "../utils/db/getUserProfile";
 import { supabase } from "../utils/supabase";
 import Avatar from "./Avatar";
 
@@ -19,21 +20,12 @@ export default function Account({ session, jiraOrg }) {
       setLoading(true);
       const user = supabase.auth.user();
 
-      let { data, error, status } = await supabase
-        .from("profiles")
-        .select(`username, website, avatar_url`)
-        .eq("id", user.id)
-        .single();
-
-      if (error && status !== 406) {
-        throw error;
-      }
-      if (data) {
-        setUserId(user.id);
-        setUsername(data.username);
-        setWebsite(data.website);
-        setAvatarUrl(data.avatar_url);
-      }
+      let userProfile = getUserProfile(user.id).then((res) => {
+        console.log(res);
+        setUsername(res.username);
+        setWebsite(res.website);
+        setAvatarUrl(res.profileImage);
+      });
     } catch (error) {
       alert(error.message);
     } finally {
