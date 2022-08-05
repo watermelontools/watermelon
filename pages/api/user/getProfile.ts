@@ -1,4 +1,4 @@
-import getUserProfile from "../../../utils/db/getUserProfile";
+import getUserProfile from "../../../utils/db/user/getProfile";
 
 export default async function handler(req, res) {
   let { user } = req.body;
