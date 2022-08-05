@@ -23,7 +23,7 @@ export default function Test({}) {
   }, []);
   useEffect(() => {
     fetch(`/api/jira/test`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
