@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import getUserProfile from "../utils/db/getUserProfile";
 import { supabase } from "../utils/supabase";
 import Avatar from "./Avatar";
 
