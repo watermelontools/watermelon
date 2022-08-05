@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     .select("refresh_token, jira_id")
     .eq("user", user);
   if (error) res.send(error);
+  console.log(data);
   let newAccessTokens = await fetch("https://auth.atlassian.com/oauth/token", {
     method: "POST",
     headers: {
