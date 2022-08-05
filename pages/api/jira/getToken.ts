@@ -25,10 +25,10 @@ export default async function handler(req, res) {
       grant_type: "refresh_token",
       client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
       client_secret: process.env.JIRA_CLIENT_SECRET,
-      refresh_token: data[0].refresh_token,
+      refresh_token: data.refresh_token,
     }),
   }).then((response) => response.json());
   const { access_token, refresh_token } = newAccessTokens;
   await updateTokens({ access_token, refresh_token, user });
-  res.send({ access_token, cloudId: data[0].jira_id });
+  res.send({ access_token, cloudId: data.jira_id });
 }
