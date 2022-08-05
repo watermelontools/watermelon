@@ -19,24 +19,22 @@ export default function Test({}) {
       .then((resJson) => {
         setAT(resJson.access_token);
         setCI(resJson.cloudId);
+        fetch(`/api/jira/test`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            access_token: resJson.access_token,
+            cloudId: resJson.cloudId,
+          }),
+        })
+          .then((res) => res.json())
+          .then((resJson) => {
+            console.log(resJson);
+          });
       });
   }, []);
-  useEffect(() => {
-    fetch(`/api/jira/test`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        access_token,
-        cloudId,
-      }),
-    })
-      .then((res) => res.json())
-      .then((resJson) => {
-        console.log(resJson);
-      });
-  }, [access_token, cloudId]);
   return (
     <div>
       <p>{access_token}</p>
