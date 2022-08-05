@@ -7,12 +7,13 @@ const updateTokens = async ({ access_token, refresh_token, user }) => {
 };
 export default async function handler(req, res) {
   let { user } = req.body;
+  console.log("user", user);
   let { data, error, status } = await supabase
     .from("Jira")
     .select("refresh_token, jira_id")
     .eq("user", user);
   if (error) res.send(error);
-  console.log(data);
+  console.log("data", data);
   let newAccessTokens = await fetch("https://auth.atlassian.com/oauth/token", {
     method: "POST",
     headers: {
