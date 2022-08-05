@@ -18,19 +18,7 @@ export default function Test({}) {
         setCI(resJson.cloudId);
       });
   }, []);
-  useEffect(() => {
-    fetch(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/project`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((resJson) => {
-        console.log(resJson);
-      });
-  }, [access_token]);
+
   return (
     <div>
       <p>{access_token}</p>
