@@ -21,7 +21,22 @@ export default function Test({}) {
         setCI(resJson.cloudId);
       });
   }, []);
-
+  useEffect(() => {
+    fetch(`/api/jira/test`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        access_token,
+        cloudId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((resJson) => {
+        console.log(resJson);
+      });
+  }, [access_token]);
   return (
     <div>
       <p>{access_token}</p>
