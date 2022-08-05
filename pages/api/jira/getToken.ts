@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
   let data;
   try {
-    data = getAPIAccessInfo(user);
+    data = await getAPIAccessInfo(user);
   } catch (error) {
     console.error(error);
     return res.send(error);
