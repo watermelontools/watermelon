@@ -8,6 +8,9 @@ export default function Test({}) {
   useEffect(() => {
     fetch("/api/jira/getToken", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
         user: supabase.auth.user().id,
       }),

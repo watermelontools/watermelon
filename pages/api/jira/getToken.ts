@@ -8,6 +8,10 @@ const updateTokens = async ({ access_token, refresh_token, user }) => {
 export default async function handler(req, res) {
   let { user } = req.body;
   console.log("user", user);
+  console.log("body", req.body);
+  if (!user) {
+    return res.send({ error: "no user" });
+  }
   let { data, error, status } = await supabase
     .from("Jira")
     .select("refresh_token, jira_id")
