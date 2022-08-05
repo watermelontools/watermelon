@@ -1,6 +1,12 @@
 export default async function handler(req, res) {
   let { cloudId, access_token } = req.body;
   let returnVal;
+  if (!cloudId) {
+    res.send({ error: "no cloudId" });
+  }
+  if (!access_token) {
+    res.send({ error: "no access_token" });
+  }
   await fetch(
     `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/2/project`,
     {
