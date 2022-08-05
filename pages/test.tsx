@@ -36,7 +36,7 @@ export default function Test({}) {
       .then((resJson) => {
         console.log(resJson);
       });
-  }, [access_token]);
+  }, [access_token, cloudId]);
   return (
     <div>
       <p>{access_token}</p>
