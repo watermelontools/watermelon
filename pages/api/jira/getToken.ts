@@ -1,25 +1,20 @@
-import { supabase } from "../../../utils/supabase";
-const updateTokens = async ({ access_token, refresh_token, user }) => {
-  const { data, error } = await supabase
-    .from("Jira")
-    .update({ access_token, refresh_token })
-    .match({ user });
-};
+import updateTokens from "../../../utils/db/jira/updateTokens";
+import getAPIAccessInfo from "../../../utils/db/jira/getAPIAccessInfo";
+
 export default async function handler(req, res) {
   let { user } = req.body;
-  console.log("user", user);
-  console.log("body", req.body);
+
   if (!user) {
     return res.send({ error: "no user" });
   }
-  let { data, error, status } = await supabase
-    .from("Jira")
-    .select("refresh_token, jira_id")
-    .eq("user", user);
-  if (error) {
+  let data;
+  try {
+    data = getAPIAccessInfo(user);
+  } catch (error) {
     console.error(error);
     return res.send(error);
   }
+
   console.log("data", data);
   let newAccessTokens = await fetch("https://auth.atlassian.com/oauth/token", {
     method: "POST",
