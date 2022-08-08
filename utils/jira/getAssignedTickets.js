@@ -1,4 +1,4 @@
-import getUserId from './getUserId';
+import getUserId from "./getUserId";
 
 export default async function handler(req, res) {
   let userID = getUserId();
