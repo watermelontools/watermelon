@@ -20,7 +20,8 @@ let connection = new Connection(config);
 
 const executeRequest = async (request) => {
   console.log("connection: ");
-  connection.on("connect", (err) => {
+
+  await connection.connect((err) => {
     console.log("connected");
     if (err) {
       console.error(err.message);
@@ -34,7 +35,5 @@ const executeRequest = async (request) => {
       connection.execSql(request);
     }
   });
-
-  await connection.connect();
 };
 export default executeRequest;
