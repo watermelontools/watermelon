@@ -1,3 +1,4 @@
+var zlib = require("zlib");
 export default async function handler(req, res) {
   let { cloudId, access_token } = req.body;
   let returnVal;
@@ -24,6 +25,8 @@ export default async function handler(req, res) {
   )
     .then((res) => {
       console.log(res.body);
+      var output = zlib.inflate(res.body);
+      console.log(output);
       res.json();
     })
     .then((resJson) => {

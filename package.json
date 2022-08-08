@@ -20,7 +20,8 @@
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-select": "^4.3.0",
-    "tedious": "^15.0.1"
+    "tedious": "^15.0.1",
+    "zlib": "^1.0.5"
   },
   "devDependencies": {
     "@types/node": "^14.14.14",
