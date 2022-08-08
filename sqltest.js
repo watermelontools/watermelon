@@ -4,16 +4,16 @@ const { Connection, Request } = require("tedious");
 const config = {
   authentication: {
     options: {
-      userName: "watermelon", // update me
-      password: "" // update me
+      userName: process.env.AZURE_DATABASE_USERNAME, // update me
+      password: process.env.AZURE_DATABASE_PASSWORD, // update me
     },
-    type: "default"
+    type: "default",
   },
-  server: "watermelon.database.windows.net", // update me
+  server: process.env.AZURE_DATABASE_SERVER, // update me
   options: {
-    database: "watermelon", //update me
-    encrypt: true
-  }
+    database: process.env.AZURE_DATABASE_DBNAME, //update me
+    encrypt: true,
+  },
 };
 
 /* 
@@ -48,7 +48,7 @@ const config = {
 const connection = new Connection(config);
 
 // Attempt to connect and execute queries if connection goes through
-connection.on("connect", err => {
+connection.on("connect", (err) => {
   if (err) {
     console.error(err.message);
   } else {
@@ -74,8 +74,8 @@ function queryDatabase() {
     }
   );
 
-  request.on("row", columns => {
-    columns.forEach(column => {
+  request.on("row", (columns) => {
+    columns.forEach((column) => {
       console.log("%s\t%s", column.metadata.colName, column.value);
     });
   });
