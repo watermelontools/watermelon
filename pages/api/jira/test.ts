@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
   )
     .then((res) => {
-      console.log(res);
+      console.log(res.body);
       res.json();
     })
     .then((resJson) => {
