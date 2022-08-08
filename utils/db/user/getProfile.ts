@@ -21,10 +21,12 @@ export default async function getUserProfile(
     isAdmin: false,
   };
   let connection = await getConnection();
+  console.log("connection: ", connection);
   connection.on("connect", (err) => {
     if (err) {
       console.error(err.message);
     } else {
+      console.log("Connected");
       queryDatabase();
     }
   });
@@ -46,14 +48,14 @@ export default async function getUserProfile(
         }
       }
     );
-
+    console.log("request: ", request);
     request.on("row", (columns) => {
       columns.forEach((column) => {
         console.log("%s\t%s", column.metadata.colName, column.value);
       });
     });
-
     connection.execSql(request);
+    console.log("executed");
   }
   let { data, error, status } = await supabase
     .from("profiles")

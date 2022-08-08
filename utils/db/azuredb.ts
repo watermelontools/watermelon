@@ -20,5 +20,6 @@ let connection = new Connection(config);
 const getConnection = async () => {
   if (connection) return connection;
   connection = new Connection(config);
+  return connection;
 };
 export default getConnection;
