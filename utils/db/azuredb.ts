@@ -34,6 +34,6 @@ const executeRequest = async (request) => {
     }
   });
 
-  connection.connect();
+  await connection.connect();
 };
 export default executeRequest;
