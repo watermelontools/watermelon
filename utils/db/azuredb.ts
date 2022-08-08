@@ -17,9 +17,23 @@ const config = {
 };
 
 let connection = new Connection(config);
-const getConnection = async () => {
-  if (connection) return connection;
-  connection = new Connection(config);
-  return connection;
+
+const executeRequest = async (request) => {
+  console.log("connection: ");
+  connection.on("connect", (err) => {
+    if (err) {
+      console.error(err.message);
+    } else {
+      console.log("Connected");
+      request.on("row", (columns) => {
+        columns.forEach((column) => {
+          console.log("%s\t%s", column.metadata.colName, column.value);
+        });
+      });
+      connection.execSql(request);
+    }
+  });
+
+  connection.connect();
 };
-export default getConnection;
+export default executeRequest;
