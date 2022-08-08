@@ -1,4 +1,7 @@
+import getUserId from './getUserId';
+
 export default async function handler(req, res) {
+  let userID = getUserId();
   let { cloudId, access_token } = req.body;
   let returnVal;
   if (!cloudId) {
@@ -17,7 +20,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: "assignee = 6205b6df506317006b092e68",
+        jql: `assignee = ${userID}`,
         fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
