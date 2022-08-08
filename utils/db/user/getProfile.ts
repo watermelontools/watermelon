@@ -22,7 +22,8 @@ export default async function getUserProfile(
 
   const request = new Request(
     `SELECT *
-       FROM [dbo].[profiles]`,
+       FROM [dbo].[profiles]
+       FOR JSON PATH`,
     (err, rowCount) => {
       if (err) {
         console.error(err.message);
