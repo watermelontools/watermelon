@@ -7,13 +7,16 @@ export default async function handler(req, res) {
   if (!access_token) {
     res.send({ error: "no access_token" });
   }
-  await fetch(`https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/users`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-  })
+  await fetch(
+    `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/field/search?query=assignee:6205b6df506317006b092e68'`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${access_token}`,
+      },
+    }
+  )
     .then((res) => res.json())
     .then((resJson) => {
       console.log(resJson);
