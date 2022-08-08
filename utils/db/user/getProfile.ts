@@ -54,7 +54,6 @@ export default async function getUserProfile(
     });
 
     connection.execSql(request);
-    connection.close();
   }
   let { data, error, status } = await supabase
     .from("profiles")
