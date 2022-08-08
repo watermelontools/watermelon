@@ -16,5 +16,9 @@ const config = {
   },
 };
 
-const connection = new Connection(config);
-export default connection;
+let connection = new Connection(config);
+const getConnection = async () => {
+  if (connection) return connection;
+  connection = new Connection(config);
+};
+export default getConnection;

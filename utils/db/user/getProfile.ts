@@ -1,5 +1,5 @@
 import { supabase } from "../../supabase";
-import connection from "../azuredb";
+import getConnection from "../azuredb";
 import { UserProfile } from "../../../types/UserProfile";
 const { Request } = require("tedious");
 
@@ -20,7 +20,7 @@ export default async function getUserProfile(
     company: "",
     isAdmin: false,
   };
-
+  let connection = await getConnection();
   connection.on("connect", (err) => {
     if (err) {
       console.error(err.message);
