@@ -48,7 +48,7 @@ export default async function getUserProfile(
         }
       }
     );
-    console.log("request: ", request);
+    console.log("request: ");
     request.on("row", (columns) => {
       columns.forEach((column) => {
         console.log("%s\t%s", column.metadata.colName, column.value);
