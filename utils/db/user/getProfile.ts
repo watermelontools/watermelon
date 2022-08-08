@@ -21,7 +21,7 @@ export default async function getUserProfile(
     isAdmin: false,
   };
   let connection = await getConnection();
-  console.log("connection: ", connection);
+  console.log("connection: ");
   connection.on("connect", (err) => {
     if (err) {
       console.error(err.message);
