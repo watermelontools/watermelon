@@ -1,8 +1,27 @@
 import { supabase } from "../../supabase";
-import getConnection from "../azuredb";
 import { UserProfile } from "../../../types/UserProfile";
-const { Request } = require("tedious");
+const { Request, Connection } = require("tedious");
+const config = {
+  authentication: {
+    options: {
+      userName: process.env.AZURE_DATABASE_USERNAME, // update me
+      password: process.env.AZURE_DATABASE_PASSWORD, // update me
+    },
+    type: "default",
+  },
+  server: process.env.AZURE_DATABASE_SERVER, // update me
+  options: {
+    database: process.env.AZURE_DATABASE_DBNAME, //update me
+    encrypt: true,
+  },
+};
 
+let connection = new Connection(config);
+const getConnection = async () => {
+  if (connection) return connection;
+  connection = new Connection(config);
+  return connection;
+};
 export default async function getUserProfile(
   userId: string
 ): Promise<UserProfile> {
