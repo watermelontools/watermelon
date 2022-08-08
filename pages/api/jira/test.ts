@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
@@ -21,7 +22,10 @@ export default async function handler(req, res) {
       }),
     }
   )
-    .then((res) => res.json())
+    .then((res) => {
+      console.log(res);
+      res.json();
+    })
     .then((resJson) => {
       console.log(resJson);
       returnVal = resJson;
