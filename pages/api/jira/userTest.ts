@@ -23,11 +23,11 @@ export default async function handler(req, res) {
       }
     )
       .then((res) => {
-        console.log(res.body);
+        console.log("res.body: ", res.body);
         res.json();
       })
       .then((resJson) => {
-        console.log(resJson);
+        console.log("resJson: ", resJson);
         returnVal = resJson;
       });
     return res.send(returnVal);
