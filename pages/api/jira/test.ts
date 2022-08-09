@@ -21,14 +21,13 @@ export default async function handler(req, res) {
         fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
-  )
-    .then((res) => {
-      console.log(res.body);
-      res.json();
-    })
-    // .then((resJson) => {
-    //   console.log(resJson);
-    //   returnVal = resJson;
-    // });
+  ).then((res) => {
+    console.log(res.body);
+    res.json();
+  });
+  // .then((resJson) => {
+  //   console.log(resJson);
+  //   returnVal = resJson;
+  // });
   return res.send(returnVal);
 }
