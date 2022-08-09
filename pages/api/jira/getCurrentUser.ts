@@ -29,5 +29,5 @@ export default async function getUserId(req, res) {
       console.log(resJson);
       returnVal = resJson;
     });
-  return (returnVal);
+  return returnVal;
 }
