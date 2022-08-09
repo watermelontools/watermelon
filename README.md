@@ -19,6 +19,8 @@ All environment vars are on vercel, the committer is responsible for correct dep
 
 We develop with a model that forces a lot of things to be done by the developer. As this is a monorepo you have to be very careful.
 
+_PLEASE READ [THE DOCS FOLDER](/docs/)_
+
 ### APIs
 
 We have a `utils` folder that includes all the business logic. We have an `api` folder that handles web communication as dictated by NextJS. In the `types` folder we hold our typescript types, that should (roughly) match what our database has.
