@@ -54,7 +54,9 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log("json ", json);
   if (json.error) {
+    console.log("error", json);
     return {
       props: {
         error: json.error,
@@ -62,6 +64,7 @@ export async function getServerSideProps(context) {
     };
   } else {
     const { access_token } = json;
+    console.log("access");
     const orgInfo = await fetch(
       "https://api.atlassian.com/oauth/token/accessible-resources",
       {
