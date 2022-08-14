@@ -73,6 +73,7 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
+    console.log("org:", orgInfoJson);
     const userInfo = await fetch(
       `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
       {
@@ -84,7 +85,7 @@ export async function getServerSideProps(context) {
       }
     );
     const userInfoJson = await userInfo.json();
-    console.log(userInfoJson);
+    console.log("user:", userInfoJson);
     let { data, error, status } = await supabase.from("Jira").insert({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
