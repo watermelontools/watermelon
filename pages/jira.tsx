@@ -89,6 +89,7 @@ export async function getServerSideProps(context) {
     );
     const userInfoJson = await userInfo.json();
     console.log("user:", userInfoJson);
+    console.log("user", context.query.state);
     let { data, error, status } = await supabase.from("Jira").insert({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
