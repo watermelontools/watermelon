@@ -14,6 +14,9 @@ export default function Account({ session, jiraOrg }) {
     if (!jiraOrg) getJiraOrg();
   }, [session]);
   const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    setUserId(supabase.auth.user().id);
+  }, []);
   async function getProfile() {
     try {
       setLoading(true);
