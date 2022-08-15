@@ -7,7 +7,15 @@ const executeRequest = async (query) => {
       "Content-Type": "application/json",
     },
     body: queryString,
-  }).then((response) => response.json());
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
   console.log(resp);
   return resp;
 };
