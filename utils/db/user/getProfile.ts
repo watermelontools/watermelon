@@ -20,19 +20,10 @@ export default async function getUserProfile(
     isAdmin: false,
   };
 
-  const request = new Request(
-    `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}'`,
-    (err, rowCount) => {
-      if (err) {
-        console.error(err.message);
-      } else {
-        console.log(`${rowCount} row(s) returned`);
-      }
-    }
-  );
+  const query = `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}'`;
 
-  await executeRequest(request);
-
+  let azureResp = await executeRequest(query);
+  console.log(azureResp);
   let { data, error, status } = await supabase
     .from("profiles")
     .select(`username, website, avatar_url`)
