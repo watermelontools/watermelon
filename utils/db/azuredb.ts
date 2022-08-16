@@ -10,7 +10,8 @@ const executeRequest = async (query) => {
   })
     .then((response) => {
       console.log(response.status);
-      console.log(response.body);
+      // print the response body to the console
+      console.log(response.json());
       return response.json();
     })
     .catch((error) => {
