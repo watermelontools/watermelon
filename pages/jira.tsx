@@ -56,7 +56,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log("jira json ", json);
   if (json.error) {
     console.log("jira error", json);
     return {
@@ -103,7 +102,7 @@ export async function getServerSideProps(context) {
       user_id: userInfoJson.accountId,
       user_displayname: userInfoJson.displayName,
     });
-
+    console.log("azureResp", azureResp);
     return {
       props: {
         organization: orgInfoJson[0]?.name,
