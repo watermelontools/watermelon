@@ -3,7 +3,7 @@ import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/jira/saveUserInfo";
-export default function Jira({ organization, avatar_url }) {
+export default function Jira({ organization, avatar_url, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -28,6 +28,7 @@ export default function Jira({ organization, avatar_url }) {
             <a>here</a>
           </Link>
         </p>
+        {error && <p>{error}</p>}
       </div>
     </div>
   );
