@@ -1,6 +1,5 @@
 import { supabase } from "../../supabase";
 import { UserProfile } from "../../../types/UserProfile";
-const { Request } = require("tedious");
 import executeRequest from "../azuredb";
 export default async function getUserProfile(
   userId: string
@@ -20,10 +19,10 @@ export default async function getUserProfile(
     isAdmin: false,
   };
 
-  const query = `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}'`;
+  const query = `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}' FROM JSON PATH`;
 
   let azureResp = await executeRequest(query);
-  console.log(azureResp);
+  console.log("azureResp profile", azureResp);
   let { data, error, status } = await supabase
     .from("profiles")
     .select(`username, website, avatar_url`)

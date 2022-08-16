@@ -24,10 +24,10 @@ export default async function getJiraOrganization(user): Promise<Organization> {
     refresh_token: "",
     scopes: [],
   };
-  /*   let azureData = await executeRequest(
-    "SELECT * FROM dbo.profiles WHERE id = '" + user + "'"
+  let azureData = await executeRequest(
+    `SELECT * FROM dbo.profiles WHERE id = '${user}' FROM JSON PATH`
   );
-  console.log(azureData); */
+  console.log("azureData org", azureData);
   if (data) {
     organization = {
       id: data[0].id,
