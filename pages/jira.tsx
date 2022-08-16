@@ -66,7 +66,6 @@ export async function getServerSideProps(context) {
     };
   } else {
     const { access_token } = json;
-    console.log("access");
     const orgInfo = await fetch(
       "https://api.atlassian.com/oauth/token/accessible-resources",
       {
@@ -78,7 +77,6 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
-    console.log("org:", orgInfoJson);
     const userInfo = await fetch(
       `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
       {
@@ -90,8 +88,20 @@ export async function getServerSideProps(context) {
       }
     );
     const userInfoJson = await userInfo.json();
-    console.log("user:", userInfoJson);
-    console.log("user", context.query.state);
+    console.log({
+      access_token: json.access_token,
+      refresh_token: json.refresh_token,
+      jira_id: orgInfoJson[0].id,
+      organization: orgInfoJson[0].name,
+      url: orgInfoJson[0].url,
+      org_avatar_url: orgInfoJson[0].avatarUrl,
+      scopes: orgInfoJson[0].scopes,
+      user: context.query.state,
+      user_email: userInfoJson.emailAddress,
+      user_avatar_url: userInfoJson.avatarUrls["48x48"],
+      user_id: userInfoJson.accountId,
+      user_displayname: userInfoJson.displayName,
+    });
     let azureResp = await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
