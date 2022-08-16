@@ -17,11 +17,7 @@ function HomePage({ organization }) {
       {!session ? (
         <Auth />
       ) : (
-        <Account
-          key={session.user.id}
-          session={session}
-          jiraOrg={organization}
-        />
+        <Account key={session.user.id} session={session} />
       )}
     </div>
   );
