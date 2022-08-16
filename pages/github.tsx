@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import Link from "next/link";
-export default function Github({ loggedIn }) {
+export default function Github({ loggedIn, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -26,6 +26,7 @@ export default function Github({ loggedIn }) {
             <a>here</a>
           </Link>
         </p>
+        {error && <p>{error}</p>}
       </div>
     </div>
   );
