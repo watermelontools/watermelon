@@ -21,7 +21,7 @@ export default async function getUserProfile(
   };
 
   const request = new Request(
-    `SELECT * FROM [dbo].[profiles] WHERE userId = '${userId}'`,
+    `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}'`,
     (err, rowCount) => {
       if (err) {
         console.error(err.message);
