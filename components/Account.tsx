@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
 import Avatar from "./Avatar";
 
-export default function Account({ session, jiraOrg }) {
+export default function Account({ session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [website, setWebsite] = useState(null);
@@ -11,11 +11,11 @@ export default function Account({ session, jiraOrg }) {
   const [DBJiraOrg, setDBJiraOrg] = useState(null);
   useEffect(() => {
     getProfile();
-    if (!jiraOrg) getJiraOrg();
   }, [session]);
   const [userId, setUserId] = useState(null);
   useEffect(() => {
     setUserId(supabase.auth.user().id);
+    getJiraOrg();
   }, []);
   async function getProfile() {
     try {
@@ -132,9 +132,7 @@ export default function Account({ session, jiraOrg }) {
         </button>
       </div>
       <div>
-        {jiraOrg ? (
-          <p>logged in to {jiraOrg} with Jira</p>
-        ) : DBJiraOrg ? (
+        {DBJiraOrg ? (
           <p>logged in to {DBJiraOrg} with Jira</p>
         ) : (
           <Link
