@@ -56,9 +56,9 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log("json ", json);
+  console.log("jira json ", json);
   if (json.error) {
-    console.log("error", json);
+    console.log("jira error", json);
     return {
       props: {
         error: json.error,
