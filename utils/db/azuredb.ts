@@ -1,5 +1,6 @@
 const executeRequest = async (query) => {
   const queryString = JSON.stringify({ query: query });
+  console.log(queryString);
   let resp = await fetch("https://watermelonbackend.azurewebsites.net/users", {
     method: "POST",
     headers: {
@@ -8,6 +9,7 @@ const executeRequest = async (query) => {
     body: queryString,
   })
     .then((response) => {
+      console.log(response);
       return response.json();
     })
     .catch((error) => {
