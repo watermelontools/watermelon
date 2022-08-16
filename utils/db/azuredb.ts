@@ -11,8 +11,9 @@ const executeRequest = async (query) => {
     .then((response) => {
       console.log(response.status);
       // print the response body to the console
-      console.log(response.json());
-      return response.json();
+      let resp = response.json();
+      console.log(resp);
+      return resp;
     })
     .catch((error) => {
       console.error(error);
