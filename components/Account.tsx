@@ -138,7 +138,7 @@ export default function Account({ session, jiraOrg }) {
           <p>logged in to {DBJiraOrg} with Jira</p>
         ) : (
           <Link
-            href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelon.tools/jira&state=${userId}&response_type=code&prompt=consent`}
+            href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=${process.env.NEXT_PUBLIC_VERCEL_URL}/jira&state=${userId}&response_type=code&prompt=consent`}
           >
             <a className="button block">Login to Jira</a>
           </Link>
