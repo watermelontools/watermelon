@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../utils/supabase";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/jira/saveUserInfo";
@@ -93,20 +92,6 @@ export async function getServerSideProps(context) {
     const userInfoJson = await userInfo.json();
     console.log("user:", userInfoJson);
     console.log("user", context.query.state);
-    let { data, error, status } = await supabase.from("Jira").insert({
-      access_token: json.access_token,
-      refresh_token: json.refresh_token,
-      jira_id: orgInfoJson[0].id,
-      organization: orgInfoJson[0].name,
-      url: orgInfoJson[0].url,
-      org_avatar_url: orgInfoJson[0].avatarUrl,
-      scopes: orgInfoJson[0].scopes,
-      user: context.query.state,
-      user_email: userInfoJson.emailAddress,
-      user_avatar_url: userInfoJson.avatarUrls["48x48"],
-      user_id: userInfoJson.accountId,
-      user_displayname: userInfoJson.displayName,
-    });
     let azureResp = await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
@@ -122,11 +107,7 @@ export async function getServerSideProps(context) {
       user_displayname: userInfoJson.displayName,
     });
     console.log("azureResp", azureResp);
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(data);
-    }
+
     return {
       props: {
         organization: orgInfoJson[0]?.name,
