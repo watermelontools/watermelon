@@ -18,6 +18,7 @@ const executeRequest = async (query) => {
       console.error(error);
       return error;
     });
+  console.log("resp", resp);
   return resp;
 };
 export default executeRequest;
