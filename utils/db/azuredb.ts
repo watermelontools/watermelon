@@ -7,9 +7,7 @@ const executeRequest = async (query) => {
     },
     body: queryString,
   })
-    .then((response) => {
-      response.json();
-    })
+    .then((response) => response.json())
     .then((data) => {
       console.log(data);
       return data;
