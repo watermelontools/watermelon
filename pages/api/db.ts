@@ -8,9 +8,7 @@ export default async function handler(req, res) {
     },
     body: queryString,
   })
-    .then((response) => {
-      response.json();
-    })
+    .then((response) => response.json())
     .then((data) => {
       console.log(data);
       return data;
