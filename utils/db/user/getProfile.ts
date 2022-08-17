@@ -19,7 +19,7 @@ export default async function getUserProfile(
     isAdmin: false,
   };
 
-  const query = `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}'`;
+  const query = `SELECT * FROM [dbo].[profiles] WHERE id = '${userId}' FOR JSON PATH`;
 
   let azureResp = await executeRequest(query);
   console.log("azureResp profile", azureResp);
