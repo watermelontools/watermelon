@@ -17,7 +17,7 @@ export default async function getJiraOrganization(user): Promise<Organization> {
     scopes: [],
   };
   let azureData = await executeRequest(
-    `SELECT * FROM dbo.jira WHERE user = '${user}' FOR JSON PATH`
+    `SELECT * FROM watermelon.dbo.jira WHERE [user]='${user}' FOR JSON PATH`
   );
   if (azureData) {
     organization = {
