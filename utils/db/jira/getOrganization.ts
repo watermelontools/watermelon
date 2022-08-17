@@ -17,7 +17,7 @@ export default async function getJiraOrganization(user): Promise<Organization> {
     scopes: [],
   };
   let azureData = await executeRequest(
-    `SELECT * FROM dbo.profiles WHERE id = '${user}' FOR JSON PATH      `
+    `SELECT * FROM dbo.jira WHERE id = '${user}' FOR JSON PATH      `
   );
   if (azureData) {
     organization = {
