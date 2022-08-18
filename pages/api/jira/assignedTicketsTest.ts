@@ -17,10 +17,10 @@ export default async function handler(req, res) {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      body: JSON.stringify({
-        jql: `assignee = ${user}`,
-        fields: ["summary", "status", "assignee", "created", "updated"],
-      }),
+      // body: JSON.stringify({
+      //   jql: `assignee = ${user}`,
+      //   fields: ["summary", "status", "assignee", "created", "updated"],
+      // }),
     }
   )
     .then((res) => {
