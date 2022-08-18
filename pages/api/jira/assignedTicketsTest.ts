@@ -2,8 +2,6 @@
 
 export default async function handler(req, res) {
   let { user, cloudId, access_token } = req.body;
-  console.log("cloudId, accesss_token: ", cloudId, access_token);
-  // let userID = userTest(cloudId, access_token);
   let returnVal;
   if (!cloudId) {
     res.send({ error: "no cloudId" });
