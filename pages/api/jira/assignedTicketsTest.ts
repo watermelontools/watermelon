@@ -30,5 +30,9 @@ export default async function handler(req, res) {
       console.log("res.json(): ", res.json());
       res.json();
     })
-  return res.send(res.json());
+    .then((resJson) => {
+      console.log("resJson: ", resJson);
+      returnVal = resJson;
+    });
+  return res.send(returnVal);
 }
