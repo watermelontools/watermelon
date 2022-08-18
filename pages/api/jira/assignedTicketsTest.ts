@@ -1,5 +1,3 @@
-// import userTest from './userTest';
-
 export default async function handler(req, res) {
   let { user, cloudId, access_token } = req.body;
   let returnVal;
@@ -10,7 +8,8 @@ export default async function handler(req, res) {
     res.send({ error: "no access_token" });
   }
   await fetch(
-    `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
+    // `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
+    `https://watermelontools.atlassian.net/rest/api/2/search?jql=assignee=${user}`,
     {
       method: "POST",
       headers: {
