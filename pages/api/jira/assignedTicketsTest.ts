@@ -10,7 +10,7 @@ export default async function handler(req, res) {
   await fetch(
     `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
     {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
