@@ -1,8 +1,9 @@
-import userTest from './userTest';
+// import userTest from './userTest';
 
 export default async function handler(req, res) {
-  let { cloudId, access_token } = req.body;
-  let userID = userTest(cloudId, access_token);
+  let { user, cloudId, access_token } = req.body;
+  console.log("cloudId, accesss_token: ", cloudId, access_token);
+  // let userID = userTest(cloudId, access_token);
   let returnVal;
   if (!cloudId) {
     res.send({ error: "no cloudId" });
@@ -20,7 +21,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `assignee = ${userID}`,
+        jql: `assignee = ${user}`,
         fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
