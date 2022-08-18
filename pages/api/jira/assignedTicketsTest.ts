@@ -8,8 +8,7 @@ export default async function handler(req, res) {
     res.send({ error: "no access_token" });
   }
   await fetch(
-    // `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
-    `https://watermelontools.atlassian.net/rest/api/2/search?jql=assignee=${user}`,
+    `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
     {
       method: "POST",
       headers: {
@@ -17,10 +16,10 @@ export default async function handler(req, res) {
         Accept: "application/json",
         Authorization: `Bearer ${access_token}`,
       },
-      // body: JSON.stringify({
-      //   jql: `assignee = ${user}`,
-      //   fields: ["summary", "status", "assignee", "created", "updated"],
-      // }),
+      body: JSON.stringify({
+        jql: `assignee = ${user}`,
+        fields: ["summary", "status", "assignee", "created", "updated"],
+      }),
     }
   )
     .then((res) => {
