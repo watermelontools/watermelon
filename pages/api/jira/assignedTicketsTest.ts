@@ -27,8 +27,8 @@ export default async function handler(req, res) {
     }
   )
     .then((res) => {
-      console.log("res.json(): ", res.json());
       res.json();
+      console.log("res after res.json(): ", res);
     })
     .then((resJson) => {
       console.log("resJson: ", resJson);
