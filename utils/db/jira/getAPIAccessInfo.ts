@@ -5,7 +5,7 @@ export default async function getAPIAccessInfo(user: string): Promise<{
   refresh_token: string;
   cloudId: string;
 }> {
-  let query = `EXEC dbo.update_jira_tokens  @user='${user}'`;
+  let query = `EXEC dbo.get_jira_tokens  @user='${user}'`;
   let resp = await executeRequest(query);
   console.log("updateTokens", resp);
   //return resp;
