@@ -9,8 +9,8 @@ export default async function handler(req, res) {
     return res.send({ error: "no user" });
   }
   try {
-    let { refresh_token, access_token, cloudId } = await getAPIAccessInfo(
-      user
+    let { refresh_token, access_token, cloudId } = (
+      await getAPIAccessInfo(user)
     )[0];
     let newAccessTokens = await updateTokensFromJira({
       refresh_token: refresh_token,
