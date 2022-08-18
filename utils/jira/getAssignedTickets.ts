@@ -1,4 +1,4 @@
-import getUserId from './getUserId';
+import getUserId from "./getUserId";
 
 export default async function handler(req, res) {
   let userID = getUserId();
@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   let returnVal;
   if (!cloudId) {
     res.send({ error: "no cloudId" });
+  }
   if (!access_token) {
     res.send({ error: "no access_token" });
   }
