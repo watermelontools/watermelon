@@ -1,4 +1,3 @@
-import { supabase } from "../../supabase";
 import executeRequest from "../azuredb";
 export default async function getAPIAccessInfo(user: string): Promise<{
   access_token: string;
