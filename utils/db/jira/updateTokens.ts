@@ -1,4 +1,5 @@
 import { supabase } from "../../supabase";
+import executeRequest from "../azuredb";
 
 export default async function updateTokens({
   user,
@@ -19,4 +20,8 @@ export default async function updateTokens({
   if (error && status !== 406) {
     throw error;
   }
+  let query = `EXEC dbo.update_jira_tokens  @user='${user}', @access_token='${access_token}', @refresh_token='${refresh_token}'`;
+  let resp = await executeRequest(query);
+  console.log("updateTokens", resp);
+  return resp;
 }
