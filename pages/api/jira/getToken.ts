@@ -8,17 +8,17 @@ export default async function handler(req, res) {
   if (!user) {
     return res.send({ error: "no user" });
   }
-  let data;
   try {
-    data = await getAPIAccessInfo(user);
+    let { refresh_token, access_token, cloudId } = await getAPIAccessInfo(user);
+    let newAccessTokens = await updateTokensFromJira({
+      refresh_token: refresh_token,
+    });
+    refresh_token = newAccessTokens.refresh_token;
+    access_token = newAccessTokens.access_token;
+    await updateTokens({ access_token, refresh_token, user });
+    res.send({ access_token, cloudId });
   } catch (error) {
     console.error(error);
     return res.send(error);
   }
-  let newAccessTokens = await updateTokensFromJira({
-    refresh_token: data.refresh_token,
-  });
-  const { access_token, refresh_token } = newAccessTokens;
-  await updateTokens({ access_token, refresh_token, user });
-  res.send({ access_token, cloudId: data.jira_id });
 }
