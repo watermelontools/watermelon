@@ -1,45 +1,19 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
-import Avatar from "./Avatar";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [website, setWebsite] = useState(null);
-  const [avatar_url, setAvatarUrl] = useState(null);
   const [DBJiraOrg, setDBJiraOrg] = useState(null);
-  useEffect(() => {
-    getProfile();
-  }, [session]);
+
   const [userId, setUserId] = useState(null);
   useEffect(() => {
     setUserId(supabase.auth.user().id);
     getJiraOrg();
   }, []);
-  async function getProfile() {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
 
-      let userProfile = await fetch("/api/user/getProfile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: supabase.auth.user().id,
-        }),
-      }).then((res) => res.json());
-      setUsername(userProfile.username);
-      setWebsite(userProfile.website);
-      setAvatarUrl(userProfile.profileImage);
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
   async function getJiraOrg() {
     try {
       fetch("/api/jira/getOrganization", {
@@ -61,32 +35,6 @@ export default function Account({ session }) {
         });
     } catch (error) {
       console.error(error);
-    }
-  }
-  async function updateProfile({ username, website, avatar_url }) {
-    try {
-      setLoading(true);
-      const user = supabase.auth.user();
-
-      const updates = {
-        id: user.id,
-        username,
-        website,
-        avatar_url,
-        updated_at: new Date(),
-      };
-
-      let { error } = await supabase.from("profiles").upsert(updates, {
-        returning: "minimal", // Don't return the value after inserting
-      });
-
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -114,23 +62,7 @@ export default function Account({ session }) {
           onChange={(e) => setWebsite(e.target.value)}
         />
       </div>
-      <Avatar
-        url={avatar_url}
-        size={150}
-        onUpload={(url) => {
-          setAvatarUrl(url);
-          updateProfile({ username, website, avatar_url: url });
-        }}
-      />
-      <div>
-        <button
-          className="button block primary"
-          onClick={() => updateProfile({ username, website, avatar_url })}
-          disabled={loading}
-        >
-          {loading ? "Loading ..." : "Update"}
-        </button>
-      </div>
+
       <div>
         {DBJiraOrg ? (
           <p>logged in to {DBJiraOrg} with Jira</p>
