@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         // jql: `assignee="${user}" AND status="Open" OR status="In Progress"`,
-        jql: `assignee="${user}"`,
+        jql: `assignee="${user} AND status="Open"`,
       }),
     }
   )
