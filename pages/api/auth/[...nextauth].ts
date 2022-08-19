@@ -29,7 +29,6 @@ export default NextAuth({
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
-      username: process.env.EMAIL_SERVER_USERNAME,
       from: process.env.EMAIL_FROM,
     }),
     GithubProvider({
