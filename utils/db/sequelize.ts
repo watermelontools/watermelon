@@ -13,8 +13,11 @@ const sequelize = new Sequelize(
       min: 0,
       idle: 10000,
     },
+    port: 1433,
     dialectOptions: {
       encrypt: true,
+      userName: process.env.AZURE_DATABASE_USERNAME,
+      password: process.env.AZURE_DATABASE_PASSWORD,
     },
     schema: "[dbo]",
   }
