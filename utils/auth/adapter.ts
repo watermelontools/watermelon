@@ -18,21 +18,21 @@ export default function MyAdapter(): Adapter {
     async getUser(id) {
       console.log("getUser", id);
       return await executeRequest(
-        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE id = '${id}';
+        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE id = '${id} FOR JSON PATH';
         `
       );
     },
     async getUserByEmail(email) {
       console.log("getUserByEmail", email);
       return await executeRequest(
-        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE email = '${email}';
+        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE email = '${email} FOR JSON PATH';
         `
       );
     },
     async getUserByAccount({ providerAccountId, provider }) {
       console.log("getUserByAccount", providerAccountId, provider);
       return await executeRequest(
-        `SELECT id, compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at FROM watermelon.dbo.accounts WHERE provider_account_id = '${providerAccountId}' AND provider_type = '${provider}';
+        `SELECT id, compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at FROM watermelon.dbo.accounts WHERE provider_account_id = '${providerAccountId}' AND provider_type = '${provider} FOR JSON PATH';
         `
       );
     },
@@ -68,7 +68,7 @@ export default function MyAdapter(): Adapter {
     async getSessionAndUser(sessionToken) {
       console.log("getSessionAndUser", sessionToken);
       return await executeRequest(
-        `SELECT id, user_id, expires, session_token, token, created_at, updated_at FROM watermelon.dbo.sessions WHERE session_token = '${sessionToken}';
+        `SELECT id, user_id, expires, session_token, token, created_at, updated_at FROM watermelon.dbo.sessions WHERE session_token = '${sessionToken}' FOR JSON PATH;
         `
       );
     },
@@ -93,7 +93,7 @@ export default function MyAdapter(): Adapter {
     async useVerificationToken({ identifier, token }) {
       console.log("useVerificationToken", identifier, token);
       return await executeRequest(
-        `SELECT id, identifier, token, expires, created_at, updated_at FROM watermelon.dbo.verification_tokens WHERE identifier = '${identifier}' AND token = '${token}';
+        `SELECT id, identifier, token, expires, created_at, updated_at FROM watermelon.dbo.verification_tokens WHERE identifier = '${identifier}' AND token = '${token}' FOR JSON PATH;
         `
       );
     },
