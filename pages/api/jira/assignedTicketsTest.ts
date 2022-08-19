@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         jql: `assignee = ${user}`,
         fields: ["summary", "status", "assignee", "created", "updated"],
+        status: ["open"]
       }),
     }
   )
