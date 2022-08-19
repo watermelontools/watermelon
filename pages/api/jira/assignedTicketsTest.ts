@@ -17,15 +17,15 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `assignee = ${user}`,
-        fields: ["summary", "status", "assignee", "created", "updated"],
+        jql: `assignee = ${user} AND status="In Progress"`,
+        // fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
   )
     .then((res) => res.json())
     .then((resJson) => {
       console.log("resJson: ", resJson);
-      returnVal = resJson;
+      returnVal = resJson.issues;
     });
   return res.send(returnVal);
 }
