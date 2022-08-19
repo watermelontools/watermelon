@@ -1,7 +1,6 @@
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import getAPIAccessInfo from "../../../utils/db/jira/getAPIAccessInfo";
-import sequelize from "../../../utils/db/sequelize";
 
 export default async function handler(req, res) {
   let { user } = req.body;
@@ -10,8 +9,6 @@ export default async function handler(req, res) {
     return res.send({ error: "no user" });
   }
   try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
     let { refresh_token, access_token, cloudId } = (
       await getAPIAccessInfo(user)
     )[0];
