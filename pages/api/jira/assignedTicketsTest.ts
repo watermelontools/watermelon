@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => {
-      console.log("resJson: ", resJson.issues);
+      console.log("resJson: ", resJson);
       returnVal = resJson.issues;
     });
   return res.send(returnVal);
