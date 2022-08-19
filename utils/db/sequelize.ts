@@ -16,6 +16,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       encrypt: true,
     },
+    schema: "dbo",
   }
 );
 export default sequelize;
