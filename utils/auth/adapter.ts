@@ -25,14 +25,14 @@ export default function MyAdapter(): Adapter {
     async getUserByEmail(email) {
       console.log("getUserByEmail", email);
       return await executeRequest(
-        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE email = '${email} FOR JSON PATH';
+        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE email = '${email}' FOR JSON PATH;
         `
       );
     },
     async getUserByAccount({ providerAccountId, provider }) {
       console.log("getUserByAccount", providerAccountId, provider);
       return await executeRequest(
-        `SELECT id, compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at FROM watermelon.dbo.accounts WHERE provider_account_id = '${providerAccountId}' AND provider_type = '${provider} FOR JSON PATH';
+        `SELECT id, compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at FROM watermelon.dbo.accounts WHERE provider_account_id = '${providerAccountId}' AND provider_type = '${provider}' FOR JSON PATH';
         `
       );
     },
@@ -86,7 +86,7 @@ export default function MyAdapter(): Adapter {
     async createVerificationToken({ identifier, expires, token }) {
       console.log("createVerificationToken", identifier, expires, token);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.verification_tokens (identifier, token, expires, created_at, updated_at) VALUES('${identifier}', '${token}', '${expires}' getdate(), getdate());
+        `INSERT INTO watermelon.dbo.verification_tokens (identifier, token, expires, created_at, updated_at) VALUES('${identifier}', '${token}', '${expires}', getdate(), getdate());
         `
       );
     },
