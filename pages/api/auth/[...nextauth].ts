@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
+import SequelizeAdapter from "@next-auth/sequelize-adapter";
+import sequelize from "../../../utils/db/sequelize";
 export default NextAuth({
+  adapter: SequelizeAdapter(sequelize),
   // Configure one or more authentication providers
   providers: [
     EmailProvider({

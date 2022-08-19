@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@next-auth/sequelize-adapter": "^1.0.5",
     "@supabase/supabase-js": "^1.35.4",
     "airtable": "^0.11.0",
     "next": "latest",
@@ -22,6 +23,7 @@
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-select": "^4.3.0",
+    "sequelize": "^6.21.4",
     "tedious": "^15.0.1",
     "zlib": "^1.0.5"
   },
