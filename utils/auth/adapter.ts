@@ -86,7 +86,7 @@ export default function MyAdapter(): Adapter {
     async createVerificationToken({ identifier, expires, token }) {
       console.log("createVerificationToken", identifier, expires, token);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.verification_tokens (identifier, token, expires, created_at, updated_at) VALUES('', '', '', getdate(), getdate());
+        `INSERT INTO watermelon.dbo.verification_tokens (identifier, token, expires, created_at, updated_at) VALUES('${identifier}', '${token}', '${expires}' getdate(), getdate());
         `
       );
     },
