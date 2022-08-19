@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `assignee = ${user} AND status="Open" OR status="In Progress" OR status="To Do"`,
+        jql: `assignee = ${user} AND status="Open" OR status="In Progress"`,
       }),
     }
   )
