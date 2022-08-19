@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `assignee = ${user} AND status="Open"`,
+        jql: `assignee = ${user}`,
         fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     .then((res) => res.json())
     .then((resJson) => {
       console.log("resJson: ", resJson);
-      returnVal = resJson;
+      returnVal = resJson.issues;
     });
   return res.send(returnVal);
 }
