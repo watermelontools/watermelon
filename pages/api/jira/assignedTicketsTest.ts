@@ -18,13 +18,13 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         jql: `assignee = ${user}`,
-        fields: ["summary", "status", "assignee", "created", "updated"],
+        // fields: ["summary", "status", "assignee", "created", "updated"],
       }),
     }
   )
     .then((res) => res.json())
     .then((resJson) => {
-      console.log("resJson: ", resJson);
+      console.log("resJson: ", resJson.issues);
       returnVal = resJson.issues;
     });
   return res.send(returnVal);
