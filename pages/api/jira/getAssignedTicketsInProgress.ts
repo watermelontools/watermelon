@@ -1,4 +1,4 @@
-import getMetadata from './getMetadata';
+import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 
 export default async function handler(req, res) {
   let { cloudId, user, access_token } = req.body;
@@ -8,12 +8,8 @@ export default async function handler(req, res) {
 
   // .user_id and user_email is what we need
   // get metadata from getMetadata.ts
-  let retrievedMetadata = await getMetadata(req, res).then(metadata => {
-    return metadata;
-  }).catch(err => {
-    return err;
-  })
-  console.log("metadata - getAssignedTicketsInProgress.ts", retrievedMetadata);
+  let getJira = await getJiraOrganization(user);
+  console.log("getJira - getAssignedTicketsInProgress.ts", getJira);
 
 
   let returnVal;
