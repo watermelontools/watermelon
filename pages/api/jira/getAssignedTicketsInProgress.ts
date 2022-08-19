@@ -8,8 +8,12 @@ export default async function handler(req, res) {
 
   // .user_id and user_email is what we need
   // get metadata from getMetadata.ts
-  let metadata = await getMetadata(req, res);
-  console.log("metadata - getAssignedTicketsInProgress.ts", metadata);
+  let retrievedMetadata = await getMetadata(req, res).then(metadata => {
+    return metadata;
+  }).catch(err => {
+    return err;
+  })
+  console.log("metadata - getAssignedTicketsInProgress.ts", retrievedMetadata);
 
 
   let returnVal;
