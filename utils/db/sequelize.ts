@@ -16,7 +16,7 @@ const sequelize = new Sequelize(
     dialectOptions: {
       encrypt: true,
     },
-    schema: "[watermelon].[dbo]",
+    schema: "[dbo]",
   }
 );
 export default sequelize;
