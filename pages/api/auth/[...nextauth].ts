@@ -5,6 +5,7 @@ import SequelizeAdapter from "@next-auth/sequelize-adapter";
 import sequelize from "../../../utils/db/sequelize";
 export default NextAuth({
   adapter: SequelizeAdapter(sequelize),
+  debug: true,
   // Configure one or more authentication providers
   providers: [
     EmailProvider({
