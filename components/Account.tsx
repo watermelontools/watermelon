@@ -16,7 +16,7 @@ export default function Account({ session }) {
 
   async function getJiraOrg() {
     try {
-      fetch("/api/jira/getOrganization", {
+      fetch("/api/jira/getMetadata", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
