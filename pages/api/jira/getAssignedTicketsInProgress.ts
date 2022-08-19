@@ -1,5 +1,18 @@
+import getJiraOrganization from "../../../utils/db/jira/getOrganization";
+
 export default async function handler(req, res) {
-  let { user, cloudId, access_token } = req.body;
+  let { cloudId, user, access_token } = req.body;
+  // get access_token from getToken.ts
+  // let access_token = await getToken(req.body.refresh_token);
+  // get cloudID and user from getJirgaOrganization.ts
+
+  await getJiraOrganization(access_token).then(organization => {
+    console.log("returned organization: ", organization);
+    return res.send(organization);
+  }).catch(err => {
+    return res.send({ error: err });
+  })
+
   let returnVal;
   if (!cloudId) {
     res.send({ error: "no cloudId" });
@@ -17,7 +30,6 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        // jql: `assignee="${user}" AND status="Open" OR status="In Progress"`,
         jql: `assignee="${user}" AND status not in (Backlog, Done)`,
       }),
     }
