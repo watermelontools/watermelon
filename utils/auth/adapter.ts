@@ -86,14 +86,14 @@ export default function MyAdapter(): Adapter {
     async createVerificationToken({ identifier, expires, token }) {
       console.log("createVerificationToken", identifier, expires, token);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.verification_tokens (identifier, token, expires, created_at, updated_at) VALUES('${identifier}', '${token}', '${expires}', getdate(), getdate());
+        `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${expires}', @token = '${token}';
         `
       );
     },
     async useVerificationToken({ identifier, token }) {
       console.log("useVerificationToken", identifier, token);
       return await executeRequest(
-        `SELECT id, identifier, token, expires, created_at, updated_at FROM watermelon.dbo.verification_tokens WHERE identifier = '${identifier}' AND token = '${token}' FOR JSON PATH;
+        `EXEC [dbo].[delete_verification_token] @identifier = '${identifier}', @token = '${token}';
         `
       );
     },
