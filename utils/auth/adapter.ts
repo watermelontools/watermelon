@@ -39,7 +39,7 @@ export default function MyAdapter(): Adapter {
     async updateUser(user) {
       console.log("updateUser", user);
       return await executeRequest(
-        `UPDATE watermelon.dbo.users SET id='', name='', email='', email_verified='', [image]='', created_at=getdate(), updated_at=getdate() WHERE id = '${user.id}';
+        `EXEC [dbo].[update_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}', @emailVerified = '${user.emailVerified}';
         `
       );
     },
