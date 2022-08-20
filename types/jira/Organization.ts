@@ -11,4 +11,6 @@ export type Organization = {
   access_token: string;
   refresh_token: string;
   scopes: string[];
+  jira_id: string;
+  user_email: string;
 };
