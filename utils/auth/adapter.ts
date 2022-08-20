@@ -18,7 +18,7 @@ export default function MyAdapter(): Adapter {
     async getUser(id) {
       console.log("getUser", id);
       return await executeRequest(
-        `SELECT id, name, email, email_verified, [image], created_at, updated_at FROM watermelon.dbo.users WHERE id = '${id} FOR JSON PATH';
+        `EXEC [dbo].[get_user] @id = '${id}';
         `
       );
     },
