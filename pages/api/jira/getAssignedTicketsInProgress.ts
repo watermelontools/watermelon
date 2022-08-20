@@ -2,13 +2,14 @@ import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "./getToken";
 
 export default async function handler(req, res) {
-  console.log("req.body - getAssignedTicketsInProgress", req.body);
   let { user } = req.body.user;
-  
-  // get token from getToken.ts
-  let access_token = await getToken(req, res).then(token => token);
-  console.log("access_token - getAssignedTicketsInProgress.ts", access_token);
 
+  // get token from getToken.ts
+  let access_token = await getToken(req, res)
+    .then(token => token.access_token)
+    .catch(error => {console.error(error); return error});
+
+  console.log("retrieved access token - getAssignedTicketsInProgress", access_token);
   let {jira_id, user_email} = await getJiraOrganization(user);
 
   let returnVal;
@@ -34,7 +35,6 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => {
-      console.log("resJson: ", resJson);
       returnVal = resJson.issues;
     });
   return res.send(returnVal);
