@@ -61,7 +61,7 @@ export default function MyAdapter(): Adapter {
     async createSession({ sessionToken, userId, expires }) {
       console.log("createSession", sessionToken, userId, expires);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.sessions (id, user_id, expires, session_token, token, created_at, updated_at) VALUES('', '', '', '', '', getdate(), getdate());
+        `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${expires}';
         `
       );
     },
