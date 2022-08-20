@@ -11,7 +11,7 @@ export default function MyAdapter(): Adapter {
     async createUser(user) {
       console.log("createUser", user);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.users (id, name, email, email_verified, [image]) VALUES('${user.id}', '${user.name}', '${user.email}', '${user.emailVerified}', '', getdate(), getdate());
+        `EXEC [dbo].[create_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}, @emailVerified = '${user.emailVerified}'';
         `
       );
     },
