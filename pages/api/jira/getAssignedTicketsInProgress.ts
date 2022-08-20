@@ -2,7 +2,6 @@ import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "./getToken";
 
 export default async function handler(req, res) {
-  console.log("req.body - getAssignedTicketsInProgress", req.body);
   let { user } = req.body.user;
 
   // get token from getToken.ts
@@ -36,7 +35,6 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => {
-      console.log("resJson: ", resJson);
       returnVal = resJson.issues;
     });
   return res.send(returnVal);
