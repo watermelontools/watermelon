@@ -2,7 +2,7 @@ import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "./getToken";
 
 export default async function handler(req, res) {
-  let { user } = req.body;
+  let user = req.body.user;
 
   // get token from getToken.ts
   let access_token = await getToken(user, res).then(token => token);
