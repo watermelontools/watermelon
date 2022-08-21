@@ -5,5 +5,6 @@ export default async function handler(req, res) {
   if (!user) {
     return res.send({ error: "getToken.ts - no user" });
   }
-  return await refreshTokens({ user });
+  let response = await refreshTokens({ user });
+  return res.send(response);
 }
