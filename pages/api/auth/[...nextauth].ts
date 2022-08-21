@@ -1,19 +1,8 @@
 import NextAuth from "next-auth";
 import EmailProvider from "next-auth/providers/email";
 import GithubProvider from "next-auth/providers/github";
-import SequelizeAdapter from "@next-auth/sequelize-adapter";
-import sequelize from "../../../utils/db/sequelize";
 import MyAdapter from "../../../utils/auth/adapter";
 
-const test = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-};
-test();
 export default NextAuth({
   adapter: MyAdapter(),
   debug: true,
