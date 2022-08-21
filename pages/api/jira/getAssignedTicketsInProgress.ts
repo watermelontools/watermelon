@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   // get token from getToken.ts
   let access_token = await getToken(req, res)
-    .then(token => token.access_token)
+    .then(token => {return token.access_token})
     .catch(error => {console.error(error); return error});
 
   console.log("retrieved access token - getAssignedTicketsInProgress", access_token);
