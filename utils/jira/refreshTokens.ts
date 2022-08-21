@@ -4,9 +4,7 @@ import getAPIAccessInfo from "../db/jira/getAPIAccessInfo";
 
 export default async ({ user }) => {
   try {
-    let { refresh_token, access_token, cloudId } = (
-      await getAPIAccessInfo(user)
-    )[0];
+    let { refresh_token, access_token, cloudId } = await getAPIAccessInfo(user);
     let newAccessTokens = await updateTokensFromJira({
       refresh_token: refresh_token,
     });
