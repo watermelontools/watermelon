@@ -8,8 +8,9 @@ export default async function handler(req, res) {
     return res.send({ error: "no user" });
   }
 
-  let { access_token, cloudId } = await getToken({ user });
-
+  let tokex = await getToken({ user });
+  console.log(tokex);
+  let access_token = tokex.access_token;
   let { jira_id, user_email } = await getJiraOrganization(user);
 
   if (!jira_id) {
