@@ -3,6 +3,7 @@ import getToken from "./getToken";
 
 export default async function handler(req, res) {
   let { user } = req.body.user;
+  let access_token = "";
 
     await fetch(
       `https://app.watermelon.tools/api/jira/getToken`,
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
         res.json();
     }).then((data) => {
       console.log("line 25 data: " + data);
-        access_token = data;
+        this.access_token = data;
     }).catch((error) => {
         console.error(error);
     })
