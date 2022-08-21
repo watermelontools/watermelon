@@ -11,14 +11,15 @@ export default async function handler(req, res) {
   let tokex = await getToken({ user });
   console.log(tokex);
   let access_token = tokex.access_token;
-  let { jira_id, user_email } = await getJiraOrganization(user);
-
-  if (!jira_id) {
-    res.send({ error: "no Jira cloudId" });
-  }
   if (!access_token) {
     res.send({ error: "no access_token" });
   }
+
+  let { jira_id, user_email } = await getJiraOrganization(user);
+  if (!jira_id) {
+    res.send({ error: "no Jira cloudId" });
+  }
+
   let returnVal = await fetch(
     `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
     {
