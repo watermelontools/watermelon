@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "../utils/supabase";
+import LogInBtn from "../components/login-btn";
 
 export default function Account({ session }) {
   const [loading, setLoading] = useState(true);
@@ -85,6 +86,7 @@ export default function Account({ session }) {
           Sign Out
         </button>
       </div>
+      <LogInBtn />
     </div>
   );
 }
