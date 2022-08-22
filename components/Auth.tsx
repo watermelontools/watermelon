@@ -1,6 +1,6 @@
 import { supabase } from "../utils/supabase";
 import { useState } from "react";
-
+import LogInBtn from "../components/login-btn";
 export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -47,6 +47,7 @@ export default function Auth() {
           </button>
         </div>
       </div>
+      <LogInBtn />
     </div>
   );
 }
