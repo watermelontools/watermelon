@@ -74,7 +74,7 @@ export default function MyAdapter(): Adapter {
     async linkAccount(account) {
       console.log("linkAccount", account);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.accounts (compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at) VALUES('${account.compoundId}', '${account.userId}', '${account.provider}', '${account.providerAccountId}', '${account.refreshToken}', '${account.accessToken}', '${account.accessTokenExpires}', '${account.createdAt}', '${account.updatedAt}');
+        `INSERT INTO watermelon.dbo.accounts ( user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires) VALUES('${account.userId}', '${account.provider}', '${account.providerAccountId}', '${account.refreshToken}', '${account.accessToken}', '${account.accessTokenExpires}');
         `
       );
     },
@@ -98,10 +98,10 @@ export default function MyAdapter(): Adapter {
         `
       );
     },
-    async updateSession({ sessionToken }) {
+    async updateSession({ sessionToken, userId, expires }) {
       console.log("updateSession", sessionToken);
       return await executeRequest(
-        `UPDATE watermelon.dbo.sessions SET id='', user_id='', expires='', session_token='', token='', created_at=getdate(), updated_at=getdate();
+        `UPDATE watermelon.dbo.sessions SET  user_id='${userId}', expires='${expires}', session_token='${sessionToken}' WHERE session_token='${sessionToken}';
         `
       );
     },
