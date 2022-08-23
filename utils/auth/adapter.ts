@@ -35,7 +35,7 @@ export default function MyAdapter(): Adapter {
       if (!userData.email) {
         console.log("getUserByEmail", email, "not found");
         return await executeRequest(
-          `EXEC [dbo].[create_user] @email = '${email}', @name = '${null}, @emailVerified = '${Date.now()}';}'';
+          `EXEC [dbo].[create_user] @email = '${email}', @name = '${null}', @emailVerified = '${Date.now()}';
           `
         );
       }
