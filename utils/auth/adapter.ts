@@ -11,7 +11,11 @@ export default function MyAdapter(): Adapter {
     async createUser(user) {
       console.log("createUser", user);
       return await executeRequest(
-        `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${user.name}, @emailVerified = '${user.emailVerified}'';
+        `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${
+          user.name
+        }, @emailVerified = '${new Date(
+          user.emailVerified as string
+        ).toISOString()}'';
         `
       );
     },
@@ -81,7 +85,9 @@ export default function MyAdapter(): Adapter {
     async createSession({ sessionToken, userId, expires }) {
       console.log("createSession", sessionToken, userId, expires);
       return await executeRequest(
-        `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${expires}';
+        `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
+          expires
+        ).toISOString()}';
         `
       );
     },
@@ -106,7 +112,9 @@ export default function MyAdapter(): Adapter {
     async createVerificationToken({ identifier, expires, token }) {
       console.log("createVerificationToken", identifier, expires, token);
       return await executeRequest(
-        `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${expires}', @token = '${token}';
+        `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${new Date(
+          expires
+        ).toISOString()}', @token = '${token}';
         `
       );
     },
