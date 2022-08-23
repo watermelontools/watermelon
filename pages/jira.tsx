@@ -95,7 +95,7 @@ export async function getServerSideProps(context) {
       url: orgInfoJson[0].url,
       org_avatar_url: orgInfoJson[0].avatarUrl,
       scopes: orgInfoJson[0].scopes,
-      user: context.query.state,
+      watermelon_user: context.query.state,
       user_email: userInfoJson.emailAddress,
       user_avatar_url: userInfoJson.avatarUrls["48x48"],
       user_id: userInfoJson.accountId,
