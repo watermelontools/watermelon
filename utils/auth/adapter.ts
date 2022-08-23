@@ -32,7 +32,7 @@ export default function MyAdapter(): Adapter {
         `EXEC [dbo].[get_user_by_email] @email = '${email}';
         `
       );
-      if (!userData.email) {
+      if (!userData.email && email) {
         console.log("getUserByEmail", email, "not found");
         return await executeRequest(
           `EXEC [dbo].[create_user] @email = '${email}', @name = '${null}', @emailVerified = '${Date.now()}';
