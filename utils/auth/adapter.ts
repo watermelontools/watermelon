@@ -11,7 +11,7 @@ export default function MyAdapter(): Adapter {
     async createUser(user) {
       console.log("createUser", user);
       return await executeRequest(
-        `EXEC [dbo].[create_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}, @emailVerified = '${user.emailVerified}'';
+        `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${user.name}, @emailVerified = '${user.emailVerified}'';
         `
       );
     },
@@ -34,9 +34,12 @@ export default function MyAdapter(): Adapter {
       );
       if (!userData.email) {
         console.log("getUserByEmail", email, "not found");
-        return null;
+        return await executeRequest(
+          `EXEC [dbo].[create_user] @email = '${email}', @name = '${null}, @emailVerified = '${Date.now()}';}'';
+          `
+        );
       }
-      console.log("getUserByEmail", email, "FONUND");
+      console.log("getUserByEmail", email, "FOUND");
       return userData;
     },
     async getUserByAccount({ providerAccountId, provider }) {
