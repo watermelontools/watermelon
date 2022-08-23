@@ -74,7 +74,7 @@ export default function MyAdapter(): Adapter {
     async linkAccount(account) {
       console.log("linkAccount", account);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.accounts ( user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires) VALUES('${account.userId}', '${account.provider}', '${account.providerAccountId}', '${account.refreshToken}', '${account.accessToken}', '${account.accessTokenExpires}');
+        `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';
         `
       );
     },
