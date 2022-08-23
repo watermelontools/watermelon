@@ -17,24 +17,36 @@ export default function MyAdapter(): Adapter {
     },
     async getUser(id) {
       console.log("getUser", id);
-      return await executeRequest(
+      let userData = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${id}';
         `
       );
+      if (!userData.email) {
+        return null;
+      }
+      return userData;
     },
     async getUserByEmail(email) {
       console.log("getUserByEmail", email);
-      return await executeRequest(
+      let userData = await executeRequest(
         `EXEC [dbo].[get_user_by_email] @email = '${email}';
         `
       );
+      if (!userData.email) {
+        return null;
+      }
+      return userData;
     },
     async getUserByAccount({ providerAccountId, provider }) {
       console.log("getUserByAccount", providerAccountId, provider);
-      return await executeRequest(
+      let userData = await executeRequest(
         `EXEC [dbo].[get_user_by_account] @providerAccountId = '${providerAccountId}', @provider = '${provider}';
         `
       );
+      if (!userData.email) {
+        return null;
+      }
+      return userData;
     },
     async updateUser(user) {
       console.log("updateUser", user);
