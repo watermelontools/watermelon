@@ -55,6 +55,9 @@ export default function MyAdapter(): Adapter {
     },
     async updateUser(user) {
       console.log("updateUser", user);
+      if (!user.emailVerified || !user.email) {
+        return null;
+      }
       return await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}', @emailVerified = '${user.emailVerified}';
         `
