@@ -8,9 +8,8 @@ import type {
 /** @return { import("next-auth/adapters").Adapter } */
 export default function MyAdapter(): Adapter {
   return {
-    async createUser(user, options) {
+    async createUser(user) {
       console.log("createUser", user);
-      console.log("options", options);
       return await executeRequest(
         `EXEC [dbo].[create_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}, @emailVerified = '${user.emailVerified}'';
         `
