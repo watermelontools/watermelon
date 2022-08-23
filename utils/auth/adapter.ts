@@ -33,8 +33,10 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
+        console.log("getUserByEmail", email, "not found");
         return null;
       }
+      console.log("getUserByEmail", email, "FONUND");
       return userData;
     },
     async getUserByAccount({ providerAccountId, provider }) {
