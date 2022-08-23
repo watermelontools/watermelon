@@ -74,7 +74,7 @@ export default function MyAdapter(): Adapter {
     async linkAccount(account) {
       console.log("linkAccount", account);
       return await executeRequest(
-        `INSERT INTO watermelon.dbo.accounts (compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at) VALUES('', 0, '', '', '', '', '', '', getdate(), getdate());
+        `INSERT INTO watermelon.dbo.accounts (compound_id, user_id, provider_type, provider_id, provider_account_id, refresh_token, access_token, access_token_expires, created_at, updated_at) VALUES('${account.compoundId}', '${account.userId}', '${account.provider}', '${account.providerAccountId}', '${account.refreshToken}', '${account.accessToken}', '${account.accessTokenExpires}', '${account.createdAt}', '${account.updatedAt}');
         `
       );
     },
