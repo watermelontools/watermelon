@@ -15,7 +15,7 @@ export default function MyAdapter(): Adapter {
           user.name
         }, @emailVerified = '${new Date(
           user.emailVerified as string
-        ).toISOString()}'';
+        ).toISOString()}';
         `
       );
     },
