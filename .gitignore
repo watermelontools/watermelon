@@ -12,3 +12,4 @@ localhost-key.pem
 next-env.d.ts
 next-env.d.ts
 yarn.lock
+.vercel

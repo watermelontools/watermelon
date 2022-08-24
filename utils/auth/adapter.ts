@@ -7,6 +7,10 @@ import type {
 } from "next-auth/adapters";
 import { Account } from "next-auth";
 /** @return { import("next-auth/adapters").Adapter } */
+function makeISO(date: string | Date) {
+  return new Date(date).toISOString();
+}
+
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
@@ -14,9 +18,7 @@ export default function MyAdapter(): Adapter {
       return await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${
           user.name
-        }, @emailVerified = '${new Date(
-          user.emailVerified as string
-        ).toISOString()}';
+        }, @emailVerified = '${makeISO(user.emailVerified as string)}'}';
         `
       );
     },
@@ -63,13 +65,20 @@ export default function MyAdapter(): Adapter {
     },
     async updateUser(user): Promise<AdapterUser> {
       console.log("updateUser", user);
-      if (!user.emailVerified || !user.email) {
+      if (!user.emailVerified || !user.id) {
         return null;
       }
-      return await executeRequest(
-        `EXEC [dbo].[update_user] @id = '${user.id}', @email = '${user.email}', @name = '${user.name}', @emailVerified = '${user.emailVerified}';
+      let updatedUser = await executeRequest(
+        `EXEC [dbo].[update_user] @id = '${user.id}', ${
+          user.email ? `@email = '${user.email}',` : ""
+        } ${
+          user.name ? `@name = '${user.name}',` : ""
+        } @emailVerified = '${makeISO(user.emailVerified)}';
         `
       );
+      console.log("updateUser from DB", updatedUser);
+      console.log(updatedUser);
+      return updatedUser;
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
@@ -92,21 +101,44 @@ export default function MyAdapter(): Adapter {
       expires,
     }): Promise<AdapterSession> {
       console.log("createSession", sessionToken, userId, expires);
-      return await executeRequest(
+      let createdSession = await executeRequest(
         `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
         ).toISOString()}';
         `
       );
+      return {
+        id: createdSession.id,
+        sessionToken: createdSession.session_token,
+        userId: createdSession.user_id,
+        expires: new Date(createdSession.expires),
+      };
     },
     async getSessionAndUser(
       sessionToken
     ): Promise<{ session: AdapterSession; user: AdapterUser }> {
       console.log("getSessionAndUser", sessionToken);
-      return await executeRequest(
-        `SELECT id, user_id, expires, session_token, token, created_at, updated_at FROM watermelon.dbo.sessions WHERE session_token = '${sessionToken}' FOR JSON PATH;
+      let fetchedSession = await executeRequest(
+        `EXEC [dbo].[get_session] @sessionToken = '${sessionToken}';
         `
       );
+      let fetchedUser = await executeRequest(
+        `EXEC [dbo].[get_user] @id = '${fetchedSession.user_id}';`
+      );
+      return {
+        session: {
+          id: fetchedSession.id,
+          sessionToken: fetchedSession.session_token,
+          userId: fetchedSession.user_id,
+          expires: new Date(fetchedSession.expires),
+        },
+        user: {
+          id: fetchedUser.id,
+          name: fetchedUser.name,
+          email: fetchedUser.email,
+          emailVerified: new Date(fetchedUser.email_verified),
+        },
+      };
     },
     async updateSession({
       sessionToken,
@@ -114,12 +146,18 @@ export default function MyAdapter(): Adapter {
       expires,
     }): Promise<AdapterSession> {
       console.log("updateSession", sessionToken);
-      return await executeRequest(
+      let updatedSession = await executeRequest(
         `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
         ).toISOString()}';
         `
       );
+      return {
+        id: updatedSession.id,
+        sessionToken: updatedSession.session_token,
+        userId: updatedSession.user_id,
+        expires: new Date(updatedSession.expires),
+      };
     },
     async deleteSession(sessionToken): Promise<AdapterSession> {
       console.log("deleteSession", sessionToken);
