@@ -45,23 +45,25 @@ export default function MyAdapter(): Adapter {
       };
     },
     async getUserByEmail(email): Promise<AdapterUser> {
-      console.log("getUserByEmail", email);
       let userData = await executeRequest(
         `EXEC [dbo].[get_user_by_email] @email = '${email}';
         `
       );
       if (!userData.email) {
-        console.log("getUserByEmail", email, "not found");
         return null;
       }
-      console.log("getUserByEmail", email, "FOUND");
-      return userData;
+      return {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        emailVerified: userData.emailVerified,
+        image: userData.image,
+      };
     },
     async getUserByAccount({
       providerAccountId,
       provider,
     }): Promise<AdapterUser> {
-      console.log("getUserByAccount", providerAccountId, provider);
       let userData = await executeRequest(
         `EXEC [dbo].[get_user_by_account] @providerAccountId = '${providerAccountId}', @provider = '${provider}';
         `
@@ -72,7 +74,6 @@ export default function MyAdapter(): Adapter {
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
-      console.log("updateUser", user);
       if (!user.emailVerified || !user.id) {
         return null;
       }
@@ -84,16 +85,19 @@ export default function MyAdapter(): Adapter {
         } @emailVerified = '${makeISO(user.emailVerified)}';
         `
       );
-      console.log("updateUser from DB", updatedUser);
-      console.log(updatedUser);
-      return updatedUser;
+      return {
+        id: updatedUser.id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        emailVerified: updatedUser.emailVerified,
+        image: updatedUser.image,
+      };
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
       return;
     },
     async linkAccount(account): Promise<Account> {
-      console.log("linkAccount", account);
       return await executeRequest(
         `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';
         `
@@ -108,7 +112,6 @@ export default function MyAdapter(): Adapter {
       userId,
       expires,
     }): Promise<AdapterSession> {
-      console.log("createSession", sessionToken, userId, expires);
       let createdSession = await executeRequest(
         `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
@@ -125,7 +128,6 @@ export default function MyAdapter(): Adapter {
     async getSessionAndUser(
       sessionToken
     ): Promise<{ session: AdapterSession; user: AdapterUser }> {
-      console.log("getSessionAndUser", sessionToken);
       let fetchedSession = await executeRequest(
         `EXEC [dbo].[get_session] @sessionToken = '${sessionToken}';
         `
@@ -153,7 +155,6 @@ export default function MyAdapter(): Adapter {
       userId,
       expires,
     }): Promise<AdapterSession> {
-      console.log("updateSession", sessionToken);
       let updatedSession = await executeRequest(
         `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
@@ -184,7 +185,6 @@ export default function MyAdapter(): Adapter {
       expires,
       token,
     }): Promise<VerificationToken> {
-      console.log("createVerificationToken", identifier, expires, token);
       return await executeRequest(
         `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${new Date(
           expires
@@ -196,7 +196,6 @@ export default function MyAdapter(): Adapter {
       identifier,
       token,
     }): Promise<VerificationToken> {
-      console.log("useVerificationToken", identifier, token);
       return await executeRequest(
         `EXEC [dbo].[delete_verification_token] @identifier = '${identifier}', @token = '${token}';
         `
