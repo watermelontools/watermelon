@@ -15,9 +15,9 @@ export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
       let createdUser = await executeRequest(
-        `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${
-          user.name
-        }, @emailVerified = '${makeISO(user.emailVerified as string)}'}';
+        `EXEC [dbo].[create_user] @email = '${user.email}',${
+          user.name ? ` @name = '${user.name}',` : ""
+        } @emailVerified = '${makeISO(user.emailVerified as string)}';
         `
       );
       return {
@@ -50,12 +50,9 @@ export default function MyAdapter(): Adapter {
         `EXEC [dbo].[get_user_by_email] @email = '${email}';
         `
       );
-      if (!userData.email && email) {
+      if (!userData.email) {
         console.log("getUserByEmail", email, "not found");
-        return await executeRequest(
-          `EXEC [dbo].[create_user] @email = '${email}', @name = '${null}', @emailVerified = '${new Date().toISOString()}';
-          `
-        );
+        return null;
       }
       console.log("getUserByEmail", email, "FOUND");
       return userData;
