@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `status='Done' AND text ~ ${parsed_pr_title}`,
+        jql: `status='Done' AND text ~ "${parsed_pr_title}"`,
       }),
     }
   )
