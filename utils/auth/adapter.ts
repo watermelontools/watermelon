@@ -160,8 +160,16 @@ export default function MyAdapter(): Adapter {
       };
     },
     async deleteSession(sessionToken): Promise<AdapterSession> {
-      console.log("deleteSession", sessionToken);
-      return;
+      let deletedSession = await executeRequest(
+        `EXEC [dbo].[delete_session] @sessionToken = '${sessionToken}';
+        `
+      );
+      return {
+        id: deletedSession.id,
+        sessionToken: deletedSession.session_token,
+        userId: deletedSession.user_id,
+        expires: new Date(deletedSession.expires),
+      };
     },
     async createVerificationToken({
       identifier,
