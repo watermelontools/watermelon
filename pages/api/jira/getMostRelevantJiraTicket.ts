@@ -5,7 +5,9 @@ export default async function handler(req, res) {
   let { user, pr_title} = req.body;
 
   // Remove stopwords to provide better search results
-  let stopwords = ['add', 'remove', 'delete', 'get', 'as', 'at', 'he', 'the', 'was', 'from', 'and'];
+  let stopwords = ['add', 'get', 'as', 'at', 'he', 'the', 'was', 'from', 'and', 'or'];
+  // trim pr_title
+  pr_title = pr_title.trim();
   pr_title = pr_title.split(' ').filter(word => !stopwords.includes(word.toLowerCase())).join(' ');
   // Add an OR clause to make the search query more flexible
   let split_pr_title = pr_title.split(" ");
@@ -35,7 +37,6 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        query: pr_title,
         jql: `status='Done' AND text ~ ${parsed_pr_title}`,
       }),
     }
