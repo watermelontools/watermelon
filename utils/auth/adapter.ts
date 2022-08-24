@@ -14,16 +14,21 @@ function makeISO(date: string | Date) {
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
-      console.log("createUser", user);
-      return await executeRequest(
+      let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}', @name = '${
           user.name
         }, @emailVerified = '${makeISO(user.emailVerified as string)}'}';
         `
       );
+      return {
+        id: createdUser.id,
+        name: createdUser.name,
+        email: createdUser.email,
+        emailVerified: createdUser.emailVerified,
+        image: createdUser.image,
+      };
     },
     async getUser(id): Promise<AdapterUser> {
-      console.log("getUser", id);
       let userData = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${id}';
         `
@@ -31,7 +36,13 @@ export default function MyAdapter(): Adapter {
       if (!userData.email) {
         return null;
       }
-      return userData;
+      return {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        emailVerified: userData.emailVerified,
+        image: userData.image,
+      };
     },
     async getUserByEmail(email): Promise<AdapterUser> {
       console.log("getUserByEmail", email);
