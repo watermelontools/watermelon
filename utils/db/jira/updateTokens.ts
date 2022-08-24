@@ -9,8 +9,10 @@ export default async function updateTokens({
   access_token: string;
   refresh_token: string;
 }): Promise<void> {
-  let query = `EXEC dbo.update_jira_tokens  @user='${user}', @access_token='${access_token}', @refresh_token='${refresh_token}'`;
-  let resp = await executeRequest(query);
-  console.log("updateTokens", resp);
-  return resp;
+  if (!user || !access_token || !refresh_token) {
+    let query = `EXEC dbo.update_jira_tokens  @user='${user}', @access_token='${access_token}', @refresh_token='${refresh_token}'`;
+    let resp = await executeRequest(query);
+    console.log("updateTokens", resp);
+    return resp;
+  }
 }
