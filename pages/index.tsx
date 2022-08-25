@@ -30,7 +30,7 @@ function HomePage({ organization }) {
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
       <LogInBtn />
-      {userData.organization ? (
+      {userData?.organization ? (
         <div>
           <p> Logged into {userData.organization}</p>
           <img src={userData.org_avatar_url} />
