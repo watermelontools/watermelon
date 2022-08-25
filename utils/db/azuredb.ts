@@ -1,6 +1,6 @@
 const executeRequest = async (query) => {
   const queryString = JSON.stringify({ query: query });
-  let resp = await fetch("https://watermelonbackend.azurewebsites.net/users", {
+  let resp = await fetch(process.env.AZURE_WEBAPP_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

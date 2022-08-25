@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   let { query } = req.body;
   let queryString = JSON.stringify({ query: query });
-  let resp = await fetch("https://watermelonbackend.azurewebsites.net/users", {
+  let resp = await fetch(process.env.AZURE_WEBAPP_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
