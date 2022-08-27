@@ -30,22 +30,26 @@ function HomePage({ organization }) {
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
       <LogInBtn />
-      {userData?.organization && userEmail ? (
+      {userEmail && (
         <div>
-          <p> Logged into {userData.organization}</p>
-          <img src={userData.org_avatar_url} />
-          <div>
-            <img src={userData.user_avatar_url} />
-            <p>Your Jira email:{userData.user_email} </p>
-            <p>Your Jira name: {userData.user_displayname}</p>
-          </div>
+          {userData?.organization ? (
+            <div>
+              <p> Logged into {userData.organization}</p>
+              <img src={userData.org_avatar_url} />
+              <div>
+                <img src={userData.user_avatar_url} />
+                <p>Your Jira email:{userData.user_email} </p>
+                <p>Your Jira name: {userData.user_displayname}</p>
+              </div>
+            </div>
+          ) : (
+            <Link
+              href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelontools.com/jira&state=${userEmail}&response_type=code&prompt=consent`}
+            >
+              <a className="button block">Login to Jira</a>
+            </Link>
+          )}{" "}
         </div>
-      ) : (
-        <Link
-          href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelontools.com/jira&state=${userEmail}&response_type=code&prompt=consent`}
-        >
-          <a className="button block">Login to Jira</a>
-        </Link>
       )}
     </div>
   );
