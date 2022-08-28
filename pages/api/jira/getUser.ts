@@ -5,6 +5,6 @@ export default async function handler(req, res) {
   if (!user) {
     return res.send({ error: "no user" });
   }
-  let organization = await getUser(user);
-  return res.send(organization);
+  let dbUser = await getUser(user);
+  return res.send(dbUser);
 }
