@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import LogInBtn from "../components/login-btn";
 
-function HomePage({ organization }) {
+function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [userData, setUserData] = useState(null);
   const { data: session } = useSession();
