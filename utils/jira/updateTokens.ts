@@ -14,8 +14,11 @@ export default async function updateTokens({
       client_secret: process.env.JIRA_CLIENT_SECRET,
       refresh_token: refresh_token,
     }),
-  }).then((response) => response.json());
-  console.log(newAccessTokens);
+  })
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error(error);
+    });
   return {
     access_token: newAccessTokens.access_token,
     refresh_token: newAccessTokens.refresh_token,

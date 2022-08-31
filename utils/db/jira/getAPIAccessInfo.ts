@@ -4,8 +4,12 @@ export default async function getAPIAccessInfo(user: string): Promise<{
   refresh_token: string;
   cloudId: string;
 }> {
-  let query = `EXEC dbo.get_jira_tokens  @user='${user}'`;
-  let resp = await executeRequest(query);
-  console.log("updateTokens", resp);
-  return resp;
+  try {
+    let query = `EXEC dbo.get_jira_tokens @user='${user}'`;
+    let resp = await executeRequest(query);
+    return resp;
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
 }
