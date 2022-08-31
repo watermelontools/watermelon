@@ -4,7 +4,7 @@ function VSCode() {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <p>
-        <Link href="vscode://WatermelonTools.watermelon">
+        <Link href="vscode://watermelontools.watermelon-tools">
           <a>vscode</a>
         </Link>
       </p>
