@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-function VSCode() {
+function VSCodeInsiders() {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <p>
@@ -12,4 +12,4 @@ function VSCode() {
   );
 }
 
-export default VSCode;
+export default VSCodeInsiders;
