@@ -8,13 +8,16 @@ function VSCode() {
       signIn();
     },
   });
-  console.log(data);
+
   return (
     <div className="w-full flex flex-col justify-center items-center">
       {status !== "loading" && (
         <Link
           href={`vscode://watermelontools.watermelon-tools?email=${
             data?.user?.email ?? ""
+          }&token=${
+            // @ts-ignore
+            data?.user?.accessToken ?? ""
           }`}
         >
           <a>click to login with vscode</a>
