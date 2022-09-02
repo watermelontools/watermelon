@@ -13,7 +13,9 @@ function VSCode() {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <p>
-        <Link href="vscode://watermelontools.watermelon-tools">
+        <Link
+          href={`vscode://watermelontools.watermelon-tools?email=${data.user.email}`}
+        >
           <a>vscode</a>
         </Link>
       </p>
