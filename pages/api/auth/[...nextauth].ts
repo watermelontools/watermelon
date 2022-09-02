@@ -4,6 +4,17 @@ import MyAdapter from "../../../utils/auth/adapter";
 
 export default NextAuth({
   adapter: MyAdapter(),
+  callbacks: {
+    async session({ session, token, user }) {
+      console.log("session", session);
+      console.log("token", token);
+      console.log("user", user);
+
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken;
+      return session;
+    },
+  },
   // Configure one or more authentication providers
   providers: [
     EmailProvider({
