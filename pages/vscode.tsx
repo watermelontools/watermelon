@@ -8,6 +8,7 @@ function VSCode() {
       signIn();
     },
   });
+  console.log(data);
   return (
     <div className="w-full flex flex-col justify-center items-center">
       {status !== "loading" && (
