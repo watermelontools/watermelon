@@ -5,13 +5,9 @@ import MyAdapter from "../../../utils/auth/adapter";
 export default NextAuth({
   adapter: MyAdapter(),
   callbacks: {
+    // add the id to the session as accessToken
     async session({ session, token, user }) {
-      console.log("session", session);
-      console.log("token", token);
-      console.log("user", user);
-
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
+      session.accessToken = user.id;
       return session;
     },
   },
