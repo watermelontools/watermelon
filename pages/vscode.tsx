@@ -9,15 +9,18 @@ function VSCode() {
       signIn();
     },
   });
-  console.log(status, data);
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <p>
-        <Link
-          href={`vscode://watermelontools.watermelon-tools?email=${data.user.email}`}
-        >
-          <a>vscode</a>
-        </Link>
+        {status !== "loading" && (
+          <Link
+            href={`vscode://watermelontools.watermelon-tools?email=${
+              data?.user?.email ?? ""
+            }`}
+          >
+            <a>vscode</a>
+          </Link>
+        )}
       </p>
     </div>
   );
