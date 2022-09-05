@@ -66,7 +66,14 @@ export async function getServerSideProps(context) {
     };
   } else {
     console.log(json);
-
+    let user = await fetch(`https://api.github.com/user`, {
+      headers: {
+        Authorization: `token ${json.access_token}`,
+      },
+    });
+    user = await user.json();
+    console.log(user);
+    await saveUserInfo(user);
     return {
       props: { loggedIn: true },
     };
