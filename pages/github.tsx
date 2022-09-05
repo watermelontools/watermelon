@@ -33,20 +33,22 @@ export default function Jira({ organization, avatar_url, error }) {
     </div>
   );
 }
+
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    f = await fetch(`https://auth.atlassian.com/oauth/token`, {
+    f = await fetch(`https://github.com/login/oauth/access_token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/jira",
-        client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
-        client_secret: process.env.JIRA_CLIENT_SECRET,
+        redirect_uri: "https://app.watermelon.tools/github",
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
       }),
     });
   } else
@@ -57,56 +59,16 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.log("jira error", json);
     return {
       props: {
         error: json.error,
       },
     };
   } else {
-    const { access_token } = json;
-    const orgInfo = await fetch(
-      "https://api.atlassian.com/oauth/token/accessible-resources",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    const orgInfoJson = await orgInfo.json();
-    const userInfo = await fetch(
-      `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    const userInfoJson = await userInfo.json();
-    await saveUserInfo({
-      access_token: json.access_token,
-      refresh_token: json.refresh_token,
-      jira_id: orgInfoJson[0].id,
-      organization: orgInfoJson[0].name,
-      url: orgInfoJson[0].url,
-      org_avatar_url: orgInfoJson[0].avatarUrl,
-      scopes: orgInfoJson[0].scopes,
-      watermelon_user: context.query.state,
-      user_email: userInfoJson.emailAddress,
-      user_avatar_url: userInfoJson.avatarUrls["48x48"],
-      user_id: userInfoJson.accountId,
-      user_displayname: userInfoJson.displayName,
-    });
+    console.log(json);
 
     return {
-      props: {
-        organization: orgInfoJson[0]?.name,
-        avatar_url: orgInfoJson[0]?.avatar_url,
-      },
+      props: { loggedIn: true },
     };
   }
 }
