@@ -2,19 +2,20 @@ import executeRequest from "../azuredb";
 
 export default async ({
   access_token,
-  refresh_token,
-  jira_id,
-  organization,
-  url,
-  org_avatar_url,
-  scopes,
+  login,
+  id,
+  avatar_url,
+  scope,
   watermelon_user,
-  user_email,
-  user_avatar_url,
-  user_id,
-  user_displayname,
+  name,
+  company,
+  blog,
+  email,
+  location,
+  bio,
+  twitter_username,
 }) => {
-  let query = `EXEC dbo.create_github @organization='${organization}', @jira_id='${jira_id}', @url='${url}', @org_avatar_url='${org_avatar_url}', @watermelon_user='${watermelon_user}', @user_email='${user_email}', @user_avatar_url='${user_avatar_url}', @user_id='${user_id}', @user_displayname='${user_displayname}', @access_token='${access_token}', @refresh_token='${refresh_token}', @scopes='${scopes}'`;
+  let query = `EXEC dbo.create_github @watermelon_user='${watermelon_user}', @login='${login}', @id='${id}', @avatar_url='${avatar_url}', @scope='${scope}', @name='${name}', @company='${company}', @blog='${blog}', @email='${email}', @location='${location}', @bio='${bio}', @twitter_username='${twitter_username}', @access_token='${access_token}'`;
   let resp = await executeRequest(query);
   return resp;
 };
