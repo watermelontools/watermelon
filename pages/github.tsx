@@ -73,7 +73,6 @@ export async function getServerSideProps(context) {
     });
     user = await user.json();
     console.log(user);
-    await saveUserInfo(user);
     return {
       props: { loggedIn: true },
     };
