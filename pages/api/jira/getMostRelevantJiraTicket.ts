@@ -16,16 +16,17 @@ export default async function handler(req, res) {
     "from",
     "and",
     "or",
+    "on",
+    "for"
   ];
-  // trim pr_title
-  pr_title = pr_title.trim();
-  pr_title = pr_title
+  
+  // parse pr_title
+  const parsed_pr_title = pr_title.trim()
     .split(" ")
     .filter((word) => !stopwords.includes(word.toLowerCase()))
-    .join(" ");
-  // Add an OR clause to make the search query more flexible
-  let split_pr_title = pr_title.split(" ");
-  let parsed_pr_title = split_pr_title.join(" OR ");
+    .join(" ")
+    .split(" ")
+    .join(" OR ");
 
   if (!user) {
     return res.send({ error: "no user" });
