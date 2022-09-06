@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import saveUserInfo from "../utils/db/github/saveUserinfo";
 export default function Jira({ organization, avatar_url, error }) {
   console.log(organization, avatar_url, error);
   const [timeToRedirect, setTimeToRedirect] = useState(5);
@@ -71,7 +72,7 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
-    console.log(user);
+    console.log(userJson);
     saveUserInfo({
       access_token: json.access_token,
       scope: json.scope,
