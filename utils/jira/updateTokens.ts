@@ -23,6 +23,7 @@ export default async function updateTokens({
       .catch((error) => {
         console.error(error);
       });
+    console.log(newAccessTokens);
     return {
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
