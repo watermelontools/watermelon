@@ -17,11 +17,12 @@ export default async function handler(req, res) {
     "and",
     "or",
     "on",
-    "for"
+    "for",
   ];
-  
+
   // parse pr_title
-  const parsed_pr_title = pr_title.trim()
+  const parsed_pr_title = pr_title
+    .trim()
     .split(" ")
     .filter((word) => !stopwords.includes(word.toLowerCase()))
     .join(" ")
