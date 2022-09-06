@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/jira/saveUserInfo";
 export default function Jira({ organization, avatar_url, error }) {
   console.log(organization, avatar_url, error);
   const [timeToRedirect, setTimeToRedirect] = useState(5);
@@ -71,8 +70,23 @@ export async function getServerSideProps(context) {
         Authorization: `token ${json.access_token}`,
       },
     });
-    user = await user.json();
+    let userJson = await user.json();
     console.log(user);
+    saveUserInfo({
+      access_token: json.access_token,
+      scope: json.scope,
+      login: userJson.login,
+      id: userJson.id,
+      avatar_url: userJson.avatar_url,
+      watermelon_user: userJson.watermelon_user,
+      name: userJson.name,
+      company: userJson.company,
+      blog: userJson.blog,
+      email: userJson.email,
+      location: userJson.location,
+      bio: userJson.bio,
+      twitter_username: userJson.twitter_username,
+    });
     return {
       props: { loggedIn: true },
     };
