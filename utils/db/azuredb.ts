@@ -16,7 +16,7 @@ const executeRequest = async (query) => {
         console.error(error);
         return error;
       });
-    console.log("resp", resp);
+    // console.log("resp", resp);
     return resp;
   } catch (error) {
     console.error(error);
