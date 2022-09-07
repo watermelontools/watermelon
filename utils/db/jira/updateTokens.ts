@@ -13,6 +13,7 @@ export default async function updateTokens({
     if (!user || !access_token || !refresh_token) {
       let query = `EXEC dbo.update_jira_tokens  @user='${user}', @access_token='${access_token}', @refresh_token='${refresh_token}'`;
       let resp = await executeRequest(query);
+      console.log("resp", resp);
       return resp;
     }
   } catch (error) {
