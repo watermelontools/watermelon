@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/github/saveUserinfo";
 export default function Jira({ login, avatar_url, error }) {
-  console.log(login, avatar_url, error);
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
