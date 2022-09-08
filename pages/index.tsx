@@ -48,7 +48,7 @@ function HomePage({}) {
       {userEmail && (
         <div>
           <div>
-            {githubUserData.name ? (
+            {githubUserData?.name || githubUserData?.email ? (
               <div>
                 <h1>GitHub</h1>
                 <h2>{githubUserData.name}</h2>
