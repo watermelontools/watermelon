@@ -17,5 +17,6 @@ export default async ({
 }) => {
   let query = `EXEC dbo.create_github @watermelon_user='${watermelon_user}', @login='${login}', @id='${id}', @avatar_url='${avatar_url}', @scope='${scope}', @name='${name}', @company='${company}', @blog='${blog}', @email='${email}', @location='${location}', @bio='${bio}', @twitter_username='${twitter_username}', @access_token='${access_token}'`;
   let resp = await executeRequest(query);
+  console.log("resp", resp);
   return resp;
 };
