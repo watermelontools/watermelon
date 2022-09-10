@@ -8,7 +8,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html data-color-mode="dark" data-dark-theme="dark">
         <Head>
           <meta charSet="utf-8" />
           <link rel="manifest" href="/favicon/site.webmanifest"></link>
