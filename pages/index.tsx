@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
 
 function HomePage({}) {
@@ -43,7 +44,7 @@ function HomePage({}) {
   }
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
-      <LogInBtn />
+      {session ? <LogOutBtn /> : <LogInBtn />}
 
       {userEmail && (
         <div>
