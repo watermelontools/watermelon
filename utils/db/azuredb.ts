@@ -5,6 +5,7 @@ const executeRequest = async (query) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-vercel-azure-auth-token": process.env.AZURE_WEBAPP_TOKEN,
       },
       body: queryString,
     })
