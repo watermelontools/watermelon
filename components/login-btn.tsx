@@ -1,19 +1,20 @@
 import { useSession, signIn, signOut } from "next-auth/react";
-
+import { Button, Box } from "@primer/react";
 export default function Component() {
   const { data: session } = useSession();
   if (session) {
     return (
       <>
         Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        <Button onClick={() => signOut()}>Sign out</Button>
       </>
     );
   }
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <Box>
+      <Button variant="primary" onClick={() => signIn()}>
+        Sign in
+      </Button>
+    </Box>
   );
 }

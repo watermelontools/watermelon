@@ -8,7 +8,11 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html
+        style={{
+          backgroundColor: "rgba(13,17,23,0)",
+        }}
+      >
         <Head>
           <meta charSet="utf-8" />
           <link rel="manifest" href="/favicon/site.webmanifest"></link>
