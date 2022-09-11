@@ -2,16 +2,32 @@ import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "../../../utils/jira/refreshTokens";
 
 export default async function handler(req, res) {
-  let { user, pr_title} = req.body;
+  let { user, pr_title } = req.body;
 
   // Remove stopwords to provide better search results
-  let stopwords = ['add', 'get', 'as', 'at', 'he', 'the', 'was', 'from', 'and', 'or'];
-  // trim pr_title
-  pr_title = pr_title.trim();
-  pr_title = pr_title.split(' ').filter(word => !stopwords.includes(word.toLowerCase())).join(' ');
-  // Add an OR clause to make the search query more flexible
-  let split_pr_title = pr_title.split(" ");
-  let parsed_pr_title = split_pr_title.join(" OR ");
+  let stopwords = [
+    "add",
+    "get",
+    "as",
+    "at",
+    "he",
+    "the",
+    "was",
+    "from",
+    "and",
+    "or",
+    "on",
+    "for",
+  ];
+
+  // parse pr_title
+  const parsed_pr_title = pr_title
+    .trim()
+    .split(" ")
+    .filter((word) => !stopwords.includes(word.toLowerCase()))
+    .join(" ")
+    .split(" ")
+    .join(" OR ");
 
   if (!user) {
     return res.send({ error: "no user" });
@@ -37,7 +53,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `status='Done' AND text ~ "${parsed_pr_title}"`,
+        jql: `text ~ "${parsed_pr_title}"`,
       }),
     }
   )
