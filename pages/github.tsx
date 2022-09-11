@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/github/saveUserInfo";
+import saveUserInfo from "../utils/db/github/saveUser";
 export default function GitHub({ login, avatar_url, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
