@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
+import GitHubInfo from "../components/githubInfo";
+import JiraInfo from "../components/jiraInfo";
 
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
@@ -50,12 +52,7 @@ function HomePage({}) {
         <div>
           <div>
             {githubUserData?.name || githubUserData?.email ? (
-              <div>
-                <h1>GitHub</h1>
-                <h2>{githubUserData.name}</h2>
-                <h3>{githubUserData.login}</h3>
-                <img src={githubUserData.avatar_url} />
-              </div>
+              <GitHubInfo {...githubUserData} />
             ) : (
               <Link
                 href={`https://github.com/login/oauth/authorize?client_id=8543242e428085df968c&redirect_uri=https://app.watermelontools.com/github&state=${userEmail}&scope=repo%20user%20notifications`}
@@ -66,15 +63,7 @@ function HomePage({}) {
           </div>
           <div>
             {jiraUserData?.organization ? (
-              <div>
-                <p> Logged into {jiraUserData.organization}</p>
-                <img src={jiraUserData.org_avatar_url} />
-                <div>
-                  <img src={jiraUserData.user_avatar_url} />
-                  <p>Your Jira email:{jiraUserData.user_email} </p>
-                  <p>Your Jira name: {jiraUserData.user_displayname}</p>
-                </div>
-              </div>
+              <JiraInfo {...jiraUserData} />
             ) : (
               <Link
                 href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelontools.com/jira&state=${userEmail}&response_type=code&prompt=consent`}
