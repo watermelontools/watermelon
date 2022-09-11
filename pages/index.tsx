@@ -5,6 +5,8 @@ import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
 import GitHubInfo from "../components/githubInfo";
 import JiraInfo from "../components/jiraInfo";
+import JiraLoginLink from "../components/JiraLoginLink";
+import GitHubLoginLink from "../components/GitHubLoginLink";
 
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
@@ -54,22 +56,14 @@ function HomePage({}) {
             {githubUserData?.name || githubUserData?.email ? (
               <GitHubInfo {...githubUserData} />
             ) : (
-              <Link
-                href={`https://github.com/login/oauth/authorize?client_id=8543242e428085df968c&redirect_uri=https://app.watermelontools.com/github&state=${userEmail}&scope=repo%20user%20notifications`}
-              >
-                <a>Sign in with GitHub</a>
-              </Link>
+              <GitHubLoginLink userEmail={userEmail} />
             )}
           </div>
           <div>
             {jiraUserData?.organization ? (
               <JiraInfo {...jiraUserData} />
             ) : (
-              <Link
-                href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelontools.com/jira&state=${userEmail}&response_type=code&prompt=consent`}
-              >
-                <a className="button block">Login to Jira</a>
-              </Link>
+              <JiraLoginLink userEmail={userEmail} />
             )}{" "}
           </div>
         </div>
