@@ -31,19 +31,19 @@ function HomePage({}) {
 
       {userEmail && (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-          <div>
+          <div className="p-3">
             {githubUserData?.name || githubUserData?.email ? (
               <GitHubInfo {...githubUserData} />
             ) : (
               <GitHubLoginLink userEmail={userEmail} />
             )}
           </div>
-          <div>
+          <div className="p-3">
             {jiraUserData?.organization ? (
               <JiraInfo {...jiraUserData} />
             ) : (
               <JiraLoginLink userEmail={userEmail} />
-            )}{" "}
+            )}
           </div>
         </div>
       )}
