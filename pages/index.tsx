@@ -30,7 +30,7 @@ function HomePage({}) {
       {session ? <LogOutBtn /> : <LogInBtn />}
 
       {userEmail && (
-        <div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
           <div>
             {githubUserData?.name || githubUserData?.email ? (
               <GitHubInfo {...githubUserData} />
