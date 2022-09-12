@@ -7,8 +7,8 @@ const JiraInfo = (jiraUserData) => (
       <img className="avatar avatar-8" src={jiraUserData.user_avatar_url} />
       <div className="p-3">
         <h3>{jiraUserData.user_displayname}</h3>
-        <span className="text-light">{jiraUserData.user_email} </span>
-        <span className="text-light">{jiraUserData.organization}</span>
+        <p className="text-light">{jiraUserData.user_email} </p>
+        <p className="text-light">{jiraUserData.organization}</p>
       </div>
     </div>
   </div>

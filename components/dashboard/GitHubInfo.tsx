@@ -7,8 +7,8 @@ const GitHubInfo = (githubUserData) => (
       <img className="avatar avatar-8" src={githubUserData.avatar_url} />
       <div className="p-3">
         <h3>{githubUserData.name}</h3>
-        <span className="text-light">{githubUserData.email}</span>
-        <span className="text-light">{githubUserData.company}</span>
+        <p className="text-light">{githubUserData.email}</p>
+        <p className="text-light">{githubUserData.company}</p>
       </div>
     </div>
   </div>
