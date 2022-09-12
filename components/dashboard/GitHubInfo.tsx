@@ -8,7 +8,6 @@ const GitHubInfo = (githubUserData) => (
       <div className="p-3">
         <h3>{githubUserData.name}</h3>
         <p className="text-light">{githubUserData.email}</p>
-        <p className="text-light">{githubUserData.company}</p>
       </div>
     </div>
   </div>

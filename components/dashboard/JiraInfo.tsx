@@ -8,7 +8,6 @@ const JiraInfo = (jiraUserData) => (
       <div className="p-3">
         <h3>{jiraUserData.user_displayname}</h3>
         <p className="text-light">{jiraUserData.user_email} </p>
-        <p className="text-light">{jiraUserData.organization}</p>
       </div>
     </div>
   </div>
