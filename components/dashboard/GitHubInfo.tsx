@@ -5,7 +5,7 @@ const GitHubInfo = (githubUserData) => (
         GitHub {githubUserData.company ? `(${githubUserData.company})` : ""}
       </h2>
     </div>
-    <div className="d-flex flex-items-center flex-justify-start py-2">
+    <div className="d-flex flex-items-center flex-justify-start p-2">
       <img className="avatar avatar-8" src={githubUserData.avatar_url} />
       <div className="px-2">
         <h3>{githubUserData.name}</h3>
