@@ -1,4 +1,4 @@
-import JiraLogo from "../../public/jira-logo.svg";
+import JiraLogo from "./logos/jira-logo.svg";
 import Link from "next/link";
 const JiraLoginLink = (userEmail) => (
   <div className="Box d-flex flex-items-center flex-justify-start">
