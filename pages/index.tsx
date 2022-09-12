@@ -2,7 +2,16 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import LogInBtn from "../components/login-btn";
+<<<<<<< Updated upstream
 
+=======
+import GitHubInfo from "../components/GitHubInfo";
+import JiraInfo from "../components/JiraInfo";
+import JiraLoginLink from "../components/JiraLoginLink";
+import GitHubLoginLink from "../components/GitHubLoginLink";
+import getGitHubInfo from "../utils/api/getGitHubInfo";
+import getJiraInfo from "../utils/api/getJiraInfo";
+>>>>>>> Stashed changes
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
