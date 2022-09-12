@@ -3,13 +3,7 @@ const JiraInfo = (jiraUserData) => (
     <div className="Subhead">
       <h2 className="Subhead-heading">Jira</h2>
     </div>
-    <p> Logged into {jiraUserData.organization}</p>
-    <img
-      className="avatar"
-      src={jiraUserData.org_avatar_url}
-      width="48"
-      height="48"
-    />
+
     <div>
       <img
         className="avatar"
@@ -20,6 +14,13 @@ const JiraInfo = (jiraUserData) => (
       <p>Your Jira email:{jiraUserData.user_email} </p>
       <p>Your Jira name: {jiraUserData.user_displayname}</p>
     </div>
+    <span className="text-light">Logged into {jiraUserData.organization}</span>
+    <img
+      className="avatar"
+      src={jiraUserData.org_avatar_url}
+      width="48"
+      height="48"
+    />
   </div>
 );
 export default JiraInfo;
