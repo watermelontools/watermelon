@@ -33,7 +33,12 @@ function HomePage({}) {
       {session ? <LogOutBtn /> : <LogInBtn />}
 
       {userEmail && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr));",
+          }}
+        >
           <div className="p-3">
             {githubUserData?.name || githubUserData?.email ? (
               <GitHubInfo {...githubUserData} />
