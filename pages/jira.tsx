@@ -18,7 +18,7 @@ export default function Jira({ organization, avatar_url, error }) {
   return (
     <div className="Box">
       <div className="Subhead">
-        <h2 className="Subhead-heading">
+        <h2 className="Subhead-heading px-2">
           You have logged in with Jira to {organization}
         </h2>
       </div>
