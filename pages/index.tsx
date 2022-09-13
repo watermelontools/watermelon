@@ -8,6 +8,7 @@ import JiraLoginLink from "../components/JiraLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
 import getJiraInfo from "../utils/api/getJiraInfo";
+import ComingSoonService from "../components/dashboard/ComingSoonService";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -27,7 +28,19 @@ function HomePage({}) {
       });
     }
   }, [userEmail]);
-
+  const nextServicesList = [
+    "Trello",
+    "Bitbucket",
+    "Slack",
+    "Gitlab",
+    "Asana",
+    "Notion",
+    "Confluence",
+    "Google Drive",
+    "Dropbox",
+    "Microsoft Teams",
+    "Zoom",
+  ];
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
       {session ? <LogOutBtn /> : <LogInBtn />}
@@ -53,6 +66,11 @@ function HomePage({}) {
               <JiraLoginLink userEmail={userEmail} />
             )}
           </div>
+          {nextServicesList.map((service) => (
+            <div className="p-3">
+              <ComingSoonService name={service} />
+            </div>
+          ))}
         </div>
       )}
     </div>
