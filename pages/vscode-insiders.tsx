@@ -9,14 +9,14 @@ function VSCodeInsiders() {
     },
   });
   return (
-    <div className="w-full flex flex-col justify-center items-center">
+    <div className="d-flex flex-items-center flex-justify-center">
       {status !== "loading" && (
         <Link
           href={`vscode-insiders://watermelontools.watermelon-tools?email=${
             data?.user?.email ?? ""
           }&token=${data?.accessToken ?? ""}`}
         >
-          <a>click to login with vscode</a>
+          <a>Open VSCode Insiders</a>
         </Link>
       )}
     </div>

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 function NotFoundPage() {
   return (
-    <div className="w-full flex flex-col justify-center items-center">
+    <div className="d-flex flex-items-center flex-justify-center">
       <p>This page does not exist</p>
       <p>
         <Link href="/">
