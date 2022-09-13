@@ -2,7 +2,8 @@ const GitHubInfo = (githubUserData) => (
   <div className="Box">
     <div className="Subhead px-3">
       <h2 className="Subhead-heading">
-        GitHub {githubUserData.company ? `(${githubUserData.company})` : ""}
+        GitHub{" "}
+        {githubUserData.company ? `(${githubUserData.company.trim()})` : ""}
       </h2>
     </div>
     <div className="d-flex flex-items-center flex-justify-start p-2">
