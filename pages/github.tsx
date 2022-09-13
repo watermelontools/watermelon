@@ -16,8 +16,12 @@ export default function GitHub({ login, avatar_url, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div>
-      <h1>You have logged in with GitHub as {login}</h1>
+    <div className="Box">
+      <div className="Subhead">
+        <h2 className="Subhead-heading">
+          You have logged in with GitHub as {login}
+        </h2>
+      </div>
       <img src={avatar_url} alt="github image" />
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>

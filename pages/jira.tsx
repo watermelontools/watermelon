@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/jira/saveUserInfo";
 export default function Jira({ organization, avatar_url, error }) {
-  console.log(organization, avatar_url, error);
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -17,9 +16,17 @@ export default function Jira({ organization, avatar_url, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div>
-      <h1>You have logged in with Jira to {organization}</h1>
-      <img src={avatar_url} alt="jira organization image" />
+    <div className="Box">
+      <div className="Subhead">
+        <h2 className="Subhead-heading">
+          You have logged in with Jira to {organization}
+        </h2>
+      </div>
+      <img
+        src={avatar_url}
+        alt="jira organization image"
+        className="avatar avatar-8"
+      />
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
