@@ -44,8 +44,7 @@ function HomePage({}) {
   ];
   return (
     <div>
-      <Header />
-      {session ? <LogOutBtn /> : <LogInBtn />}
+      {session ? <Header /> : <LogInBtn />}
 
       {userEmail && (
         <div

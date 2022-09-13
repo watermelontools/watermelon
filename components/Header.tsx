@@ -1,13 +1,21 @@
 import Image from "next/image";
+import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 export default function Header() {
+  const [userEmail, setUserEmail] = useState(null);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    setUserEmail(session?.user?.email);
+  }, [session]);
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
       <div className="Header-item">
         <Image
           src="/logos/watermelon.png"
           alt="Watermelon Tools"
-          width="32"
-          height="32"
+          width="36"
+          height="23"
         />
       </div>
       <div className="Header-item mr-0">
@@ -18,21 +26,24 @@ export default function Header() {
               <div className="dropdown-caret"></div>
             </summary>
 
-            <ul className="dropdown-menu dropdown-menu-se">
+            <ul className="dropdown-menu dropdown-menu-sw">
               <li>
                 <a className="dropdown-item" href="#url">
-                  Dropdown item
+                  {userEmail}
                 </a>
               </li>
               <li>
-                <a className="dropdown-item" href="#url">
-                  Dropdown item
+                <a
+                  className="dropdown-item"
+                  href="vscode://watermelontools.watermelon-tools"
+                >
+                  Download VSCode Extension
                 </a>
               </li>
               <li>
-                <a className="dropdown-item" href="#url">
-                  Dropdown item
-                </a>
+                <button className="btn" onClick={() => signOut()}>
+                  Sign out
+                </button>
               </li>
             </ul>
           </details>
