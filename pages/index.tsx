@@ -14,7 +14,7 @@ function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   useEffect(() => {
     setUserEmail(session?.user?.email);
   }, [session]);
@@ -44,35 +44,41 @@ function HomePage({}) {
   ];
   return (
     <div>
-      {session ? <Header /> : <LogInBtn />}
+      {status === "loading" && <div>Loading...</div>}
+      {status === "unauthenticated" && <LogInBtn />}
+      {status === "authenticated" && (
+        <>
+          {session ? <Header /> : <LogInBtn />}
 
-      {userEmail && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-          }}
-        >
-          <div className="p-3">
-            {githubUserData?.name || githubUserData?.email ? (
-              <GitHubInfo {...githubUserData} />
-            ) : (
-              <GitHubLoginLink userEmail={userEmail} />
-            )}
-          </div>
-          <div className="p-3">
-            {jiraUserData?.organization ? (
-              <JiraInfo {...jiraUserData} />
-            ) : (
-              <JiraLoginLink userEmail={userEmail} />
-            )}
-          </div>
-          {nextServicesList.map((service) => (
-            <div className="p-3">
-              <ComingSoonService name={service} />
+          {userEmail && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+              }}
+            >
+              <div className="p-3">
+                {githubUserData?.name || githubUserData?.email ? (
+                  <GitHubInfo {...githubUserData} />
+                ) : (
+                  <GitHubLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {jiraUserData?.organization ? (
+                  <JiraInfo {...jiraUserData} />
+                ) : (
+                  <JiraLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              {nextServicesList.map((service) => (
+                <div className="p-3">
+                  <ComingSoonService name={service} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   );
