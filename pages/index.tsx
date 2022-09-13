@@ -9,6 +9,7 @@ import GitHubLoginLink from "../components/GitHubLoginLink";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
 import getJiraInfo from "../utils/api/getJiraInfo";
 import ComingSoonService from "../components/dashboard/ComingSoonService";
+import Header from "../components/Header";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -43,6 +44,7 @@ function HomePage({}) {
   ];
   return (
     <div className="container" style={{ padding: "50px 0 100px 0" }}>
+      <Header />
       {session ? <LogOutBtn /> : <LogInBtn />}
 
       {userEmail && (
