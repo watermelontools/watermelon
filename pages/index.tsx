@@ -18,12 +18,14 @@ function HomePage({}) {
   }, [session]);
   useEffect(() => {
     console.log("userEmail", userEmail);
-    getJiraInfo(userEmail).then((data) => {
-      setJiraUserData(data);
-    });
-    getGitHubInfo(userEmail).then((data) => {
-      setGithubUserData(data);
-    });
+    if (userEmail) {
+      getJiraInfo(userEmail).then((data) => {
+        setJiraUserData(data);
+      });
+      getGitHubInfo(userEmail).then((data) => {
+        setGithubUserData(data);
+      });
+    }
   }, [userEmail]);
 
   return (
