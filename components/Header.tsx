@@ -1,10 +1,10 @@
 import Image from "next/image";
 export default function Header() {
   return (
-    <div className="Header">
+    <div className="Header d-flex flex-items-center flex-justify-between">
       <div className="Header-item">
         <Image
-          src="/logos/watermelon.svg"
+          src="/logos/watermelon.png"
           alt="Watermelon Tools"
           width="32"
           height="32"
@@ -14,7 +14,7 @@ export default function Header() {
         <div>
           <details className="dropdown details-reset details-overlay d-inline-block">
             <summary className="btn" aria-haspopup="true">
-              Dropdown
+              Account
               <div className="dropdown-caret"></div>
             </summary>
 
