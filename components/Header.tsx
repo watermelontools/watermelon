@@ -37,10 +37,10 @@ export default function Header() {
                   className="dropdown-item"
                   href="vscode://watermelontools.watermelon-tools"
                 >
-                  Download VSCode Extension
+                  VSCode Extension
                 </a>
               </li>
-              <li>
+              <li className="d-flex flex-items-center flex-justify-center">
                 <button className="btn" onClick={() => signOut()}>
                   Sign out
                 </button>
