@@ -29,12 +29,12 @@ function HomePage({}) {
     }
   }, [userEmail]);
   const nextServicesList = [
-    "Trello",
     "Bitbucket",
-    "Slack",
     "Gitlab",
-    "Asana",
     "Notion",
+    "Slack",
+    "Trello",
+    "Asana",
     "Confluence",
     "Google Drive",
     "Dropbox",
