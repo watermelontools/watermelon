@@ -10,6 +10,7 @@ import getGitHubInfo from "../utils/api/getGitHubInfo";
 import getJiraInfo from "../utils/api/getJiraInfo";
 import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
+import DownloadExtension from "../components/dashboard/DownloadExtension";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -70,6 +71,20 @@ function HomePage({}) {
                 ) : (
                   <JiraLoginLink userEmail={userEmail} />
                 )}
+              </div>
+              <div className="p-3">
+                <DownloadExtension
+                  name="VSCode"
+                  email={userEmail}
+                  accessToken={session.id}
+                />
+              </div>
+              <div className="p-3">
+                <DownloadExtension
+                  name="VSCode Insiders"
+                  email={userEmail}
+                  accessToken={session.id}
+                />
               </div>
               {nextServicesList.map((service) => (
                 <div className="p-3">
