@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/github/saveUser";
-export default function GitHub({ login, avatar_url, error }) {
+import JiraLoginLink from "../components/JiraLoginLink";
+export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(5);
   const router = useRouter();
   useEffect(() => {
@@ -27,6 +28,10 @@ export default function GitHub({ login, avatar_url, error }) {
         alt="github user image"
         className="avatar avatar-8"
       />
+      <div>
+        <p className="text-emphasized">We recommend you login to Jira</p>
+        <JiraLoginLink userEmail={userEmail} />
+      </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
@@ -96,6 +101,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         loggedIn: true,
+        userEmail: context.query.state,
         login: userJson.login,
         avatar_url: userJson.avatar_url,
       },
