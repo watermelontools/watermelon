@@ -4,7 +4,7 @@ import Link from "next/link";
 import saveUserInfo from "../utils/db/github/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
-  const [timeToRedirect, setTimeToRedirect] = useState(5);
+  const [timeToRedirect, setTimeToRedirect] = useState(10);
   const router = useRouter();
   useEffect(() => {
     const interval = setInterval(() => {
