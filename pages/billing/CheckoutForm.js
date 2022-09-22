@@ -1,5 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
+import React, { useEffect, useState } from "react";
+import {
+  useStripe,
+  useElements,
+  PaymentElement,
+} from "@stripe/react-stripe-js";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -7,15 +11,15 @@ const CheckoutForm = () => {
 
   const [numberOfSeats, setNumberOfSeats] = useState(5);
   const [subscriptionPrice, setSubscriptionPrice] = useState(50);
-  const [interval, setInterval] = useState('Monthly');
+  const [interval, setInterval] = useState("Monthly");
 
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    if (interval === 'Monthly') {
+    if (interval === "Monthly") {
       const calculatedPrice = numberOfSeats * 10;
       setSubscriptionPrice(calculatedPrice);
-    } else if (interval === 'Yearly') {
+    } else if (interval === "Yearly") {
       const calculatedPrice = numberOfSeats * 10 * 12 * 0.8;
       setSubscriptionPrice(calculatedPrice);
     }
@@ -32,14 +36,13 @@ const CheckoutForm = () => {
       return;
     }
 
-    const {error} = await stripe.confirmPayment({
+    const { error } = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: 'https://example.com/order/123/complete',
+        return_url: "https://example.com/order/123/complete",
       },
     });
-
 
     if (error) {
       // This point will only be reached if there is an immediate error when
@@ -57,23 +60,59 @@ const CheckoutForm = () => {
     <form onSubmit={handleSubmit}>
       <label htmlFor="number-of-seats">Number of seats</label>
       <br />
-      <input required type="number" className="form-control mb-2 mr-2" id="exampleFormControlSelect1" placeholder="Number of seats" value={numberOfSeats} onChange={(e) => {setNumberOfSeats(e.target.value)}}/>
-      <select required className="form-control mb-2" id="exampleFormControlSelect1" value={interval} onChange={(e) => {setInterval(e.target.value)}}>
+      <input
+        required
+        type="number"
+        className="form-control mb-2 mr-2"
+        id="exampleFormControlSelect1"
+        placeholder="Number of seats"
+        value={numberOfSeats}
+        onChange={(e) => {
+          setNumberOfSeats(e.target.value);
+        }}
+      />
+      <select
+        required
+        className="form-control mb-2"
+        id="exampleFormControlSelect1"
+        value={interval}
+        onChange={(e) => {
+          setInterval(e.target.value);
+        }}
+      >
         <option value="Monthly">Monthly</option>
         <option value="Yearly">Yearly</option>
       </select>
       <br />
-      <p className="text-danger">{interval} subscription price: ${subscriptionPrice}</p>
-      <input required label="Number of seats" type="text" className="form-control mb-2 mr-2" id="exampleFormControlSelect1" placeholder="Admin First Name"/>
-      <input required label="Number of seats" type="text" className="form-control mb-2" id="exampleFormControlSelect1" placeholder="Admin Last Name"/>
+      <p className="text-danger">
+        {interval} subscription price: ${subscriptionPrice}
+      </p>
+      <input
+        required
+        label="Number of seats"
+        type="text"
+        className="form-control mb-2 mr-2"
+        id="exampleFormControlSelect1"
+        placeholder="Admin First Name"
+      />
+      <input
+        required
+        label="Number of seats"
+        type="text"
+        className="form-control mb-2"
+        id="exampleFormControlSelect1"
+        placeholder="Admin Last Name"
+      />
       <PaymentElement />
       <br />
       <div className="d-flex flex-items-center flex-justify-center">
-        <button className='btn btn-primary' type="submit" disabled={!stripe}>Purchase</button>
+        <button className="btn btn-primary" type="submit" disabled={!stripe}>
+          Purchase
+        </button>
       </div>
       {errorMessage && <div>{errorMessage}</div>}
     </form>
-  )
+  );
 };
 
 export default CheckoutForm;

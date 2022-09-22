@@ -4,9 +4,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm from "./CheckoutForm";
 // import paymentIntent from utils
 
-const stripePromise = loadStripe(
-  process.env.STRIPE_TEST_PUBLIC_KEY
-);
+const stripePromise = loadStripe(process.env.STRIPE_TEST_PUBLIC_KEY);
 
 function BillingPage() {
   // const paymentIntentClientSecret = await getPaymentIntent("1000");
