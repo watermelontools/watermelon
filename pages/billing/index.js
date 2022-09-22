@@ -1,8 +1,6 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-// import CheckoutForm
 import CheckoutForm from "./CheckoutForm";
-// import paymentIntent from utils
 
 const stripePromise = loadStripe(process.env.STRIPE_TEST_PUBLIC_KEY);
 
