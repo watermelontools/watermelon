@@ -4,6 +4,7 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
+import createStripeSubscription from "../../utils/stripe/createSubscription";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -53,6 +54,9 @@ const CheckoutForm = () => {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
+      
+      console.log("Payment confirmed!");
+      await createStripeSubscription(subscriptionPrice, interval);
     }
   };
 
@@ -106,7 +110,7 @@ const CheckoutForm = () => {
       <PaymentElement />
       <br />
       <div className="d-flex flex-items-center flex-justify-center">
-        <button className="btn btn-primary" type="submit" disabled={!stripe}>
+        <button className="btn btn-primary" id="checkout-and-portal-button" type="submit" disabled={!stripe}>
           Purchase
         </button>
       </div>
