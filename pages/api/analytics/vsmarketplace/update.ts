@@ -4,13 +4,11 @@ Airtable.configure({
   apiKey: process.env.AIRTABLE_API_KEY,
 });
 const base = require("airtable").base("appDpKitgxjDIUwZ3");
-
-export default async function handler(req, res) {
-  const { dailyStats } = req.body;
-
+function toRecords(infoArray) {
   let records: any[] = [];
-  for (let index = 0; index < dailyStats.length; index++) {
-    const element = dailyStats[index];
+
+  for (let index = 0; index < infoArray.length; index++) {
+    const element = infoArray[index];
     const counts = element.counts;
 
     records.push({
@@ -24,6 +22,35 @@ export default async function handler(req, res) {
       },
     });
   }
-  let createdRecord = await base("vscmarketplace").create(records);
-  res.status(200).json(createdRecord);
+  return records;
+}
+export default async function handler(req, res) {
+  const { dailyStats } = req.body;
+  let records;
+  if (dailyStats.length < 10) {
+    records = toRecords(dailyStats.slice(0, 10));
+    let createdRecord = await base("vscmarketplace").create(records);
+    res.status(200).json(createdRecord);
+  } else {
+    records = toRecords(dailyStats);
+    // now take the records and chunk them into groups of 10
+    let chunkedRecords = [];
+    let i,
+      j,
+      temparray,
+      chunk = 10;
+    for (i = 0, j = records.length; i < j; i += chunk) {
+      temparray = records.slice(i, i + chunk);
+      chunkedRecords.push(temparray);
+    }
+    // now we have an array of arrays of 10 records each
+    // we can now loop through each array and create the records
+    let createdRecords = [];
+    for (let index = 0; index < chunkedRecords.length; index++) {
+      const element = chunkedRecords[index];
+      let createdRecord = await base("vscmarketplace").create(element);
+      createdRecords.push(createdRecord);
+    }
+    res.status(200).json(createdRecords);
+  }
 }
