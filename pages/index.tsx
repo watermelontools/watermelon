@@ -69,7 +69,7 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} />
+                  <JiraLoginLink userEmail={userEmail} hasPaid={true}/>
                 )}
               </div>
               <div className="p-3">
