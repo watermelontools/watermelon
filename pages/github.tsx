@@ -30,7 +30,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} />
+        <JiraLoginLink userEmail={userEmail} hasPaid={true}/>
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
