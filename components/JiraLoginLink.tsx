@@ -9,6 +9,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/jira.svg" />
             <div className="p-2">
+              <h2>Login to Jira</h2>
               <p>View your Most Relevant Ticket and Active Tickets</p>
             </div>
           </div>
@@ -22,6 +23,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/jira.svg" />
             <div className="p-2">
+              <h2>Activate Jira Integration</h2>
               <p>Contact us to view your Most Relevant Ticket and Active Tickets</p>
             </div>
           </div>
