@@ -6,7 +6,7 @@ export default async function getByEmail({
   email: string;
 }): Promise<boolean> {
   try {
-    let query = `EXEC dbo.update_jira_tokens  @email='${email}'`;
+    let query = `EXEC dbo.get_payment_by_email @email='${email}'`;
     let resp = await executeRequest(query);
     console.log("resp", resp);
     return resp;

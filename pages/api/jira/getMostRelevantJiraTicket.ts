@@ -2,7 +2,7 @@ import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "../../../utils/jira/refreshTokens";
 
 export default async function handler(req, res) {
-  let { user, pr_title } = req.body;
+  let { user, prTitle } = req.body;
 
   // Remove stopwords to provide better search results
   let stopwords = [
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   ];
 
   // parse pr_title
-  const parsed_pr_title = pr_title
+  const parsedPRTitle = prTitle
     .trim()
     .split(" ")
     .filter((word) => !stopwords.includes(word.toLowerCase()))
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `text ~ "${parsed_pr_title}"`,
+        jql: `text ~ "${parsedPRTitle}"`,
       }),
     }
   )
