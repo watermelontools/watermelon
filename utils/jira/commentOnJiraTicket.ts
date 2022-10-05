@@ -1,14 +1,44 @@
 import getUserId from "./getUserId";
 
-export default async function handler(req, res) {
-  let { cloudId, access_token, text, issueIdOrKey } = req.body;
+export default async function handler({
+  user,
+  issueIdOrKey,
+  text,
+  access_token,
+  cloudId,
+}: {
+  user: string;
+  issueIdOrKey: string;
+  text: string;
+  access_token: string;
+  cloudId: string;
+}) {
   let returnVal;
   if (!cloudId) {
-    res.send({ error: "no cloudId" });
+    return { error: "no cloudId" };
   }
   if (!access_token) {
-    res.send({ error: "no access_token" });
+    return { error: "no access_token" };
   }
+  let bodyToSend = JSON.stringify({
+    body: {
+      type: "doc",
+      version: 1,
+      content: [
+        {
+          type: "paragraph",
+          content: [
+            {
+              text: "🍉" + text,
+              type: "text",
+            },
+          ],
+        },
+      ],
+    },
+  });
+
+  console.log(bodyToSend);
   try {
     await fetch(
       `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueIdOrKey}/comment`,
@@ -19,21 +49,7 @@ export default async function handler(req, res) {
           Accept: "application/json",
           Authorization: `Bearer ${access_token}`,
         },
-        body: JSON.stringify({
-          type: "doc",
-          version: 1,
-          content: [
-            {
-              type: "paragraph",
-              content: [
-                {
-                  text: "🍉" + text,
-                  type: "text",
-                },
-              ],
-            },
-          ],
-        }),
+        body: bodyToSend,
       }
     )
       .then((res) => {
@@ -41,12 +57,12 @@ export default async function handler(req, res) {
         res.json();
       })
       .then((resJson) => {
-        console.log(resJson);
+        console.log("resJson", resJson);
         returnVal = resJson;
       });
-    return res.send(returnVal);
+    return returnVal;
   } catch (error) {
     console.error(error);
-    return res.send(error);
+    return error;
   }
 }

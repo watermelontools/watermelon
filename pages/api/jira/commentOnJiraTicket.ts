@@ -1,4 +1,4 @@
-import commentOnJiraTicket from "../../../utils/db/jira/commentOnJiraTicket";
+import commentOnJiraTicket from "../../../utils/jira/commentOnJiraTicket";
 import getToken from "../../../utils/jira/refreshTokens";
 export default async function handler(req, res) {
   let { user, issueIdOrKey, text } = req.body;
@@ -12,13 +12,15 @@ export default async function handler(req, res) {
   if (!text) {
     return res.send({ error: "no text" });
   }
-  let { access_token } = await getToken({ user });
+  let { access_token, cloudId } = await getToken({ user });
 
   let response = await commentOnJiraTicket({
     user,
     issueIdOrKey,
     text,
     access_token,
+    cloudId,
   });
+
   return res.send(response);
 }
