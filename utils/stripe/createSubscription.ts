@@ -1,41 +1,35 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(
-  process.env.NEXT_PUBLIC_STRIPE_TEST_SECRET_KEY,
-  {
-    apiVersion: null,
-  }
-);
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_TEST_SECRET_KEY, {
+  apiVersion: null,
+});
 
-export default async function createStripeSubscription(paymentAmount, paymentInterval) {
-  const lowerCasePaymentInterval = paymentInterval.toLowerCase();
-  console.log("createSubscription.ts - lowerCasePaymentInterval", lowerCasePaymentInterval);
-  stripe.products
-    .create({
-      name: `$${paymentAmount} ${lowerCasePaymentInterval} Subscription`,
-      description: `$${paymentAmount} ${paymentInterval} subscription`,
-    })
-    .then((product) => {
-      console.log("createSubscription.ts - product", product);
-      stripe.prices
-        .create({
-          unit_amount: paymentAmount * 100, // this unit is cents, not dollars
-          currency: "usd",
-          recurring: {
-            interval: lowerCasePaymentInterval,
-          },
-          product: product.id,
-        })
-        .then((price) => {
-          console.log(
-            "Success! Here is your starter subscription product id: " +
-              product.id
-          );
-          console.log(
-            "Success! Here is your premium subscription price id: " + price.id
-          );
-        }).catch((err) => {
-          console.log("createSubscription.ts - err", err);
-        });
+export default async function createStripeSubscription(req, res) {
+  const { customerId, priceId } = req.body;
+
+  try {
+    const customerId = 'cus_LN0cvznvRZsoxG' // Esteban Vargas hardcoded for testing purposes
+    const priceId = 'price_1LpVZKCM8rWyG1fMUfuYpk9f' // ID for customer chooses price
+    // Create the subscription. Note we're expanding the Subscription's
+    // latest invoice and that invoice's payment_intent
+    // so we can pass it to the front end to confirm the payment
+    const subscription = await stripe.subscriptions.create({
+      customer: customerId,
+      items: [
+        {
+          price: priceId,
+        },
+      ],
+      payment_behavior: "default_incomplete",
+      payment_settings: { save_default_payment_method: "on_subscription" },
+      expand: ["latest_invoice.payment_intent"],
     });
+
+    res.send({
+      subscriptionId: subscription.id,
+      clientSecret: subscription.latest_invoice.payment_intent.client_secret,
+    });
+  } catch (error) {
+    return res.status(400).send({ error: { message: error.message } });
+  }
 }

@@ -9,8 +9,7 @@ function BillingPage() {
 
   const options = {
     // passing the client secret obtained from the server
-    clientSecret:
-      // TODO: get the client secret from the server,
+    clientSecret: "pi_3LkbR2CM8rWyG1fM0I9GrW3i_secret_rRdNOYCIuCD6Ky6CctY9dtUob",
       
 
     appearance: {
