@@ -15,6 +15,7 @@ function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [hasPaid, setHasPaid] = useState(false);
   const { data: session, status } = useSession();
   useEffect(() => {
     setUserEmail(session?.user?.email);
@@ -30,6 +31,23 @@ function HomePage({}) {
       });
     }
   }, [userEmail]);
+  useEffect(() => {
+    // use getByEmail to check if user has paid
+    fetch("/api/payments/getByEmail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: userEmail }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.email) {
+          setHasPaid(true);
+        }
+      });
+  }, [userEmail]);
+
   const nextServicesList = [
     "Bitbucket",
     "Gitlab",
@@ -69,7 +87,7 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} hasPaid={true}/>
+                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
                 )}
               </div>
               <div className="p-3">
