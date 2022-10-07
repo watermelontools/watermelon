@@ -1,16 +1,35 @@
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { useEffect, useState, useCallback } from "react";
 import CheckoutForm from "./CheckoutForm";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLIC_KEY);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLIC_KEY
+);
 
 function BillingPage() {
-  // const paymentIntentClientSecret = await getPaymentIntent("1000");
+  const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
+
+  useEffect(async () => {
+    const resSecret =  await fetch(
+      // TODO: Change to production URL
+      "http://localhost:3000/api/stripe/createSubscription",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customerId: "cus_LN0cvznvRZsoxG",
+          priceId: "price_1LpVZKCM8rWyG1fMUfuYpk9f",
+        }),
+      }
+    ).then((res) => res.json());
+    setRetrievedClientSecret(resSecret.clientSecret);
+  }, []);
 
   const options = {
-    // passing the client secret obtained from the server
-    clientSecret: "pi_3LkbR2CM8rWyG1fM0I9GrW3i_secret_rRdNOYCIuCD6Ky6CctY9dtUob",
-      
+    clientSecret: retrievedClientSecret,
 
     appearance: {
       theme: "night",
@@ -44,9 +63,12 @@ function BillingPage() {
           <h1 className="h3 mb-3 f4 text-normal">
             Purchase your Watermelon subscription
           </h1>
-          <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm />
-          </Elements>
+          {/* render if component already mounted */}
+          {retrievedClientSecret && (
+            <Elements stripe={stripePromise} options={options}>
+              <CheckoutForm />
+            </Elements>
+          )}
         </div>
       </div>
     </div>

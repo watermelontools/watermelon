@@ -4,8 +4,6 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import createStripeSubscription from "../../utils/stripe/createSubscription";
-import createStripeCustomer from "../../utils/stripe/createStripeCustomer";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -21,6 +19,7 @@ const CheckoutForm = () => {
   const [adminLastName, setAdminLastName] = useState("");
 
   const [errorMessage, setErrorMessage] = useState(null);
+
 
   useEffect(() => {
     if (interval === "Monthly") {
@@ -43,21 +42,6 @@ const CheckoutForm = () => {
       return;
     }
 
-    const customerDetails = {
-      email: "estebanvargas94@gmail.com", // TODO: Get from current session
-      name: `${adminFirstName} ${adminLastName}`,
-      address: {
-        line1: "1234 Main St",
-        city: "San Francisco",
-        state: "CA",
-        postal_code: "94111",
-        country: "US",
-      }
-    }
-    await createStripeCustomer(customerDetails);
-    const createSbuscriptionResponse = await createStripeSubscription(subscriptionPrice, interval);
-    console.log("createSbuscriptionResponse: ", createSbuscriptionResponse);
-
     const { error } = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
@@ -75,9 +59,6 @@ const CheckoutForm = () => {
       // Your customer will be redirected to your `return_url`. For some payment
       // methods like iDEAL, your customer will be redirected to an intermediate
       // site first to authorize the payment, then redirected to the `return_url`.
-      
-      // console.log("Payment confirmed!");
-      // await createStripeSubscription(subscriptionPrice, interval);
     }
   };
 

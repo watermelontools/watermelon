@@ -4,9 +4,7 @@ const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_TEST_SECRET_KEY, {
   apiVersion: null,
 });
 
-export default async function createStripeSubscription(req, res) {
-  const { customerId, priceId } = req.body;
-
+export default async function handler(req, res) {
   try {
     const customerId = 'cus_LN0cvznvRZsoxG' // Esteban Vargas hardcoded for testing purposes
     const priceId = 'price_1LpVZKCM8rWyG1fMUfuYpk9f' // ID for customer chooses price
