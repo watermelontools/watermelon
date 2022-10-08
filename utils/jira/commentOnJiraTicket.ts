@@ -52,10 +52,9 @@ export default async function handler({
         body: bodyToSend,
       }
     )
-      .then((res) => {
-        console.log(res.body);
+      .then((res) => 
         res.json();
-      })
+      )
       .then((resJson) => {
         console.log("resJson", resJson);
         returnVal = resJson;
