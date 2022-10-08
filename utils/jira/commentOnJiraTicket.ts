@@ -13,7 +13,7 @@ export default async function handler({
   access_token: string;
   cloudId: string;
 }) {
-  let returnVal;
+
   if (!cloudId) {
     return { error: "no cloudId" };
   }
@@ -52,14 +52,10 @@ export default async function handler({
         body: bodyToSend,
       }
     )
-      .then((res) => 
-        res.json();
-      )
+      .then((res) => res.json())
       .then((resJson) => {
         console.log("resJson", resJson);
-        returnVal = resJson;
       });
-    return returnVal;
   } catch (error) {
     console.error(error);
     return error;
