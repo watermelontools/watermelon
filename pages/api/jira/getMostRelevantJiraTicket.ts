@@ -21,13 +21,17 @@ export default async function handler(req, res) {
   ];
 
   // parse pr_title
-  const parsedPRTitle = prTitle
-    .trim()
-    .split(" ")
-    .filter((word) => !stopwords.includes(word.toLowerCase()))
-    .join(" ")
-    .split(" ")
-    .join(" OR ");
+  let parsedPRTitle = "";
+
+  if (prTitle) {
+    parsedPRTitle = prTitle
+      .trim()
+      .split(" ")
+      .filter((word) => !stopwords.includes(word.toLowerCase()))
+      .join(" ")
+      .split(" ")
+      .join(" OR ");
+  }
 
   if (!user) {
     return res.send({ error: "no user" });
