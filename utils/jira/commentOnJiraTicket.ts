@@ -13,7 +13,6 @@ export default async function handler({
   access_token: string;
   cloudId: string;
 }) {
-
   if (!cloudId) {
     return { error: "no cloudId" };
   }
