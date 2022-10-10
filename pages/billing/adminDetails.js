@@ -7,7 +7,6 @@ const AdminDetails = () => {
   // Subscription details
   const [numberOfSeats, setNumberOfSeats] = useState(5);
   const [subscriptionPrice, setSubscriptionPrice] = useState(50);
-  const [interval, setInterval] = useState("Monthly");
 
   // Admin details
   const [adminFirstName, setAdminFirstName] = useState("");
@@ -19,30 +18,20 @@ const AdminDetails = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (interval === "Monthly") {
-      const calculatedPrice = numberOfSeats * 10;
-      setSubscriptionPrice(calculatedPrice);
-    } else if (interval === "Yearly") {
-      const calculatedPrice = numberOfSeats * 10 * 12 * 0.8;
-      setSubscriptionPrice(calculatedPrice);
-    }
-  }, [numberOfSeats, interval]);
+    const calculatedPrice = numberOfSeats * 10;
+    setSubscriptionPrice(calculatedPrice);
+  }, [numberOfSeats]);
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
 
-    console.log("admin details event ", event);
-
-    // go to billing/?numberOfSeats=5&interval=Monthly&adminFirstName=John&adminLastName=Doe
     router.push({
       pathname: "/billing",
       query: {
         quantity: numberOfSeats,
-        interval: interval,
         email: adminEmail,
-        subscriptionAmount: subscriptionPrice * 100,
       },
     });
   };
@@ -77,21 +66,23 @@ const AdminDetails = () => {
                 setNumberOfSeats(e.target.value);
               }}
             />
-            <select
+
+            <input
               required
+              label="Admin Email"
+              type="text"
               className="form-control mb-2"
               id="exampleFormControlSelect1"
-              value={interval}
+              placeholder="Admin Email"
+              value={adminEmail}
               onChange={(e) => {
-                setInterval(e.target.value);
+                setAdminEmail(e.target.value);
               }}
-            >
-              <option value="Monthly">Monthly</option>
-              <option value="Yearly">Yearly (Save 20%)</option>
-            </select>
+            />
+
             <br />
             <p className="text-danger">
-              {interval} subscription price: ${subscriptionPrice}
+              Monthly subscription price: ${subscriptionPrice}
             </p>
             <input
               required
@@ -118,19 +109,6 @@ const AdminDetails = () => {
               }}
             />
             <br />
-
-            <input
-              required
-              label="Admin Email"
-              type="text"
-              className="form-control mb-2"
-              id="exampleFormControlSelect1"
-              placeholder="Admin Email"
-              value={adminEmail}
-              onChange={(e) => {
-                setAdminEmail(e.target.value);
-              }}
-            />
 
             <div className="d-flex flex-items-center flex-justify-center">
               <button

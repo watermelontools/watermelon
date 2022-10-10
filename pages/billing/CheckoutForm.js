@@ -8,28 +8,7 @@ import {
 const CheckoutForm = () => {
   const stripe = useStripe();
   const elements = useElements();
-
-  // Subscription details
-  const [numberOfSeats, setNumberOfSeats] = useState(5);
-  const [subscriptionPrice, setSubscriptionPrice] = useState(50);
-  const [interval, setInterval] = useState("Monthly");
-
-  // Admin details
-  const [adminFirstName, setAdminFirstName] = useState("");
-  const [adminLastName, setAdminLastName] = useState("");
-
   const [errorMessage, setErrorMessage] = useState(null);
-
-
-  useEffect(() => {
-    if (interval === "Monthly") {
-      const calculatedPrice = numberOfSeats * 10;
-      setSubscriptionPrice(calculatedPrice);
-    } else if (interval === "Yearly") {
-      const calculatedPrice = numberOfSeats * 10 * 12 * 0.8;
-      setSubscriptionPrice(calculatedPrice);
-    }
-  }, [numberOfSeats, interval]);
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
