@@ -20,8 +20,8 @@ function BillingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          customerId: "cus_LN0cvznvRZsoxG",
-          priceId: "price_1LpVZKCM8rWyG1fMUfuYpk9f",
+          email: "estebanvargas94@gmail.com",
+          quantity: 10
         }),
       }
     ).then((res) => res.json());
