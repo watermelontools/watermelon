@@ -24,7 +24,7 @@ export default async function handler(req, res) {
         {
           price: priceId,
           quantity: req.body.quantity,
-        },
+        }
       ],
       payment_behavior: "default_incomplete",
       payment_settings: { save_default_payment_method: "on_subscription" },

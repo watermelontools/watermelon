@@ -2,6 +2,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState, useCallback } from "react";
 import CheckoutForm from "./CheckoutForm";
+import { useRouter } from "next/router";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY
@@ -9,8 +10,17 @@ const stripePromise = loadStripe(
 
 function BillingPage() {
   const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
+  const router = useRouter();
 
   useEffect(async () => {
+    const {quantity, email, interval, subscriptionAmount} = router.query;
+    let parsedInterval = "";
+    console.log("query params: ", quantity, email, subscriptionAmount, interval);
+    if (interval === "Monthly") {
+      parsedInterval = "month";
+    } else if (interval === "Yearly") {
+      parsedInterval = "year";
+    }
     const resSecret =  await fetch(
       // TODO: Change to production URL
       "http://localhost:3000/api/stripe/createSubscription",
@@ -20,8 +30,10 @@ function BillingPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: "estebanvargas94@gmail.com",
-          quantity: 10
+          email: email,
+          quantity: quantity,
+          interval: parsedInterval,
+          unitAmount: subscriptionAmount
         }),
       }
     ).then((res) => res.json());

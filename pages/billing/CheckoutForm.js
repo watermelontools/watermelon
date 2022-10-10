@@ -58,55 +58,6 @@ const CheckoutForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="number-of-seats">Number of seats</label>
-      <br />
-      <input
-        required
-        type="number"
-        className="form-control mb-2 mr-2"
-        id="exampleFormControlSelect1"
-        placeholder="Number of seats"
-        value={numberOfSeats}
-        onChange={(e) => {
-          setNumberOfSeats(e.target.value);
-        }}
-      />
-      <select
-        required
-        className="form-control mb-2"
-        id="exampleFormControlSelect1"
-        value={interval}
-        onChange={(e) => {
-          setInterval(e.target.value);
-        }}
-      >
-        <option value="Monthly">Monthly</option>
-        <option value="Yearly">Yearly</option>
-      </select>
-      <br />
-      <p className="text-danger">
-        {interval} subscription price: ${subscriptionPrice}
-      </p>
-      <input
-        required
-        label="Number of seats"
-        type="text"
-        className="form-control mb-2 mr-2"
-        id="exampleFormControlSelect1"
-        placeholder="Admin First Name"
-        value={adminFirstName}
-        onChange={(e) => {setAdminFirstName(e.target.value)}}
-      />
-      <input
-        required
-        label="Number of seats"
-        type="text"
-        className="form-control mb-2"
-        id="exampleFormControlSelect1"
-        placeholder="Admin Last Name"
-        value={adminLastName}
-        onChange={(e) => {setAdminLastName(e.target.value)}}
-      />
       <PaymentElement />
       <br />
       <div className="d-flex flex-items-center flex-justify-center">
