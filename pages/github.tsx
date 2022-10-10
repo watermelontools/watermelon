@@ -4,8 +4,11 @@ import Link from "next/link";
 import saveUserInfo from "../utils/db/github/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
+  const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
+
   const router = useRouter();
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
@@ -15,6 +18,23 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     }, 1000);
     return () => clearInterval(interval);
   }, [timeToRedirect]);
+
+  useEffect(() => {
+    // use getByEmail to check if user has paid
+    fetch("/api/payments/getByEmail", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+        body: JSON.stringify({ email: userEmail }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.email) {
+            setHasPaid(true);
+          }
+    });
+  }, []);
 
   return (
     <div className="Box">
@@ -30,7 +50,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} hasPaid={true}/>
+        <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
