@@ -4,18 +4,16 @@ import { useEffect, useState, useCallback } from "react";
 import CheckoutForm from "./CheckoutForm";
 import { useRouter } from "next/router";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 function BillingPage() {
   const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
   const router = useRouter();
 
   useEffect(async () => {
-    const {quantity, email } = router.query;
+    const { quantity, email } = router.query;
 
-    const resSecret =  await fetch(
+    const resSecret = await fetch(
       // TODO: Change to production URL
       "https://app.watermelontools.com/api/stripe/createSubscription",
       {
