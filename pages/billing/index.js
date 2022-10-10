@@ -17,7 +17,7 @@ function BillingPage() {
 
     const resSecret =  await fetch(
       // TODO: Change to production URL
-      "http://localhost:3000/api/stripe/createSubscription",
+      "https://app.watermelontools.com/api/stripe/createSubscription",
       {
         method: "POST",
         headers: {
