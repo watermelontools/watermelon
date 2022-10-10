@@ -29,23 +29,22 @@ function HomePage({}) {
       getGitHubInfo(userEmail).then((data) => {
         setGithubUserData(data);
       });
-    }
-  }, [userEmail]);
-  useEffect(() => {
-    // use getByEmail to check if user has paid
-    fetch("/api/payments/getByEmail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: userEmail }),
-    })
+
+      // use getByEmail to check if user has paid
+      fetch("/api/payments/getByEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail }),
+      })
       .then((res) => res.json())
       .then((data) => {
         if (data.email) {
           setHasPaid(true);
         }
       });
+    }
   }, [userEmail]);
 
   const nextServicesList = [
