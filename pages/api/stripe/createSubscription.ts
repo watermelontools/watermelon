@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       .then((customer) => {
         return customer.id;
       });
-    const priceId = "price_1LpVZKCM8rWyG1fMUfuYpk9f";
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID;
     // Create the subscription. Note we're expanding the Subscription's
     // latest invoice and that invoice's payment_intent
     // so we can pass it to the front end to confirm the payment
