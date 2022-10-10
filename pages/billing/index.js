@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import CheckoutForm from "./CheckoutForm";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLIC_KEY
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY
 );
 
 function BillingPage() {
