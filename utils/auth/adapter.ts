@@ -17,7 +17,7 @@ export default function MyAdapter(): Adapter {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as string)}';
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';
         `
       );
       return {
