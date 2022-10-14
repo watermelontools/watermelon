@@ -37,7 +37,7 @@ export default function Header() {
                   className="dropdown-item"
                   href={`vscode://watermelontools.watermelon-tools?email=${
                     userEmail ?? ""
-                  }&token=${session?.accessToken ?? ""}`}
+                  }&token=${session?.accessToken ? session.accessToken : ""}`}
                 >
                   VSCode Extension
                 </a>
