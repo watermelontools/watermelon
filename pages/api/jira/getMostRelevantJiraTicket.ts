@@ -48,7 +48,7 @@ export default async function handler(req, res) {
   }
 
   let returnVal = await fetch(
-    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
+    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search?expand=renderedBody`,
     {
       method: "POST",
       headers: {
