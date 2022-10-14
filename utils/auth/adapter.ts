@@ -97,8 +97,8 @@ export default function MyAdapter(): Adapter {
       console.log("deleteUser", userId);
       return;
     },
-    async linkAccount(account): Promise<Account> {
-      return await executeRequest(
+    async linkAccount(account): Promise<void> {
+      await executeRequest(
         `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';
         `
       );
