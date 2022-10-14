@@ -118,9 +118,9 @@ export default function MyAdapter(): Adapter {
         `
       );
       return {
-        id: createdSession.id,
-        sessionToken: createdSession.session_token,
-        userId: createdSession.user_id,
+        id: createdSession.id as string,
+        sessionToken: createdSession.session_token as string,
+        userId: createdSession.user_id as string,
         expires: new Date(createdSession.expires),
       };
     },
