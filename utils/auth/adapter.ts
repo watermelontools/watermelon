@@ -103,9 +103,8 @@ export default function MyAdapter(): Adapter {
         `
       );
     },
-    async unlinkAccount({ providerAccountId, provider }): Promise<Account> {
+    async unlinkAccount({ providerAccountId, provider }): Promise<void> {
       console.log("unlinkAccount", providerAccountId, provider);
-      return;
     },
     async createSession({
       sessionToken,
