@@ -14,7 +14,7 @@ function VSCodeInsiders() {
         <Link
           href={`vscode-insiders://watermelontools.watermelon-tools?email=${
             data?.user?.email ?? ""
-          }&token=${data?.accessToken ?? ""}`}
+          }&token=${data?.user.name ?? ""}`}
         >
           <a>Open VSCode Insiders</a>
         </Link>

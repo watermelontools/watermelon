@@ -15,7 +15,7 @@ function VSCode() {
         <Link
           href={`vscode://watermelontools.watermelon-tools?email=${
             data?.user?.email ?? ""
-          }&token=${data?.accessToken ?? ""}`}
+          }&token=${data?.user.name ?? ""}`}
         >
           <a>Open VSCode</a>
         </Link>
