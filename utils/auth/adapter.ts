@@ -122,7 +122,7 @@ export default function MyAdapter(): Adapter {
         sessionToken: createdSession.session_token as string,
         userId: createdSession.user_id as string,
         expires: new Date(createdSession.expires),
-      };
+      } as AdapterSession;
     },
     async getSessionAndUser(
       sessionToken
