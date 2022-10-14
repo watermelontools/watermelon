@@ -136,9 +136,9 @@ export default function MyAdapter(): Adapter {
       );
       return {
         session: {
-          id: fetchedSession.id,
-          sessionToken: fetchedSession.session_token,
-          userId: fetchedSession.user_id,
+          id: fetchedSession.id as string,
+          sessionToken: fetchedSession.session_token as string,
+          userId: fetchedSession.user_id as string,
           expires: new Date(fetchedSession.expires),
         },
         user: {
