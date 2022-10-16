@@ -134,19 +134,21 @@ export default function MyAdapter(): Adapter {
       let fetchedUser = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${fetchedSession.user_id}';`
       );
+      const session = {
+        id: fetchedSession.id as string,
+        sessionToken: fetchedSession.session_token as string,
+        userId: fetchedSession.user_id as string,
+        expires: new Date(fetchedSession.expires),
+      };
+      const user = {
+        id: fetchedUser.id,
+        name: fetchedUser.name,
+        email: fetchedUser.email,
+        emailVerified: new Date(fetchedUser.email_verified),
+      };
       return {
-        session: {
-          id: fetchedSession.id as string,
-          sessionToken: fetchedSession.session_token as string,
-          userId: fetchedSession.user_id as string,
-          expires: new Date(fetchedSession.expires),
-        },
-        user: {
-          id: fetchedUser.id,
-          name: fetchedUser.name,
-          email: fetchedUser.email,
-          emailVerified: new Date(fetchedUser.email_verified),
-        },
+        session,
+        user,
       };
     },
     async updateSession({
