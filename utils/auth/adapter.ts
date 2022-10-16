@@ -163,9 +163,9 @@ export default function MyAdapter(): Adapter {
         `
       );
       return {
-        id: updatedSession.id,
-        sessionToken: updatedSession.session_token,
-        userId: updatedSession.user_id,
+        id: updatedSession.id as string,
+        sessionToken: updatedSession.session_token as string,
+        userId: updatedSession.user_id as string,
         expires: new Date(updatedSession.expires),
       };
     },
