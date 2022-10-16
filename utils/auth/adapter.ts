@@ -175,12 +175,13 @@ export default function MyAdapter(): Adapter {
         `EXEC [dbo].[delete_session] @sessionToken = '${sessionToken}';
         `
       );
-      return {
-        id: deletedSession.id,
-        sessionToken: deletedSession.session_token,
-        userId: deletedSession.user_id,
+      const session = {
+        id: deletedSession.id as string,
+        sessionToken: deletedSession.session_token as string,
+        userId: deletedSession.user_id as string,
         expires: new Date(deletedSession.expires),
       };
+      return session;
     },
     async createVerificationToken({
       identifier,
