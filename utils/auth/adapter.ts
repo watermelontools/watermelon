@@ -162,12 +162,13 @@ export default function MyAdapter(): Adapter {
         ).toISOString()}';
         `
       );
-      return {
+      const session = {
         id: updatedSession.id as string,
         sessionToken: updatedSession.session_token as string,
         userId: updatedSession.user_id as string,
         expires: new Date(updatedSession.expires),
       };
+      return session;
     },
     async deleteSession(sessionToken): Promise<AdapterSession> {
       let deletedSession = await executeRequest(
