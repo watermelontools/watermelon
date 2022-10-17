@@ -22,7 +22,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx", "pages/billing/testBilling.js" ],
+    "**/*.tsx", 
+    "**/*.js" ],
   "exclude": [
     "node_modules"
   ]

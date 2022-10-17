@@ -15,7 +15,7 @@ function BillingPage() {
 
     const resSecret = await fetch(
       // TODO: Change to production URL
-      `${NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
       {
         method: "POST",
         headers: {
