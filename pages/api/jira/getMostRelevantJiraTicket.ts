@@ -48,7 +48,7 @@ export default async function handler(req, res) {
   }
 
   let returnVal = await fetch(
-    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search?expand=renderedBody`,
+    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
     {
       method: "POST",
       headers: {
@@ -58,6 +58,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         jql: `text ~ "${parsedPRTitle}"`,
+        expand: ["renderedFields"],
       }),
     }
   )
