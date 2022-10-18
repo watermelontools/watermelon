@@ -76,14 +76,14 @@ function HomePage({}) {
                 <DownloadExtension
                   name="VSCode"
                   email={userEmail}
-                  accessToken={session.id}
+                  accessToken={session.user.name}
                 />
               </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode Insiders"
                   email={userEmail}
-                  accessToken={session.id}
+                  accessToken={session.user.name}
                 />
               </div>
               {nextServicesList.map((service) => (
