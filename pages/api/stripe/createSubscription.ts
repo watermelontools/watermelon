@@ -33,6 +33,9 @@ export default async function handler(req, res) {
 
     res.send({
       subscriptionId: subscription.id,
+      // We use Stripe's Expand functionality to get the latest invoice and its payment intent
+      // So we can pass it to the front end to confirm the payment
+      // We're adding a type assertion here in order to get the CI/CD to pass
       clientSecret: (subscription.latest_invoice as any).payment_intent.client_secret,
     });
   } catch (error) {
