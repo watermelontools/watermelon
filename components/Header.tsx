@@ -3,11 +3,11 @@ import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 export default function Header() {
   const [userEmail, setUserEmail] = useState(null);
-  const { data: session } = useSession();
+  const { data } = useSession();
 
   useEffect(() => {
-    setUserEmail(session?.user?.email);
-  }, [session]);
+    setUserEmail(data?.user?.email);
+  }, [data]);
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
       <div className="Header-item">
@@ -37,7 +37,7 @@ export default function Header() {
                   className="dropdown-item"
                   href={`vscode://watermelontools.watermelon-tools?email=${
                     userEmail ?? ""
-                  }&token=${session?.accessToken ?? ""}`}
+                  }&token=${data?.user.name ? data.user.name : ""}`}
                 >
                   VSCode Extension
                 </a>
