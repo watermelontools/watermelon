@@ -72,7 +72,7 @@ const AdminDetails = () => {
               label="Admin Email"
               type="text"
               className="form-control mb-2"
-              id="exampleFormControlSelect1"
+              id="exampleFormControlSelect2"
               placeholder="Admin Email"
               value={adminEmail}
               onChange={(e) => {
@@ -89,7 +89,7 @@ const AdminDetails = () => {
               label="Number of seats"
               type="text"
               className="form-control mb-2 mr-2"
-              id="exampleFormControlSelect1"
+              id="exampleFormControlSelect3"
               placeholder="Admin First Name"
               value={adminFirstName}
               onChange={(e) => {
@@ -101,7 +101,7 @@ const AdminDetails = () => {
               label="Number of seats"
               type="text"
               className="form-control mb-2"
-              id="exampleFormControlSelect1"
+              id="exampleFormControlSelect4"
               placeholder="Admin Last Name"
               value={adminLastName}
               onChange={(e) => {
