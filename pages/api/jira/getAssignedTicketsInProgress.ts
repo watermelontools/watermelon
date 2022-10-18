@@ -29,6 +29,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         jql: `assignee="${user_email}" AND status not in (Backlog, Done)`,
+        expand: ["renderedFields"],
       }),
     }
   )
