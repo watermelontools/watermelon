@@ -57,22 +57,23 @@ function BillingPage() {
         gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
       }}
     >
-      <div className="d-flex flex-items-center flex-justify-center flex-column">
-        <div
-          className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-6 m-6"
-          style={{ maxWidth: "80ch" }}
-        >
-          <h1 className="h3 mb-3 f4 text-normal">
-            Purchase your Watermelon subscription
-          </h1>
-          {/* render if component already mounted */}
-          {retrievedClientSecret && (
-            <Elements stripe={stripePromise} options={options}>
+      {/* render if component already mounted, if not app will crash*/}
+      {retrievedClientSecret && (
+        <Elements stripe={stripePromise} options={options}>
+          <div className="d-flex flex-items-center flex-justify-center flex-column">
+            <div
+              className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-6 m-6"
+              style={{ maxWidth: "80ch" }}
+            >
+              <h1 className="h3 mb-3 f4 text-normal">
+                Purchase your Watermelon subscription
+              </h1>
+
               <CheckoutForm />
-            </Elements>
-          )}
-        </div>
-      </div>
+            </div>
+          </div>
+        </Elements>
+      )}
     </div>
   );
 }
