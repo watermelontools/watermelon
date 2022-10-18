@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
     res.send({
       subscriptionId: subscription.id,
-      clientSecret: subscription.latest_invoice?.payment_intent.client_secret,
+      clientSecret: (subscription.latest_invoice as any).payment_intent.client_secret,
     });
   } catch (error) {
     return res.status(400).send({ error: { message: error.message } });
