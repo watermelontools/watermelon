@@ -31,6 +31,8 @@ function HomePage({}) {
       });
 
       // use getByEmail to check if user has paid
+      // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
+      // and have a perfect self-serve experience
       fetch("/api/payments/getByEmail", {
         method: "POST",
         headers: {
