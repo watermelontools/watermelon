@@ -13,12 +13,16 @@ export default async function handler(req, res) {
     return res.send({ error: "no owner" });
   }
   let { access_token } = await getToken(user);
-  const octokit = new Octokit({
-    auth: access_token,
-  });
-  let pullRequests = await octokit.rest.pulls.list({
-    owner,
-    repo,
-  });
-  return res.send(pullRequests.data);
+  try {
+    const octokit = new Octokit({
+      auth: access_token,
+    });
+    let pullRequests = await octokit.rest.pulls.list({
+      owner,
+      repo,
+    });
+    return res.send(pullRequests.data);
+  } catch (error) {
+    return res.send({ error });
+  }
 }

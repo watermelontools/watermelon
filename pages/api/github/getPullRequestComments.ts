@@ -16,13 +16,17 @@ export default async function handler(req, res) {
     return res.send({ error: "no pull_number" });
   }
   let { access_token } = await getToken(user);
-  const octokit = new Octokit({
-    auth: access_token,
-  });
-  let comments = await octokit.rest.pulls.listReviewComments({
-    owner,
-    repo,
-    pull_number,
-  });
-  return res.send(comments.data);
+  try {
+    const octokit = new Octokit({
+      auth: access_token,
+    });
+    let comments = await octokit.rest.pulls.listReviewComments({
+      owner,
+      repo,
+      pull_number,
+    });
+    return res.send(comments.data);
+  } catch (error) {
+    return res.send({ error });
+  }
 }
