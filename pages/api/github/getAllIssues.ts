@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   });
   try {
     let issues = await octokit.rest.issues.list();
-    return res.send(issues);
+    return res.send(issues.data);
   } catch (error) {
     return res.send({ error });
   }
