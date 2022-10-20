@@ -46,7 +46,6 @@ function Paymentsuccess() {
                 <input
                   required
                   id={`email${seatIndex}`}
-                  pattern="(?!^[.+&'_-]*@.*$)(^[_\w\d+&'-]+(\.[_\w\d+&'-]*)*@[\w\d-]+(\.[\w\d-]+)*\.(([\d]{1,3})|([\w]{2,}))$)"
                   type="email"
                   placeholder="Enter email"
                   className="form-control mb-2 mr-2"
