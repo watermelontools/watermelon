@@ -14,7 +14,6 @@ function BillingPage() {
     const { quantity, email } = router.query;
 
     const resSecret = await fetch(
-      // TODO: Change to production URL
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
       {
         method: "POST",
@@ -28,7 +27,7 @@ function BillingPage() {
       }
     ).then((res) => res.json());
     setRetrievedClientSecret(resSecret.clientSecret);
-  }, []);
+  }, [router.query]);
 
   const options = {
     clientSecret: retrievedClientSecret,
