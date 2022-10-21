@@ -51,7 +51,6 @@ const CheckoutForm = () => {
   );
 };
 
-// export default CheckoutForm;
 export default dynamic(() => Promise.resolve(CheckoutForm), {
   ssr: false,
 });
