@@ -30,7 +30,7 @@ function BillingPage() {
   }, [router.query]);
 
   const options = {
-    clientSecret: retrievedClientSecret || null,
+    clientSecret: retrievedClientSecret,
 
     appearance: {
       theme: "night",

@@ -4,6 +4,7 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
+import dynamic from 'next/dynamic'
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -45,4 +46,7 @@ const CheckoutForm = () => {
   );
 };
 
-export default CheckoutForm;
+// export default CheckoutForm;
+export default dynamic(() => Promise.resolve(CheckoutForm), {
+  ssr: false
+})
