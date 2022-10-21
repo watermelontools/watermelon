@@ -66,7 +66,7 @@ function BillingPage() {
             Purchase your Watermelon subscription
           </h1>
           {/* render if component already mounted */}
-          {options && stripePromise && (
+          {(retrievedClientSecret && stripePromise && options) && (
             <div>
               {router.isFallback ? (
                 <div>Loading...</div>
