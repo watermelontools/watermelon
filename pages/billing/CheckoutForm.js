@@ -4,7 +4,7 @@ import {
   useElements,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -29,7 +29,7 @@ const CheckoutForm = () => {
       // confirming the payment. Show error to your customer (for example, payment
       // details incomplete)
       setErrorMessage(error.message);
-    } 
+    }
   };
 
   return (
@@ -37,7 +37,12 @@ const CheckoutForm = () => {
       <PaymentElement />
       <br />
       <div className="d-flex flex-items-center flex-justify-center">
-        <button className="btn btn-primary" id="checkout-and-portal-button" type="submit" disabled={!stripe}>
+        <button
+          className="btn btn-primary"
+          id="checkout-and-portal-button"
+          type="submit"
+          disabled={!stripe}
+        >
           Purchase
         </button>
       </div>
@@ -48,5 +53,5 @@ const CheckoutForm = () => {
 
 // export default CheckoutForm;
 export default dynamic(() => Promise.resolve(CheckoutForm), {
-  ssr: false
-})
+  ssr: false,
+});
