@@ -72,13 +72,10 @@ function BillingPage() {
                 <div>Loading...</div>
               ) : (
                 <Elements stripe={stripePromise} options={options}>
-                  <CheckoutForm />
+                  {/* <CheckoutForm /> */}
                 </Elements>
               )}
             </div>
-            // <Elements stripe={stripePromise} options={options}>
-            //   <CheckoutForm/>
-            // </Elements>
           )}
         </div>
       </div>
