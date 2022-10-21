@@ -1,10 +1,10 @@
-import addEmail from "../../../utils/db/payments/addEmail";
+import addEmails from "../../../utils/db/payments/addEmails";
 
 export default async function handler(req, res) {
-  let { emailList } = req.body;
-  if (!emailList) {
-    return res.send({ error: "no email list" });
+  let { email } = req.body;
+  if (!email) {
+    return res.send({ error: "no email" });
   }
-//   let hasPaid = await getByEmail({ email });
-  return res.send(hasPaid);
+  let emailsAdded = await addEmails( {email} );
+  return res.send(emailsAdded);
 }
