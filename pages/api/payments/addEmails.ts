@@ -5,6 +5,6 @@ export default async function handler(req, res) {
   if (!email) {
     return res.send({ error: "no email" });
   }
-  let emailsAdded = await addEmails( {email} );
+  let emailsAdded = await addEmails({ email });
   return res.send(emailsAdded);
 }
