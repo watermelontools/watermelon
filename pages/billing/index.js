@@ -68,11 +68,7 @@ function BillingPage() {
           {/* render if component already mounted */}
           {retrievedClientSecret && (
             <Elements stripe={stripePromise} options={options}>
-              {router.isFallback ? (
-                <div>Loading...</div>
-              ) : (
-                <CheckoutForm />
-              )}
+              {router.isFallback ? <div>Loading...</div> : <CheckoutForm />}
               {/* <CheckoutForm/> */}
             </Elements>
           )}
