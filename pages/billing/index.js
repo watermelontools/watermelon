@@ -68,9 +68,7 @@ function BillingPage() {
           {/* render if component already mounted */}
           {retrievedClientSecret && (
             <Elements stripe={stripePromise} options={options}>
-              {retrievedClientSecret && (
-                <CheckoutForm />
-              )}
+              {retrievedClientSecret && <CheckoutForm />}
             </Elements>
           )}
         </div>
