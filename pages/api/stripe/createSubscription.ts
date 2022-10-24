@@ -40,6 +40,8 @@ export default async function handler(req, res) {
         .client_secret,
     });
   } catch (error) {
-    return res.status(400).send({ error: { message: error.message } });
+    // get error code
+    const errorCode = error.raw?.code;
+    return res.status(errorCode).send({ error: { message: error.message } });
   }
 }
