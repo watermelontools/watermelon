@@ -30,20 +30,6 @@ function BillingPage() {
     };
 
     fetchClientSecret();
-    // const resSecret = await fetch(
-    //   `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       email: email,
-    //       quantity: quantity,
-    //     }),
-    //   }
-    // ).then((res) => res.json());
-    // setRetrievedClientSecret(resSecret.clientSecret);
   }, [router.query]);
 
   const options = {
