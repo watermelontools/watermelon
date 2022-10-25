@@ -18,7 +18,7 @@ const AdminDetails = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const calculatedPrice = numberOfSeats * 10;
+    const calculatedPrice = numberOfSeats * 5;
     setSubscriptionPrice(calculatedPrice);
   }, [numberOfSeats]);
 
