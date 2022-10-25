@@ -5,8 +5,7 @@ function Paymentsuccess() {
   const router = useRouter();
 
   const [numberOfSeats, setNumberOfSeats] = useState(4);
-
-  let localEmailArray = [];
+  const [emailArray, setEmailArray] = useState([]);
 
   useEffect(() => {
     const { seats } = router.query as { seats: string };
@@ -16,8 +15,9 @@ function Paymentsuccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("localEmailArray", localEmailArray);
-    // send local email array to DB here
+    console.log("emailArray", emailArray);
+    // send email array to DB here
+    // Send welcome to team emails here
     router.push("/billing/teammatesInvited");
   };
 
@@ -50,7 +50,11 @@ function Paymentsuccess() {
                   placeholder="Enter email"
                   className="form-control mb-2 mr-2"
                   onChange={(e) => {
-                    localEmailArray[seatIndex] = e.target.value;
+                    setEmailArray([
+                      ...emailArray.slice(0, seatIndex),
+                      e.target.value,
+                      ...emailArray.slice(seatIndex + 1),
+                    ]);
                   }}
                 />
               </div>
