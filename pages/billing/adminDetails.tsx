@@ -62,14 +62,13 @@ const AdminDetails = () => {
               id="exampleFormControlSelect1"
               placeholder="Number of seats"
               value={numberOfSeats}
-              onChange={(e) => {
-                setNumberOfSeats(e.target.value);
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setNumberOfSeats(parseInt(e.target.value));
               }}
             />
 
             <input
               required
-              label="Admin Email"
               type="text"
               className="form-control mb-2"
               id="exampleFormControlSelect2"
@@ -86,7 +85,6 @@ const AdminDetails = () => {
             </p>
             <input
               required
-              label="Number of seats"
               type="text"
               className="form-control mb-2 mr-2"
               id="exampleFormControlSelect3"
@@ -98,7 +96,6 @@ const AdminDetails = () => {
             />
             <input
               required
-              label="Number of seats"
               type="text"
               className="form-control mb-2"
               id="exampleFormControlSelect4"
