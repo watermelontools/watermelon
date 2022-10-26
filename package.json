@@ -20,6 +20,7 @@
     "nodemailer": "^6.7.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "octokit": "^2.0.9",
     "react-select": "^4.3.0",
     "stripe": "^10.10.0",
     "zlib": "^1.0.5"
