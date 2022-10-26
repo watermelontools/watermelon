@@ -20,7 +20,7 @@ const CheckoutForm = () => {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: "https://example.com/order/123/complete",
+        return_url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/billing/paymentsSucess`
       },
     });
 
