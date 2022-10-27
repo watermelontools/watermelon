@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import sendWelcome from "../../utils/sendgrid/sendWelcome";
 import addEmails from "../../utils/db/payments/addEmails";
 
 function Paymentsuccess() {
@@ -21,7 +20,14 @@ function Paymentsuccess() {
     // Send welcome to the team emails via Sengrid here
     emailArray.forEach((email) => {
       addEmails(email);
-      sendWelcome(email);
+      // Note: Calling utils/sendgrid/sendEmail here doesn't work
+      fetch("/api/sendGrid/sendWelcome", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
     });
 
     router.push("/billing/teammatesInvited");

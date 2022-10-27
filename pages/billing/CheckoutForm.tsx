@@ -6,7 +6,8 @@ import {
 } from "@stripe/react-stripe-js";
 import dynamic from "next/dynamic";
 
-const CheckoutForm = () => {
+const CheckoutForm = ({numberOfSeats}) => {
+  console.log("checkoutform.tsx - numberOfSeats", numberOfSeats);
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState(null);
@@ -20,7 +21,7 @@ const CheckoutForm = () => {
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/billing/paymentSuccess/?seats=${4}`
+        return_url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/billing/paymentSuccess/?seats=${numberOfSeats}`
       },
     });
 
