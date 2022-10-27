@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import sendWelcome from "../../utils/sendgrid/sendWelcome";
+import addEmails from "../../utils/db/payments/addEmails";
 
 function Paymentsuccess() {
   const router = useRouter();
@@ -15,9 +17,13 @@ function Paymentsuccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("emailArray", emailArray);
-    // send email array to DB here
-    // Send welcome to team emails here
+    // Save emails to db of paid users here
+    // Send welcome to the team emails via Sengrid here
+    emailArray.forEach((email) => {
+      addEmails(email);
+      sendWelcome(email);
+    });
+
     router.push("/billing/teammatesInvited");
   };
 
