@@ -15,8 +15,6 @@ function Paymentsuccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Save emails to db of paid users here
-    // Send welcome to the team emails via Sengrid here
     emailArray.forEach((email) => {
       // Add email to the list of paying users
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/addEmails`, {
