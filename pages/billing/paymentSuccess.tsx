@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import addEmails from "../../utils/db/payments/addEmails";
-import sendWelcome from "../../utils/sendgrid/sendWelcome";
 
 function Paymentsuccess() {
   const router = useRouter();
@@ -20,8 +18,17 @@ function Paymentsuccess() {
     // Save emails to db of paid users here
     // Send welcome to the team emails via Sengrid here
     emailArray.forEach((email) => {
-      // addEmails(email); TODO: Debug this
-      // Note: Calling utils/sendgrid/sendEmail here doesn't work. Yields the Module not found: Can't resolve 'fs' error
+      // Add email to the list of paying users
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/addEmails`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+      // Send welcome to the team email
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendgrid/sendWelcome`, {
         method: "POST",
         headers: {
