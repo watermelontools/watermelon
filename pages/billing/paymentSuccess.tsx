@@ -26,14 +26,15 @@ function Paymentsuccess() {
           email,
         }),
       });
-      // Send welcome to the team email
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendgrid/sendWelcome`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emails: email, sender: "info@watermelon.tools" }),
-      });
+    });
+
+    // Send welcome to the team email
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendgrid/sendWelcome`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ emails: emailArray, sender: "info@watermelon.tools" }),
     });
 
     router.push("/billing/teammatesInvited");
