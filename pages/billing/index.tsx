@@ -12,13 +12,9 @@ function BillingPage() {
   const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
   const { data: session, status } = useSession();
   const router = useRouter();
-  // let quantity;
-  // let email;
 
   useEffect(() => {
     const { quantity, email } = router.query;
-    // quantity = router.query.quantity;
-    // email = router.query.email;
 
     // create async function that fetches the client secret
     const fetchClientSecret = async () => {

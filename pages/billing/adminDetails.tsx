@@ -64,6 +64,7 @@ const AdminDetails = () => {
                 type="number"
                 className="form-control mb-2 mr-2"
                 id="exampleFormControlSelect1"
+                min="1"
                 placeholder="Number of seats"
                 value={numberOfSeats}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +74,7 @@ const AdminDetails = () => {
 
               <input
                 required
-                type="text"
+                type="email"
                 className="form-control mb-2"
                 id="exampleFormControlSelect2"
                 placeholder="Admin Email"

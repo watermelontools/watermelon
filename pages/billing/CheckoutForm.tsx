@@ -6,8 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import dynamic from "next/dynamic";
 
-const CheckoutForm = ({numberOfSeats}) => {
-  console.log("checkoutform.tsx - numberOfSeats", numberOfSeats);
+const CheckoutForm = ({numberOfSeats}) => {;
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState(null);

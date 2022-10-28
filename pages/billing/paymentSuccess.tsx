@@ -32,7 +32,7 @@ function Paymentsuccess() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ emails: email, sender: "edalel@watermelon.tools" }),
+        body: JSON.stringify({ emails: email, sender: "info@watermelon.tools" }),
       });
     });
 
