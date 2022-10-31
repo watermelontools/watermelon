@@ -15,9 +15,28 @@ function Paymentsuccess() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("emailArray", emailArray);
-    // send email array to DB here
-    // Send welcome to team emails here
+    emailArray.forEach((email) => {
+      // Add email to the list of paying users
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/addEmails`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      });
+    });
+
+    // Send welcome to the team email
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/sendgrid/sendWelcome`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ emails: emailArray, sender: "info@watermelon.tools" }),
+    });
+
     router.push("/billing/teammatesInvited");
   };
 
