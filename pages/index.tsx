@@ -15,6 +15,7 @@ function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [hasPaid, setHasPaid] = useState(false);
   const { data: session, status } = useSession();
   useEffect(() => {
     setUserEmail(session?.user?.email);
@@ -27,8 +28,26 @@ function HomePage({}) {
       getGitHubInfo(userEmail).then((data) => {
         setGithubUserData(data);
       });
+
+      // use getByEmail to check if user has paid
+      // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
+      // and have a perfect self-serve experience
+      fetch("/api/payments/getByEmail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: userEmail }),
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.email) {
+          setHasPaid(true);
+        }
+      });
     }
   }, [userEmail]);
+
   const nextServicesList = [
     "Bitbucket",
     "Gitlab",
@@ -68,21 +87,21 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} />
+                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
                 )}
               </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode"
                   email={userEmail}
-                  accessToken={session.id}
+                  accessToken={session.user.name}
                 />
               </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode Insiders"
                   email={userEmail}
-                  accessToken={session.id}
+                  accessToken={session.user.name}
                 />
               </div>
               {nextServicesList.map((service) => (

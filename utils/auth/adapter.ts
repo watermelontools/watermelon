@@ -17,7 +17,7 @@ export default function MyAdapter(): Adapter {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as string)}';
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';
         `
       );
       return {
@@ -97,15 +97,14 @@ export default function MyAdapter(): Adapter {
       console.log("deleteUser", userId);
       return;
     },
-    async linkAccount(account): Promise<Account> {
-      return await executeRequest(
+    async linkAccount(account): Promise<void> {
+      await executeRequest(
         `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';
         `
       );
     },
-    async unlinkAccount({ providerAccountId, provider }): Promise<Account> {
+    async unlinkAccount({ providerAccountId, provider }): Promise<void> {
       console.log("unlinkAccount", providerAccountId, provider);
-      return;
     },
     async createSession({
       sessionToken,
@@ -119,11 +118,11 @@ export default function MyAdapter(): Adapter {
         `
       );
       return {
-        id: createdSession.id,
-        sessionToken: createdSession.session_token,
-        userId: createdSession.user_id,
+        id: createdSession.id as string,
+        sessionToken: createdSession.session_token as string,
+        userId: createdSession.user_id as string,
         expires: new Date(createdSession.expires),
-      };
+      } as AdapterSession;
     },
     async getSessionAndUser(
       sessionToken
@@ -135,19 +134,21 @@ export default function MyAdapter(): Adapter {
       let fetchedUser = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${fetchedSession.user_id}';`
       );
+      const session = {
+        id: fetchedSession.id as string,
+        sessionToken: fetchedSession.session_token as string,
+        userId: fetchedSession.user_id as string,
+        expires: new Date(fetchedSession.expires),
+      };
+      const user = {
+        id: fetchedUser.id,
+        name: fetchedUser.name,
+        email: fetchedUser.email,
+        emailVerified: new Date(fetchedUser.email_verified),
+      };
       return {
-        session: {
-          id: fetchedSession.id,
-          sessionToken: fetchedSession.session_token,
-          userId: fetchedSession.user_id,
-          expires: new Date(fetchedSession.expires),
-        },
-        user: {
-          id: fetchedUser.id,
-          name: fetchedUser.name,
-          email: fetchedUser.email,
-          emailVerified: new Date(fetchedUser.email_verified),
-        },
+        session,
+        user,
       };
     },
     async updateSession({
@@ -161,24 +162,26 @@ export default function MyAdapter(): Adapter {
         ).toISOString()}';
         `
       );
-      return {
-        id: updatedSession.id,
-        sessionToken: updatedSession.session_token,
-        userId: updatedSession.user_id,
+      const session = {
+        id: updatedSession.id as string,
+        sessionToken: updatedSession.session_token as string,
+        userId: updatedSession.user_id as string,
         expires: new Date(updatedSession.expires),
       };
+      return session;
     },
     async deleteSession(sessionToken): Promise<AdapterSession> {
       let deletedSession = await executeRequest(
         `EXEC [dbo].[delete_session] @sessionToken = '${sessionToken}';
         `
       );
-      return {
-        id: deletedSession.id,
-        sessionToken: deletedSession.session_token,
-        userId: deletedSession.user_id,
+      const session = {
+        id: deletedSession.id as string,
+        sessionToken: deletedSession.session_token as string,
+        userId: deletedSession.user_id as string,
         expires: new Date(deletedSession.expires),
       };
+      return session;
     },
     async createVerificationToken({
       identifier,
