@@ -20,7 +20,6 @@ function HomePage({}) {
     setUserEmail(session?.user?.email);
   }, [session]);
   useEffect(() => {
-    console.log("userEmail", userEmail);
     if (userEmail) {
       getJiraInfo(userEmail).then((data) => {
         setJiraUserData(data);
