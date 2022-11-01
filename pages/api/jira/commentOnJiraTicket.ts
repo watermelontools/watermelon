@@ -15,7 +15,6 @@ export default async function handler(req, res) {
   let { access_token, cloudId } = await getToken({ user });
 
   let response = await commentOnJiraTicket({
-    user,
     issueIdOrKey,
     text,
     access_token,
