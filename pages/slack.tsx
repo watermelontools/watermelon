@@ -49,18 +49,20 @@ export async function getServerSideProps(context) {
   let f;
   console.log(context.query.code);
   if (context.query.code) {
+    let body = JSON.stringify({
+      grant_type: "authorization_code",
+      code: context.query.code,
+      redirect_uri: "https://app.watermelontools.com/slack",
+      client_id: process.env.SLACK_CLIENT_ID,
+      client_secret: process.env.SLACK_CLIENT_SECRET,
+    });
+    console.log(body);
     f = await fetch(`https://slack.com/api/openid.connect.token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=utf-8",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/slack",
-        client_id: process.env.SLACK_CLIENT_ID,
-        client_secret: process.env.SLACK_CLIENT_SECRET,
-      }),
+      body,
     });
   } else
     return {
