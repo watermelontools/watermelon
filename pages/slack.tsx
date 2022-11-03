@@ -49,20 +49,31 @@ export async function getServerSideProps(context) {
   let f;
   console.log(context.query.code);
   if (context.query.code) {
-    let body = JSON.stringify({
+    let details = {
       grant_type: "authorization_code",
       code: context.query.code,
       redirect_uri: "https://app.watermelontools.com/slack",
       client_id: process.env.SLACK_CLIENT_ID,
       client_secret: process.env.SLACK_CLIENT_SECRET,
-    });
-    console.log(body);
+    };
+    let formBody = [];
+    for (var property in details) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(details[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    let formText = "";
+    for (let index = 0; index < formBody.length; index++) {
+      const element = formBody[index];
+      formText = formText.concat(formText, "&", element);
+    }
+    console.log(formText);
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json; charset=utf-8",
+        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
       },
-      body,
+      body: formText,
     });
   } else
     return {
@@ -72,7 +83,7 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.log("jira error", json);
+    console.log("Slack error", json);
     return {
       props: {
         error: json.error,
