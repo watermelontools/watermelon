@@ -57,7 +57,7 @@ export async function getServerSideProps(context) {
       client_secret: process.env.SLACK_CLIENT_SECRET,
     });
     console.log(body);
-    f = await fetch(`https://slack.com/api/openid.connect.token`, {
+    f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
