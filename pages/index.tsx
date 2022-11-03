@@ -39,12 +39,12 @@ function HomePage({}) {
         },
         body: JSON.stringify({ email: userEmail }),
       })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.email) {
-          setHasPaid(true);
-        }
-      });
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.email) {
+            setHasPaid(true);
+          }
+        });
     }
   }, [userEmail]);
 
@@ -87,7 +87,7 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
+                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
                 )}
               </div>
               <div className="p-3">
@@ -109,6 +109,10 @@ function HomePage({}) {
                   <ComingSoonService name={service} />
                 </div>
               ))}
+
+              <a href="https://slack.com/openid/connect/authorize?scope=openid%20email%20profile&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fapp.watermelontools.com%2Fslack&amp;client_id=2258283433764.3516691319939">
+                Sign in with Slack
+              </a>
             </div>
           )}
         </>
