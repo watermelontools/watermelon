@@ -22,14 +22,14 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
       </Link>
     ) : (
       <Link
-        href={`https://calendly.com/evargas-14/call-with-esteban-vargas`}
+        href={`https://app.watermelontools.com/billing/adminDetails`}
       >
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/jira.svg" />
             <div className="p-2">
               <h2>Activate Jira Integration</h2>
-              <p>Contact us to view your Most Relevant Ticket and Active Tickets</p>
+              <p>Upgrade your plan to index code context from Jira</p>
             </div>
           </div>
         </a>

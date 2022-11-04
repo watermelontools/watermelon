@@ -11,7 +11,7 @@ import getJiraInfo from "../utils/api/getJiraInfo";
 import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
-function HomePage({}) {
+function HomePage({ hasPaidServerSide }) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
@@ -27,23 +27,6 @@ function HomePage({}) {
       });
       getGitHubInfo(userEmail).then((data) => {
         setGithubUserData(data);
-      });
-
-      // use getByEmail to check if user has paid
-      // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
-      // and have a perfect self-serve experience
-      fetch("/api/payments/getByEmail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: userEmail }),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.email) {
-          setHasPaid(true);
-        }
       });
     }
   }, [userEmail]);
@@ -87,7 +70,8 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
+                  // <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
+                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaidServerSide}/>
                 )}
               </div>
               <div className="p-3">
@@ -115,6 +99,29 @@ function HomePage({}) {
       )}
     </div>
   );
+}
+
+// This gets called on every request
+export async function getServerSideProps() {
+  // Fetch data from external API
+  let hasPaidServerSide = false;
+  await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/getByEmail`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // body: JSON.stringify({ email: userEmail }),
+    body: JSON.stringify({ email: "info@watermelon.tools" })
+  })
+  .then((res) => res.json())
+  .then((data) => {
+    if (data.email) {
+      hasPaidServerSide = true;
+    }
+  })
+
+  // Pass data to the page via props
+  return { props: { hasPaidServerSide } }
 }
 
 export default HomePage;
