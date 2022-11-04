@@ -85,13 +85,16 @@ export async function getServerSideProps(context) {
     };
   } else {
     const { authed_user } = json;
-    const userInfo = await fetch("https://slack.com/api/users.info", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authed_user.access_token}`,
-      },
-    });
+    const userInfo = await fetch(
+      `https://slack.com/api/users.info?user=${authed_user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authed_user.access_token}`,
+        },
+      }
+    );
     let userJson = await userInfo.json();
     console.log(userJson);
     return {
