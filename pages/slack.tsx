@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/jira/saveUserInfo";
+import saveUserInfo from "../utils/db/slack/saveUserInfo";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 export default function Jira({ organization, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
@@ -47,7 +47,6 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
 }
 export async function getServerSideProps(context) {
   let f;
-  console.log(context.query.code);
   if (context.query.code) {
     let details = {
       grant_type: "authorization_code",
@@ -71,7 +70,7 @@ export async function getServerSideProps(context) {
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: formText,
     });
@@ -91,17 +90,14 @@ export async function getServerSideProps(context) {
     };
   } else {
     console.log(json);
-    const { access_token } = json;
-    const userInfo = await fetch(
-      "https://slack.com/api/openid.connect.userInfo",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
+    const { authed_user } = json;
+    const userInfo = await fetch("https://slack.com/api/users.info", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authed_user.access_token}`,
+      },
+    });
     console.log(userInfo);
     return {
       props: {
