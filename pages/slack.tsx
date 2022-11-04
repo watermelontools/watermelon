@@ -92,7 +92,8 @@ export async function getServerSideProps(context) {
         Authorization: `Bearer ${authed_user.access_token}`,
       },
     });
-    console.log(userInfo);
+    let userJson = await userInfo.json();
+    console.log(userJson);
     return {
       props: {
         userEmail: context.query.state,
