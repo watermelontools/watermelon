@@ -61,18 +61,13 @@ export async function getServerSideProps(context) {
       var encodedValue = encodeURIComponent(details[property]);
       formBody.push(encodedKey + "=" + encodedValue);
     }
-    let formText = "";
-    for (let index = 0; index < formBody.length; index++) {
-      const element = formBody[index];
-      formText = formText.concat(formText, "&", element);
-    }
-    console.log(formText);
+
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: formText,
+      body: formBody.join("&"),
     });
   } else
     return {
@@ -89,7 +84,6 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    console.log(json);
     const { authed_user } = json;
     const userInfo = await fetch("https://slack.com/api/users.info", {
       method: "GET",
