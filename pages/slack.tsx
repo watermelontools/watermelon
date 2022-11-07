@@ -17,7 +17,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div className="Box" style={{ maxWidth: "100ch" }}>
+    <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with Slack to {organization}

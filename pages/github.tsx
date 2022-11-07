@@ -8,7 +8,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
   const router = useRouter();
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
@@ -26,18 +26,18 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       headers: {
         "Content-Type": "application/json",
       },
-        body: JSON.stringify({ email: userEmail }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.email) {
-            setHasPaid(true);
-          }
-    });
+      body: JSON.stringify({ email: userEmail }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.email) {
+          setHasPaid(true);
+        }
+      });
   }, []);
 
   return (
-    <div className="Box">
+    <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with GitHub as {login}
@@ -50,7 +50,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid}/>
+        <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>

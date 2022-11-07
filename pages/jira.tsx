@@ -17,7 +17,7 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div className="Box">
+    <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with Jira to {organization}
