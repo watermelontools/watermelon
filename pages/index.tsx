@@ -111,7 +111,9 @@ function HomePage({}) {
                 </div>
               ))}
 
-              <a href="https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize&user_scope=chat:write,users:read">
+              <a
+                href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize&user_scope=chat:write,users:read&state=${userEmail}`}
+              >
                 Add to Slack
               </a>
             </div>
