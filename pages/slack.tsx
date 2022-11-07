@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/slack/saveUserInfo";
 import GitHubLoginLink from "../components/GitHubLoginLink";
-export default function Jira({ organization, avatar_url, userEmail, error }) {
+export default function Slack({ organization, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
   const router = useRouter();
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div className="Box">
+    <div className="Box" style={{ maxWidth: "100ch" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with Slack to {organization}
@@ -116,11 +116,12 @@ export async function getServerSideProps(context) {
       user_real_name: userJson.user.real_name,
       user_picture_url: userJson.user.profile.image_512,
     };
-    console.log("saveitem", saveitem);
     saveUserInfo(saveitem);
     return {
       props: {
         userEmail: context.query.state,
+        organization: json.team.name,
+        avatar_url: userJson.user.profile.image_512,
       },
     };
   }
