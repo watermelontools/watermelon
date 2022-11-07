@@ -96,7 +96,30 @@ export async function getServerSideProps(context) {
       }
     );
     let userJson = await userInfo.json();
-    console.log(userJson);
+    console.log("userJson", userJson);
+    console.log("json", json);
+    const saveitem = {
+      user_token: authed_user.access_token,
+      bot_token: authed_user.bot_token,
+      bot_user_id: authed_user.bot_user_id,
+      user_id: authed_user.id,
+      team_id: authed_user.team.id,
+      team_name: authed_user.team.name,
+      bot_scopes: authed_user.scope,
+      user_scopes: authed_user.scope,
+      incoming_webhook_channel_id: authed_user.incoming_webhook.channel_id,
+      watermelon_user: userJson.user.profile.email,
+      incoming_webhook_configuration_url:
+        authed_user.incoming_webhook.configuration_url,
+      incoming_webhook_url: authed_user.incoming_webhook.url,
+      is_enterprise_install: authed_user.is_enterprise_install,
+      user_username: userJson.user.name,
+      user_title: userJson.user.profile.title,
+      user_real_name: userJson.user.real_name,
+      user_picture_url: userJson.user.profile.image_512,
+    };
+    console.log("saveitem", saveitem);
+    saveUserInfo(saveitem);
     return {
       props: {
         userEmail: context.query.state,
