@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/jira/saveUserInfo";
+import saveUserInfo from "../utils/db/slack/saveUserInfo";
 import GitHubLoginLink from "../components/GitHubLoginLink";
-export default function Jira({ organization, avatar_url, userEmail, error }) {
+export default function Slack({ organization, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
   const router = useRouter();
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
       </div>
       <img
         src={avatar_url}
-        alt="jira organization image"
+        alt="slack user image"
         className="avatar avatar-8"
       />
       <div>
