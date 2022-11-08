@@ -4,18 +4,18 @@ import Link from "next/link";
 // We will replace this with a more robust solution in the near future
 // This will happen once we release the billing page, which will allow companies to sign up for a paid plan via self-serve
 // Until then, we will manually add the companies and their employees to the database
-const JiraLoginLink = ({ userEmail, hasPaid }) => (
+const SlackLoginLink = ({ userEmail, hasPaid }) => (
   <div>
     {hasPaid ? (
       <Link
-        href={`https://auth.atlassian.com/authorize?audience=api.atlassian.com&client_id=VUngRAClu8ZE56vxXCFBocTxCTLEUQTT&scope=read:jira-user%20read:jira-work%20write:jira-work%20offline_access&redirect_uri=https://app.watermelontools.com/jira&state=${userEmail}&response_type=code&prompt=consent`}
+        href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize&user_scope=chat:write,users:read&state=${userEmail}`}
       >
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/jira.svg" />
+            <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
-              <h2>Login to Jira</h2>
-              <p>View your Most Relevant Ticket and Active Tickets</p>
+              <h2>Login to Slack</h2>
+              <p>View your Most Relevant Threads and Groups</p>
             </div>
           </div>
         </a>
@@ -24,10 +24,10 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
       <Link href={`https://app.watermelontools.com/billing/adminDetails`}>
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/jira.svg" />
+            <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
-              <h2>Activate Jira</h2>
-              <p>Upgrade your plan to index code context from Jira</p>
+              <h2>Activate Slack</h2>
+              <p>Upgrade your plan to find context from your chats</p>
             </div>
           </div>
         </a>
@@ -35,4 +35,4 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
     )}
   </div>
 );
-export default JiraLoginLink;
+export default SlackLoginLink;

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
 import GitHubInfo from "../components/dashboard/GitHubInfo";
+import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraInfo from "../components/dashboard/JiraInfo";
 import JiraLoginLink from "../components/JiraLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
@@ -11,10 +12,13 @@ import getJiraInfo from "../utils/api/getJiraInfo";
 import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
+import getSlackInfo from "../utils/api/getSlackInfo";
+import SlackLoginLink from "../components/SlackLoginLink";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [slackUserData, setSlackUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
   const { data: session, status } = useSession();
   useEffect(() => {
@@ -28,7 +32,9 @@ function HomePage({}) {
       getGitHubInfo(userEmail).then((data) => {
         setGithubUserData(data);
       });
-
+      getSlackInfo(userEmail).then((data) => {
+        setSlackUserData(data);
+      });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
       // and have a perfect self-serve experience
@@ -52,7 +58,6 @@ function HomePage({}) {
     "Bitbucket",
     "Gitlab",
     "Notion",
-    "Slack",
     "Trello",
     "Asana",
     "Confluence",
@@ -90,7 +95,21 @@ function HomePage({}) {
                   <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
                 )}
               </div>
-
+              <div className="p-3">
+                {slackUserData?.name || slackUserData?.email ? (
+                  <InfoPanel
+                    info={{
+                      organization: slackUserData?.team_name,
+                      user_avatar_url: slackUserData?.user_avatar_url,
+                      user_displayname: slackUserData?.name,
+                      user_email: slackUserData?.email,
+                      service_name: "Slack",
+                    }}
+                  />
+                ) : (
+                  <SlackLoginLink userEmail={userEmail} hasPaid={hasPaid} />
+                )}
+              </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode"
@@ -110,9 +129,6 @@ function HomePage({}) {
                   <ComingSoonService name={service} />
                 </div>
               ))}
-              <a href="https://slack.com/openid/connect/authorize?scope=openid&amp;response_type=code&amp;redirect_uri=https%3A%2F%2Fapp.watermelontools.com%2Fslack&amp;client_id=2258283433764.3516691319939">
-                Sign in with Slack
-              </a>
             </div>
           )}
         </>
