@@ -58,7 +58,6 @@ function HomePage({}) {
     "Bitbucket",
     "Gitlab",
     "Notion",
-    "Slack",
     "Trello",
     "Asana",
     "Confluence",
