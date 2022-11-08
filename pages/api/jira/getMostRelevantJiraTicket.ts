@@ -57,7 +57,9 @@ export default async function handler(req, res) {
         Authorization: `Bearer ${access_token}`,
       },
       body: JSON.stringify({
-        jql: `text ~ "${parsedPRTitle}"`,
+        // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
+        // Sorting by description might be better than completely filtering out tickets without a description
+        jql: `text ~ "${parsedPRTitle}" AND issuetype in (Bug, Story) ORDER BY issuetype ASC, "Story Points" DESC, description DESC`,
         expand: ["renderedFields"],
       }),
     }
