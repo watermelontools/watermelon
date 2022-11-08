@@ -26,9 +26,9 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
-              <h2>Activate Jira Integration</h2>
+              <h2>Activate Slack Integration</h2>
               <p>
-                Contact us to view your Most Relevant Ticket and Active Tickets
+                Upgrade your plan to view your Most Relevant Threads and Groups
               </p>
             </div>
           </div>
