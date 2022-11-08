@@ -9,8 +9,11 @@ const InfoPanel = ({ info }) => {
   return (
     <div className="Box">
       <div className="Subhead px-3">
-        <h2 className="Subhead-heading">
-          {service_name} ({organization})
+        <h2 className="Subhead-heading d-flex flex-items-center flex-justify-start">
+          <img className="avatar avatar-8" src={`/logos/${service_name}.svg`} />
+          <span>
+            {service_name} ({organization})
+          </span>
         </h2>
       </div>
       <div className="d-flex flex-items-center flex-justify-start p-2">
