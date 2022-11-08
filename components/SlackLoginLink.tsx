@@ -27,9 +27,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
             <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
               <h2>Activate Slack Integration</h2>
-              <p>
-                Upgrade your plan to view your Most Relevant Threads and Groups
-              </p>
+              <p>Upgrade your plan to find context from your chats</p>
             </div>
           </div>
         </a>
