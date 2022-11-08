@@ -12,7 +12,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
       >
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/jira.svg" />
+            <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
               <h2>Login to Slack</h2>
               <p>View your Most Relevant Threads and Groups</p>
@@ -24,7 +24,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
       <Link href={`https://calendly.com/evargas-14/call-with-esteban-vargas`}>
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/jira.svg" />
+            <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
               <h2>Activate Jira Integration</h2>
               <p>
