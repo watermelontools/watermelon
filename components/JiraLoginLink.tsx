@@ -21,14 +21,12 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
         </a>
       </Link>
     ) : (
-      <Link
-        href={`https://app.watermelontools.com/billing/adminDetails`}
-      >
+      <Link href={`https://app.watermelontools.com/billing/adminDetails`}>
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/jira.svg" />
             <div className="p-2">
-              <h2>Activate Jira Integration</h2>
+              <h2>Activate Jira</h2>
               <p>Upgrade your plan to index code context from Jira</p>
             </div>
           </div>
