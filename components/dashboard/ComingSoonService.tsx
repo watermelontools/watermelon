@@ -1,4 +1,4 @@
-const JiraLoginLink = ({ name }) => (
+const ComingSoonService = ({ name }) => (
   <div className="Box d-flex flex-items-center flex-justify-start p-2">
     <img
       className="avatar avatar-8"
@@ -13,4 +13,4 @@ const JiraLoginLink = ({ name }) => (
     </div>
   </div>
 );
-export default JiraLoginLink;
+export default ComingSoonService;
