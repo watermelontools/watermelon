@@ -96,7 +96,7 @@ function HomePage({}) {
                 )}
               </div>
               <div className="p-3">
-                {slackUserData?.name || slackUserData?.email ? (
+                {slackUserData?.user_username || slackUserData?.user_email ? (
                   <InfoPanel
                     info={{
                       organization: slackUserData?.team_name,
