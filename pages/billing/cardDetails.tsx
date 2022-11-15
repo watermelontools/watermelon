@@ -83,7 +83,7 @@ function BillingPage() {
                   ) : (
                     // @ts-ignore
                     <Elements stripe={stripePromise} options={options}>
-                      <CheckoutForm numberOfSeats={router.query.quantity}/>
+                      <CheckoutForm numberOfSeats={router.query.quantity} />
                     </Elements>
                   )}
                 </div>
