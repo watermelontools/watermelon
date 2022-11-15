@@ -15,8 +15,8 @@ import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import getByEmail from "../utils/db/payments/getByEmail";
-import { useRouter } from 'next/router'
-function HomePage({hasPaidServerSide}) {
+import { useRouter } from "next/router";
+function HomePage({ hasPaidServerSide }) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
@@ -77,7 +77,10 @@ function HomePage({hasPaidServerSide}) {
                 {jiraUserData?.organization ? (
                   <JiraInfo {...jiraUserData} />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} hasPaid={hasPaidServerSide} />
+                  <JiraLoginLink
+                    userEmail={userEmail}
+                    hasPaid={hasPaidServerSide}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -92,7 +95,10 @@ function HomePage({hasPaidServerSide}) {
                     }}
                   />
                 ) : (
-                  <SlackLoginLink userEmail={userEmail} hasPaid={hasPaidServerSide} />
+                  <SlackLoginLink
+                    userEmail={userEmail}
+                    hasPaid={hasPaidServerSide}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -124,16 +130,18 @@ function HomePage({hasPaidServerSide}) {
 
 // This gets called on every request
 export async function getServerSideProps() {
-  // Is this the correct way to do it? 
-  const router = useRouter()
+  // Is this the correct way to do it?
+  const router = useRouter();
   const userEmail = router.query.email[0];
-  let hasPaidServerSide = await getByEmail({ email: userEmail }).then((data) => {
-    if (data["email"]) {
-      return true;
+  let hasPaidServerSide = await getByEmail({ email: userEmail }).then(
+    (data) => {
+      if (data["email"]) {
+        return true;
+      }
+      return false;
     }
-    return false;
-  });
-  return { props: { hasPaidServerSide } }
+  );
+  return { props: { hasPaidServerSide } };
 }
 
 export default HomePage;
