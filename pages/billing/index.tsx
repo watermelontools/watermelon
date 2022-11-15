@@ -1,61 +1,42 @@
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import { useEffect, useState, useCallback } from "react";
-import CheckoutForm from "./CheckoutForm";
+import { Router } from "next/router";
+import React, { useEffect, useState } from "react";
+// import react router
 import { useRouter } from "next/router";
 import LogInBtn from "../../components/login-btn";
 import { useSession } from "next-auth/react";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+const AdminDetails = () => {
+  // Subscription details
+  const [numberOfSeats, setNumberOfSeats] = useState(5);
+  const [subscriptionPrice, setSubscriptionPrice] = useState(50);
 
-function BillingPage() {
-  const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
-  const { data: session, status } = useSession();
+  // Admin details
+  const [adminFirstName, setAdminFirstName] = useState("");
+  const [adminLastName, setAdminLastName] = useState("");
+  const [adminEmail, setAdminEmail] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const router = useRouter();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    const { quantity, email } = router.query;
+    const calculatedPrice = numberOfSeats * 5;
+    setSubscriptionPrice(calculatedPrice);
+  }, [numberOfSeats]);
 
-    // create async function that fetches the client secret
-    const fetchClientSecret = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            quantity,
-            email,
-          }),
-        }
-      );
-      const { clientSecret } = await response.json();
-      setRetrievedClientSecret(clientSecret);
-    };
+  const handleSubmit = async (event) => {
+    // We don't want to let default form submission happen here,
+    // which would refresh the page.
+    event.preventDefault();
 
-    fetchClientSecret();
-  }, [router.query]);
-
-  const options = {
-    clientSecret: retrievedClientSecret,
-
-    appearance: {
-      theme: "night",
-      labels: "floating",
-
-      variables: {
-        colorPrimary: "#79c0ff",
-        colorBackground: "#0d1117",
-        colorText: "#c9d1d9",
-        colorDanger: "#df1b41",
-        fontFamily: "Ideal Sans, system-ui, sans-serif",
-        fontSize: "14-px",
-        spacingUnit: "2px",
-        borderRadius: "4px",
+    router.push({
+      pathname: "/billing/cardDetails",
+      query: {
+        quantity: numberOfSeats,
+        email: adminEmail,
       },
-    },
+    });
   };
 
   return (
@@ -66,29 +47,82 @@ function BillingPage() {
       }}
     >
       {session ? (
-        <div className="p-3">
-          <div className="d-flex flex-items-center flex-justify-center flex-column">
-            <div
-              className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-6 m-6"
-              style={{ maxWidth: "80ch" }}
-            >
-              <h1 className="h3 mb-3 f4 text-normal">
-                Purchase your Watermelon subscription
-              </h1>
-              {/* render if component already mounted */}
-              {retrievedClientSecret && stripePromise && options && (
-                <div>
-                  {router.isFallback ? (
-                    <div>Loading...</div>
-                  ) : (
-                    // @ts-ignore
-                    <Elements stripe={stripePromise} options={options}>
-                      <CheckoutForm numberOfSeats={router.query.quantity}/>
-                    </Elements>
-                  )}
-                </div>
-              )}
-            </div>
+        <div className="d-flex flex-items-center flex-justify-center flex-column">
+          <div
+            className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-6 m-6"
+            style={{ maxWidth: "80ch" }}
+          >
+            <h1 className="h3 mb-3 f4 text-normal">
+              Purchase your Watermelon subscription
+            </h1>
+
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="number-of-seats">Number of seats</label>
+              <br />
+              <input
+                required
+                type="number"
+                className="form-control mb-2 mr-2"
+                id="exampleFormControlSelect1"
+                min="1"
+                placeholder="Number of seats"
+                value={numberOfSeats}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setNumberOfSeats(parseInt(e.target.value));
+                }}
+              />
+
+              <input
+                required
+                type="email"
+                className="form-control mb-2"
+                id="exampleFormControlSelect2"
+                placeholder="Admin Email"
+                value={adminEmail}
+                onChange={(e) => {
+                  setAdminEmail(e.target.value);
+                }}
+              />
+
+              <br />
+              <p className="text-danger">
+                Monthly subscription price: ${subscriptionPrice}
+              </p>
+              <input
+                required
+                type="text"
+                className="form-control mb-2 mr-2"
+                id="exampleFormControlSelect3"
+                placeholder="Admin First Name"
+                value={adminFirstName}
+                onChange={(e) => {
+                  setAdminFirstName(e.target.value);
+                }}
+              />
+              <input
+                required
+                type="text"
+                className="form-control mb-2"
+                id="exampleFormControlSelect4"
+                placeholder="Admin Last Name"
+                value={adminLastName}
+                onChange={(e) => {
+                  setAdminLastName(e.target.value);
+                }}
+              />
+              <br />
+
+              <div className="d-flex flex-items-center flex-justify-center">
+                <button
+                  className="btn btn-primary"
+                  id="checkout-and-portal-button"
+                  type="submit"
+                >
+                  Enter Card Details
+                </button>
+              </div>
+              {errorMessage && <div>{errorMessage}</div>}
+            </form>
           </div>
         </div>
       ) : (
@@ -96,6 +130,6 @@ function BillingPage() {
       )}
     </div>
   );
-}
+};
 
-export default BillingPage;
+export default AdminDetails;

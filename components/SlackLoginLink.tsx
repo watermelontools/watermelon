@@ -21,7 +21,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
         </a>
       </Link>
     ) : (
-      <Link href={`https://app.watermelontools.com/billing/adminDetails`}>
+      <Link href={`https://app.watermelontools.com/billing`}>
         <a className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/slack.svg" />
