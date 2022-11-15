@@ -15,6 +15,7 @@ import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import getByEmail from "../utils/db/payments/getByEmail";
+import { useRouter } from 'next/router'
 function HomePage({hasPaidServerSide}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -123,8 +124,10 @@ function HomePage({hasPaidServerSide}) {
 
 // This gets called on every request
 export async function getServerSideProps() {
-  // Fetch data from external API
-  let hasPaidServerSide = await getByEmail({ email: "evargas@watermelon.tools"}).then((data) => {
+  // Is this the correct way to do it? 
+  const router = useRouter()
+  const userEmail = router.query.email[0];
+  let hasPaidServerSide = await getByEmail({ email: userEmail }).then((data) => {
     if (data["email"]) {
       return true;
     }
