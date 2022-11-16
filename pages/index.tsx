@@ -68,7 +68,23 @@ function HomePage({}) {
   ];
   return (
     <div>
-      {status === "loading" && <div>Loading...</div>}
+      {status === "loading" && (
+        <>
+          <Header />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+            }}
+          >
+            {nextServicesList.map((service) => (
+              <div className="p-3">
+                <ComingSoonService name={service} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       {status === "unauthenticated" && <LogInBtn />}
       {status === "authenticated" && (
         <>
