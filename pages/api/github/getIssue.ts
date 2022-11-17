@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     auth: access_token,
   });
   try {
-    let issue = await octokit.rest.issues.listForRepo({
+    let issue = await octokit.rest.issues.get({
       owner,
       repo,
       issue_number,
