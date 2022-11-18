@@ -2,7 +2,7 @@ import { Octokit } from "octokit";
 import getToken from "../../../utils/db/github/getToken";
 
 export default async function handler(req, res) {
-  let { user, repo, owner, issue_number } = req.body;
+  let { user, repo, owner, commitList } = req.body;
   if (!user) {
     return res.send({ error: "no user" });
   }
@@ -12,20 +12,22 @@ export default async function handler(req, res) {
   if (!owner) {
     return res.send({ error: "no owner" });
   }
-  if (!issue_number) {
-    return res.send({ error: "no issue_number" });
+  if (!commitList) {
+    return res.send({ error: "no commitList" });
   }
   let { access_token, login } = await getToken(user);
   const octokit = new Octokit({
     auth: access_token,
   });
+  let q= `repo:${owner}/${repo}+hash:${commitList}`
   try {
-    let issue = await octokit.rest.issues.get({
-      owner,
-      repo,
-      issue_number,
-    });
-    return res.send(issue.data);
+    let issues = await octokit.rest.search.issuesAndPullRequests({
+        q,
+        is: "pr",
+        type: "pr"
+    })
+
+    return res.send(issues.data);
   } catch (error) {
     return res.send({ error });
   }
