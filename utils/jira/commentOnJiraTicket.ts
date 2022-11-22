@@ -15,6 +15,12 @@ export default async function handler({
   if (!access_token) {
     return { error: "no access_token" };
   }
+  if (!issueIdOrKey) {
+    return { error: "no issueIdOrKey" };
+  }
+  if (!text) {
+    return { error: "no text" };
+  }
   let bodyToSend = JSON.stringify({
     body: {
       type: "doc",
