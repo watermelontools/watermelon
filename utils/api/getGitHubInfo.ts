@@ -9,7 +9,7 @@ const getGitHubInfo = async (userEmail: string) => {
     }),
   })
     .then((res) => res.json())
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
   return data;
 };
 export default getGitHubInfo;
