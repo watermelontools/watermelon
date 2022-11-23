@@ -1,7 +1,7 @@
 import addMessageToThread from "../../../utils/slack/addMessageToThread";
 import getToken from "../../../utils/db/slack/getToken";
 export default async function handler(req, res) {
-  let { user, channelId, text, threadTS } = req.body;
+  let { user, channelId, text, threadTS, broadcast } = req.body;
 
   if (!user) {
     return res.send({ error: "no user" });
@@ -22,6 +22,7 @@ export default async function handler(req, res) {
     user_token,
     channelId,
     threadTS,
+    broadcast,
   });
 
   return res.send(response);
