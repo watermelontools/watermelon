@@ -69,7 +69,7 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.log("Slack error", json);
+    console.error("Slack error", json);
     return {
       props: {
         error: json.error,
