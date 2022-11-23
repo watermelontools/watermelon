@@ -9,7 +9,6 @@ export default async function getTicketComments({
   access_token: string;
   issueIdOrKey: string;
 }) {
-  let returnVal;
   if (!cloudId) {
     return { error: "no cloudId" };
   }
@@ -20,7 +19,7 @@ export default async function getTicketComments({
     return { error: "no issueIdOrKey" };
   }
   try {
-    await fetch(
+    return await fetch(
       `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueIdOrKey}/comment?expand=renderedBody`,
       {
         method: "GET",
@@ -31,13 +30,7 @@ export default async function getTicketComments({
           Authorization: `Bearer ${access_token}`,
         },
       }
-    )
-      .then((res) => res.json())
-      .then((resJson) => {
-        console.log(resJson);
-        returnVal = resJson;
-      });
-    return returnVal;
+    ).then((res) => res.json());
   } catch (error) {
     console.error(error);
     return error;
