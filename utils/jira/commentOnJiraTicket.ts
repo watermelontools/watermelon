@@ -1,4 +1,4 @@
-import fnTranslate from 'md-to-adf'
+import fnTranslate from "md-to-adf";
 
 export default async function handler({
   issueIdOrKey,
@@ -40,7 +40,7 @@ export default async function handler({
       ],
     },
   });
-  console.log(fnTranslate( text ))
+  console.log(fnTranslate(text));
   try {
     return await fetch(
       `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueIdOrKey}/comment`,
