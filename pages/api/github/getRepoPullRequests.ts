@@ -1,5 +1,6 @@
 import { Octokit } from "octokit";
 import getToken from "../../../utils/db/github/getToken";
+import addToGitHubQueryCount from "../../../utils/db/github/addToGitHubQueryCount";
 
 export default async function handler(req, res) {
   let { user, owner, repo } = req.body;
@@ -21,6 +22,9 @@ export default async function handler(req, res) {
       owner,
       repo,
     });
+
+    addToGitHubQueryCount(user);
+
     return res.send(pullRequests.data);
   } catch (error) {
     return res.send({ error });

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/github/saveUser";
+import addEmailToGitHubQueryCountTable from "../utils/db/github/addEmailToGitHubQueryCountTable";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
@@ -118,6 +119,9 @@ export async function getServerSideProps(context) {
       bio: userJson.bio,
       twitter_username: userJson.twitter_username,
     });
+
+    await addEmailToGitHubQueryCountTable(userJson.email);
+
     return {
       props: {
         loggedIn: true,
