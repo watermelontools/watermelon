@@ -6,7 +6,7 @@ function NotFoundPage() {
       <p>This page does not exist</p>
       <p>
         <Link href="/">
-          <a>Go back home</a>
+          Go back home
         </Link>
       </p>
     </div>

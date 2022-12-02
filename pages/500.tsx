@@ -6,7 +6,7 @@ function ServerErrorPage() {
       <p>The server ran into an error</p>
       <p>
         <Link href="/">
-          <a>Go back home</a>
+          Go back home
         </Link>
       </p>
     </div>
