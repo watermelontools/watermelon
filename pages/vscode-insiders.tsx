@@ -16,7 +16,7 @@ function VSCodeInsiders() {
             data?.user?.email ?? ""
           }&token=${data?.user.name ?? ""}`}
         >
-          <a>Open VSCode Insiders</a>
+          Open VSCode Insiders
         </Link>
       )}
     </div>

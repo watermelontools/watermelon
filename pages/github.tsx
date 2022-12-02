@@ -58,7 +58,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
         <p>
           If you are not redirected, please click{" "}
           <Link href="/">
-            <a>here</a>
+            here
           </Link>
         </p>
         {error && <p>{error}</p>}

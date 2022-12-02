@@ -116,9 +116,9 @@ function HomePage({}) {
                   <InfoPanel
                     info={{
                       organization: slackUserData?.team_name,
-                      user_avatar_url: slackUserData?.user_avatar_url,
-                      user_displayname: slackUserData?.name,
-                      user_email: slackUserData?.email,
+                      user_avatar_url: slackUserData?.user_picture_url,
+                      user_displayname: slackUserData?.user_real_name,
+                      user_email: slackUserData?.user_email,
                       service_name: "Slack",
                     }}
                   />
