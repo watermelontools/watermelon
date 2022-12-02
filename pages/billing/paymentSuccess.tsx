@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import addEmailToGitHubQueryCountTable from "../../utils/db/github/addEmailToGitHubQueryCountTable";
 
 function Paymentsuccess() {
   const router = useRouter();
@@ -26,6 +27,9 @@ function Paymentsuccess() {
           email,
         }),
       });
+
+      // Add email to github query count table
+      addEmailToGitHubQueryCountTable(email);
     });
 
     // Send welcome to the team email
