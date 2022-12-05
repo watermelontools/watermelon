@@ -8,7 +8,8 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
   <div>
     {hasPaid ? (
       (<Link
-        href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize,channels:history,groups:history,mpim:history,im:history&user_scope=chat:write,users:read,search:read,channels:history,groups:history,mpim:history,im:history&state=${userEmail}`}
+        href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=chat:write,chat:write.customize,incoming-webhook,channels:history,groups:history,im:history,mpim:history,users:read&user_scope=chat:write,channels:history,groups:history,im:history,mpim:history,identify,search:read,users:read&state=${userEmail}`}
+        
         className="button block">
 
         <div className="Box d-flex flex-items-center flex-justify-start p-2">
