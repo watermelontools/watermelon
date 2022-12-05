@@ -52,7 +52,7 @@ export async function getServerSideProps(context) {
     f = await fetch(`https://slack.com/api/openid.connect.token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
