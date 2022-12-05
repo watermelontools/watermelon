@@ -13,12 +13,16 @@ export default async function handler(req, res) {
     return res.send({ error: "no ts" });
   }
   let { user_token } = await getToken({ user });
-
+console.log({
+    ts,
+    user_token,
+    channelId,
+  })
   let response = await getConversationReplies({
     ts,
     user_token,
     channelId,
   });
-
+console.log(response)
   return res.send(response);
 }

@@ -16,7 +16,8 @@ export default async function handler({
     if (!user_token) {
       return { error: "no user_token" };
     }
-  
+  console.log(channelId)
+  console.log(ts)
     try {
       return await fetch(`https://slack.com/api/conversations.replies`, {
         method: "POST",
