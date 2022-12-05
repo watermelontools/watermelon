@@ -15,13 +15,13 @@ export default async function handler(req, res) {
     return res.send({ error: "no owner" });
   }
   let { access_token } = await getToken(user);
-  
+
   // if the github query count for the user with that email address is over 50 and the user hasn't paid, return an error
-  let {hasPaid, queryCount} = await getGitHubQueryCountStatusByEmail(user);
+  let { hasPaid, queryCount } = await getGitHubQueryCountStatusByEmail(user);
   if (queryCount > 50 && !hasPaid) {
     return res.send({ error: "GitHub query limit reached" });
   }
-  
+
   try {
     const octokit = new Octokit({
       auth: access_token,
