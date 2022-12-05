@@ -45,7 +45,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    f = await fetch(`https://slack.com/api/openid.connect.token`, {
+    f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -59,7 +59,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json)
   if (json.error) {
     console.error("Slack error", json);
     return {
