@@ -7,31 +7,33 @@ import Link from "next/link";
 const SlackLoginLink = ({ userEmail, hasPaid }) => (
   <div>
     {hasPaid ? (
-      <Link
+      (<Link
         href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize&user_scope=chat:write,users:read,search:read&state=${userEmail}`}
-      >
-        <a className="button block">
-          <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/slack.svg" />
-            <div className="p-2">
-              <h2>Login to Slack</h2>
-              <p>View your Most Relevant Threads and Groups</p>
-            </div>
+        className="button block">
+
+        <div className="Box d-flex flex-items-center flex-justify-start p-2">
+          <img className="avatar avatar-8" src="/logos/slack.svg" />
+          <div className="p-2">
+            <h2>Login to Slack</h2>
+            <p>View your Most Relevant Threads and Groups</p>
           </div>
-        </a>
-      </Link>
+        </div>
+
+      </Link>)
     ) : (
-      <Link href={`https://app.watermelontools.com/billing/adminDetails`}>
-        <a className="button block">
-          <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/slack.svg" />
-            <div className="p-2">
-              <h2>Activate Slack</h2>
-              <p>Upgrade your plan to find context from your chats</p>
-            </div>
+      (<Link
+        href={`https://app.watermelontools.com/billing/adminDetails`}
+        className="button block">
+
+        <div className="Box d-flex flex-items-center flex-justify-start p-2">
+          <img className="avatar avatar-8" src="/logos/slack.svg" />
+          <div className="p-2">
+            <h2>Activate Slack</h2>
+            <p>Upgrade your plan to find context from your chats</p>
           </div>
-        </a>
-      </Link>
+        </div>
+
+      </Link>)
     )}
   </div>
 );

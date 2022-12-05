@@ -16,7 +16,7 @@ function VSCodeInsiders() {
             data?.user?.email ?? ""
           }&token=${data?.user.name ?? ""}`}
         >
-          <a>Open VSCodium</a>
+          Open VSCodium
         </Link>
       )}
     </div>
