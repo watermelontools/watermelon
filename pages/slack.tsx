@@ -35,10 +35,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click{" "}
-          <Link href="/">
-            here
-          </Link>
+          If you are not redirected, please click <Link href="/">here</Link>
         </p>
         {error && <p>{error}</p>}
       </div>
@@ -48,18 +45,12 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    f = await fetch(`https://slack.com/api/oauth.v2.access`, {
+    f = await fetch(`https://slack.com/api/openid.connect.token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/slack",
-        client_id: process.env.SLACK_CLIENT_ID,
-        client_secret: process.env.SLACK_CLIENT_SECRET,
-      }),
+      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com/slack&client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}`,
     });
   } else
     return {
@@ -68,7 +59,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json)
   if (json.error) {
     console.error("Slack error", json);
     return {
