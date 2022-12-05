@@ -48,13 +48,18 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    console.log(context.query)
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "Content-Type": "application/json",
       },
-      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com/slack&client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}`,
+      body: JSON.stringify({
+        grant_type: "authorization_code",
+        code: context.query.code,
+        redirect_uri: "https://app.watermelontools.com/slack",
+        client_id: process.env.SLACK_CLIENT_ID,
+        client_secret: process.env.SLACK_CLIENT_SECRET,
+      }),
     });
   } else
     return {
@@ -63,7 +68,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json)
   if (json.error) {
     console.error("Slack error", json);
     return {
