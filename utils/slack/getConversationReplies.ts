@@ -25,7 +25,7 @@ export default async function handler({
         Accept: "application/json",
         Authorization: `Bearer ${user_token}`,
       },
-      body: `channel=${channelId}&ts=${ts}`,
+      body: `channel=${channelId}&ts=${ts}&include_all_metadata=true`,
     }).then((res) => res.json());
   } catch (error) {
     console.error(error);
