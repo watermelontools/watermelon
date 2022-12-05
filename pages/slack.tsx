@@ -79,7 +79,6 @@ export async function getServerSideProps(context) {
       }
     );
     let userJson = await userInfo.json();
-    console.log(userJson)
     const saveitem = {
       user_token: authed_user.access_token,
       bot_token: json.access_token,
@@ -100,7 +99,6 @@ export async function getServerSideProps(context) {
       user_real_name: userJson.user.real_name,
       user_picture_url: userJson.user.profile.image_512,
     };
-    console.log(saveitem)
     saveUserInfo(saveitem);
     return {
       props: {
