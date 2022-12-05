@@ -48,6 +48,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
+    console.log(context.query)
     f = await fetch(`https://slack.com/api/openid.connect.token`, {
       method: "POST",
       headers: {
