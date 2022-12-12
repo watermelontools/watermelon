@@ -50,7 +50,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Bitbucket</p>
-        {/* <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} /> */}
+        <BitbucketLoginLink userEmail={userEmail} hasPaid={hasPaid} />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
