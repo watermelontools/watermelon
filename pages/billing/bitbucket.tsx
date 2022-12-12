@@ -80,7 +80,7 @@ export async function getServerSideProps(context) {
         code: context.query.code,
         redirect_uri: "https://app.watermelontools.com/bitbucket",
         client_id: process.env.BITBUCKET_CLIENT_ID,
-        client_secret: process.env.BITBUCKET_CLIENT_SECRET,
+        client_secret: process.env.BITBUCKET_CLIENT_ID,
       }),
     });
   } else

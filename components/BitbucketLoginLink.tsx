@@ -3,7 +3,7 @@ import Link from "next/link";
 const BitbucketLoginLink = ({ userEmail }) => (
   <div className="Box">
     <Link
-      href={`https://bitbucket.org/site/oauth2/authorize`}
+      href={`https://bitbucket.org/site/oauth2/authorize?client_id=ATBBTrHkDAnwBAtwfkCphsKJpypv9540C209&response_type=code`}
       className="button block">
 
       <div className="Box d-flex flex-items-center flex-justify-start p-2">
