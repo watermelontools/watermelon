@@ -50,7 +50,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Bitbucket</p>
-        <BitbucketLoginLink userEmail={userEmail} hasPaid={hasPaid} />
+        <BitbucketLoginLink userEmail={userEmail}  />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
@@ -80,7 +80,7 @@ export async function getServerSideProps(context) {
         code: context.query.code,
         redirect_uri: "https://app.watermelontools.com/bitbucket",
         client_id: process.env.BITBUCKET_CLIENT_ID,
-        client_secret: process.env.BITBUCKET_CLIENT_ID,
+        client_secret: process.env.BITBUCKET_CLIENT_SECRET,
       }),
     });
     console.log("bitbucket access_token: ", f)
