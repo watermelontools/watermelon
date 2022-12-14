@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-// import saveUserInfo from "../utils/db/bitbucket/saveUser";
+import saveUserInfo from "../utils/db/bitbucket/saveUser";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 export default function Bitbucket({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
@@ -83,6 +83,7 @@ export async function getServerSideProps(context) {
         client_secret: process.env.BITBUCKET_CLIENT_ID,
       }),
     });
+    console.log("bitbucket access_token: ", f)
   } else
     return {
       props: {
@@ -106,22 +107,21 @@ export async function getServerSideProps(context) {
     let userJson = await user.json();
     console.log("bitbucket userJson: ", userJson);
 
-    // TODO: Build stored procedure for this
-    // await saveUserInfo({
-    //   access_token: json.access_token,
-    //   scope: json.scope,
-    //   login: userJson.login,
-    //   id: userJson.id,
-    //   avatar_url: userJson.avatar_url,
-    //   watermelon_user: context.query.state,
-    //   name: userJson.name,
-    //   company: userJson.company,
-    //   blog: userJson.blog,
-    //   email: userJson.email,
-    //   location: userJson.location,
-    //   bio: userJson.bio,
-    //   twitter_username: userJson.twitter_username,
-    // });
+    await saveUserInfo({
+      access_token: json.access_token,
+      scope: json.scope,
+      login: userJson.login,
+      id: userJson.id,
+      avatar_url: userJson.avatar_url,
+      watermelon_user: context.query.state,
+      name: userJson.name,
+      company: userJson.company,
+      blog: userJson.blog,
+      email: userJson.email,
+      location: userJson.location,
+      bio: userJson.bio,
+      twitter_username: userJson.twitter_username,
+    });
     return {
       props: {
         loggedIn: true,
