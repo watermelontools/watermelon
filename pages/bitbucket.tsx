@@ -69,6 +69,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
+    // This wouldn't be needed if we get the access_token from the url param
     f = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
       method: "POST",
       headers: {
@@ -107,8 +108,14 @@ export async function getServerSideProps(context) {
     let userJson = await user.json();
     console.log("bitbucket userJson: ", userJson);
 
+    // If this works, we would use location to get the access_token from the url param here
+    console.log("await save user info with hardcoded token called.")
+    // Via something like this 
+    // const searchParams = new URLSearchParams(window.location.hash);
+    // const accessToken = searchParams.get('access_token');
     await saveUserInfo({
-      access_token: json.access_token,
+      access_token: "DNKhmncVIHChqVY5YG9mAQgpvLfbt2KLjS7xWfXyrt0MiXBbye8phEkvgGNVYIgcBS03qNMp4HgKOHGpdCXe-WG0vWwZwrcgWV6eWRfA1tFLYyquM1PAA5FuTCFv0muq0DJavb2n0Ia3DYgeNxXU5b4U5rw",
+      // access_token: json.access_token,
       scope: json.scope,
       login: userJson.login,
       id: userJson.id,
