@@ -13,7 +13,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
       if (timeToRedirect === 0) {
-        // before redirecting, add user to DB
+        // Before redirecting, add user to DB
 
         // First get access-token from window.location.hash
         let retrievedAccessToken = window.location.hash.split("=")[1].split("&")[0];
@@ -30,32 +30,30 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
             console.log(
               `Response: ${response.status} ${response.statusText}`
             );
+
+            let responseJson = response.json().then(async (data) => {
+              // Third, call the create_bitbucket stored procedure
+              await saveUserInfo({
+                access_token: retrievedAccessToken, 
+                id: data.account_id,
+                avatar_url: data.links.avatar.href,
+                watermelon_user: "to be defined",
+                name: data.display_name,
+                email: data.email,
+                location: data.location,
+              });
+            });
+
+
+
             return response.text();
           })
-          .then(text => console.log(text))
+          // .then(text => console.log(text))
           .catch(err => console.error(err));
-
-        // Third, call the create_bitbucket stored procedure
-        // await saveUserInfo({
-        //   access_token: "DNKhmncVIHChqVY5YG9mAQgpvLfbt2KLjS7xWfXyrt0MiXBbye8phEkvgGNVYIgcBS03qNMp4HgKOHGpdCXe-WG0vWwZwrcgWV6eWRfA1tFLYyquM1PAA5FuTCFv0muq0DJavb2n0Ia3DYgeNxXU5b4U5rw",
-        //   // access_token: json.access_token,
-        //   scope: json.scope,
-        //   login: userJson.login,
-        //   id: userJson.id,
-        //   avatar_url: userJson.avatar_url,
-        //   watermelon_user: context.query.state,
-        //   name: userJson.name,
-        //   company: userJson.company,
-        //   blog: userJson.blog,
-        //   email: userJson.email,
-        //   location: userJson.location,
-        //   bio: userJson.bio,
-        //   twitter_username: userJson.twitter_username,
-        // });
 
         router.push("/");
       }
-    }, 1000);
+    }, 10);
     return () => clearInterval(interval);
   }, [timeToRedirect]);
 
@@ -104,48 +102,4 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
       </div>
     </div>
   );
-}
-
-export async function getServerSideProps() {
-  // Here we had the old code that retrieved the access_token from the API of other services, but Bitbucket doesn't work like that. So we're using the code below instead.
-
-    // Then, we should fetch the user data to get avatar_url, login, etc, and then send that to the create_bitbucket stored procedure
-    
-    // Call endpoint to retrieve user
-    // let user = await fetch(`https://api.bitbucket.org/2.0/user`, {
-    //   headers: {
-    //     Authorization: `Bearer ${json.access_token}`,
-    //     'Accept': 'application/json'
-    //   },
-    // });
-
-    // call user.json();
-    // let userJson = await user.json();
-
-    // Send it to the DB
-    // await saveUserInfo({
-    //   access_token: "DNKhmncVIHChqVY5YG9mAQgpvLfbt2KLjS7xWfXyrt0MiXBbye8phEkvgGNVYIgcBS03qNMp4HgKOHGpdCXe-WG0vWwZwrcgWV6eWRfA1tFLYyquM1PAA5FuTCFv0muq0DJavb2n0Ia3DYgeNxXU5b4U5rw",
-    //   // access_token: json.access_token,
-    //   scope: json.scope,
-    //   login: userJson.login,
-    //   id: userJson.id,
-    //   avatar_url: userJson.avatar_url,
-    //   watermelon_user: context.query.state,
-    //   name: userJson.name,
-    //   company: userJson.company,
-    //   blog: userJson.blog,
-    //   email: userJson.email,
-    //   location: userJson.location,
-    //   bio: userJson.bio,
-    //   twitter_username: userJson.twitter_username,
-    // });
-    // return {
-    //   props: {
-    //     loggedIn: true,
-    //     userEmail: context.query.state,
-    //     login: userJson.login,
-    //     avatar_url: userJson.avatar_url,
-    //   },
-    // };
-  
 }
