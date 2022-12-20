@@ -33,8 +33,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
                 access_token: retrievedAccessToken, 
                 id: data.account_id,
                 avatar_url: data.links.avatar.href,
-                // watermelon_user: userEmail, woooooah 
-                watermelon_user: 'estebanvargas94@gmail.com',
+                watermelon_user: userEmail,
                 name: data.display_name,
                 email: data.email,
                 location: data.location,
