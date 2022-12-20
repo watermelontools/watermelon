@@ -27,33 +27,27 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
           }
         })
           .then(response => {
-            console.log(
-              `Response: ${response.status} ${response.statusText}`
-            );
-
             let responseJson = response.json().then(async (data) => {
               // Third, call the create_bitbucket stored procedure
               await saveUserInfo({
                 access_token: retrievedAccessToken, 
                 id: data.account_id,
                 avatar_url: data.links.avatar.href,
-                watermelon_user: "to be defined",
+                // watermelon_user: userEmail, woooooah 
+                watermelon_user: 'estebanvargas94@gmail.com',
                 name: data.display_name,
                 email: data.email,
                 location: data.location,
               });
             });
 
-
-
             return response.text();
           })
-          // .then(text => console.log(text))
           .catch(err => console.error(err));
 
         router.push("/");
       }
-    }, 10);
+    }, 1000);
     return () => clearInterval(interval);
   }, [timeToRedirect]);
 
