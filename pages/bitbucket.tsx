@@ -8,7 +8,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
   const router = useRouter();
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
@@ -24,7 +24,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: `grant_type=refresh_token&code=${retrievedCode}`
+          body: `grant_type=authorization_code&code=${retrievedCode}`
         }).then(response => {
           let responseJson = response.json().then(async (data) => {
             // get access_token from the response
