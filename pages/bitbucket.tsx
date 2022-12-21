@@ -8,46 +8,60 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
   const router = useRouter();
-
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
       if (timeToRedirect === 0) {
         // Before redirecting, add user to DB
-
-        // First get access-token from window.location.hash
-        let retrievedAccessToken = window.location.hash.split("=")[1].split("&")[0];
-
-        // Second, fetch user data from the Bitbucket API
-        fetch('https://api.bitbucket.org/2.0/user', {
-          method: 'GET',
+  
+        // First, get code from URL
+        let retrievedCode = window.location.hash.split("=")[1].split("&")[0];
+  
+        // Second, get access_token from Bitbucket
+        fetch('https://bitbucket.org/site/oauth2/access_token', {
+          method: 'POST',
           headers: {
-            'Authorization': `Bearer ${retrievedAccessToken}`,
-            'Accept': 'application/json'
-          }
-        })
-          .then(response => {
-            let responseJson = response.json().then(async (data) => {
-              // Third, call the create_bitbucket stored procedure
-              await saveUserInfo({
-                access_token: retrievedAccessToken, 
-                id: data.account_id,
-                avatar_url: data?.links?.avatar?.href,
-                watermelon_user: userEmail,
-                name: data.display_name,
-                location: data.location,
-              });
-            });
-
-            return response.text();
-          })
-          .catch(err => console.error(err));
-
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `grant_type=refresh_token&code=${retrievedCode}`
+        }).then(response => {
+          let responseJson = response.json().then(async (data) => {
+            // get access_token from the response
+            let retrievedAccessToken = data.access_token;
+  
+            // Third, fetch user data from the Bitbucket API
+            fetch('https://api.bitbucket.org/2.0/user', {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${retrievedAccessToken}`,
+                'Accept': 'application/json'
+              }
+            })
+              .then(response => {
+                let responseJson = response.json().then(async (data) => {
+                  // Third, call the create_bitbucket stored procedure
+                  await saveUserInfo({
+                    access_token: retrievedAccessToken, 
+                    id: data.account_id,
+                    avatar_url: data?.links?.avatar?.href,
+                    watermelon_user: userEmail,
+                    name: data.display_name,
+                    location: data.location,
+                    refresh_token: data.refresh_token,
+                  });
+                });
+    
+                return response.text();
+              })
+              .catch(err => console.error(err));
+          });
+        });
         router.push("/");
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [timeToRedirect]);
+  }, []);
 
   useEffect(() => {
     // use getByEmail to check if user has paid
