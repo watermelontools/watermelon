@@ -14,6 +14,7 @@ import Header from "../components/Header";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
+import GitLabLoginLink from "../components/GitLabLoginLink";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -101,6 +102,13 @@ function HomePage({}) {
                   <GitHubInfo {...githubUserData} />
                 ) : (
                   <GitHubLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {githubUserData?.name || githubUserData?.email ? (
+                  <GitHubInfo {...githubUserData} />
+                ) : (
+                  <GitLabLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
