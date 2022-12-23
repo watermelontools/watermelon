@@ -90,6 +90,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log(json)
   if (json.error) {
     return {
       props: {
