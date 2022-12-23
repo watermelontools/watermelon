@@ -97,7 +97,7 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://gitlab.com/user`, {
+    let user = await fetch(`https://gitlab.com/api/v4/user`, {
       headers: {
         Authorization: `Bearer ${json.access_token}`,
       },
