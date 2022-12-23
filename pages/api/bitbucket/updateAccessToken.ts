@@ -1,4 +1,4 @@
-import updateBitbucketAccessToken from "../../../utils/db/bitbucket/updateBitbucketAccessToken";
+import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucketAccessToken";
 
 export default async function handler(req, res) {
   let { userEmail } = req.body;

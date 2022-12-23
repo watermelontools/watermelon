@@ -5,7 +5,10 @@ import updateAccessTokenOnDB from "../db/bitbucket/updateAccessTokenOnDB";
 export default async function updateBitbucketAccessToken(email): Promise<any> {
     try {
         // We get the refresh token for that user email from the DB
-        let refreshToken = await getRefreshToken(email);
+        let refreshToken = await getRefreshToken(email)
+        .then((res) => {
+            return res.refresh_token;
+        })
 
         // Then, we call Bitbucket's API to get a new access token
         const response = await fetch("https://bitbucket.org/site/oauth2/access_token", {
