@@ -90,6 +90,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log(json)
   if (json.error) {
     return {
       props: {
@@ -97,7 +98,7 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://gitlab.com/users`, {
+    /* let user = await fetch(`https://gitlab.com/users`, {
       headers: {
         Authorization: `token ${json.access_token}`,
       },
@@ -117,13 +118,13 @@ export async function getServerSideProps(context) {
       location: userJson.location,
       bio: userJson.bio,
       twitter_username: userJson.twitter_username,
-    });
+    }); */
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
-        login: userJson.login,
-        avatar_url: userJson.avatar_url,
+        login: "userJson.login",
+        avatar_url: "userJson.avatar_url",
       },
     };
   }
