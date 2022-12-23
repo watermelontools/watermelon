@@ -90,7 +90,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json)
   if (json.error) {
     return {
       props: {
@@ -104,7 +103,6 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
-    console.log(userJson)
      await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
