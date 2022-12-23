@@ -119,9 +119,9 @@ function HomePage({}) {
                   <InfoPanel
                     info={{
                       organization: gitlabUserData?.organization,
-                      user_avatar_url: gitlabUserData?.user_avatar_url,
-                      user_displayname: gitlabUserData?.user_displayname,
-                      user_email: gitlabUserData?.user_email,
+                      user_avatar_url: gitlabUserData?.avatar_url,
+                      user_displayname: gitlabUserData?.name,
+                      user_email: gitlabUserData?.email,
                       service_name: "GitLab",
                     }}
                   />
@@ -133,10 +133,10 @@ function HomePage({}) {
                 {jiraUserData?.organization ? (
                   <InfoPanel
                     info={{
-                      organization: jiraUserData?.company,
-                      user_avatar_url: jiraUserData?.avatar_url,
-                      user_displayname: jiraUserData?.name,
-                      user_email: jiraUserData?.email,
+                      organization: jiraUserData?.organization,
+                      user_avatar_url: jiraUserData?.user_avatar_url,
+                      user_displayname: jiraUserData?.user_displayname,
+                      user_email: jiraUserData?.user_email,
                       service_name: "Jira",
                     }}
                   />
