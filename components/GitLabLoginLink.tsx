@@ -1,9 +1,5 @@
 import Link from "next/link";
 
-// This conditional render is the fastest solution towards manually onboarding our first paid customers
-// We will replace this with a more robust solution in the near future
-// This will happen once we release the billing page, which will allow companies to sign up for a paid plan via self-serve
-// Until then, we will manually add the companies and their employees to the database
 const GitLabLoginLink = ({ userEmail }) => (
   <div>
     <Link
