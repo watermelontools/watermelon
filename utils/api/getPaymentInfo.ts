@@ -12,6 +12,8 @@ const getPaymentInfo = async (userEmail: string) => {
     .then((data) => {
       if (data.email) {
         return true;
+      } else {
+        return false;
       }
     });
   return data;
