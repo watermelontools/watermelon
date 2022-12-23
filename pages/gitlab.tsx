@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/github/saveUser";
+import saveUserInfo from "../utils/db/gitlab/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
@@ -105,27 +105,29 @@ export async function getServerSideProps(context) {
     });
     let userJson = await user.json();
     console.log(userJson)
-    /* await saveUserInfo({
+     await saveUserInfo({
       access_token: json.access_token,
+      refresh_token: json.refresh_token,
       scope: json.scope,
-      login: userJson.login,
+      username: userJson.username,
       id: userJson.id,
       avatar_url: userJson.avatar_url,
       watermelon_user: context.query.state,
       name: userJson.name,
-      company: userJson.company,
-      blog: userJson.blog,
+      organization: userJson.organization,
+      website: userJson.website,
       email: userJson.email,
       location: userJson.location,
       bio: userJson.bio,
-      twitter_username: userJson.twitter_username,
-    }); */
+      twitter: userJson.twitter,
+      linkedin: userJson.linkedin
+    }); 
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
-        login: "userJson.login",
-        avatar_url: "userJson.avatar_url",
+        login: userJson.username,
+        avatar_url: userJson.avatar_url,
       },
     };
   }
