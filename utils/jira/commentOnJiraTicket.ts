@@ -1,3 +1,5 @@
+import fnTranslate from "md-to-adf";
+
 export default async function handler({
   issueIdOrKey,
   text,
@@ -14,6 +16,12 @@ export default async function handler({
   }
   if (!access_token) {
     return { error: "no access_token" };
+  }
+  if (!issueIdOrKey) {
+    return { error: "no issueIdOrKey" };
+  }
+  if (!text) {
+    return { error: "no text" };
   }
   let bodyToSend = JSON.stringify({
     body: {
@@ -32,6 +40,7 @@ export default async function handler({
       ],
     },
   });
+  console.log(fnTranslate(text));
   try {
     return await fetch(
       `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/issue/${issueIdOrKey}/comment`,

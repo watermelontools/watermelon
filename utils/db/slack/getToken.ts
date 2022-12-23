@@ -1,9 +1,9 @@
 import executeRequest from "../azuredb";
 
-export default async function getUser(user): Promise<any> {
+export default async function getToken({ user }): Promise<any> {
   try {
     let data = await executeRequest(
-      `EXEC dbo.get_github_token @watermelon_user = '${user}'`
+      `EXEC dbo.get_slack_token @watermelon_user = '${user}'`
     );
     return data;
   } catch (err) {

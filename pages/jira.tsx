@@ -37,7 +37,7 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
         <p>
           If you are not redirected, please click{" "}
           <Link href="/">
-            <a>here</a>
+            here
           </Link>
         </p>
         {error && <p>{error}</p>}
@@ -69,7 +69,7 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.log("jira error", json);
+    console.error("Jira error", json);
     return {
       props: {
         error: json.error,

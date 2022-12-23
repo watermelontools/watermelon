@@ -68,7 +68,23 @@ function HomePage({}) {
   ];
   return (
     <div>
-      {status === "loading" && <div>Loading...</div>}
+      {status === "loading" && (
+        <>
+          <Header />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+            }}
+          >
+            {nextServicesList.map((service) => (
+              <div className="p-3">
+                <ComingSoonService name={service} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
       {status === "unauthenticated" && <LogInBtn />}
       {status === "authenticated" && (
         <>
@@ -96,13 +112,13 @@ function HomePage({}) {
                 )}
               </div>
               <div className="p-3">
-                {slackUserData?.name || slackUserData?.email ? (
+                {slackUserData?.user_username || slackUserData?.user_email ? (
                   <InfoPanel
                     info={{
                       organization: slackUserData?.team_name,
-                      user_avatar_url: slackUserData?.user_avatar_url,
-                      user_displayname: slackUserData?.name,
-                      user_email: slackUserData?.email,
+                      user_avatar_url: slackUserData?.user_picture_url,
+                      user_displayname: slackUserData?.user_real_name,
+                      user_email: slackUserData?.user_email,
                       service_name: "Slack",
                     }}
                   />

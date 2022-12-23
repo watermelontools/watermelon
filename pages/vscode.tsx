@@ -17,7 +17,7 @@ function VSCode() {
             data?.user?.email ?? ""
           }&token=${data?.user.name ?? ""}`}
         >
-          <a>Open VSCode</a>
+          Open VSCode
         </Link>
       )}
     </div>

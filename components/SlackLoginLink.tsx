@@ -7,19 +7,20 @@ import Link from "next/link";
 const SlackLoginLink = ({ userEmail, hasPaid }) => (
   <div>
     {hasPaid ? (
-      <Link
-        href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=incoming-webhook,chat:write,chat:write.customize&user_scope=chat:write,users:read&state=${userEmail}`}
-      >
-        <a className="button block">
-          <div className="Box d-flex flex-items-center flex-justify-start p-2">
-            <img className="avatar avatar-8" src="/logos/slack.svg" />
-            <div className="p-2">
-              <h2>Login to Slack</h2>
-              <p>View your Most Relevant Threads and Groups</p>
-            </div>
+      (<Link
+        href={`https://slack.com/oauth/v2/authorize?client_id=2258283433764.3516691319939&scope=chat:write,chat:write.customize,incoming-webhook,channels:history,groups:history,im:history,mpim:history,users:read&user_scope=chat:write,channels:history,groups:history,im:history,mpim:history,identify,search:read,users:read&state=${userEmail}`}
+        
+        className="button block">
+
+        <div className="Box d-flex flex-items-center flex-justify-start p-2">
+          <img className="avatar avatar-8" src="/logos/slack.svg" />
+          <div className="p-2">
+            <h2>Login to Slack</h2>
+            <p>View your Most Relevant Threads and Groups</p>
           </div>
-        </a>
-      </Link>
+        </div>
+
+      </Link>)
     ) : (
       <Link href={`https://app.watermelontools.com/billing`}>
         <a className="button block">
@@ -30,8 +31,9 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
               <p>Upgrade your plan to find context from your chats</p>
             </div>
           </div>
-        </a>
-      </Link>
+        </div>
+
+      </Link>)
     )}
   </div>
 );

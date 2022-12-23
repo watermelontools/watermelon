@@ -17,7 +17,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
   }, [timeToRedirect]);
 
   return (
-    <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
+    <div className="Box">
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with Slack to {organization}
@@ -25,7 +25,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
       </div>
       <img
         src={avatar_url}
-        alt="jira organization image"
+        alt="slack user image"
         className="avatar avatar-8"
       />
       <div>
@@ -35,10 +35,7 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click{" "}
-          <Link href="/">
-            <a>here</a>
-          </Link>
+          If you are not redirected, please click <Link href="/">here</Link>
         </p>
         {error && <p>{error}</p>}
       </div>
@@ -48,26 +45,12 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    let details = {
-      grant_type: "authorization_code",
-      code: context.query.code,
-      redirect_uri: "https://app.watermelontools.com/slack",
-      client_id: process.env.SLACK_CLIENT_ID,
-      client_secret: process.env.SLACK_CLIENT_SECRET,
-    };
-    let formBody = [];
-    for (var property in details) {
-      var encodedKey = encodeURIComponent(property);
-      var encodedValue = encodeURIComponent(details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-    }
-
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: formBody.join("&"),
+      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com/slack&client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}`,
     });
   } else
     return {
@@ -77,7 +60,7 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.log("Slack error", json);
+    console.error("Slack error", json);
     return {
       props: {
         error: json.error,

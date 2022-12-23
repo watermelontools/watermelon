@@ -12,11 +12,11 @@ function VSCodeInsiders() {
     <div className="d-flex flex-items-center flex-justify-center">
       {status !== "loading" && (
         <Link
-          href={`vscode-insiders://watermelontools.watermelon-tools?email=${
+          href={`vscodium://watermelontools.watermelon-tools?email=${
             data?.user?.email ?? ""
           }&token=${data?.user.name ?? ""}`}
         >
-          Open VSCode Insiders
+          Open VSCodium
         </Link>
       )}
     </div>
