@@ -19,6 +19,7 @@ function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [gitlabUserData, setGitlabUserData] = useState(null);
   const [slackUserData, setSlackUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
   const { data: session, status } = useSession();
@@ -105,8 +106,8 @@ function HomePage({}) {
                 )}
               </div>
               <div className="p-3">
-                {githubUserData?.name || githubUserData?.email ? (
-                  <GitHubInfo {...githubUserData} />
+                {gitlabUserData?.name || gitlabUserData?.email ? (
+                  <GitHubInfo {...gitlabUserData} />
                 ) : (
                   <GitLabLoginLink userEmail={userEmail} />
                 )}
