@@ -104,22 +104,30 @@ function HomePage({}) {
             >
               <div className="p-3">
                 {githubUserData?.name || githubUserData?.email ? (
-                  <GitHubInfo {...githubUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: githubUserData?.company,
+                      user_avatar_url: githubUserData?.avatar_url,
+                      user_displayname: githubUserData?.name,
+                      user_email: githubUserData?.email,
+                      service_name: "GitHub",
+                    }}
+                  />
                 ) : (
                   <GitHubLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
                 {gitlabUserData?.name || gitlabUserData?.email ? (
-                 <InfoPanel
-                 info={{
-                   organization: gitlabUserData?.organization,
-                   user_avatar_url: gitlabUserData?.avatar_url,
-                   user_displayname: gitlabUserData?.name,
-                   user_email: gitlabUserData?.email,
-                   service_name: "GitLab",
-                 }}
-               />
+                  <InfoPanel
+                    info={{
+                      organization: gitlabUserData?.organization,
+                      user_avatar_url: gitlabUserData?.avatar_url,
+                      user_displayname: gitlabUserData?.name,
+                      user_email: gitlabUserData?.email,
+                      service_name: "GitLab",
+                    }}
+                  />
                 ) : (
                   <GitLabLoginLink userEmail={userEmail} />
                 )}
