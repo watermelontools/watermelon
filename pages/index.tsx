@@ -13,6 +13,7 @@ import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
+import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 function HomePage({}) {
@@ -36,6 +37,9 @@ function HomePage({}) {
       });
       getSlackInfo(userEmail).then((data) => {
         setSlackUserData(data);
+      });
+      getGitLabInfo(userEmail).then((data) => {
+        setGitlabUserData(data);
       });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
@@ -107,7 +111,15 @@ function HomePage({}) {
               </div>
               <div className="p-3">
                 {gitlabUserData?.name || gitlabUserData?.email ? (
-                  <GitHubInfo {...gitlabUserData} />
+                 <InfoPanel
+                 info={{
+                   organization: gitlabUserData?.organization,
+                   user_avatar_url: gitlabUserData?.avatar_url,
+                   user_displayname: gitlabUserData?.name,
+                   user_email: gitlabUserData?.user_email,
+                   service_name: "GitLab",
+                 }}
+               />
                 ) : (
                   <GitLabLoginLink userEmail={userEmail} />
                 )}
