@@ -116,7 +116,7 @@ function HomePage({}) {
                    organization: gitlabUserData?.organization,
                    user_avatar_url: gitlabUserData?.avatar_url,
                    user_displayname: gitlabUserData?.name,
-                   user_email: gitlabUserData?.user_email,
+                   user_email: gitlabUserData?.email,
                    service_name: "GitLab",
                  }}
                />
