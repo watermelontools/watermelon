@@ -56,7 +56,6 @@ function HomePage({}) {
 
   const nextServicesList = [
     "Bitbucket",
-    "Gitlab",
     "Notion",
     "Trello",
     "Asana",
