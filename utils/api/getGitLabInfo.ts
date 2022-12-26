@@ -1,4 +1,4 @@
-const getSlackInfo = async (userEmail: string) => {
+const getGitLabInfo = async (userEmail: string) => {
   const data = await fetch("/api/gitlab/getUser", {
     method: "POST",
     headers: {
@@ -12,4 +12,4 @@ const getSlackInfo = async (userEmail: string) => {
     .catch((err) => console.log(err));
   return data;
 };
-export default getSlackInfo;
+export default getGitLabInfo;
