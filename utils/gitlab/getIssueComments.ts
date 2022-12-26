@@ -9,7 +9,7 @@ export default async function getIssue({
 }): Promise<{ any }> {
   try {
     return await fetch(
-      `https://gitlab.com/api/v4/projects/${project_id}/issues/${issue_iid}`,
+      `https://gitlab.com/api/v4/projects/${project_id}/issues/${issue_iid}/notes`,
       {
         method: "GET",
         headers: {
