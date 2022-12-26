@@ -1,10 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
-import GitHubInfo from "../components/dashboard/GitHubInfo";
 import InfoPanel from "../components/dashboard/InfoPanel";
-import JiraInfo from "../components/dashboard/JiraInfo";
 import JiraLoginLink from "../components/JiraLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
@@ -13,12 +10,14 @@ import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
+import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [gitlabUserData, setGitlabUserData] = useState(null);
   const [slackUserData, setSlackUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
   const { data: session, status } = useSession();
@@ -35,6 +34,9 @@ function HomePage({}) {
       });
       getSlackInfo(userEmail).then((data) => {
         setSlackUserData(data);
+      });
+      getGitLabInfo(userEmail).then((data) => {
+        setGitlabUserData(data);
       });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
@@ -99,21 +101,45 @@ function HomePage({}) {
             >
               <div className="p-3">
                 {githubUserData?.name || githubUserData?.email ? (
-                  <GitHubInfo {...githubUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: githubUserData?.company,
+                      user_avatar_url: githubUserData?.avatar_url,
+                      user_displayname: githubUserData?.name,
+                      user_email: githubUserData?.email,
+                      service_name: "GitHub",
+                    }}
+                  />
                 ) : (
                   <GitHubLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
-                {githubUserData?.name || githubUserData?.email ? (
-                  <GitHubInfo {...githubUserData} />
+                {gitlabUserData?.name || gitlabUserData?.email ? (
+                  <InfoPanel
+                    info={{
+                      organization: gitlabUserData?.organization,
+                      user_avatar_url: gitlabUserData?.avatar_url,
+                      user_displayname: gitlabUserData?.name,
+                      user_email: gitlabUserData?.email,
+                      service_name: "GitLab",
+                    }}
+                  />
                 ) : (
                   <GitLabLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
                 {jiraUserData?.organization ? (
-                  <JiraInfo {...jiraUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: jiraUserData?.organization,
+                      user_avatar_url: jiraUserData?.user_avatar_url,
+                      user_displayname: jiraUserData?.user_displayname,
+                      user_email: jiraUserData?.user_email,
+                      service_name: "Jira",
+                    }}
+                  />
                 ) : (
                   <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
                 )}
