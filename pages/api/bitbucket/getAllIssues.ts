@@ -2,7 +2,7 @@ import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucket
 
 export default async function handler(req, res) {
   let { workspace, repo_slug, userEmail } = req.body;
-  let { access_token } = await updateBitbucketAccessToken(userEmail);
+  let  access_token  = await updateBitbucketAccessToken(userEmail);
   fetch(
     `https://api.bitbucket.org/2.0/repositories/${workspace}/${repo_slug}/issues`,
     {
@@ -14,8 +14,9 @@ export default async function handler(req, res) {
     }
   )
     .then((response) => {
-      return response.text();
+      return res.send({response});
     })
-    .then((text) => console.log(text))
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      return res.send({ err });
+    });
 }
