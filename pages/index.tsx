@@ -1,10 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import LogOutBtn from "../components/logout-btn";
 import LogInBtn from "../components/login-btn";
-import GitHubInfo from "../components/dashboard/GitHubInfo";
 import InfoPanel from "../components/dashboard/InfoPanel";
-import JiraInfo from "../components/dashboard/JiraInfo";
 import JiraLoginLink from "../components/JiraLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
@@ -104,29 +101,45 @@ function HomePage({}) {
             >
               <div className="p-3">
                 {githubUserData?.name || githubUserData?.email ? (
-                  <GitHubInfo {...githubUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: githubUserData?.company,
+                      user_avatar_url: githubUserData?.avatar_url,
+                      user_displayname: githubUserData?.name,
+                      user_email: githubUserData?.email,
+                      service_name: "GitHub",
+                    }}
+                  />
                 ) : (
                   <GitHubLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
                 {gitlabUserData?.name || gitlabUserData?.email ? (
-                 <InfoPanel
-                 info={{
-                   organization: gitlabUserData?.organization,
-                   user_avatar_url: gitlabUserData?.avatar_url,
-                   user_displayname: gitlabUserData?.name,
-                   user_email: gitlabUserData?.email,
-                   service_name: "GitLab",
-                 }}
-               />
+                  <InfoPanel
+                    info={{
+                      organization: gitlabUserData?.organization,
+                      user_avatar_url: gitlabUserData?.avatar_url,
+                      user_displayname: gitlabUserData?.name,
+                      user_email: gitlabUserData?.email,
+                      service_name: "GitLab",
+                    }}
+                  />
                 ) : (
                   <GitLabLoginLink userEmail={userEmail} />
                 )}
               </div>
               <div className="p-3">
                 {jiraUserData?.organization ? (
-                  <JiraInfo {...jiraUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: jiraUserData?.organization,
+                      user_avatar_url: jiraUserData?.user_avatar_url,
+                      user_displayname: jiraUserData?.user_displayname,
+                      user_email: jiraUserData?.user_email,
+                      service_name: "Jira",
+                    }}
+                  />
                 ) : (
                   <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
                 )}
