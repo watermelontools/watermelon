@@ -30,7 +30,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
               <p>Upgrade your plan to index code context from Jira</p>
             </div>
           </div>
-        </div>
+        </a>
 
       </Link>)
     )}
