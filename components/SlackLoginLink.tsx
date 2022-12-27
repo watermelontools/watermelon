@@ -23,7 +23,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
       </Link>)
     ) : (
       <Link href={`https://app.watermelontools.com/billing`}>
-        <a className="button block">
+        <div className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/slack.svg" />
             <div className="p-2">
@@ -31,7 +31,7 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
               <p>Upgrade your plan to find context from your chats</p>
             </div>
           </div>
-        </a>
+        </div>
 
       </Link>)
     }

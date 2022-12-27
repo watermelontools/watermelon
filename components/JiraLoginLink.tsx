@@ -22,7 +22,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
       </Link>)
     ) : (
       <Link href={`https://app.watermelontools.com/billing`}>
-        <a className="button block">
+        <div className="button block">
           <div className="Box d-flex flex-items-center flex-justify-start p-2">
             <img className="avatar avatar-8" src="/logos/jira.svg" />
             <div className="p-2">
@@ -30,7 +30,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
               <p>Upgrade your plan to index code context from Jira</p>
             </div>
           </div>
-        </a>
+        </div>
 
       </Link>)
     }
