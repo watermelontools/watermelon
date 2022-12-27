@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/github/saveUser";
+import saveUserInfo from "../utils/db/gitlab/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
@@ -40,7 +40,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with GitHub as {login}
+          You have logged in with GitLab as {login}
         </h2>
       </div>
       <img
@@ -69,7 +69,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    f = await fetch(`https://github.com/login/oauth/access_token`, {
+    f = await fetch(`https://gitlab.com/oauth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -78,9 +78,9 @@ export async function getServerSideProps(context) {
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/github",
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        redirect_uri: "https://app.watermelontools.com/gitlab",
+        client_id: process.env.GITLAB_APP_ID,
+        client_secret: process.env.GITLAB_CLIENT_SECRET,
       }),
     });
   } else
@@ -97,32 +97,34 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://api.github.com/user`, {
+    let user = await fetch(`https://gitlab.com/api/v4/user`, {
       headers: {
-        Authorization: `token ${json.access_token}`,
+        Authorization: `Bearer ${json.access_token}`,
       },
     });
     let userJson = await user.json();
-    await saveUserInfo({
+     await saveUserInfo({
       access_token: json.access_token,
+      refresh_token: json.refresh_token,
       scope: json.scope,
-      login: userJson.login,
+      username: userJson.username,
       id: userJson.id,
       avatar_url: userJson.avatar_url,
       watermelon_user: context.query.state,
       name: userJson.name,
-      company: userJson.company,
-      blog: userJson.blog,
+      organization: userJson.organization,
+      website: userJson.website,
       email: userJson.email,
       location: userJson.location,
       bio: userJson.bio,
-      twitter_username: userJson.twitter_username,
-    });
+      twitter: userJson.twitter,
+      linkedin: userJson.linkedin
+    }); 
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
-        login: userJson.login,
+        login: userJson.username,
         avatar_url: userJson.avatar_url,
       },
     };

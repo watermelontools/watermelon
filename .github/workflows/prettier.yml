@@ -28,3 +28,7 @@ jobs:
           commit_message: "Prettified"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull request summarizer
+        uses: KanHarI/gpt-commit-summarizer@v1.0.1
+

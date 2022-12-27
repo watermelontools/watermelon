@@ -19,13 +19,13 @@ export default async function handler(req, res) {
   const octokit = new Octokit({
     auth: access_token,
   });
-  let q= `repo:${owner}/${repo}+hash:${commitList}`
+  let q = `repo:${owner}/${repo}+hash:${commitList}`;
   try {
     let issues = await octokit.rest.search.issuesAndPullRequests({
-        q,
-        is: "pr",
-        type: "pr"
-    })
+      q,
+      is: "pr",
+      type: "pr",
+    });
 
     return res.send(issues.data);
   } catch (error) {

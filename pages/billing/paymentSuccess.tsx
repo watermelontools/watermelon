@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import addEmailToGitHubQueryCountTable from "../../utils/db/github/addEmailToGitHubQueryCountTable";
 
 function Paymentsuccess() {
   const router = useRouter();
@@ -16,6 +17,18 @@ function Paymentsuccess() {
   const handleSubmit = (e) => {
     e.preventDefault();
     emailArray.forEach((email) => {
+      // Add email to github query count table
+      // addEmailToGitHubQueryCountTable(email);
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/github/addEmailToGitHubQueryCountTable`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email
+        })
+      });
+
       // Add email to the list of paying users
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/addEmails`, {
         method: "POST",
