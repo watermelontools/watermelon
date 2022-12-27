@@ -2,7 +2,7 @@ import getToken from "../../../utils/gitlab/refreshTokens";
 import postCommentOnIssue from "../../../utils/gitlab/postCommentOnIssue";
 
 export default async function handler(req, res) {
-  let { user, repo, issue_iid, project_id, comment_body } = req.body;
+  let { user, issue_iid, project_id, comment_body } = req.body;
   if (!user) {
     return res.send({ error: "no user" });
   }
