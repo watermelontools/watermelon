@@ -42,7 +42,7 @@ export default function Header() {
                   VSCode Extension
                 </a>
               </li>
-                            <li>
+              <li>
                 <a
                   className="dropdown-item"
                   href={`https://docs.watermelontools.com/`}
