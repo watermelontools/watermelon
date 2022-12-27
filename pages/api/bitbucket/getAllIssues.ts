@@ -3,7 +3,7 @@ import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucket
 export default async function handler(req, res) {
   let { workspace, repo_slug, userEmail } = req.body;
   let  access_token  = await updateBitbucketAccessToken(userEmail);
-  fetch(
+  await fetch(
     `https://api.bitbucket.org/2.0/repositories/${workspace}/${repo_slug}/issues`,
     {
       method: "GET",
