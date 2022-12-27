@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     {
       method: "GET",
       headers: {
-        // Authorization: `Bearer ${access_token}`, // do we need this?
+      Authorization: `Bearer ${access_token}`, // works with hardcoded updated token
         Accept: "application/json",
       },
     }
