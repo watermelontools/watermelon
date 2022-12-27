@@ -1,4 +1,4 @@
-export default async function getIssue({
+export default async function postCommentOnIssue({
   access_token,
   issue_iid,
   project_id,
