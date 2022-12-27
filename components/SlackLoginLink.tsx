@@ -31,10 +31,10 @@ const SlackLoginLink = ({ userEmail, hasPaid }) => (
               <p>Upgrade your plan to find context from your chats</p>
             </div>
           </div>
-        </div>
+        </a>
 
       </Link>)
-    )}
+    }
   </div>
 );
 export default SlackLoginLink;

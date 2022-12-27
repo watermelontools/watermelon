@@ -33,7 +33,7 @@ const JiraLoginLink = ({ userEmail, hasPaid }) => (
         </a>
 
       </Link>)
-    )}
+    }
   </div>
 );
 export default JiraLoginLink;
