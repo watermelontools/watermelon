@@ -1,7 +1,7 @@
 import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucketAccessToken";
 
 export default async function handler(req, res) {
-  let { workspace, repo_slug, commitHash } = req.body;
+  let { workspace, repo_slug, commitHash, userEmail } = req.body;
   // let  access_token  = await updateBitbucketAccessToken(userEmail);
 
   await fetch(
@@ -15,7 +15,9 @@ export default async function handler(req, res) {
     }
   )
     .then((response) => {
-      return res.send({ response });
+      response.json().then((data) => {
+        return res.send(data);
+      });
     })
     .catch((err) => {
       return res.send({ err });
