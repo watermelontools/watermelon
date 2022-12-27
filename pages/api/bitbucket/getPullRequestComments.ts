@@ -2,7 +2,7 @@ import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucket
 
 export default async function handler(req, res) {
   let { workspace, repo_slug, pull_request_id, userEmail } = req.body;
-  
+
   let access_token  = await updateBitbucketAccessToken(userEmail);
 
   await fetch(
@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     {
       method: "GET",
       headers: {
-      Authorization: `Bearer ${access_token}`, // works with hardcoded updated token
+      Authorization: `Bearer ${access_token}`,
         Accept: "application/json",
       },
     }
