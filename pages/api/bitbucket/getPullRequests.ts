@@ -1,4 +1,6 @@
 import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucketAccessToken";
+import addToGitHubQueryCount from "../../../utils/db/github/addToGitHubQueryCount";
+import getGitHubQueryCountStatusByEmail from "../../../utils/db/github/getGitHubQueryCountStatusByEmail";
 
 export default async function handler(req, res) {
   let { workspace, repo_slug, commitHash, userEmail } = req.body;
@@ -13,7 +15,15 @@ export default async function handler(req, res) {
     return res.send({ error: "no commitHash" });
   }
 
-  let access_token  = await updateBitbucketAccessToken(userEmail);
+  let access_token = await updateBitbucketAccessToken(userEmail);
+
+  // if the git query count for the user with that email address is over 50 and the user hasn't paid, return an error
+  let { hasPaid, queryCount } = await getGitHubQueryCountStatusByEmail(
+    userEmail
+  );
+  if (queryCount > 50 && !hasPaid) {
+    return res.send({ error: "Git query limit reached" });
+  }
 
   try {
     const response = await fetch(
@@ -31,6 +41,9 @@ export default async function handler(req, res) {
       }
     );
     const data = await response.json();
+
+    addToGitHubQueryCount(userEmail);
+
     return res.send(data);
   } catch (err) {
     return res.send(err);
