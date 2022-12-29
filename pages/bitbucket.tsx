@@ -72,17 +72,15 @@ export async function getServerSideProps(context) {
     f = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/bitbucket",
-        client_id: process.env.BITBUCKET_CLIENT_ID,
-        client_secret: process.env.BITBUCKET_CLIENT_SECRET,
+        username: process.env.BITBUCKET_CLIENT_ID,
+        password: process.env.BITBUCKET_CLIENT_SECRET
       }),
-    });
+    })
   } else
     return {
       props: {
@@ -104,14 +102,14 @@ export async function getServerSideProps(context) {
     });
     let userJson = await user.json();
      await saveUserInfo({
-      access_token: retrievedAccessToken, 
-      id: data.account_id,
-      avatar_url: data?.links?.avatar?.href,
-      watermelon_user: userEmail,
-      name: data.display_name,
-      location: data.location,
-      refresh_token: data.refresh_token,
-    }); 
+      access_token: json.access_token,
+      refresh_token: json.refresh_token,
+      id: userJson.id,
+      avatar_url: userJson.avatar_url,
+      watermelon_user: context.query.state,
+      name: userJson.name,
+      location: userJson.location
+    });  
     return {
       props: {
         loggedIn: true,
