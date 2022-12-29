@@ -17,8 +17,8 @@ export default async function handler(req, res) {
   let { access_token } = await getToken(user);
 
   // if the github query count for the user with that email address is over 50 and the user hasn't paid, return an error
-  let { hasPaid, queryCount } = await getGitHubQueryCountStatusByEmail(user);
-  if (queryCount > 50 && !hasPaid) {
+  let { hasPaid, git_query_count  } = await getGitHubQueryCountStatusByEmail(user);
+  if (git_query_count  > 50 && !hasPaid) {
     return res.send({ error: "GitHub query limit reached" });
   }
 

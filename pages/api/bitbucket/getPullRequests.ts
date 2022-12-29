@@ -18,10 +18,11 @@ export default async function handler(req, res) {
   let access_token = await updateBitbucketAccessToken(userEmail);
 
   // if the git query count for the user with that email address is over 50 and the user hasn't paid, return an error
-  let { hasPaid, queryCount } = await getGitHubQueryCountStatusByEmail(
+  let { hasPaid, git_query_count } = await getGitHubQueryCountStatusByEmail(
     userEmail
   );
-  if (queryCount > 50 && !hasPaid) {
+
+  if (git_query_count  > 50 && !hasPaid) {
     return res.send({ error: "Git query limit reached" });
   }
 
