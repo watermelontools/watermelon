@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     userEmail
   );
 
-  if (git_query_count  > 50 && !hasPaid) {
+  if (git_query_count > 50 && !hasPaid) {
     return res.send({ error: "Git query limit reached" });
   }
 
