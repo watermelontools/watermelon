@@ -2,12 +2,9 @@ import getAssignedIssues from "../../../utils/gitlab/getAssignedIssues";
 import getToken from "../../../utils/gitlab/refreshTokens";
 import getUser from "../../../utils/db/gitlab/getUser";
 export default async function handler(req, res) {
-  let { user, issue_iid, project_id } = req.body;
+  let { user, project_id } = req.body;
   if (!user) {
     return res.send({ error: "no user" });
-  }
-  if (!issue_iid) {
-    return res.send({ error: "no issue_number" });
   }
   if (!project_id) {
     return res.send({ error: "no project_id" });
