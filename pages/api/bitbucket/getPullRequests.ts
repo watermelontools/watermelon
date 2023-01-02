@@ -32,11 +32,7 @@ export default async function handler(req, res) {
       {
         method: "GET",
         headers: {
-          // https://developer.atlassian.com/cloud/bitbucket/rest/api-group-pullrequests/#api-repositories-workspace-repo-slug-commit-commit-pullrequests-get
-          // Docs say it shouldn't have an access token
-          // with the auth tokens it returns "invalid or unknown installation"
           Authorization: `Bearer ${access_token}`,
-          // without it, it returns "resource not found"
           Accept: "application/json",
         },
       }
