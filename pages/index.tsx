@@ -59,14 +59,6 @@ function HomePage({}) {
 
   const nextServicesList = [
     "Bitbucket",
-    "Notion",
-    "Trello",
-    "Asana",
-    "Confluence",
-    "Google Drive",
-    "Dropbox",
-    "Microsoft Teams",
-    "Zoom",
   ];
   return (
     <div>
