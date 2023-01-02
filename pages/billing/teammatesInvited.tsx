@@ -18,7 +18,29 @@ function TeammatesInvited() {
           <h1 className="h3 mb-3 f4 text-normal">
             Your team members have been invited!
           </h1>
-          <p>They will receive an invitation shortly</p>
+          <p>Your team members will receive an invitation shortly</p>
+
+          <p>To start using Watermelon:</p>
+          <p>
+            <a
+              href="https://marketplace.visualstudio.com/items?itemName=WatermelonTools.watermelon-tools"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Download Watermelon for VS Code
+            </a>
+          </p>
+          <p>
+            <a
+              href="https://app.watermelontools.com"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Login to Watermelon
+            </a>
+          </p>
+
+
           <div className="d-flex flex-items-center flex-justify-center">
             <button
               className="btn btn-primary"
