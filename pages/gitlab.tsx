@@ -55,10 +55,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click{" "}
-          <Link href="/">
-            here
-          </Link>
+          If you are not redirected, please click <Link href="/">here</Link>
         </p>
         {error && <p>{error}</p>}
       </div>
@@ -103,7 +100,7 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
-     await saveUserInfo({
+    await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
       scope: json.scope,
@@ -118,8 +115,8 @@ export async function getServerSideProps(context) {
       location: userJson.location,
       bio: userJson.bio,
       twitter: userJson.twitter,
-      linkedin: userJson.linkedin
-    }); 
+      linkedin: userJson.linkedin,
+    });
     return {
       props: {
         loggedIn: true,
