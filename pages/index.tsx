@@ -178,13 +178,23 @@ function HomePage({}) {
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode"
-                  email={userEmail}
+                  email={userEmail}         
+                  urlStart="vscode"
                   accessToken={session.user.name}
                 />
               </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode Insiders"
+                  urlStart="vscode-insiders"
+                  email={userEmail}
+                  accessToken={session.user.name}
+                />
+              </div>
+              <div className="p-3">
+                <DownloadExtension
+                  name="VSCodium"
+                  urlStart="vscodium"
                   email={userEmail}
                   accessToken={session.user.name}
                 />
