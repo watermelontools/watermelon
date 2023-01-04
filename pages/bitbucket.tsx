@@ -55,10 +55,7 @@ export default function Bitbucket({ login, avatar_url, userEmail, error }) {
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click{" "}
-          <Link href="/">
-            here
-          </Link>
+          If you are not redirected, please click <Link href="/">here</Link>
         </p>
         {error && <p>{error}</p>}
       </div>
@@ -78,9 +75,9 @@ export async function getServerSideProps(context) {
         grant_type: "authorization_code",
         code: context.query.code,
         username: process.env.BITBUCKET_CLIENT_ID,
-        password: process.env.BITBUCKET_CLIENT_SECRET
+        password: process.env.BITBUCKET_CLIENT_SECRET,
       }),
-    })
+    });
   } else
     return {
       props: {
@@ -88,6 +85,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log(json);
   if (json.error) {
     return {
       props: {
@@ -100,16 +98,17 @@ export async function getServerSideProps(context) {
         Authorization: `Bearer ${json.access_token}`,
       },
     });
+    console.log(user);
     let userJson = await user.json();
-     await saveUserInfo({
+    await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
       id: userJson.id,
       avatar_url: userJson.avatar_url,
       watermelon_user: context.query.state,
       name: userJson.name,
-      location: userJson.location
-    });  
+      location: userJson.location,
+    });
     return {
       props: {
         loggedIn: true,
