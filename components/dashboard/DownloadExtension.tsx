@@ -1,8 +1,8 @@
 import Link from "next/link";
 
-const DownloadExtension = ({ name, email, accessToken }) => (
+const DownloadExtension = ({ name, email, accessToken, urlStart }) => (
   <Link
-    href={`vscode://watermelontools.watermelon-tools?email=${
+    href={`${urlStart}://watermelontools.watermelon-tools?email=${
       email ?? ""
     }&token=${accessToken ?? ""}`}
   >
