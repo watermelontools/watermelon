@@ -5,9 +5,8 @@ const DownloadExtension = ({ name, email, accessToken }) => (
     href={`vscode://watermelontools.watermelon-tools?email=${
       email ?? ""
     }&token=${accessToken ?? ""}`}
-    className="Box d-flex flex-items-center flex-justify-start p-2"
   >
-    <div>
+    <div className="Box d-flex flex-items-center flex-justify-start p-2">
       <img
         className="avatar avatar-8"
         src={`/logos/${name.toLowerCase()}.svg`}
