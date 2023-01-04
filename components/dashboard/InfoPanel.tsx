@@ -15,7 +15,7 @@ const InfoPanel = ({ info }) => {
             src={`/logos/${service_name.toLowerCase()}.svg`}
           />
           <span>
-            {service_name} {organization ? `(${organization})` : ""}
+            {service_name} {organization ? `(${organization.trim()})` : ""}
           </span>
         </h2>
       </div>
