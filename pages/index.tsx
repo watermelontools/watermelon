@@ -221,7 +221,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json);
+  console.log("json", json);
   if (json.error) {
     return {
       props: {
@@ -234,7 +234,7 @@ export async function getServerSideProps(context) {
         Authorization: `Bearer ${json.access_token}`,
       },
     });
-    console.log(user);
+    console.log("user", user);
     let userJson = await user.json();
     /*     await saveUserInfo({
       access_token: json.access_token,
