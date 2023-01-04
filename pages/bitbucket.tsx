@@ -71,12 +71,7 @@ export async function getServerSideProps(context) {
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: context.query.code,
-        username: process.env.BITBUCKET_CLIENT_ID,
-        password: process.env.BITBUCKET_CLIENT_SECRET,
-      }),
+      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com/bitbucket&client_id=${process.env.BITBUCKET_CLIENT_ID}&client_secret=${process.env.BITBUCKET_CLIENT_SECRET}`,
     });
   } else
     return {
