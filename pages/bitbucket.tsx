@@ -80,9 +80,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log("json", json);
   if (json.error) {
-    console.log(json.error);
     return {
       props: {
         error: json.error,
@@ -94,9 +92,9 @@ export async function getServerSideProps(context) {
         Authorization: `Bearer ${json.access_token}`,
       },
     });
-    console.log(user);
     let userJson = await user.json();
-    await saveUserInfo({
+    console.log(userJson);
+    let save = await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
       id: userJson.id,
@@ -105,6 +103,7 @@ export async function getServerSideProps(context) {
       name: userJson.name,
       location: userJson.location,
     });
+    console.log(save);
     return {
       props: {
         loggedIn: true,
