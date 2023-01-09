@@ -98,7 +98,7 @@ export async function getServerSideProps(context) {
       access_token: json.access_token,
       refresh_token: json.refresh_token,
       id: userJson.account_id,
-      avatar_url: userJson.links.avatar,
+      avatar_url: userJson.links.avatar.href,
       watermelon_user: context.query.state,
       name: userJson.display_name,
       location: userJson.location,
@@ -109,7 +109,7 @@ export async function getServerSideProps(context) {
         loggedIn: true,
         userEmail: context.query.state,
         login: userJson.username,
-        avatar_url: userJson.links.avatar,
+        avatar_url: userJson.links.avatar.href,
       },
     };
   }
