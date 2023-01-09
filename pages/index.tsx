@@ -178,7 +178,7 @@ function HomePage({}) {
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode"
-                  email={userEmail}         
+                  email={userEmail}
                   urlStart="vscode"
                   accessToken={session.user.name}
                 />
@@ -213,55 +213,3 @@ function HomePage({}) {
 }
 
 export default HomePage;
-
-export async function getServerSideProps(context) {
-  let f;
-  if (context.query.code) {
-    f = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com&client_id=${process.env.BITBUCKET_CLIENT_ID}&client_secret=${process.env.BITBUCKET_CLIENT_SECRET}`,
-    });
-  } else
-    return {
-      props: {
-        error: "no code",
-      },
-    };
-  const json = await f.json();
-  console.log("json", json);
-  if (json.error) {
-    return {
-      props: {
-        error: json.error,
-      },
-    };
-  } else {
-    let user = await fetch(`https://api.bitbucket.org/2.0/user`, {
-      headers: {
-        Authorization: `Bearer ${json.access_token}`,
-      },
-    });
-    console.log("user", user);
-    let userJson = await user.json();
-    /*     await saveUserInfo({
-      access_token: json.access_token,
-      refresh_token: json.refresh_token,
-      id: userJson.id,
-      avatar_url: userJson.avatar_url,
-      watermelon_user: context.query.state,
-      name: userJson.name,
-      location: userJson.location,
-    }); */
-    return {
-      props: {
-        loggedIn: true,
-        userEmail: context.query.state,
-        login: userJson.username,
-        avatar_url: userJson.avatar_url,
-      },
-    };
-  }
-}
