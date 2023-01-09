@@ -123,7 +123,15 @@ function HomePage({}) {
 
               <div className="p-3">
                 {bitbucketUserData?.name || bitbucketUserData?.email ? (
-                  <BitbucketInfo {...bitbucketUserData} />
+                  <InfoPanel
+                    info={{
+                      organization: bitbucketUserData?.organization,
+                      user_avatar_url: bitbucketUserData?.avatar_url,
+                      user_displayname: bitbucketUserData?.name,
+                      user_email: bitbucketUserData?.email,
+                      service_name: "Bitbucket",
+                    }}
+                  />
                 ) : (
                   <BitbucketLoginLink userEmail={userEmail} />
                 )}
