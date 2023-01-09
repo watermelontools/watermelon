@@ -93,6 +93,7 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
+    console.log(userJson);
     let save = await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
