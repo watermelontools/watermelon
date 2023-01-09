@@ -41,6 +41,7 @@ function HomePage({}) {
       });
 
       getBitbucketInfo(userEmail).then((data) => {
+        console.log("bitbucket data", data);
         setBitbucketUserData(data);
       });
       getGitLabInfo(userEmail).then((data) => {
