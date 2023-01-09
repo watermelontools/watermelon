@@ -93,14 +93,13 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
-    console.log(userJson);
     let save = await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
-      id: userJson.id,
-      avatar_url: userJson.avatar_url,
+      id: userJson.account_id,
+      avatar_url: userJson.links.avatar,
       watermelon_user: context.query.state,
-      name: userJson.name,
+      name: userJson.display_name,
       location: userJson.location,
     });
     console.log(save);
@@ -109,7 +108,7 @@ export async function getServerSideProps(context) {
         loggedIn: true,
         userEmail: context.query.state,
         login: userJson.username,
-        avatar_url: userJson.avatar_url,
+        avatar_url: userJson.links.avatar,
       },
     };
   }
