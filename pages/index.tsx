@@ -14,7 +14,6 @@ import DownloadExtension from "../components/dashboard/DownloadExtension";
 import getSlackInfo from "../utils/api/getSlackInfo";
 import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
-import BitbucketInfo from "../components/dashboard/BitbucketInfo";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
