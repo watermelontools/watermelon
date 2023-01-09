@@ -39,9 +39,7 @@ function HomePage({}) {
       getSlackInfo(userEmail).then((data) => {
         setSlackUserData(data);
       });
-
       getBitbucketInfo(userEmail).then((data) => {
-        console.log("bitbucket data", data);
         setBitbucketUserData(data);
       });
       getGitLabInfo(userEmail).then((data) => {
