@@ -21,9 +21,9 @@ const InfoPanel = ({ info }) => {
         <img className="avatar avatar-8" src={user_avatar_url} />
         <div className="px-2">
           <h3>{user_displayname}</h3>
-          <p className="text-light">{user_email} </p>
+          <p className="text-light">{user_email || "Unknown email"} </p>
           <p className="text-light">
-            {organization ? `(${organization.trim()})` : ""}
+            {organization ? `${organization.trim()}` : "Unknown organization"}
           </p>
         </div>
       </div>
