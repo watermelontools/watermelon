@@ -14,9 +14,7 @@ const InfoPanel = ({ info }) => {
             className="avatar avatar-4"
             src={`/logos/${service_name.toLowerCase()}.svg`}
           />
-          <span>
-            {service_name} {organization ? `(${organization.trim()})` : ""}
-          </span>
+          <span>{service_name}</span>
         </h2>
       </div>
       <div className="d-flex flex-items-center flex-justify-start p-2">
@@ -24,6 +22,9 @@ const InfoPanel = ({ info }) => {
         <div className="px-2">
           <h3>{user_displayname}</h3>
           <p className="text-light">{user_email} </p>
+          <p className="text-light">
+            {organization ? `(${organization.trim()})` : ""}
+          </p>
         </div>
       </div>
     </div>
