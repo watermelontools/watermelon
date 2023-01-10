@@ -15,6 +15,7 @@ import getSlackInfo from "../utils/api/getSlackInfo";
 import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
+import getPaymentInfo from "../utils/api/getPaymentInfo";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -47,19 +48,9 @@ function HomePage({}) {
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
       // and have a perfect self-serve experience
-      fetch("/api/payments/getByEmail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: userEmail }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.email) {
-            setHasPaid(true);
-          }
-        });
+      getPaymentInfo(userEmail).then((data) => {
+        setHasPaid(data);
+      });
     }
   }, [userEmail]);
 
