@@ -54,8 +54,7 @@ function HomePage({}) {
     }
   }, [userEmail]);
 
-  const nextServicesList = [
-  ];
+  const nextServicesList = [];
   return (
     <div>
       {status === "loading" && (
@@ -164,29 +163,36 @@ function HomePage({}) {
                   <SlackLoginLink userEmail={userEmail} hasPaid={hasPaid} />
                 )}
               </div>
-              <div className="p-3">
-                <DownloadExtension
-                  name="VSCode"
-                  email={userEmail}
-                  urlStart="vscode"
-                  accessToken={session.user.name}
-                />
-              </div>
-              <div className="p-3">
-                <DownloadExtension
-                  name="VSCode Insiders"
-                  urlStart="vscode-insiders"
-                  email={userEmail}
-                  accessToken={session.user.name}
-                />
-              </div>
-              <div className="p-3">
-                <DownloadExtension
-                  name="VSCodium"
-                  urlStart="vscodium"
-                  email={userEmail}
-                  accessToken={session.user.name}
-                />
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+                }}
+              >
+                <div className="p-3">
+                  <DownloadExtension
+                    name="VSCode"
+                    email={userEmail}
+                    urlStart="vscode"
+                    accessToken={session.user.name}
+                  />
+                </div>
+                <div className="p-3">
+                  <DownloadExtension
+                    name="VSCode Insiders"
+                    urlStart="vscode-insiders"
+                    email={userEmail}
+                    accessToken={session.user.name}
+                  />
+                </div>
+                <div className="p-3">
+                  <DownloadExtension
+                    name="VSCodium"
+                    urlStart="vscodium"
+                    email={userEmail}
+                    accessToken={session.user.name}
+                  />
+                </div>
               </div>
               {nextServicesList.map((service) => (
                 <div className="p-3">
