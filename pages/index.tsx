@@ -55,14 +55,6 @@ function HomePage({}) {
   }, [userEmail]);
 
   const nextServicesList = [
-    "Notion",
-    "Trello",
-    "Asana",
-    "Confluence",
-    "Google Drive",
-    "Dropbox",
-    "Microsoft Teams",
-    "Zoom",
   ];
   return (
     <div>
