@@ -1,13 +1,12 @@
 import Link from "next/link";
 
-const DownloadExtension = ({ name, email, accessToken }) => (
+const DownloadExtension = ({ name, email, accessToken, urlStart }) => (
   <Link
-    href={`vscode://watermelontools.watermelon-tools?email=${
+    href={`${urlStart}://watermelontools.watermelon-tools?email=${
       email ?? ""
     }&token=${accessToken ?? ""}`}
-    className="Box d-flex flex-items-center flex-justify-start p-2"
   >
-    <div>
+    <div className="Box d-flex flex-items-center flex-justify-start p-2">
       <img
         className="avatar avatar-8"
         src={`/logos/${name.toLowerCase()}.svg`}

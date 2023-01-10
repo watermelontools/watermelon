@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/gitlab/saveUser";
+import saveUserInfo from "../utils/db/bitbucket/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error }) {
+export default function Bitbucket({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
@@ -40,12 +40,12 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with GitLab as {login}
+          You have logged in with Bitbucket as {login}
         </h2>
       </div>
       <img
         src={avatar_url}
-        alt="github user image"
+        alt="bitbucket user image"
         className="avatar avatar-8"
       />
       <div>
@@ -66,19 +66,12 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    f = await fetch(`https://gitlab.com/oauth/token`, {
+    f = await fetch(`https://bitbucket.org/site/oauth2/access_token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/gitlab",
-        client_id: process.env.GITLAB_APP_ID,
-        client_secret: process.env.GITLAB_CLIENT_SECRET,
-      }),
+      body: `grant_type=authorization_code&code=${context.query.code}&client_id=${process.env.BITBUCKET_CLIENT_ID}&client_secret=${process.env.BITBUCKET_CLIENT_SECRET}`,
     });
   } else
     return {
@@ -87,6 +80,7 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log("json", json);
   if (json.error) {
     return {
       props: {
@@ -94,35 +88,28 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://gitlab.com/api/v4/user`, {
+    let user = await fetch(`https://api.bitbucket.org/2.0/user`, {
       headers: {
         Authorization: `Bearer ${json.access_token}`,
       },
     });
     let userJson = await user.json();
+    console.log("userJson", userJson);
     await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
-      scope: json.scope,
-      username: userJson.username,
-      id: userJson.id,
-      avatar_url: userJson.avatar_url,
+      id: userJson.account_id,
+      avatar_url: userJson.links.avatar.href,
       watermelon_user: context.query.state,
-      name: userJson.name,
-      organization: userJson.organization,
-      website: userJson.website,
-      email: userJson.email,
+      name: userJson.display_name,
       location: userJson.location,
-      bio: userJson.bio,
-      twitter: userJson.twitter,
-      linkedin: userJson.linkedin,
     });
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
         login: userJson.username,
-        avatar_url: userJson.avatar_url,
+        avatar_url: userJson.links.avatar.href,
       },
     };
   }

@@ -4,7 +4,9 @@ import LogInBtn from "../components/login-btn";
 import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraLoginLink from "../components/JiraLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
+import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
+import getBitbucketInfo from "../utils/api/getBitbucketInfo";
 import getJiraInfo from "../utils/api/getJiraInfo";
 import ComingSoonService from "../components/dashboard/ComingSoonService";
 import Header from "../components/Header";
@@ -13,10 +15,12 @@ import getSlackInfo from "../utils/api/getSlackInfo";
 import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
+import getPaymentInfo from "../utils/api/getPaymentInfo";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
   const [githubUserData, setGithubUserData] = useState(null);
+  const [bitbucketUserData, setBitbucketUserData] = useState(null);
   const [gitlabUserData, setGitlabUserData] = useState(null);
   const [slackUserData, setSlackUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
@@ -35,30 +39,22 @@ function HomePage({}) {
       getSlackInfo(userEmail).then((data) => {
         setSlackUserData(data);
       });
+      getBitbucketInfo(userEmail).then((data) => {
+        setBitbucketUserData(data);
+      });
       getGitLabInfo(userEmail).then((data) => {
         setGitlabUserData(data);
       });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
       // and have a perfect self-serve experience
-      fetch("/api/payments/getByEmail", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: userEmail }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.email) {
-            setHasPaid(true);
-          }
-        });
+      getPaymentInfo(userEmail).then((data) => {
+        setHasPaid(data);
+      });
     }
   }, [userEmail]);
 
   const nextServicesList = [
-    "Bitbucket",
   ];
   return (
     <div>
@@ -106,6 +102,23 @@ function HomePage({}) {
                   <GitHubLoginLink userEmail={userEmail} />
                 )}
               </div>
+
+              <div className="p-3">
+                {bitbucketUserData?.name || bitbucketUserData?.email ? (
+                  <InfoPanel
+                    info={{
+                      organization: bitbucketUserData?.organization,
+                      user_avatar_url: bitbucketUserData?.avatar_url,
+                      user_displayname: bitbucketUserData?.name,
+                      user_email: bitbucketUserData?.email,
+                      service_name: "Bitbucket",
+                    }}
+                  />
+                ) : (
+                  <BitbucketLoginLink userEmail={userEmail} />
+                )}
+              </div>
+
               <div className="p-3">
                 {gitlabUserData?.name || gitlabUserData?.email ? (
                   <InfoPanel
@@ -155,12 +168,22 @@ function HomePage({}) {
                 <DownloadExtension
                   name="VSCode"
                   email={userEmail}
+                  urlStart="vscode"
                   accessToken={session.user.name}
                 />
               </div>
               <div className="p-3">
                 <DownloadExtension
                   name="VSCode Insiders"
+                  urlStart="vscode-insiders"
+                  email={userEmail}
+                  accessToken={session.user.name}
+                />
+              </div>
+              <div className="p-3">
+                <DownloadExtension
+                  name="VSCodium"
+                  urlStart="vscodium"
                   email={userEmail}
                   accessToken={session.user.name}
                 />
