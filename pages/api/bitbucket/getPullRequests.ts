@@ -24,25 +24,25 @@ export default async function handler(req, res) {
 
   if (git_query_count > 50 && !hasPaid) {
     return res.send({ error: "Git query limit reached" });
-  }
+  } else {
+    try {
+      const response = await fetch(
+        `https://api.bitbucket.org/2.0/repositories/${workspace}/${repo_slug}/commit/${commitHash}/pullrequests`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            Accept: "application/json",
+          },
+        }
+      );
+      const data = await response.json();
 
-  try {
-    const response = await fetch(
-      `https://api.bitbucket.org/2.0/repositories/${workspace}/${repo_slug}/commit/${commitHash}/pullrequests`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-          Accept: "application/json",
-        },
-      }
-    );
-    const data = await response.json();
+      addToGitHubQueryCount(userEmail);
 
-    addToGitHubQueryCount(userEmail);
-
-    return res.send(data);
-  } catch (err) {
-    return res.send(err);
+      return res.send(data);
+    } catch (err) {
+      return res.send(err);
+    }
   }
 }
