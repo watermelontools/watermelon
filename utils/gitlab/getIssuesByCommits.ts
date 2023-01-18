@@ -1,11 +1,13 @@
 async function getMergeRequestsForCommit(
   access_token: string,
-  project_id: string,
+  owner: string,
+  project_name: string,
   commit: string
 ) {
   try {
+    const urlEncodedProjectPath = encodeURIComponent(`${owner}/${project_name}`);
     return fetch(
-      `https://gitlab.com/api/v4/projects/${project_id}/repository/commits/${commit}/merge_requests`,
+      `https://gitlab.com/api/v4/projects/${urlEncodedProjectPath}/repository/commits/${commit}/merge_requests`,
       {
         method: "GET",
         headers: {
@@ -27,15 +29,17 @@ async function getMergeRequestsForCommit(
 export default async function getIssuesByCommits({
   access_token,
   commitList,
-  project_id,
+  owner,
+  project_name,
 }: {
   access_token: string;
   commitList: string;
-  project_id: string;
+  project_name: string;
+  owner: string;
 }) {
   let localCommitList = commitList.split(",");
   const requests = localCommitList.map((commit) =>
-    getMergeRequestsForCommit(access_token, project_id, commit)
+    getMergeRequestsForCommit(access_token, owner, project_name, commit)
   );
   const responses = await Promise.all(requests);
   return responses.flatMap((response) => response);
