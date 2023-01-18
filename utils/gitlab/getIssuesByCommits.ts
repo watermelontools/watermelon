@@ -5,7 +5,9 @@ async function getMergeRequestsForCommit(
   commit: string
 ) {
   try {
-    const urlEncodedProjectPath = encodeURIComponent(`${owner}/${project_name}`);
+    const urlEncodedProjectPath = encodeURIComponent(
+      `${owner}/${project_name}`
+    );
     return fetch(
       `https://gitlab.com/api/v4/projects/${urlEncodedProjectPath}/repository/commits/${commit}/merge_requests`,
       {
