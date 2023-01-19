@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       access_token,
       issue_iid,
       owner,
-      project_name
+      project_name,
     });
     console.log(issueComments);
     return res.send(issueComments);

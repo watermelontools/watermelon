@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     return res.send({ error: "no issue_number" });
   }
   if (!owner) {
-    return res.send({ error: "no owner" })
+    return res.send({ error: "no owner" });
   }
   if (!project_name) {
     return res.send({ error: "no project_name" });
