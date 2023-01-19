@@ -1,15 +1,20 @@
 export default async function getIssue({
   access_token,
   issue_iid,
-  project_id,
+  owner,
+  project_name,
 }: {
   access_token: string;
   issue_iid: string;
-  project_id: string;
+  owner: string;
+  project_name: string;
 }): Promise<{ any }> {
   try {
+    const urlEncodedProjectPath = encodeURIComponent(
+      `${owner}/${project_name}`
+    );
     return await fetch(
-      `https://gitlab.com/api/v4/projects/${project_id}/issues/${issue_iid}/notes`,
+      `https://gitlab.com/api/v4/projects/${urlEncodedProjectPath}/issues/${issue_iid}/notes`,
       {
         method: "GET",
         headers: {
