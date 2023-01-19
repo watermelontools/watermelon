@@ -1,17 +1,20 @@
 export default async function postCommentOnIssue({
   access_token,
   issue_iid,
-  project_id,
+  owner,
+  project_name,
   comment_body,
 }: {
   access_token: string;
   issue_iid: string;
-  project_id: string;
+  owner: string,
+  project_name: string,
   comment_body: string;
 }): Promise<{ any }> {
   try {
+    const urlEncodedProjectPath = encodeURIComponent(`${owner}/${project_name}`);
     return await fetch(
-      `https://gitlab.com/api/v4/projects/${project_id}/issues/${issue_iid}/notes`,
+      `https://gitlab.com/api/v4/projects/${urlEncodedProjectPath}/issues/${issue_iid}/notes`,
       {
         method: "POST",
         headers: {
