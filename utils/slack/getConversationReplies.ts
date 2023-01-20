@@ -17,7 +17,7 @@ export default async function handler({
     return { error: "no user_token" };
   }
   try {
-    return await fetch(`https://slack.com/api/conversations.replies`, {
+    const replies = await fetch(`https://slack.com/api/conversations.replies`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -27,6 +27,26 @@ export default async function handler({
       },
       body: `channel=${channelId}&ts=${ts}&include_all_metadata=true`,
     }).then((res) => res.json());
+    const promises = replies.messages.map(async (element, index) => {
+      return await fetch(
+        `https://slack.com/api/users.info?user=${element.user}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept-Encoding": "deflate",
+            Accept: "application/json",
+            Authorization: `Bearer ${user_token}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((json) => {
+          replies.messages[index].userInfo = json;
+        });
+    });
+    await Promise.allSettled(promises);
+    return replies;
   } catch (error) {
     console.error(error);
     return error;
