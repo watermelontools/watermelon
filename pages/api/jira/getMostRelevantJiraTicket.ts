@@ -66,20 +66,27 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => resJson.issues);
-  let issueLink = await fetch(
-    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${returnVal[0].key}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-    }
-  )
-    .then((res) => res.json())
-    .then((resJson) => resJson.self);
-  returnVal[0].issueLink = issueLink;
+  for (let index = 0; index < returnVal.length; index++) {
+    const element = returnVal[index];
+    let issue = await fetch(
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+
+        body: JSON.stringify({
+          expand: ["renderedFields"],
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((resJson) => resJson);
+    returnVal[index].issue = issue;
+  }
 
   return res.send(returnVal);
 }
