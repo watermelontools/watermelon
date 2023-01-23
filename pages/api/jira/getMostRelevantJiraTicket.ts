@@ -66,8 +66,7 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => resJson.issues);
-  for (let index = 0; index < returnVal.length; index++) {
-    const element = returnVal[index];
+  let issuePromises = returnVal.map(async (element, index) => {
     let issue = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}`,
       {
@@ -86,7 +85,8 @@ export default async function handler(req, res) {
       .then((res) => res.json())
       .then((resJson) => resJson);
     returnVal[index].issue = issue;
-  }
+  });
+  await Promise.all(issuePromises);
 
   return res.send(returnVal);
 }
