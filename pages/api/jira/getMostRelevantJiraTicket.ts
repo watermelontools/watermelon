@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     .then((resJson) => resJson.issues);
   let issuePromises = returnVal.map(async (element, index) => {
     let issue = await fetch(
-      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}`,
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}?expand=renderedFields`,
       {
         method: "GET",
         headers: {
@@ -76,10 +76,6 @@ export default async function handler(req, res) {
           Accept: "application/json",
           Authorization: `Bearer ${access_token}`,
         },
-
-        body: JSON.stringify({
-          expand: ["renderedFields"],
-        }),
       }
     )
       .then((res) => res.json())
