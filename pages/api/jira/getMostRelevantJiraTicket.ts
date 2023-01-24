@@ -102,7 +102,7 @@ export default async function handler(req, res) {
       .then((resJson) => resJson);
     returnVal[index].issue = issue;
   });
-  await Promise.all(issuePromises, serverPromise);
+  await Promise.all([issuePromises, serverPromise()]);
 
   return res.send(returnVal);
 }
