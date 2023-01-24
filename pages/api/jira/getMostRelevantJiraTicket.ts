@@ -66,6 +66,26 @@ export default async function handler(req, res) {
   )
     .then((res) => res.json())
     .then((resJson) => resJson.issues);
+  let serverPromise = async () => {
+    let serverInfo = await fetch(
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/serverInfo`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((resJson) => resJson);
+    returnVal.forEach((element, index) => {
+      returnVal[index].serverInfo = serverInfo;
+    });
+  };
+
   let issuePromises = returnVal.map(async (element, index) => {
     let issue = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}?expand=renderedFields`,
@@ -82,7 +102,7 @@ export default async function handler(req, res) {
       .then((resJson) => resJson);
     returnVal[index].issue = issue;
   });
-  await Promise.all(issuePromises);
+  await Promise.all(issuePromises, serverPromise);
 
   return res.send(returnVal);
 }
