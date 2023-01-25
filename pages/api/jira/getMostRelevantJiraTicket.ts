@@ -39,12 +39,12 @@ export default async function handler(req, res) {
 
   let { access_token } = await getToken({ user });
   if (!access_token) {
-    res.send({ error: "no access_token" });
+    return res.send({ error: "no access_token" });
   }
 
-  let { jira_id, user_email } = await getJiraOrganization(user);
+  let { jira_id } = await getJiraOrganization(user);
   if (!jira_id) {
-    res.send({ error: "no Jira cloudId" });
+    return res.send({ error: "no Jira cloudId" });
   }
 
   let returnVal = await fetch(
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     });
   };
 
-  let issuePromises = returnVal.map(async (element, index) => {
+  let issuePromises = returnVal?.map(async (element, index) => {
     let issue = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}?expand=renderedFields`,
       {
@@ -102,7 +102,9 @@ export default async function handler(req, res) {
       .then((resJson) => resJson);
     returnVal[index].issue = issue;
   });
-  await Promise.all([issuePromises, serverPromise()]);
+  if (returnVal) {
+    await Promise.all([issuePromises, serverPromise()]);
+  }
 
   return res.send(returnVal);
 }
