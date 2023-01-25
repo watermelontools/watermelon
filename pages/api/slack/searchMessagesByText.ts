@@ -10,7 +10,9 @@ export default async function handler(req, res) {
     return res.send({ error: "no text" });
   }
   let { user_token } = await getToken({ user });
-
+  if (!user_token) {
+    return { error: "no access_token" };
+  }
   let response = await searchMessageByText({
     text,
     user_token,
