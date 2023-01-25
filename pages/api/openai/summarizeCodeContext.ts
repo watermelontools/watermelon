@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     ticket_title,
     ticket_body,
     thread_body,
-    user_email
+    user_email,
   } = req.body;
 
   // The product reason why we only make the code and git parameters mandatory is because there might not
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   }
 
   if (!user_email) {
-    return res.send({ error: "No user email" })
+    return res.send({ error: "No user email" });
   }
 
   const prTitlePrompt = `Most relevant Pull Request title: ${pr_title} \n`;
