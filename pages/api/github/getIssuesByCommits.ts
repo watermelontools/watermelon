@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   let { access_token } = await getToken(user);
 
   if (!access_token) {
-    res.send({ error: "not logged in to service" });
+    return res.send({ error: "no access_token" });
   }
   const octokit = new Octokit({
     auth: access_token,
