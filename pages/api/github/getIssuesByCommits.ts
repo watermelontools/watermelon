@@ -17,7 +17,11 @@ export default async function handler(req, res) {
   if (!commitList) {
     return res.send({ error: "no commitList" });
   }
-  let { access_token, login } = await getToken(user);
+  let { access_token } = await getToken(user);
+
+  if (!access_token) {
+    res.send({ error: "not logged in to service" });
+  }
   const octokit = new Octokit({
     auth: access_token,
   });
