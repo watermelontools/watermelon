@@ -33,9 +33,9 @@ export default async function handler(req, res) {
     return res.send({ error: "No user email" })
   }
 
-  const prTitlePrompt = `Most relevant Pull Request title: ${pr_title}`;
-  const prBodyPrompt = `Most relevant Pull Request body: ${pr_body}`;
-  const codePrompt = `Block of code: ${block_of_code}`;
+  const prTitlePrompt = `Most relevant Pull Request title: ${pr_title} \n`;
+  const prBodyPrompt = `Most relevant Pull Request body: ${pr_body} \n`;
+  const codePrompt = `Block of code: ${block_of_code} \n`;
   const additionalInstructions =
     "Explain the context of the highlighted piece of code. Don't focus on explaining the syntax. Explain the complexities of the code taking into account its context from the pull request. Enclose the keywords between two underscores (**key_word**) to make it bold on markdown. Don't consider 'Pull Request', 'Slack thread' or 'Jira Ticket' as keywords. Highlight the 3 most imporant words.";
 
@@ -44,20 +44,20 @@ export default async function handler(req, res) {
   let threadBodyPrompt = "";
 
   if (ticket_title) {
-    ticketTitlePrompt = `Most relevant ticket title: ${ticket_title}`;
+    ticketTitlePrompt = `Most relevant ticket title: ${ticket_title} \n`;
   }
   if (ticket_body) {
-    ticketBodyPrompt = `Most relevant ticket body: ${ticket_body}`;
+    ticketBodyPrompt = `Most relevant ticket body: ${ticket_body} \n`;
   }
   if (thread_body) {
-    threadBodyPrompt = `Most relevant message thread body: ${thread_body}`;
+    threadBodyPrompt = `Most relevant message thread body: ${thread_body} \n`;
   }
 
   try {
     const codeContextSummary = await openai
       .createCompletion({
         model: "text-davinci-003",
-        prompt: `${prTitlePrompt} \n ${prBodyPrompt} \n ${codePrompt} \n ${ticketTitlePrompt} \n ${ticketBodyPrompt} \n ${threadBodyPrompt} \n ${additionalInstructions}`,
+        prompt: `${prTitlePrompt} ${prBodyPrompt} ${codePrompt} ${ticketTitlePrompt} ${ticketBodyPrompt} ${threadBodyPrompt} ${additionalInstructions}`,
         max_tokens: 128,
         temperature: 0.7,
       })
