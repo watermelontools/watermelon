@@ -38,7 +38,6 @@ export default async function handler(req, res) {
   }
 
   let { access_token } = await getToken({ user });
-  console.log(access_token)
   if (!access_token) {
     return res.send({ error: "no access_token" });
   }
