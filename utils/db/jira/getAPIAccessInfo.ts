@@ -5,7 +5,7 @@ export default async function getAPIAccessInfo(user: string): Promise<{
   cloudId: string;
 }> {
   try {
-    let query = `EXEC dbo.get_jira_tokens @user='${user}'`;
+    let query = `EXEC dbo.get_jira_tokens @watermelon_user='${user}'`;
     let resp = await executeRequest(query);
     return resp;
   } catch (error) {
