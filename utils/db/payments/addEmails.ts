@@ -8,7 +8,6 @@ export default async function addEmails({
   try {
     let query = `EXEC dbo.add_emails_to_paying_user_list @email='${email}'`;
     let resp = await executeRequest(query);
-    console.log("resp", resp);
     return resp;
   } catch (error) {
     console.error(error);
