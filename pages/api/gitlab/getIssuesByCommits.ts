@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return res.send({ error: "no commitList" });
   }
   let { access_token } = await getToken({ user });
-  
+
   // if the gitlab query count for the user with that email address is over 50 and the user hasn't paid, return an error
   let { hasPaid, git_query_count } = await getGitHubQueryCountStatusByEmail(
     user
@@ -26,7 +26,6 @@ export default async function handler(req, res) {
   if (git_query_count > 50 && !hasPaid) {
     return res.send({ error: "Context query limit reached" });
   }
-
 
   try {
     let issues = await getIssuesByCommits({
