@@ -62,7 +62,7 @@ export default async function handler(req, res) {
         temperature: 0.7,
       })
       .then((res) => res.data.choices[0].text.trim())
-      .catch((err) => res.send("error: ", err.message))
+      .catch((err) => res.send("error: ", err.message));
 
     return res.send(codeContextSummary);
   } catch (error) {
