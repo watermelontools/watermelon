@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     user
   );
   if (git_query_count > 50 && !hasPaid) {
-    return res.send({ error: "GitHub query limit reached" });
+    return res.send({ error: "Context query limit reached" });
   }
 
   try {
