@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   const prBodyPrompt = `Most relevant Pull Request body: ${pr_body} \n`;
   const codePrompt = `Block of code: ${block_of_code} \n`;
   const additionalInstructions =
-    "Explain the context of the highlighted piece of code. Don't focus on explaining the syntax. Explain the complexities of the code taking into account its context from the pull request. Enclose the keywords between two underscores (**key_word**) to make it bold on markdown. Don't consider 'Pull Request', 'Slack thread' or 'Jira Ticket' as keywords. Highlight the 3 most imporant words.";
+    "Let's think step by step. Explain the context of the highlighted piece of code. Don't focus on explaining the syntax. Explain the complexities of the code taking into account its context from the pull request, the most relevant ticket_title and ticket_body info, as well as the most relevant thread_body info.";
 
   let ticketTitlePrompt = "";
   let ticketBodyPrompt = "";
@@ -61,7 +61,8 @@ export default async function handler(req, res) {
         max_tokens: 128,
         temperature: 0.7,
       })
-      .then((res) => res.data.choices[0].text);
+      .then((res) => res.data.choices[0].text.trim())
+      .catch((err) => res.send("error: ", err.message));
 
     return res.send(codeContextSummary);
   } catch (error) {
