@@ -86,9 +86,10 @@ export default async function handler(req, res) {
     });
   };
 
-  let issuePromises = returnVal?.map(async (element, index) => {
-    let issue = await fetch(
-      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}?expand=renderedFields`,
+  let commentsPromises = returnVal?.map(async (element, index) => {
+    returnVal[index].comments = [];
+    return await fetch(
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment`,
       {
         method: "GET",
         headers: {
@@ -99,11 +100,13 @@ export default async function handler(req, res) {
       }
     )
       .then((res) => res.json())
-      .then((resJson) => resJson);
-    returnVal[index].issue = issue;
+      .then((resJson) => {
+        returnVal[index].comments.push(...resJson.comments);
+        return resJson;
+      });
   });
   if (returnVal) {
-    await Promise.all([issuePromises, serverPromise()]);
+    await Promise.allSettled([...commentsPromises, serverPromise()]);
   }
 
   return res.send(returnVal);
