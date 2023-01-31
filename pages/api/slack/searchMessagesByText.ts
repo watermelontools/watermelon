@@ -25,7 +25,7 @@ export default async function handler(req, res) {
       user_token: match.user_token,
       channelId: match.channel.id,
     });
-    response.messages.matches[index].comments.push(...replies.messages);
+    response.messages.matches[index].replies.push(...replies.messages);
   });
   await Promise.allSettled(repliesPromises);
   return res.send(response);
