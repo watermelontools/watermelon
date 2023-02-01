@@ -89,7 +89,7 @@ export default async function handler(req, res) {
   let commentsPromises = returnVal?.map(async (element, index) => {
     returnVal[index].comments = [];
     return await fetch(
-      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment`,
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment?expand=renderedBody`,
       {
         method: "GET",
         headers: {
