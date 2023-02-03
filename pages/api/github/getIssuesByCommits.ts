@@ -41,9 +41,21 @@ export default async function handler(req, res) {
       is: "pr",
       type: "pr",
     });
-
+    let commentsPromises = issues.data.items.map(
+      async (issue, index) =>
+        await octokit.rest.issues
+          .listComments({
+            owner,
+            repo,
+            issue_number: issue.number,
+          })
+          .then((comments) => {
+            //@ts-ignore
+            issues.data.items[index].comments = comments.data;
+          })
+    );
+    await Promise.allSettled(commentsPromises);
     addToGitHubQueryCount(user);
-
     return res.send(issues.data);
   } catch (error) {
     return res.send({ error });
