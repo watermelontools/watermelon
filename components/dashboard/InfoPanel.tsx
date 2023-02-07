@@ -6,6 +6,20 @@ const InfoPanel = ({ info }) => {
     user_email,
     service_name,
   } = info;
+  let trimmedOrg = (organization) => {
+    if (organization.length > 20) {
+      return organization.substring(0, 20) + "...";
+    } else if (
+      organization === "" ||
+      organization === null ||
+      organization === undefined ||
+      organization === "null"
+    ) {
+      return "Unknown organization";
+    } else {
+      return organization.trim();
+    }
+  };
   return (
     <div className="Box">
       <div className="Subhead px-3">
@@ -22,9 +36,7 @@ const InfoPanel = ({ info }) => {
         <div className="px-2">
           <h3>{user_displayname}</h3>
           <p className="text-light">{user_email || "Unknown email"} </p>
-          <p className="text-light">
-            {organization ? `${organization.trim()}` : "Unknown organization"}
-          </p>
+          <p className="text-light">{trimmedOrg(organization)}</p>
         </div>
       </div>
     </div>
