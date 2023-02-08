@@ -45,5 +45,26 @@ export default async function getIssuesByCommits({
     getMergeRequestsForCommit(access_token, owner, project_name, commit)
   );
   const responses = await Promise.all(requests);
+  let commentsPromises = responses.map(async (response, index) => {
+    return await fetch(
+      `https://gitlab.com/api/v4/projects/${response[0].project_id}/merge_requests/${response[0].iid}/notes`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${access_token}`,
+        },
+      }
+    )
+      .then((commentResp) => commentResp.json())
+      .then((data) => {
+        responses[index][0].comments = data;
+        return responses;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
+  await Promise.allSettled(commentsPromises);
   return responses.flatMap((response) => response);
 }
