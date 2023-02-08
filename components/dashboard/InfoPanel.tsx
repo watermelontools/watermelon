@@ -7,15 +7,15 @@ const InfoPanel = ({ info }) => {
     service_name,
   } = info;
   let trimmedOrg = (organization) => {
-    if (organization.length > 20) {
-      return organization.substring(0, 20) + "...";
-    } else if (
+    if (
       organization === "" ||
       organization === null ||
       organization === undefined ||
       organization === "null"
     ) {
       return "Unknown organization";
+    } else if (organization.length > 20) {
+      return organization.substring(0, 20) + "...";
     } else {
       return organization.trim();
     }
