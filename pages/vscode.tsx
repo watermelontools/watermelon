@@ -35,7 +35,7 @@ function VSCode() {
               style={{ maxWidth: "80ch" }}
             >
               <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
-              <p>You will be redirected in {timeToRedirect}...</p>
+              <p>We will try opening it in {timeToRedirect}...</p>
             </div>
           </div>
         </Link>
