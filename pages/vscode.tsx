@@ -1,7 +1,24 @@
 import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 function VSCode() {
+  const [timeToRedirect, setTimeToRedirect] = useState(10);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeToRedirect(timeToRedirect - 1);
+      if (timeToRedirect === 0) {
+        window.open(
+          `vscode://watermelontools.watermelon-tools?email=${
+            data?.user?.email ?? ""
+          }&token=${data?.user.name ?? ""}`,
+          "_blank"
+        );
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeToRedirect]);
   const { status, data } = useSession({
     required: true,
     onUnauthenticated() {
@@ -23,6 +40,7 @@ function VSCode() {
               style={{ maxWidth: "80ch" }}
             >
               <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
+              <p>You will be redirected in {timeToRedirect}...</p>
             </div>
           </div>
         </Link>
