@@ -34,23 +34,24 @@ function VSCode() {
   return (
     <div>
       {status !== "loading" && (
-        <Link href={url}>
-        <Link href={url}>
-          <div className="d-flex flex-items-center flex-justify-center flex-column">
-            <div
-              className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
-              style={{ maxWidth: "80ch" }}
-            >
-              <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
-              <img className="avatar avatar-8" src={`/logos/vscode.svg`} />
-              {timeToRedirect > 0 ? (
-                <p>We will try opening it in {timeToRedirect}...</p>
-              ) : null}{" "}
+        <>
+          <Link href={url}>
+            <div className="d-flex flex-items-center flex-justify-center flex-column">
+              <div
+                className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
+                style={{ maxWidth: "80ch" }}
+              >
+                <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
+                <img className="avatar avatar-8" src={`/logos/vscode.svg`} />
+                {timeToRedirect > 0 ? (
+                  <p>We will try opening it in {timeToRedirect}...</p>
+                ) : null}{" "}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+          <LoginGrid userEmail={userEmail} />
+        </>
       )}
-      <LoginGrid userEmail={userEmail} />
     </div>
   );
 }
