@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   let {
     pr_title,
     pr_body,
-    block_of_code,
     ticket_title,
     ticket_body,
     thread_body,
@@ -25,19 +24,14 @@ export default async function handler(req, res) {
     return res.send({ error: "no PR Body" });
   }
 
-  if (!block_of_code) {
-    return res.send({ error: "no Block of code" });
-  }
-
   if (!user_email) {
     return res.send({ error: "No user email" });
   }
 
   const prTitlePrompt = `Most relevant Pull Request title: ${pr_title} \n`;
   const prBodyPrompt = `Most relevant Pull Request body: ${pr_body} \n`;
-  const codePrompt = `Block of code: ${block_of_code} \n`;
   const additionalInstructions =
-    "Let's think step by step. Explain the context of the highlighted piece of code. Don't focus on explaining the syntax. Explain the complexities of the code taking into account its context from the pull request, the most relevant ticket_title and ticket_body info, as well as the most relevant thread_body info.";
+    "Explain the context of the code taking into account its context from the most relevant pull request, the most relevant ticket, the most relevant commit message and most relevant thread body.";
 
   let ticketTitlePrompt = "";
   let ticketBodyPrompt = "";
@@ -57,7 +51,7 @@ export default async function handler(req, res) {
     const codeContextSummary = await openai
       .createCompletion({
         model: "text-davinci-003",
-        prompt: `${prTitlePrompt} ${prBodyPrompt} ${codePrompt} ${ticketTitlePrompt} ${ticketBodyPrompt} ${threadBodyPrompt} ${additionalInstructions}`,
+        prompt: `${prTitlePrompt} ${prBodyPrompt} ${ticketTitlePrompt} ${ticketBodyPrompt} ${threadBodyPrompt} ${additionalInstructions}`,
         max_tokens: 128,
         temperature: 0.7,
       })
