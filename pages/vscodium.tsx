@@ -43,6 +43,7 @@ function VSCodium({}) {
                 style={{ maxWidth: "80ch" }}
               >
                 <h1 className="h3 mb-3 f4 text-normal"> Open VSCodium</h1>
+                <img className="avatar avatar-8" src={`/logos/vscodium.svg`} />
                 {timeToRedirect > 0 ? (
                   <p>We will try opening it in {timeToRedirect}...</p>
                 ) : null}

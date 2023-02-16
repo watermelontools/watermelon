@@ -32,7 +32,7 @@ function VSCode() {
   }, [timeToRedirect]);
 
   return (
-    <div className="d-flex flex-items-center flex-justify-center">
+    <div>
       {status !== "loading" && (
         <Link href={url}>
           <div className="d-flex flex-items-center flex-justify-center flex-column">
@@ -41,6 +41,7 @@ function VSCode() {
               style={{ maxWidth: "80ch" }}
             >
               <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
+              <img className="avatar avatar-8" src={`/logos/vscode.svg`} />
               {timeToRedirect > 0 ? (
                 <p>We will try opening it in {timeToRedirect}...</p>
               ) : null}{" "}
