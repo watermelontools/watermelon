@@ -35,6 +35,7 @@ function VSCode() {
     <div>
       {status !== "loading" && (
         <Link href={url}>
+        <Link href={url}>
           <div className="d-flex flex-items-center flex-justify-center flex-column">
             <div
               className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
