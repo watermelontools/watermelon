@@ -16,6 +16,7 @@ import getGitLabInfo from "../utils/api/getGitLabInfo";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
+import LoginGrid from "../components/loginGrid";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -78,99 +79,9 @@ function HomePage({}) {
       {status === "authenticated" && (
         <>
           {session ? <Header /> : <LogInBtn />}
-
-          {userEmail && (
-            <div>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-                }}
-              >
-                <div className="p-3">
-                  {githubUserData?.name || githubUserData?.email ? (
-                    <InfoPanel
-                      info={{
-                        organization: githubUserData?.company,
-                        user_avatar_url: githubUserData?.avatar_url,
-                        user_displayname: githubUserData?.name,
-                        user_email: githubUserData?.email,
-                        service_name: "GitHub",
-                      }}
-                    />
-                  ) : (
-                    <GitHubLoginLink userEmail={userEmail} />
-                  )}
-                </div>
-
-                <div className="p-3">
-                  {bitbucketUserData?.name || bitbucketUserData?.email ? (
-                    <InfoPanel
-                      info={{
-                        organization: bitbucketUserData?.organization,
-                        user_avatar_url: bitbucketUserData?.avatar_url,
-                        user_displayname: bitbucketUserData?.name,
-                        user_email: bitbucketUserData?.email,
-                        service_name: "Bitbucket",
-                      }}
-                    />
-                  ) : (
-                    <BitbucketLoginLink userEmail={userEmail} />
-                  )}
-                </div>
-
-                <div className="p-3">
-                  {gitlabUserData?.name || gitlabUserData?.email ? (
-                    <InfoPanel
-                      info={{
-                        organization: gitlabUserData?.organization,
-                        user_avatar_url: gitlabUserData?.avatar_url,
-                        user_displayname: gitlabUserData?.name,
-                        user_email: gitlabUserData?.email,
-                        service_name: "GitLab",
-                      }}
-                    />
-                  ) : (
-                    <GitLabLoginLink userEmail={userEmail} />
-                  )}
-                </div>
-                <div className="p-3">
-                  {jiraUserData?.organization ? (
-                    <InfoPanel
-                      info={{
-                        organization: jiraUserData?.organization,
-                        user_avatar_url: jiraUserData?.user_avatar_url,
-                        user_displayname: jiraUserData?.user_displayname,
-                        user_email: jiraUserData?.user_email,
-                        service_name: "Jira",
-                      }}
-                    />
-                  ) : (
-                    <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
-                  )}
-                </div>
-                <div className="p-3">
-                  {slackUserData?.user_username || slackUserData?.user_email ? (
-                    <InfoPanel
-                      info={{
-                        organization: slackUserData?.team_name,
-                        user_avatar_url: slackUserData?.user_picture_url,
-                        user_displayname: slackUserData?.user_real_name,
-                        user_email: slackUserData?.user_email,
-                        service_name: "Slack",
-                      }}
-                    />
-                  ) : (
-                    <SlackLoginLink userEmail={userEmail} hasPaid={hasPaid} />
-                  )}
-                </div>
-
-                {nextServicesList.map((service) => (
-                  <div className="p-3">
-                    <ComingSoonService name={service} />
-                  </div>
-                ))}
-              </div>
+          {userEmail ? (
+            <>
+              <LoginGrid userEmail={userEmail} />
               <div
                 style={{
                   display: "grid",
@@ -202,8 +113,8 @@ function HomePage({}) {
                   />
                 </div>
               </div>
-            </div>
-          )}
+            </>
+          ) : null}
         </>
       )}
     </div>

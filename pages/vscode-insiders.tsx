@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import LoginGrid from "../components/loginGrid";
 
 function VSCodeInsiders() {
   const { status, data } = useSession({
@@ -14,6 +15,11 @@ function VSCodeInsiders() {
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
     data?.user?.email ?? ""
   }&token=${data?.user.name ?? ""}`;
+  const [userEmail, setUserEmail] = useState(null);
+
+  useEffect(() => {
+    setUserEmail(data?.user?.email);
+  }, [data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,7 +32,7 @@ function VSCodeInsiders() {
   }, [timeToRedirect]);
 
   return (
-    <div className="d-flex flex-items-center flex-justify-center">
+    <div>
       {status !== "loading" && (
         <Link href={url}>
           <div className="d-flex flex-items-center flex-justify-center flex-column">
@@ -35,6 +41,10 @@ function VSCodeInsiders() {
               style={{ maxWidth: "80ch" }}
             >
               <h1 className="h3 mb-3 f4 text-normal">Open VSCode Insiders</h1>
+              <img
+                className="avatar avatar-8"
+                src={`/logos/vscode insiders.svg`}
+              />
               {timeToRedirect > 0 ? (
                 <p>We will try opening it in {timeToRedirect}...</p>
               ) : null}
@@ -42,6 +52,7 @@ function VSCodeInsiders() {
           </div>
         </Link>
       )}
+      <LoginGrid userEmail={userEmail} />
     </div>
   );
 }

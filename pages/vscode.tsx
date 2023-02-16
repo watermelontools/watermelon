@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import LoginGrid from "../components/loginGrid";
 
 function VSCode() {
   const { status, data } = useSession({
@@ -14,6 +15,11 @@ function VSCode() {
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
     data?.user?.email ?? ""
   }&token=${data?.user.name ?? ""}`;
+  const [userEmail, setUserEmail] = useState(null);
+
+  useEffect(() => {
+    setUserEmail(data?.user?.email);
+  }, [data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,21 +32,25 @@ function VSCode() {
   }, [timeToRedirect]);
 
   return (
-    <div className="d-flex flex-items-center flex-justify-center">
+    <div>
       {status !== "loading" && (
-        <Link href={url}>
-          <div className="d-flex flex-items-center flex-justify-center flex-column">
-            <div
-              className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
-              style={{ maxWidth: "80ch" }}
-            >
-              <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
-              {timeToRedirect > 0 ? (
-                <p>We will try opening it in {timeToRedirect}...</p>
-              ) : null}{" "}
+        <>
+          <Link href={url}>
+            <div className="d-flex flex-items-center flex-justify-center flex-column">
+              <div
+                className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
+                style={{ maxWidth: "80ch" }}
+              >
+                <h1 className="h3 mb-3 f4 text-normal">Open VSCode</h1>
+                <img className="avatar avatar-8" src={`/logos/vscode.svg`} />
+                {timeToRedirect > 0 ? (
+                  <p>We will try opening it in {timeToRedirect}...</p>
+                ) : null}{" "}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+          <LoginGrid userEmail={userEmail} />
+        </>
       )}
     </div>
   );
