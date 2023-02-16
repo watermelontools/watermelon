@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-function VSCodeInsiders() {
+function VSCodium() {
   const { status, data } = useSession({
     required: true,
     onUnauthenticated() {
@@ -46,4 +46,4 @@ function VSCodeInsiders() {
   );
 }
 
-export default VSCodeInsiders;
+export default VSCodium;
