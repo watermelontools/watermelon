@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
 import { useEffect, useState } from "react";
+import LoginGrid from "../components/loginGrid";
 
-function VSCodium() {
+function VSCodeInsiders() {
   const { status, data } = useSession({
     required: true,
     onUnauthenticated() {
@@ -14,6 +15,11 @@ function VSCodium() {
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
     data?.user?.email ?? ""
   }&token=${data?.user.name ?? ""}`;
+  const [userEmail, setUserEmail] = useState(null);
+
+  useEffect(() => {
+    setUserEmail(data?.user?.email);
+  }, [data]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -42,8 +48,9 @@ function VSCodium() {
           </div>
         </Link>
       )}
+      <LoginGrid userEmail={userEmail} />
     </div>
   );
 }
 
-export default VSCodium;
+export default VSCodeInsiders;
