@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       owner,
       repo,
       issue_number,
-      body: "🍉" + comment_body,
+      body: "🍉 " + comment_body,
     });
     return res.send(issue.data);
   } catch (error) {
