@@ -1,59 +1,19 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import LogInBtn from "../components/login-btn";
-import InfoPanel from "../components/dashboard/InfoPanel";
-import JiraLoginLink from "../components/JiraLoginLink";
-import GitHubLoginLink from "../components/GitHubLoginLink";
-import BitbucketLoginLink from "../components/BitbucketLoginLink";
-import getGitHubInfo from "../utils/api/getGitHubInfo";
-import getBitbucketInfo from "../utils/api/getBitbucketInfo";
-import getJiraInfo from "../utils/api/getJiraInfo";
-import ComingSoonService from "../components/dashboard/ComingSoonService";
+
 import Header from "../components/Header";
-import DownloadExtension from "../components/dashboard/DownloadExtension";
-import getSlackInfo from "../utils/api/getSlackInfo";
-import getGitLabInfo from "../utils/api/getGitLabInfo";
-import SlackLoginLink from "../components/SlackLoginLink";
-import GitLabLoginLink from "../components/GitLabLoginLink";
-import getPaymentInfo from "../utils/api/getPaymentInfo";
+import LogInBtn from "../components/login-btn";
 import LoginGrid from "../components/loginGrid";
+import ComingSoonService from "../components/dashboard/ComingSoonService";
+import DownloadExtension from "../components/dashboard/DownloadExtension";
+
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
-  const [jiraUserData, setJiraUserData] = useState(null);
-  const [githubUserData, setGithubUserData] = useState(null);
-  const [bitbucketUserData, setBitbucketUserData] = useState(null);
-  const [gitlabUserData, setGitlabUserData] = useState(null);
-  const [slackUserData, setSlackUserData] = useState(null);
-  const [hasPaid, setHasPaid] = useState(false);
+
   const { data: session, status } = useSession();
   useEffect(() => {
     setUserEmail(session?.user?.email);
   }, [session]);
-  useEffect(() => {
-    if (userEmail) {
-      getJiraInfo(userEmail).then((data) => {
-        setJiraUserData(data);
-      });
-      getGitHubInfo(userEmail).then((data) => {
-        setGithubUserData(data);
-      });
-      getSlackInfo(userEmail).then((data) => {
-        setSlackUserData(data);
-      });
-      getBitbucketInfo(userEmail).then((data) => {
-        setBitbucketUserData(data);
-      });
-      getGitLabInfo(userEmail).then((data) => {
-        setGitlabUserData(data);
-      });
-      // use getByEmail to check if user has paid
-      // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
-      // and have a perfect self-serve experience
-      getPaymentInfo(userEmail).then((data) => {
-        setHasPaid(data);
-      });
-    }
-  }, [userEmail]);
 
   const nextServicesList = [];
   return (
