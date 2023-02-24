@@ -24,7 +24,7 @@ export default async function postCommentOnIssue({
           Authorization: `Bearer ${access_token}`,
         },
         body: JSON.stringify({
-          body: comment_body,
+          body: "🍉 " + comment_body,
         }),
       }
     )
