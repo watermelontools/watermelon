@@ -32,7 +32,7 @@ export default async function handler({
           type: "paragraph",
           content: [
             {
-              text: "🍉" + text,
+              text: "🍉 " + text,
               type: "text",
             },
           ],
