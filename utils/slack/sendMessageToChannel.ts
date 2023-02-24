@@ -28,7 +28,7 @@ export default async function handler({
       },
       body: JSON.stringify({
         channel: channelId,
-        text: text,
+        text: "🍉 " + text,
       }),
     }).then((res) => res.json());
   } catch (error) {
