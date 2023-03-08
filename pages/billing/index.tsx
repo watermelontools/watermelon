@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 const AdminDetails = () => {
   // Subscription details
   const [numberOfSeats, setNumberOfSeats] = useState(5);
-  const [subscriptionPrice, setSubscriptionPrice] = useState(50);
+  const [subscriptionPrice, setSubscriptionPrice] = useState(150);
 
   // Admin details
   const [adminFirstName, setAdminFirstName] = useState("");
@@ -20,7 +20,7 @@ const AdminDetails = () => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    const calculatedPrice = numberOfSeats * 5;
+    const calculatedPrice = numberOfSeats * 30;
     setSubscriptionPrice(calculatedPrice);
   }, [numberOfSeats]);
 
