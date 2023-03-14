@@ -50,15 +50,12 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
       />
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
+        <JiraLoginLink userEmail={userEmail} />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
-          If you are not redirected, please click{" "}
-          <Link href="/">
-            here
-          </Link>
+          If you are not redirected, please click <Link href="/">here</Link>
         </p>
         {error && <p>{error}</p>}
       </div>
