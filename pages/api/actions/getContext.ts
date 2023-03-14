@@ -162,5 +162,5 @@ export default async function handler(req, res) {
     });
     response.messages.matches[index].replies.push(...replies.messages);
   }); */
-  return res.send(true);
+  return res.send(ghcommentsPromises);
 }
