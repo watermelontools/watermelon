@@ -10,10 +10,13 @@ export default async function handler(req, res) {
   console.log(req.body);
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
-  const { github_token, jira_token, jira_refresh_token, slack_token } = resp;
+  const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
+    resp;
+  console.log("resp: ", resp);
   const newAccessTokens = await updateTokensFromJira({
-    refresh_token: resp.jira_refresh_token,
+    refresh_token: jira_refresh_token,
   });
+  console.log("newAccessTokens: ", newAccessTokens);
   await updateTokens({
     access_token: newAccessTokens.access_token,
     refresh_token: newAccessTokens.refresh_token,
@@ -21,7 +24,7 @@ export default async function handler(req, res) {
   });
   console.log({
     access_token: newAccessTokens.access_token,
-    cloudId: resp.cloudId,
+    cloudId,
   });
   const octokit = new Octokit({
     auth: github_token,
