@@ -51,7 +51,14 @@ export default async function handler(req, res) {
           })
           .then((comments) => {
             //@ts-ignore
-            issues.data.items[index].comments = comments.data;
+            issues.data.items[index].comments = comments.data.filter(
+              (comment) => {
+                if (comment.user.type === "Bot") {
+                  return false;
+                }
+                return true;
+              }
+            );
           })
     );
     await Promise.allSettled(commentsPromises);
