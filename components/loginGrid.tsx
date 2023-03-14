@@ -121,7 +121,7 @@ function LoginGrid({ userEmail }) {
                   }}
                 />
               ) : (
-                <JiraLoginLink userEmail={userEmail} hasPaid={hasPaid} />
+                <JiraLoginLink userEmail={userEmail} />
               )}
             </div>
             <div className="p-3">
@@ -136,7 +136,7 @@ function LoginGrid({ userEmail }) {
                   }}
                 />
               ) : (
-                <SlackLoginLink userEmail={userEmail} hasPaid={hasPaid} />
+                <SlackLoginLink userEmail={userEmail} />
               )}
             </div>
           </div>
