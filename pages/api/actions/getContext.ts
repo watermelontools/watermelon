@@ -165,5 +165,5 @@ const newAccessTokens = await updateTokensFromJira({
     });
     response.messages.matches[index].replies.push(...replies.messages);
   }); */
-  return res.send(ghcommentsPromises);
+  return res.send(issues);
 }
