@@ -4,10 +4,12 @@ import { Octokit } from "octokit";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import executeRequest from "../../../utils/db/azuredb";
+import searchMessageByText from "../../../utils/slack/searchMessageByText";
+import getConversationReplies from "../../../utils/slack/getConversationReplies";
+import Slack from "../../slack";
 
 export default async function handler(req, res) {
-  const { user, prTitle, repo, owner, commitList } = req.body;
-  console.log(req.body);
+  const { user, title, body, repo, owner, commitList } = req.body;
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
@@ -150,6 +152,7 @@ export default async function handler(req, res) {
     "staging",
     "stage",
   ];
+  let ghValue = {};
   // create a string from the commitlist set and remove stopwords in lowercase
   const commitListString = Array.from(commitSet)
     .join(" ")
@@ -183,133 +186,134 @@ export default async function handler(req, res) {
         })
   );
   await Promise.allSettled(ghcommentsPromises);
-  /* // Remove stopwords to provide better search results
-  let stopwords = [
-    "add",
-    "get",
-    "as",
-    "at",
-    "he",
-    "the",
-    "was",
-    "from",
-    "and",
-    "or",
-    "on",
-    "for",
-  ];
-const newAccessTokens = await updateTokensFromJira({
-    refresh_token: jira_refresh_token,
-  });
-  console.log("newAccessTokens: ", newAccessTokens);
-  await updateTokens({
-    access_token: newAccessTokens.access_token,
-    refresh_token: newAccessTokens.refresh_token,
-    user,
-  });
-  console.log({
-    access_token: newAccessTokens.access_token,
-    cloudId,
-  });
-  // parse pr_title
-  let parsedPRTitle = "";
+  ghValue = issues.data.items;
+  let jiraValue = {};
+  if (jira_token && jira_refresh_token) {
+    const newAccessTokens = await updateTokensFromJira({
+      refresh_token: jira_refresh_token,
+    });
+    console.log("newAccessTokens: ", newAccessTokens);
+    await updateTokens({
+      access_token: newAccessTokens.access_token,
+      refresh_token: newAccessTokens.refresh_token,
+      user,
+    });
+    console.log({
+      access_token: newAccessTokens.access_token,
+      cloudId,
+    });
+    // parse pr_title
+    let parsedTitle = "";
 
-  if (prTitle) {
-    parsedPRTitle = prTitle
-      .trim()
-      .split(" ")
-      .filter((word) => !stopwords.includes(word.toLowerCase()))
-      .join(" ")
-      .split(" ")
-      .join(" OR ");
-  }
-
-  if (!user) {
-    return res.send({ error: "no user" });
-  }
-
-  let { access_token } = await getJiraToken({ user });
-  if (!access_token) {
-    return res.send({ error: "no access_token" });
-  }
-
-  let { jira_id } = await getJiraOrganization(user);
-  if (!jira_id) {
-    return res.send({ error: "no Jira cloudId" });
-  }
-
-  let returnVal = await fetch(
-    `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${access_token}`,
-      },
-      body: JSON.stringify({
-        // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
-        // Sorting by description might be better than completely filtering out tickets without a description
-        jql: `text ~ "${parsedPRTitle}" AND issuetype in (Bug, Story, Task, Sub-task, Epic) ORDER BY issuetype ASC, "Story Points" DESC, description DESC`,
-        expand: ["renderedFields"],
-      }),
+    if (title) {
+      parsedTitle = title
+        .trim()
+        .split(" ")
+        .filter((word) => !stopwords.includes(word.toLowerCase()))
+        .join(" ")
+        .split(" ")
+        .join(" OR ");
     }
-  )
-    .then((res) => res.json())
-    .then((resJson) => resJson.issues);
-  let serverPromise = async () => {
-    let serverInfo = await fetch(
-      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/serverInfo`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
 
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    )
-      .then((res) => res.json())
-      .then((resJson) => resJson);
-    returnVal.forEach((element, index) => {
-      returnVal[index].serverInfo = serverInfo;
-    });
-  };
-  let commentsPromises = returnVal?.map(async (element, index) => {
-    returnVal[index].comments = [];
-    return await fetch(
-      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment?expand=renderedBody`,
+    if (!user) {
+      return res.send({ error: "no user" });
+    }
+
+    let { access_token } = await getJiraToken({ user });
+    if (!access_token) {
+      return res.send({ error: "no access_token" });
+    }
+
+    let { jira_id } = await getJiraOrganization(user);
+    if (!jira_id) {
+      return res.send({ error: "no Jira cloudId" });
+    }
+
+    let returnVal = await fetch(
+      `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
           Authorization: `Bearer ${access_token}`,
         },
+        body: JSON.stringify({
+          // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
+          // Sorting by description might be better than completely filtering out tickets without a description
+          jql: `text ~ "${parsedTitle} OR ${title} OR ${body}" AND issuetype in (Bug, Story, Task, Sub-task, Epic) ORDER BY issuetype ASC, "Story Points" DESC, description DESC`,
+          expand: ["renderedFields"],
+        }),
       }
     )
       .then((res) => res.json())
-      .then((resJson) => {
-        returnVal[index].comments.push(...resJson.comments);
-        return resJson;
+      .then((resJson) => resJson.issues);
+    let serverPromise = async () => {
+      let serverInfo = await fetch(
+        `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/serverInfo`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((resJson) => resJson);
+      returnVal.forEach((element, index) => {
+        returnVal[index].serverInfo = serverInfo;
       });
-  });
-  if (returnVal) {
-    await Promise.allSettled([...commentsPromises, serverPromise()]);
-  }
-  let response = await searchMessageByText({
-    text,
-    user_token,
-  });
-  let repliesPromises = response.messages.matches.map(async (match, index) => {
-    response.messages.matches[index].comments = [];
-    let replies = await getConversationReplies({
-      ts: match.ts,
-      user_token: match.user_token,
-      channelId: match.channel.id,
+    };
+    let commentsPromises = returnVal?.map(async (element, index) => {
+      returnVal[index].comments = [];
+      return await fetch(
+        `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment?expand=renderedBody`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then((resJson) => {
+          returnVal[index].comments.push(...resJson.comments);
+          return resJson;
+        });
     });
-    response.messages.matches[index].replies.push(...replies.messages);
-  }); */
-  return res.send(issues);
+    if (returnVal) {
+      await Promise.allSettled([...commentsPromises, serverPromise()]);
+    }
+    jiraValue = returnVal;
+  } else {
+    jiraValue = { error: "no jira token" };
+  }
+  let slackValue = {};
+  if (slack_token) {
+    let response = await searchMessageByText({
+      text: commitListString256.toString() + " OR " + title + " OR " + body,
+      user_token: slack_token,
+    });
+    let repliesPromises = response.messages.matches.map(
+      async (match, index) => {
+        response.messages.matches[index].comments = [];
+        let replies = await getConversationReplies({
+          ts: match.ts,
+          user_token: slack_token,
+          channelId: match.channel.id,
+        });
+        response.messages.matches[index].replies.push(...replies.messages);
+      }
+    );
+    await Promise.allSettled(repliesPromises);
+    slackValue = response.messages.matches;
+  } else {
+    slackValue = { error: "no slack token" };
+  }
+  return res.send({ ghValue, jiraValue, slackValue });
 }
