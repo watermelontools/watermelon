@@ -10,6 +10,7 @@ import Slack from "../../slack";
 
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, commitList } = req.body;
+  console.log("req.body", req.body);
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
@@ -154,6 +155,7 @@ export default async function handler(req, res) {
   ];
   let ghValue = {};
   // create a string from the commitlist set and remove stopwords in lowercase
+
   const commitListString = Array.from(commitSet)
     .join(" ")
     .split(" ")
