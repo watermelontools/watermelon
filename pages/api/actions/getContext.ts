@@ -162,16 +162,23 @@ export default async function handler(req, res) {
     .split(",");
   // now take the max 256 characters of the string
   const commitListString256 = commitListString.slice(0, 256);
-
+  console.log("commitListString256", commitListString256);
   const octokit = new Octokit({
     auth: github_token,
   });
-  let q = `${commitListString256} repo:${owner}/${repo}`;
+  let searchString = `${commitListString256.toString()} ${title} ${body ?? ""}`
+    .toLowerCase()
+    .replace(/\s{2,}/g, " ")
+    .slice(0, 230);
+
+  let q = `${searchString} org:${owner}`;
+  console.log("q", q);
   let issues = await octokit.rest.search.issuesAndPullRequests({
     q,
     is: "pr",
     type: "pr",
   });
+  console.log("issues", issues.data);
   let ghcommentsPromises = issues.data.items.map(
     async (issue, index) =>
       await octokit.rest.issues
@@ -192,16 +199,12 @@ export default async function handler(req, res) {
     const newAccessTokens = await updateTokensFromJira({
       refresh_token: jira_refresh_token,
     });
-    console.log("newAccessTokens: ", newAccessTokens);
     await updateTokens({
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
       user,
     });
-    console.log({
-      access_token: newAccessTokens.access_token,
-      cloudId,
-    });
+
     // parse pr_title
     let parsedTitle = "";
 
