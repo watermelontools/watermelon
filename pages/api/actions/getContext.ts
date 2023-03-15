@@ -12,7 +12,6 @@ export default async function handler(req, res) {
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
     resp;
-  console.log("resp: ", resp);
 
   const octokit = new Octokit({
     auth: github_token,
