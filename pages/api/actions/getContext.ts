@@ -19,7 +19,6 @@ async function getGitHub({ repo, owner, github_token, randomWords }) {
     is: "pr",
     type: "pr",
   });
-  console.log("issues", issues.data);
   const ghcommentsPromises = issues.data.items.map(
     async (issue, index) =>
       await octokit.rest.issues
@@ -163,7 +162,6 @@ async function getSlack({ title, body, slack_token, randomWords }) {
 }
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, commitList } = req.body;
-  console.log("req.body", req.body);
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
