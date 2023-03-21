@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   let { hasPaid, git_query_count } = await getGitHubQueryCountStatusByEmail(
     user
   );
-  if (git_query_count > 50 && !hasPaid) {
+  if (git_query_count > 500 && !hasPaid) {
     return res.send({ error: "Context query limit reached" });
   }
 
