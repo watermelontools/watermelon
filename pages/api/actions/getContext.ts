@@ -6,7 +6,6 @@ import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import executeRequest from "../../../utils/db/azuredb";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
 import getConversationReplies from "../../../utils/slack/getConversationReplies";
-import Slack from "../../slack";
 
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, commitList } = req.body;
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
     resp;
-  const commitSet = new Set(commitList);
+  const commitSet = new Set(commitList.split(","));
   const stopwords = [
     "a",
     "about",
@@ -156,25 +155,31 @@ export default async function handler(req, res) {
   let ghValue = {};
   // create a string from the commitlist set and remove stopwords in lowercase
 
-  const commitListString = Array.from(commitSet)
-    .join(" ")
+  let searchString = Array.from(commitSet).join(" ");
+
+  // add the title and body to the search string, remove stopwords and remove duplicates
+  searchString = Array.from(
+    new Set(
+      searchString
+        .concat(` ${title.split("/").join(" ")}`)
+        .concat(` ${body}`)
+        .split(" ")
+        .map((commit: string) => commit.toLowerCase())
+        .filter((commit) => !stopwords.includes(commit))
+        .join(" ")
+        .split(" ")
+    )
+  ).join(" ");
+  // select six random words from the search string
+  const randomWords = searchString
     .split(" ")
-    .filter((word) => !stopwords.includes(word.toLowerCase()))
-    .join(" ")
-    .split(",");
-  // now take the max 256 characters of the string
-  const commitListString256 = commitListString.slice(0, 256);
-  console.log("commitListString256", commitListString256);
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 6);
+  // create the query with the random words and the owner
+  let q = `${randomWords.join(" OR ")} org:${owner}`;
   const octokit = new Octokit({
     auth: github_token,
   });
-  let searchString = `${commitListString256.toString()} ${title} ${body ?? ""}`
-    .toLowerCase()
-    .replace(/\s{2,}/g, " ")
-    .slice(0, 230);
-
-  let q = `${searchString} org:${owner}`;
-  console.log("q", q);
   let issues = await octokit.rest.search.issuesAndPullRequests({
     q,
     is: "pr",
