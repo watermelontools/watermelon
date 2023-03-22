@@ -1,38 +1,32 @@
 import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getToken from "../../../utils/jira/refreshTokens";
+// Remove stopwords to provide better search results
+let stopwords = [
+  "add",
+  "get",
+  "as",
+  "at",
+  "he",
+  "the",
+  "was",
+  "from",
+  "and",
+  "or",
+  "on",
+  "for",
+];
 
 export default async function handler(req, res) {
   let { user, prTitle } = req.body;
 
-  // Remove stopwords to provide better search results
-  let stopwords = [
-    "add",
-    "get",
-    "as",
-    "at",
-    "he",
-    "the",
-    "was",
-    "from",
-    "and",
-    "or",
-    "on",
-    "for",
-  ];
-
   // parse pr_title
-  let parsedPRTitle = "";
-
-  if (prTitle) {
-    parsedPRTitle = prTitle
-      .trim()
-      .split(" ")
-      .filter((word) => !stopwords.includes(word.toLowerCase()))
-      .join(" ")
-      .split(" ")
-      .join(" OR ");
-  }
-
+  const parsedPRTitle = prTitle
+    ? prTitle
+        .trim()
+        .split(" ")
+        .filter((word) => !stopwords.includes(word.toLowerCase()))
+        .join(" OR ")
+    : "";
   if (!user) {
     return res.send({ error: "no user" });
   }
