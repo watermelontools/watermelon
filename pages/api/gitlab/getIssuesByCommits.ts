@@ -2,6 +2,7 @@ import getToken from "../../../utils/gitlab/refreshTokens";
 import getIssuesByCommits from "../../../utils/gitlab/getIssuesByCommits";
 import addToGitHubQueryCount from "../../../utils/db/github/addToGitHubQueryCount";
 import getGitHubQueryCountStatusByEmail from "../../../utils/db/github/getGitHubQueryCountStatusByEmail";
+import constants from "../../../utils/constants";
 
 export default async function handler(req, res) {
   let { user, project_name, owner, commitList } = req.body;
@@ -19,11 +20,11 @@ export default async function handler(req, res) {
   }
   let { access_token } = await getToken({ user });
 
-  // if the gitlab query count for the user with that email address is over 50 and the user hasn't paid, return an error
+  // if the gitlab query count for the user with that email address is over constants.MAX_QUERIES_PER_MONTH and the user hasn't paid, return an error
   let { hasPaid, git_query_count } = await getGitHubQueryCountStatusByEmail(
     user
   );
-  if (git_query_count > 500 && !hasPaid) {
+  if (git_query_count > constants.MAX_QUERIES_PER_MONTH && !hasPaid) {
     return res.send({ error: "Context query limit reached" });
   }
 

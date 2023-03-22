@@ -1,6 +1,7 @@
 import updateBitbucketAccessToken from "../../../utils/bitbucket/updateBitbucketAccessToken";
 import addToGitHubQueryCount from "../../../utils/db/github/addToGitHubQueryCount";
 import getGitHubQueryCountStatusByEmail from "../../../utils/db/github/getGitHubQueryCountStatusByEmail";
+import constants from "../../../utils/constants";
 
 export default async function handler(req, res) {
   let { workspace, repo_slug, commitHash, userEmail } = req.body;
@@ -17,12 +18,12 @@ export default async function handler(req, res) {
 
   let access_token = await updateBitbucketAccessToken(userEmail);
 
-  // if the git query count for the user with that email address is over 50 and the user hasn't paid, return an error
+  // if the git query count for the user with that email address is over constants.MAX_QUERIES_PER_MONTH and the user hasn't paid, return an error
   let { hasPaid, git_query_count } = await getGitHubQueryCountStatusByEmail(
     userEmail
   );
 
-  if (git_query_count > 500 && !hasPaid) {
+  if (git_query_count > constants.MAX_QUERIES_PER_MONTH && !hasPaid) {
     return res.send({ error: "Context query limit reached" });
   }
 
