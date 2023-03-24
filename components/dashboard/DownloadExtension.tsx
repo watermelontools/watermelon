@@ -1,7 +1,5 @@
-import Link from "next/link";
-
 const DownloadExtension = ({ name, email, accessToken, urlStart }) => (
-  <Link
+  <a
     href={`${urlStart}://watermelontools.watermelon-tools?email=${
       email ?? ""
     }&token=${accessToken ?? ""}`}
@@ -16,6 +14,6 @@ const DownloadExtension = ({ name, email, accessToken, urlStart }) => (
         <p>Download Watermelon</p>
       </div>
     </div>
-  </Link>
+  </a>
 );
 export default DownloadExtension;
