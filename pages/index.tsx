@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import LogInBtn from "../components/login-btn";
 import LoginGrid from "../components/loginGrid";
-import ComingSoonService from "../components/dashboard/ComingSoonService";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 
 function HomePage({}) {
@@ -15,26 +14,9 @@ function HomePage({}) {
     setUserEmail(session?.user?.email);
   }, [session]);
 
-  const nextServicesList = [];
   return (
     <div>
-      {status === "loading" && (
-        <>
-          <Header />
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-            }}
-          >
-            {nextServicesList.map((service) => (
-              <div className="p-3">
-                <ComingSoonService name={service} />
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      {status === "loading" && <Header />}
       {status === "unauthenticated" && <LogInBtn />}
       {status === "authenticated" && (
         <>
