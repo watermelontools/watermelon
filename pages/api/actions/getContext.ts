@@ -97,7 +97,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    jiraValue = returnVal;
+    jiraValue = returnVal.slice(0, 3);
   } else {
     jiraValue = { error: "no jira token" };
   }
@@ -111,7 +111,7 @@ async function getSlack({ title, body, slack_token, randomWords }) {
       user_token: slack_token,
     });
 
-    slackValue = response.messages.matches;
+    slackValue = response.messages.matches.slice(0, 3);
   } else {
     slackValue = { error: "no slack token" };
   }
