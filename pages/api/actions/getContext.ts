@@ -19,20 +19,6 @@ async function getGitHub({ repo, owner, github_token, randomWords }) {
     is: "pr",
     type: "pr",
   });
-  const ghcommentsPromises = issues.data.items.map(
-    async (issue, index) =>
-      await octokit.rest.issues
-        .listComments({
-          owner,
-          repo,
-          issue_number: issue.number,
-        })
-        .then((comments) => {
-          //@ts-ignore
-          issues.data.items[index].comments = comments.data;
-        })
-  );
-  await Promise.allSettled(ghcommentsPromises);
   ghValue = issues.data.items;
   return ghValue;
 }
