@@ -161,7 +161,7 @@ async function getSlack({ title, body, slack_token, randomWords }) {
   return slackValue;
 }
 export default async function handler(req, res) {
-  const { user, title, body, repo, owner, commitList } = req.body;
+  const { user, title, body, repo, owner, number, commitList } = req.body;
   if (!user) {
     return res.send({ error: "no user" });
   }
@@ -176,6 +176,9 @@ export default async function handler(req, res) {
   }
   if (!owner) {
     return res.send({ error: "no owner" });
+  }
+  if (!number) {
+    return res.send({ error: "no number" });
   }
   if (!commitList) {
     return res.send({ error: "no commitList" });
