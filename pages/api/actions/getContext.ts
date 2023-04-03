@@ -19,7 +19,7 @@ async function getGitHub({ repo, owner, github_token, randomWords }) {
     is: "pr",
     type: "pr",
   });
-  ghValue = issues.data.items;
+  ghValue = issues.data?.items?.slice(0, 3);
   return ghValue;
 }
 async function getJira({
