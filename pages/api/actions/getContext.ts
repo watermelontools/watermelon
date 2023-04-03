@@ -93,27 +93,9 @@ async function getJira({
         returnVal[index].serverInfo = serverInfo;
       });
     };
-    const commentsPromises = returnVal?.map(async (element, index) => {
-      returnVal[index].comments = [];
-      return await fetch(
-        `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/issue/${element.key}/comment?expand=renderedBody`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        }
-      )
-        .then((res) => res.json())
-        .then((resJson) => {
-          returnVal[index].comments.push(...resJson.comments);
-          return resJson;
-        });
-    });
+
     if (returnVal) {
-      await Promise.allSettled([...commentsPromises, serverPromise()]);
+      await Promise.allSettled([serverPromise()]);
     }
     jiraValue = returnVal;
   } else {
@@ -128,18 +110,7 @@ async function getSlack({ title, body, slack_token, randomWords }) {
       text: `${randomWords.toString()} OR ${title} OR  ${body}`,
       user_token: slack_token,
     });
-    const repliesPromises = response.messages.matches.map(
-      async (match, index) => {
-        response.messages.matches[index].comments = [];
-        const replies = await getConversationReplies({
-          ts: match.ts,
-          user_token: slack_token,
-          channelId: match.channel.id,
-        });
-        response.messages.matches[index].replies.push(...replies.messages);
-      }
-    );
-    await Promise.allSettled(repliesPromises);
+
     slackValue = response.messages.matches;
   } else {
     slackValue = { error: "no slack token" };
