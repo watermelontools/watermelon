@@ -162,6 +162,24 @@ async function getSlack({ title, body, slack_token, randomWords }) {
 }
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, commitList } = req.body;
+  if (!user) {
+    return res.send({ error: "no user" });
+  }
+  if (!title) {
+    return res.send({ error: "no title" });
+  }
+  if (!body) {
+    return res.send({ error: "no body" });
+  }
+  if (!repo) {
+    return res.send({ error: "no repo" });
+  }
+  if (!owner) {
+    return res.send({ error: "no owner" });
+  }
+  if (!commitList) {
+    return res.send({ error: "no commitList" });
+  }
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
