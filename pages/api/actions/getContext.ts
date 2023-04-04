@@ -76,6 +76,9 @@ async function getJira({
       return { error: "no Jira cloudId" };
     }
 
+    const summaryQuery = randomWords.split(" OR ").map((word) => `summary ~ "${word}"`).join(" OR ");
+    const descriptionQuery = randomWords.split(" OR ").map((word) => `description ~ "${word}"`).join(" OR ");
+
     let returnVal = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
       {
@@ -88,7 +91,7 @@ async function getJira({
         body: JSON.stringify({
           // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
           // Sorting by description might be better than completely filtering out tickets without a description
-          jql: `text ~ "${randomWords} OR ${title} OR ${body}" AND issuetype in (Bug, Story, Task, Sub-task, Epic) ORDER BY issuetype ASC, "Story Points" DESC, description DESC`,
+          jql: `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`,
           expand: ["renderedFields"],
         }),
       }
