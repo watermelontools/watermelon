@@ -240,13 +240,13 @@ export default async function handler(req, res) {
     .sort(() => Math.random() - 0.5)
     .slice(0, 6);
   console.log(randomWords);
-  const [/* ghValue, */ jiraValue, slackValue] = await Promise.all([
-    /*     getGitHub({
+  const [ghValue, jiraValue, slackValue] = await Promise.all([
+    getGitHub({
       repo,
       owner,
       github_token,
       randomWords,
-    }), */
+    }),
     getJira({
       user: user_email,
       title,
@@ -257,5 +257,5 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-  return res.send({ /* ghValue, */ jiraValue, slackValue });
+  return res.send({ ghValue, jiraValue, slackValue });
 }
