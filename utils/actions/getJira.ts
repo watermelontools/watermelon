@@ -57,8 +57,6 @@ async function getJira({
           Authorization: `Bearer ${newAccessTokens.access_token}`,
         },
         body: JSON.stringify({
-          // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
-          // Sorting by description might be better than completely filtering out tickets without a description
           jql,
           expand: ["renderedFields"],
         }),
