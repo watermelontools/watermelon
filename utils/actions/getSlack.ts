@@ -7,7 +7,7 @@ async function getSlack({ title, body, slack_token, randomWords }) {
       user_token: slack_token,
     });
 
-    slackValue = response.messages.matches.slice(0, 3);
+    slackValue = response?.messages?.matches.slice(0, 3);
   } else {
     slackValue = { error: "no slack token" };
   }
