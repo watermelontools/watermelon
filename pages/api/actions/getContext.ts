@@ -6,6 +6,13 @@ import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import executeRequest from "../../../utils/db/azuredb";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
 import getConversationReplies from "../../../utils/slack/getConversationReplies";
+
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: process.env.OPEN_AI_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
 async function getGitHub({ repo, owner, github_token, randomWords }) {
   let ghValue = {};
 
@@ -321,11 +328,25 @@ export default async function handler(req, res) {
         .split(" ")
     )
   ).join(" ");
+
+  console.log("searchStringSetWTitleABody", searchStringSetWTitleABody);
+
+  // let GPT choose the 6 most relevant words from the search string
+  const randomWords = await openai
+    .createCompletion({
+      model: "text-davinci-003",
+      prompt: `"Get the 6 most relevant words from the following string: ${searchStringSetWTitleABody}"`,
+      max_tokens: 128,
+      temperature: 0.7,
+    })
+    .then((res) => res.data.choices[0].text.trim())
+    .catch((err) => res.send("error: ", err.message));
+
   // select six random words from the search string
-  const randomWords = searchStringSetWTitleABody
-    .split(" ")
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 6);
+  // // const randomWords = searchStringSetWTitleABody
+  // //   .split(" ")
+  // //   .sort(() => Math.random() - 0.5)
+  // //   .slice(0, 6);
 
   const [ghValue, jiraValue, slackValue] = await Promise.all([
     getGitHub({
