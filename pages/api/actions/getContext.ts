@@ -1,27 +1,12 @@
 import getJiraOrganization from "../../../utils/db/jira/getOrganization";
 import getJiraToken from "../../../utils/jira/refreshTokens";
-import { Octokit } from "octokit";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import executeRequest from "../../../utils/db/azuredb";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
 import getConversationReplies from "../../../utils/slack/getConversationReplies";
-async function getGitHub({ repo, owner, github_token, randomWords }) {
-  let ghValue = {};
+import getGitHub from "../../../utils/actions/getGitHub";
 
-  // create the query with the random words and the owner
-  const q = `${randomWords.join(" OR ")} org:${owner}`;
-  const octokit = new Octokit({
-    auth: github_token,
-  });
-  const issues = await octokit.rest.search.issuesAndPullRequests({
-    q,
-    is: "pr",
-    type: "pr",
-  });
-  ghValue = issues.data?.items?.slice(0, 3);
-  return ghValue;
-}
 async function getJira({
   user,
   title,
