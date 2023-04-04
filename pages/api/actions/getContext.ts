@@ -76,8 +76,14 @@ async function getJira({
       return { error: "no Jira cloudId" };
     }
 
-    const summaryQuery = randomWords.split(" OR ").map((word) => `summary ~ "${word}"`).join(" OR ");
-    const descriptionQuery = randomWords.split(" OR ").map((word) => `description ~ "${word}"`).join(" OR ");
+    const summaryQuery = randomWords
+      .split(" OR ")
+      .map((word) => `summary ~ "${word}"`)
+      .join(" OR ");
+    const descriptionQuery = randomWords
+      .split(" OR ")
+      .map((word) => `description ~ "${word}"`)
+      .join(" OR ");
 
     let returnVal = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
