@@ -25,8 +25,12 @@ export default async function handler(req, res) {
         .trim()
         .split(" ")
         .filter((word) => !stopwords.includes(word.toLowerCase()))
+        .map((word) => word.replace(/:/g, "")) // Remove colons from words
         .join(" OR ")
     : "";
+  const summaryQuery = parsedPRTitle.split(" OR ").map((word) => `summary ~ "${word}"`).join(" OR ");
+  const descriptionQuery = parsedPRTitle.split(" OR ").map((word) => `description ~ "${word}"`).join(" OR ");
+
   if (!user) {
     return res.send({ error: "no user" });
   }
@@ -53,8 +57,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
         // Sorting by description might be better than completely filtering out tickets without a description
-        jql: `text ~ "${parsedPRTitle}" ORDER BY description DESC`,
-        expand: ["renderedFields"],
+        jql: `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`,
       }),
     }
   )
