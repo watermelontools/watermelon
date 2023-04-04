@@ -31,7 +31,7 @@ async function getJira({
   randomWords,
 }) {
   let jiraValue = {};
-  if (jira_token && jira_refresh_token) {
+  if (jira_token !== null && jira_refresh_token !== null) {
     const newAccessTokens = await updateTokensFromJira({
       refresh_token: jira_refresh_token,
     });
@@ -44,9 +44,7 @@ async function getJira({
     if (!user) {
       return { error: "no user" };
     }
-
-    const { access_token } = await getJiraToken({ user });
-    if (!access_token) {
+    if (!newAccessTokens?.access_token) {
       return { error: "no access_token" };
     }
 
@@ -62,7 +60,7 @@ async function getJira({
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          Authorization: `Bearer ${access_token}`,
+          Authorization: `Bearer ${newAccessTokens.access_token}`,
         },
         body: JSON.stringify({
           // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
@@ -83,7 +81,7 @@ async function getJira({
             "Content-Type": "application/json",
             Accept: "application/json",
 
-            Authorization: `Bearer ${access_token}`,
+            Authorization: `Bearer ${newAccessTokens.access_token}`,
           },
         }
       )
@@ -97,7 +95,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    jiraValue = returnVal.slice(0, 3);
+    jiraValue = returnVal;
   } else {
     jiraValue = { error: "no jira token" };
   }
@@ -142,8 +140,14 @@ export default async function handler(req, res) {
   }
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
-  const { github_token, jira_token, jira_refresh_token, slack_token, cloudId } =
-    resp;
+  const {
+    github_token,
+    jira_token,
+    jira_refresh_token,
+    slack_token,
+    cloudId,
+    user_email,
+  } = resp;
   const commitSet = new Set(commitList.split(","));
   const stopwords = [
     "a",
@@ -313,7 +317,7 @@ export default async function handler(req, res) {
       randomWords,
     }),
     getJira({
-      user,
+      user: user_email,
       title,
       body,
       jira_token,
