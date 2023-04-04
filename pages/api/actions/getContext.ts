@@ -338,8 +338,6 @@ export default async function handler(req, res) {
     )
   ).join(" ");
 
-  console.log("searchStringSetWTitleABody", searchStringSetWTitleABody);
-
   // let GPT choose the 6 most relevant words from the search string
   const randomWords = await openai
     .createCompletion({
@@ -350,12 +348,6 @@ export default async function handler(req, res) {
     })
     .then((res) => res.data.choices[0].text.trim())
     .catch((err) => res.send("error: ", err.message));
-
-  // select six random words from the search string
-  // // const randomWords = searchStringSetWTitleABody
-  // //   .split(" ")
-  // //   .sort(() => Math.random() - 0.5)
-  // //   .slice(0, 6);
 
   const [ghValue, jiraValue, slackValue] = await Promise.all([
     getGitHub({
