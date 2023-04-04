@@ -173,6 +173,48 @@ export default async function handler(req, res) {
     "production",
     "staging",
     "stage",
+    "[",
+    "]",
+    "!",
+    "{",
+    "}",
+    "(",
+    ")",
+    "''",
+    '"',
+    "``",
+    "-",
+    "_",
+    ":",
+    ";",
+    ",",
+    ".",
+    "?",
+    "/",
+    "|",
+    "&",
+    "*",
+    "^",
+    "%",
+    "$",
+    "#",
+    "##",
+    "###",
+    "####",
+    "#####",
+    "######",
+    "#######",
+    "@",
+    "\n",
+    "\t",
+    "\r",
+    "<!--",
+    "-->",
+    "/*",
+    "*/",
+    "[x]",
+    "[]",
+    "[ ]",
   ];
   // create a string from the commitlist set and remove stopwords in lowercase
 
@@ -183,8 +225,9 @@ export default async function handler(req, res) {
     new Set(
       searchStringSet
         .concat(` ${title.split("/").join(" ")}`)
-        .concat(` ${body}`)
-        .split(" ")
+        .concat(` ${body}`.split("\n").join(" "))
+        .split("\n")
+        .flatMap((line) => line.split(","))
         .map((commit: string) => commit.toLowerCase())
         .filter((commit) => !stopwords.includes(commit))
         .join(" ")
@@ -196,14 +239,14 @@ export default async function handler(req, res) {
     .split(" ")
     .sort(() => Math.random() - 0.5)
     .slice(0, 6);
-
-  const [ghValue, jiraValue, slackValue] = await Promise.all([
-    getGitHub({
+  console.log(randomWords);
+  const [/* ghValue, */ jiraValue, slackValue] = await Promise.all([
+    /*     getGitHub({
       repo,
       owner,
       github_token,
       randomWords,
-    }),
+    }), */
     getJira({
       user: user_email,
       title,
@@ -214,5 +257,5 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-  return res.send({ ghValue, jiraValue, slackValue });
+  return res.send({ /* ghValue, */ jiraValue, slackValue });
 }

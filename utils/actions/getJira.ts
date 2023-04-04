@@ -1,6 +1,14 @@
 import getJiraOrganization from "../../utils/db/jira/getOrganization";
 import updateTokens from "../../utils/db/jira/updateTokens";
 import updateTokensFromJira from "../../utils/jira/updateTokens";
+function removeSpecialChars(inputString) {
+  const specialChars = '!"#$%&/()=-_"{}¨*[]'; // Edit this list to include or exclude characters
+  return inputString
+    .split("")
+    .filter((char) => !specialChars.includes(char))
+    .join("");
+}
+
 async function getJira({
   user,
   title,
@@ -31,7 +39,14 @@ async function getJira({
     if (!jira_id) {
       return { error: "no Jira cloudId" };
     }
-
+    let cleanRW = Array.from(
+      new Set(randomWords.map((word) => removeSpecialChars(word)))
+    );
+    let jql = `text ~ "${title
+      .split(" ")
+      .join('" OR text ~ "')}" OR text ~ "${cleanRW.join(
+      '" OR text ~ "'
+    )}" ORDER BY issuetype ASC, "Story Points" DESC, description DESC`;
     let returnVal = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
       {
@@ -44,13 +59,16 @@ async function getJira({
         body: JSON.stringify({
           // ORDER BY issuetype ASC gives priority to bug tickets. If there are no bug tickets, it will still return stories
           // Sorting by description might be better than completely filtering out tickets without a description
-          jql: `text ~ "${randomWords} OR ${title} OR ${body}" AND issuetype in (Bug, Story, Task, Sub-task, Epic) ORDER BY issuetype ASC, "Story Points" DESC, description DESC`,
+          jql,
           expand: ["renderedFields"],
         }),
       }
     )
       .then((res) => res.json())
-      .then((resJson) => resJson.issues);
+      .then((resJson) => resJson.issues)
+      .catch((error) => {
+        console.error(error);
+      });
     const serverPromise = async () => {
       const serverInfo = await fetch(
         `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/serverInfo`,
@@ -65,7 +83,11 @@ async function getJira({
         }
       )
         .then((res) => res.json())
-        .then((resJson) => resJson);
+        .then((resJson) => resJson)
+        .catch((error) => {
+          console.error(error);
+        });
+
       returnVal.forEach((element, index) => {
         returnVal[index].serverInfo = serverInfo;
       });
@@ -74,7 +96,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    jiraValue = returnVal;
+    jiraValue = returnVal.slice(0, 3);
   } else {
     jiraValue = { error: "no jira token" };
   }
