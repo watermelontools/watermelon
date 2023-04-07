@@ -1,7 +1,10 @@
 import { signIn } from "next-auth/react";
-export default function Component() {
+export default function LogInBtn() {
   return (
-    <div className="d-flex flex-items-center flex-justify-center flex-column">
+    <div
+      className="d-flex flex-items-center flex-justify-center flex-column"
+      style={{ height: "100vh" }}
+    >
       <div
         className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
         style={{ maxWidth: "80ch" }}
