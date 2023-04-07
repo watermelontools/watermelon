@@ -55,6 +55,17 @@ function HomePage({}) {
                   />
                 </div>
               </div>
+              <a
+                href="https://github.com/marketplace/actions/watermelon-context-action"
+                target="_blank"
+              >
+                <div className="Box d-flex flex-items-center flex-justify-start p-2">
+                  <div className="p-2">
+                    <h2>Try our GitHub Action</h2>
+                    <p>Context on each Pr</p>
+                  </div>
+                </div>
+              </a>
             </>
           ) : null}
         </>
