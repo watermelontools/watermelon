@@ -325,7 +325,7 @@ export default async function handler(req, res) {
   const searchStringSet = Array.from(commitSet).join(" ");
 
   // add the title and body to the search string, remove stopwords and remove duplicates
-  const searchStringSetWTitleABody = Array.from(
+  let searchStringSetWTitleABody = Array.from(
     new Set(
       searchStringSet
         .concat(` ${title.split("/").join(" ")}`)
@@ -338,16 +338,24 @@ export default async function handler(req, res) {
     )
   ).join(" ");
 
-  // let GPT choose the 6 most relevant words from the search string
-  const randomWords = await openai
+  searchStringSetWTitleABody = await openai
     .createCompletion({
       model: "text-davinci-003",
       prompt: `"Get the 6 most relevant words from the following string: ${searchStringSetWTitleABody}"`,
       max_tokens: 128,
       temperature: 0.7,
     })
-    .then((res) => res.data.choices[0].text.trim())
-    .catch((err) => res.send("error: ", err.message));
+    .then((res) => {
+      return res.data.choices[0].text.trim();
+    })
+    .catch((err) => {
+      return err.send("error: ", err.message);
+    });
+
+  const randomWords = searchStringSetWTitleABody
+    .split(" ")
+    .sort(() => Math.random() - 0.5)
+    .slice(0, 6);
 
   const [ghValue, jiraValue, slackValue] = await Promise.all([
     getGitHub({
