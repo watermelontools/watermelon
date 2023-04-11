@@ -2,7 +2,7 @@ name: watermelon-context
 on: [pull_request]
 
 jobs:
-  getdata:
+  getcontext:
     runs-on: ubuntu-latest
     name: Get code context with Watermelon
     steps:
