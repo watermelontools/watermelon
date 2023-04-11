@@ -256,5 +256,6 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
+  console.log(jiraValue)
   return res.send({ ghValue, jiraValue, slackValue });
 }
