@@ -9,4 +9,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Watermelon-context-action
-        uses: watermelontools/watermelon-context-action@v1
+        uses: watermelontools/watermelon-context-action@latest
