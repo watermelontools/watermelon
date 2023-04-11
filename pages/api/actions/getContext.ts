@@ -11,9 +11,6 @@ export default async function handler(req, res) {
   if (!title) {
     return res.send({ error: "no title" });
   }
-  if (!body) {
-    return res.send({ error: "no body" });
-  }
   if (!repo) {
     return res.send({ error: "no repo" });
   }
