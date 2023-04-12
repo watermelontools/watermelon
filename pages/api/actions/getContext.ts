@@ -17,9 +17,6 @@ export default async function handler(req, res) {
   if (!title) {
     return res.send({ error: "no title" });
   }
-  if (!body) {
-    return res.send({ error: "no body" });
-  }
   if (!repo) {
     return res.send({ error: "no repo" });
   }
@@ -273,5 +270,10 @@ export default async function handler(req, res) {
   .then((res) => res.data.choices[0].text.trim())
   .catch((err) => res.send("error: ", err.message));
  
-  return res.send({ ghValue, jiraValue, slackValue, businessLogicSummary});
+  return res.send({
+    ghValue: ghValue ?? { error: "no value" },
+    jiraValue: jiraValue ?? { error: "no value" },
+    slackValue: slackValue ?? { error: "no value" },
+    businessLogicSummary: businessLogicSummary ?? { error: "no value" },
+  });
 }
