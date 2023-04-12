@@ -4,7 +4,7 @@ const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
 });
 const openai = new OpenAIApi(configuration);
-async function getOpenAISummary({
+export default async function getOpenAISummary({
   ghValue,
   commitList,
   jiraValue,
