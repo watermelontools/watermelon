@@ -2,25 +2,10 @@ import executeRequest from "../../../utils/db/azuredb";
 import getGitHub from "../../../utils/actions/getGitHub";
 import getSlack from "../../../utils/actions/getSlack";
 import getJira from "../../../utils/actions/getJira";
-
+import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 export default async function handler(req, res) {
-  const appInsights = require("applicationinsights");
-  const instrumentationKey =
-    "InstrumentationKey=bb2eac7f-33dd-426c-92c5-4dd922b2befb;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/";
-
-  appInsights
-    .setup(instrumentationKey)
-    .setAutoDependencyCorrelation(true)
-    .setAutoCollectRequests(true)
-    .setAutoCollectPerformance(true)
-    .setAutoCollectExceptions(true)
-    .setAutoCollectDependencies(true)
-    .setAutoCollectConsole(true)
-    .start();
-
   const { user, title, body, repo, owner, number, commitList } = req.body;
-  let client = appInsights.defaultClient;
-  client.trackEvent({
+  trackEvent({
     name: "gitHubAction",
     properties: { user, repo, owner, number },
   });
