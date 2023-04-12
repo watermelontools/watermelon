@@ -11,9 +11,6 @@ export default async function handler(req, res) {
   if (!title) {
     return res.send({ error: "no title" });
   }
-  if (!body) {
-    return res.send({ error: "no body" });
-  }
   if (!repo) {
     return res.send({ error: "no repo" });
   }
@@ -256,5 +253,10 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-  return res.send({ ghValue, jiraValue, slackValue });
+  console.log(jiraValue);
+  return res.send({
+    ghValue: ghValue ?? { error: "no value" },
+    jiraValue: jiraValue ?? { error: "no value" },
+    slackValue: slackValue ?? { error: "no value" },
+  });
 }
