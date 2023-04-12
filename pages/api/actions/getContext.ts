@@ -4,7 +4,26 @@ import getSlack from "../../../utils/actions/getSlack";
 import getJira from "../../../utils/actions/getJira";
 
 export default async function handler(req, res) {
+  const appInsights = require("applicationinsights");
+  const instrumentationKey =
+    "InstrumentationKey=bb2eac7f-33dd-426c-92c5-4dd922b2befb;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/";
+
+  appInsights
+    .setup(instrumentationKey)
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true)
+    .start();
+
   const { user, title, body, repo, owner, number, commitList } = req.body;
+  let client = appInsights.defaultClient;
+  client.trackEvent({
+    name: "gitHubAction",
+    properties: { user, repo, owner, number },
+  });
   if (!user) {
     return res.send({ error: "no user" });
   }
@@ -253,7 +272,6 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-  console.log(jiraValue);
   return res.send({
     ghValue: ghValue ?? { error: "no value" },
     jiraValue: jiraValue ?? { error: "no value" },
