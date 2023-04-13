@@ -1,8 +1,8 @@
-import next from 'next';
-import http from 'http';
-import { parse } from 'url';
+import next from "next";
+import http from "http";
+import { parse } from "url";
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -15,4 +15,3 @@ export default async function createTestServer() {
 
   return server;
 }
-
