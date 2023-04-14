@@ -24,6 +24,7 @@ export default async function handler(req, res) {
   if (!commitList) {
     return res.send({ error: "no commitList" });
   }
+
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const {
@@ -254,8 +255,7 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-
-  const businessLogicSummary = getOpenAISummary({
+  const businessLogicSummary = await getOpenAISummary({
     ghValue,
     commitList,
     jiraValue,
