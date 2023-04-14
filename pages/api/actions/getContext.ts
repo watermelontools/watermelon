@@ -2,9 +2,13 @@ import executeRequest from "../../../utils/db/azuredb";
 import getGitHub from "../../../utils/actions/getGitHub";
 import getSlack from "../../../utils/actions/getSlack";
 import getJira from "../../../utils/actions/getJira";
-
+import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, number, commitList } = req.body;
+  trackEvent({
+    name: "gitHubAction",
+    properties: { user, repo, owner, number },
+  });
   if (!user) {
     return res.send({ error: "no user" });
   }
@@ -253,7 +257,6 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
-  console.log(jiraValue);
   return res.send({
     ghValue: ghValue ?? { error: "no value" },
     jiraValue: jiraValue ?? { error: "no value" },
