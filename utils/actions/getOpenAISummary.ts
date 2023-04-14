@@ -39,16 +39,16 @@ export default async function getOpenAISummary({
       prompt += `Slack ${i + 1} text: ${slackValue[i].text || ""} \n`;
     }
   }
-  for (let i = 0; i < commitList.length; i++) {
-    prompt += `Commit ${i + 1} message: ${commitList[i]} \n`;
+  for (let i = 0; i < commitList.split(",").length; i++) {
+    prompt += `Commit ${i + 1} message: ${commitList.split(",")[i]} \n`;
   }
   prompt += `Current PR Title: ${title} \n ${
     body ? `Current PR Body: ${body} \n` : ""
   }`;
-  prompt += `Summarize what the ${ghValue.length} PRs, ${
-    jiraValue.length ? `the ${jiraValue.length} Jira tickets, ` : ""
-  } ${slackValue.length ? `the ${slackValue.length} Slack messages, ` : ""} ${
-    commitList.length ? `the ${commitList.length} commits, ` : ""
+  prompt += `Summarize what the ${ghValue?.length} PRs, ${
+    jiraValue?.length ? `the ${jiraValue?.length} Jira tickets, ` : ""
+  } ${slackValue?.length ? `the ${slackValue?.length} Slack messages, ` : ""} ${
+    commitList?.length ? `the ${commitList?.length} commits, ` : ""
   } are about. What do they tell us about the business logic? Don't summarize each PR and commit separately, combine them. Don't say "these PRs", instead say "related PRs". Take into consideration the current PR title and body. \n\n`;
   const businessLogicSummary = await openai
     .createCompletion({
@@ -57,8 +57,10 @@ export default async function getOpenAISummary({
       max_tokens: 512,
       temperature: 0.7,
     })
-    .then((res) => res.data.choices[0].text.trim())
+    .then((res) => {
+      return res.data.choices[0].text.trim();
+    })
     .catch((err) => console.error("error: ", err.message));
-  console.log(prompt);
-  return { prompt };
+
+  return businessLogicSummary;
 }
