@@ -12,22 +12,53 @@ export default async function getOpenAISummary({
   title,
   body,
 }) {
+  let prompt = "";
+  if (ghValue.error && jiraValue.error && slackValue.error) {
+    return { error: "no data" };
+  }
+  for (let i = 0; i < ghValue.length; i++) {
+    prompt += `PR ${i + 1} title: ${ghValue[i].title || ""} \n ${
+      ghValue[i].body ? `PR ${i + 1} body: ${ghValue[i].body || ""} \n` : ""
+    }`;
+  }
+  if (jiraValue?.length) {
+    for (let i = 0; i < jiraValue.length; i++) {
+      prompt += `Jira ${i + 1} title: ${
+        jiraValue[i].fields.summary || ""
+      } \n  ${
+        jiraValue[i].renderedFields.description
+          ? `Jira ${i + 1} body: ${
+              jiraValue[i].renderedFields.description || ""
+            } \n`
+          : ""
+      }`;
+    }
+  }
+  if (slackValue?.length) {
+    for (let i = 0; i < slackValue.length; i++) {
+      prompt += `Slack ${i + 1} text: ${slackValue[i].text || ""} \n`;
+    }
+  }
+  for (let i = 0; i < commitList.length; i++) {
+    prompt += `Commit ${i + 1} message: ${commitList[i]} \n`;
+  }
+  prompt += `Current PR Title: ${title} \n ${
+    body ? `Current PR Body: ${body} \n` : ""
+  }`;
+  prompt += `Summarize what the ${ghValue.length} PRs, ${
+    jiraValue.length ? `the ${jiraValue.length} Jira tickets, ` : ""
+  } ${slackValue.length ? `the ${slackValue.length} Slack messages, ` : ""} ${
+    commitList.length ? `the ${commitList.length} commits, ` : ""
+  } are about. What do they tell us about the business logic? Don't summarize each PR and commit separately, combine them. Don't say "these PRs", instead say "related PRs". Take into consideration the current PR title and body. \n\n`;
   const businessLogicSummary = await openai
     .createCompletion({
       model: "text-davinci-003",
-      prompt: `PR 1 title: ${ghValue[0].title || ""} \n PR 1 body: ${
-        ghValue[0].body || ""
-      } \n PR 2 title: ${ghValue[1].title || ""} \n PR 2 body: ${
-        ghValue[1].body || ""
-      } \n PR 3 title: ${ghValue[2].title || ""} \n PR 3 body: ${
-        ghValue[2].body || ""
-      } \n ${
-        commitList || ""
-      } \n Summarize what the 3 PRs and the commit list are about. What are these 3 PRs and the commit list tell us about the business logic? Don't summarize each PR and commit separately, combine them. Don't say "these PRs", instead say "related PRs".`,
+      prompt,
       max_tokens: 512,
       temperature: 0.7,
     })
     .then((res) => res.data.choices[0].text.trim())
     .catch((err) => console.error("error: ", err.message));
-  return businessLogicSummary;
+  console.log(prompt);
+  return { prompt };
 }
