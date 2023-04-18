@@ -52,13 +52,6 @@ async function getJira({
       .map((word) => `description ~ "${word}"`)
       .join(" OR ");
 
-    console.log(
-      "summaryQuery",
-      summaryQuery,
-      "descriptionQuery",
-      descriptionQuery
-    );
-
     // Sorting by description might be better than completely filtering out tickets without a description
     let jql = `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`;
     
