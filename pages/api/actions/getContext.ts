@@ -2,7 +2,9 @@ import executeRequest from "../../../utils/db/azuredb";
 import getGitHub from "../../../utils/actions/getGitHub";
 import getSlack from "../../../utils/actions/getSlack";
 import getJira from "../../../utils/actions/getJira";
+import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
+
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, number, commitList } = req.body;
   trackEvent({
@@ -27,6 +29,7 @@ export default async function handler(req, res) {
   if (!commitList) {
     return res.send({ error: "no commitList" });
   }
+
   const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${user}'`;
   const resp = await executeRequest(query);
   const {
@@ -257,9 +260,20 @@ export default async function handler(req, res) {
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
+
+  const businessLogicSummary = await getOpenAISummary({
+    ghValue,
+    commitList,
+    jiraValue,
+    slackValue,
+    title,
+    body,
+  });
+
   return res.send({
     ghValue: ghValue ?? { error: "no value" },
     jiraValue: jiraValue ?? { error: "no value" },
     slackValue: slackValue ?? { error: "no value" },
+    businessLogicSummary: businessLogicSummary ?? { error: "no value" },
   });
 }

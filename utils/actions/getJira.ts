@@ -17,9 +17,8 @@ async function getJira({
   jira_refresh_token,
   randomWords,
 }) {
-  let jiraValue = {};
   if (!jira_token || !jira_refresh_token) {
-    jiraValue = { error: "no jira token" };
+    return { error: "no jira token" };
   } else {
     const newAccessTokens = await updateTokensFromJira({
       refresh_token: jira_refresh_token,
@@ -96,8 +95,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    jiraValue = returnVal.slice(0, 3);
+    return returnVal?.slice(0, 3);
   }
-  return jiraValue;
 }
 export default getJira;
