@@ -5,6 +5,12 @@ import getJira from "../../../utils/actions/getJira";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: process.env.OPEN_AI_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
 export default async function handler(req, res) {
   const { user, title, body, repo, owner, number, commitList } = req.body;
   trackEvent({
@@ -238,11 +244,19 @@ export default async function handler(req, res) {
         .split(" ")
     )
   ).join(" ");
-  // select six random words from the search string
-  const randomWords = searchStringSetWTitleABody
-    .split(" ")
-    .sort(() => Math.random() - 0.5)
-    .slice(0, 6);
+
+  const randomWords = await openai
+  .createCompletion({
+    model: "text-davinci-003",
+    prompt: `"Get the 6 most relevant words from the following string: ${searchStringSetWTitleABody}"`,
+    max_tokens: 128,
+    temperature: 0.7,
+  }).then((res) => {
+    return res.data.choices[0].text.trim();
+  }).catch((err) => {
+    return err.send("error: ", err.message);
+  });
+    
   const [ghValue, jiraValue, slackValue] = await Promise.all([
     getGitHub({
       repo,
