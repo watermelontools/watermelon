@@ -276,5 +276,4 @@ export default async function handler(req, res) {
     slackValue: slackValue ?? { error: "no value" },
     businessLogicSummary: businessLogicSummary ?? { error: "no value" },
   });
-
 }
