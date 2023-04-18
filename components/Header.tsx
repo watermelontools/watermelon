@@ -35,6 +35,14 @@ export default function Header() {
               <li>
                 <a
                   className="dropdown-item"
+                  href={"https://github.com/marketplace/actions/watermelon-context-action"}
+                >
+                  GitHub Action
+                </a>
+              </li>
+              <li>
+                <a
+                  className="dropdown-item"
                   href={`vscode://watermelontools.watermelon-tools?email=${
                     userEmail ?? ""
                   }&token=${data?.user.name ? data.user.name : ""}`}
