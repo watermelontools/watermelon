@@ -277,5 +277,4 @@ export default async function handler(req, res) {
     businessLogicSummary: businessLogicSummary ?? { error: "no value" },
   });
 
-  return res.send({ ghValue, jiraValue, slackValue, businessLogicSummary });
 }
