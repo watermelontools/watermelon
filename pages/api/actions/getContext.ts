@@ -249,7 +249,7 @@ export default async function handler(req, res) {
     .split(" ")
     .sort(() => Math.random() - 0.5)
     .slice(0, 6);
-    
+
   const [ghValue, jiraValue, slackValue] = await Promise.all([
     getGitHub({
       repo,
