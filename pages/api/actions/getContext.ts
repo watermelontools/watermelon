@@ -267,14 +267,14 @@ export default async function handler(req, res) {
     jiraValue,
     slackValue,
     title,
-    body
-  })
-  
+    body,
+  });
+
   return res.send({
     ghValue: ghValue ?? { error: "no value" },
     jiraValue: jiraValue ?? { error: "no value" },
     slackValue: slackValue ?? { error: "no value" },
-    businessLogicSummary: businessLogicSummary ?? { error: "no value" }
+    businessLogicSummary: businessLogicSummary ?? { error: "no value" },
   });
 
   return res.send({ ghValue, jiraValue, slackValue, businessLogicSummary });
