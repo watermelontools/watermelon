@@ -43,11 +43,18 @@ async function getJira({
     let cleanRW = Array.from(
       new Set(randomWords.map((word) => removeSpecialChars(word)))
     );
-    let jql = `text ~ "${title
-      .split(" ")
-      .join('" OR text ~ "')}" OR text ~ "${cleanRW.join(
-      '" OR text ~ "'
-    )}" ORDER BY issuetype ASC, "Story Points" DESC, description DESC`;
+
+    const summaryQuery = cleanRW
+      .map((word) => `summary ~ "${word}"`)
+      .join(" OR ");
+
+    const descriptionQuery = cleanRW
+      .map((word) => `description ~ "${word}"`)
+      .join(" OR ");
+
+    // Sorting by description might be better than completely filtering out tickets without a description
+    let jql = `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`;
+    
     let returnVal = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
       {
