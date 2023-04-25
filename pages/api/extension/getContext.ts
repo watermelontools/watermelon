@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     return res.send({ error: "no commitList" });
   }
   if (!gitSystem) {
-    return res.send({ error: "no commitList" });
+    return res.send({ error: "no gitSystem" });
   }
   let userTokens;
   try {
