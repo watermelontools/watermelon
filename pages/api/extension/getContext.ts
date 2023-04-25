@@ -4,6 +4,7 @@ import getAllData from "../../../utils/db/user/getAllData";
 
 export default async function handler(req, res) {
   const { user, gitSystem, repo, owner, commitList } = req.body;
+  console.log("req.body", req.body);
 
   trackEvent({
     name: "extensionContext",
@@ -36,20 +37,20 @@ export default async function handler(req, res) {
     );
     return res.send({ error });
   }
-  console.log("userTokens", userTokens);
   const {
-    github_token,
-    jira_token,
-    jira_refresh_token,
-    slack_token,
+    github_data,
+    jira_data,
+    jira_refresh_data,
+    slack_data,
     cloudId,
     user_email,
   } = userTokens;
   const commitSet = new Set(commitList.split(","));
+  const parsedGithubData = JSON.parse(github_data);
   const octokit = new Octokit({
-    auth: github_token,
+    auth: parsedGithubData.access_token,
   });
-  let q = `repo:${owner}/${repo}+hash:${commitList}`;
+  let q = `repo:${owner}/${repo}`;
   let issues;
   try {
     issues = await octokit.rest.search.issuesAndPullRequests({
@@ -79,6 +80,7 @@ export default async function handler(req, res) {
     );
     await Promise.allSettled(commentsPromises);
   } catch (error) {
+    console.error("An error occurred while getting issues:", error.message);
     return res.send({ error });
   }
 
