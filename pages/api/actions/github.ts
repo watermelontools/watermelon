@@ -12,7 +12,7 @@ const octokit = new Octokit({
 
 // Handle the "pull_request" event
 webhooks.on("pull_request", async ({ payload }) => {
-  console.log("pull_request", payload);
+  console.log("pull_request", payload.repository);
   if (payload.action === "opened") {
     const { repository, pull_request } = payload;
     const comment = {
@@ -33,7 +33,6 @@ export default async (req, res) => {
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
-      console.log("req.body", req.body);
       await webhooks.receive({
         id: req.headers["x-github-delivery"],
         name: eventName,
