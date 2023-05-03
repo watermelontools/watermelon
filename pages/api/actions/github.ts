@@ -34,4 +34,27 @@ export const config = {
   },
 };
 
-export default webhooks;
+export default async (req, res) => {
+  if (req.method === "POST") {
+    try {
+      // Verify and parse the webhook event
+      const eventName = req.headers["x-github-event"];
+      const signature = req.headers["x-hub-signature-256"];
+      const payload = JSON.parse(req.body);
+      await webhooks.verifyAndReceive({
+        id: req.headers["x-github-delivery"],
+        name: eventName,
+        signature,
+        payload,
+      });
+
+      res.status(200).send("Webhook event processed");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error processing webhook event");
+    }
+  } else {
+    res.setHeader("Allow", "POST");
+    res.status(405).end("Method Not Allowed");
+  }
+};
