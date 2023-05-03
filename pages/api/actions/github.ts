@@ -34,7 +34,17 @@ export default async (req, res) => {
         console.log(comment);
 
         // Add a comment to the pull request
-        await octokit.rest.issues.createComment(comment);
+        await octokit
+          .request(
+            `POST /repos/${repository.owner}/${repository.repo}/issues/${pull_request.numbers}/comments`,
+            comment
+          )
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
 
       res.status(200).send("Webhook event processed");
