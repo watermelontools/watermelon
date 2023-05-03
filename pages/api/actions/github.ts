@@ -34,11 +34,10 @@ export default async (req, res) => {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
       console.log("req.body", req.body);
-      const payload = JSON.parse(req.body);
       await webhooks.receive({
         id: req.headers["x-github-delivery"],
         name: eventName,
-        payload,
+        payload: req.body,
       });
 
       res.status(200).send("Webhook event processed");
