@@ -20,9 +20,16 @@ export default async (req, res) => {
           issue_number: pull_request.number,
           body: "Thank you for your pull request! We will review it shortly.",
         };
-
+        console.log(comment);
         // Add a comment to the pull request
-        await octokit.rest.issues.createComment(comment);
+        await octokit.rest.issues
+          .createComment(comment)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
 
       res.status(200).send("Webhook event processed");
