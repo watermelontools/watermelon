@@ -13,7 +13,11 @@ export default async (req, res) => {
       let payload = req.body;
       console.log(payload);
       console.log(payload.action);
-      if (payload.action === "opened") {
+      if (
+        payload.action === "opened" ||
+        payload.action === "reopened" ||
+        payload.action === "synchronize"
+      ) {
         const { repository, pull_request } = payload;
         const comment = {
           owner: repository.owner.login,
