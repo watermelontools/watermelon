@@ -10,7 +10,7 @@ export default async (req, res) => {
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
-      let { payload } = req.body;
+      let payload = req.body;
       if (payload.action === "opened") {
         const { repository, pull_request } = payload;
         const comment = {
