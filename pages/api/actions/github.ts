@@ -13,12 +13,17 @@ export default async (req, res) => {
       let payload = req.body;
       console.log(payload);
       console.log(payload.action);
+
       if (
         payload.action === "opened" ||
         payload.action === "reopened" ||
         payload.action === "synchronize"
       ) {
-        const { repository, pull_request } = payload;
+        const { installation, repository, pull_request } = payload;
+        const installationId = installation.id;
+
+        const octokit = await app.getInstallationOctokit(installationId);
+
         const comment = {
           owner: repository.owner.login,
           repo: repository.name,
@@ -27,18 +32,9 @@ export default async (req, res) => {
           body: "Thank you for your pull request! We will review it shortly.",
         };
         console.log(comment);
+
         // Add a comment to the pull request
-        await app.octokit
-          .request(
-            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-            comment
-          )
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        await octokit.rest.issues.createComment(comment);
       }
 
       res.status(200).send("Webhook event processed");
