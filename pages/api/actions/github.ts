@@ -5,7 +5,10 @@ const webhooks = new Webhooks({
   secret: process.env.WEBHOOK_SECRET,
 });
 
-const octokit = new Octokit({ auth: process.env.GITHUB_ACCESS_TOKEN });
+const octokit = new Octokit({
+  appId: process.env.GITHUB_APP_ID,
+  privateKey: process.env.GITHUB_PRIVATE_KEY,
+});
 
 // Handle the "pull_request" event
 webhooks.on("pull_request", async ({ payload }) => {
