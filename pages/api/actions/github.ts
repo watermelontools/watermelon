@@ -28,23 +28,16 @@ webhooks.on("pull_request", async ({ payload }) => {
   }
 });
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 export default async (req, res) => {
   if (req.method === "POST") {
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
-      const signature = req.headers["x-hub-signature-256"];
+      console.log("req.body", req.body);
       const payload = JSON.parse(req.body);
-      await webhooks.verifyAndReceive({
+      await webhooks.receive({
         id: req.headers["x-github-delivery"],
         name: eventName,
-        signature,
         payload,
       });
 
