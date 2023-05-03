@@ -1,6 +1,6 @@
-import { Octokit } from "@octokit/rest";
+import { App } from "@octokit/app";
 
-const octokit = new Octokit({
+const app = new App({
   appId: process.env.GITHUB_APP_ID,
   privateKey: process.env.GITHUB_PRIVATE_KEY,
 });
@@ -28,8 +28,11 @@ export default async (req, res) => {
         };
         console.log(comment);
         // Add a comment to the pull request
-        await octokit.rest.issues
-          .createComment(comment)
+        await app.octokit
+          .request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+            comment
+          )
           .then((response) => {
             console.log(response);
           })
