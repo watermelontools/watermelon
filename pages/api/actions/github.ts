@@ -36,7 +36,7 @@ export default async (req, res) => {
         // Add a comment to the pull request
         await octokit
           .request(
-            `POST /repos/${repository.owner}/${repository.repo}/issues/${pull_request.numbers}/comments`,
+            `POST /repos/${repository.owner.login}/${repository.name}/issues/${pull_request.numbers}/comments`,
             comment
           )
           .then((response) => {
