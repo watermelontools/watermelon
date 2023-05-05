@@ -1,6 +1,11 @@
 import searchMessageByText from "../../utils/slack/searchMessageByText";
-async function getSlack({ title, body, slack_token, randomWords }) {
-  let slackValue = {};
+async function getSlack({
+  title,
+  body,
+  slack_token,
+  randomWords,
+}): Promise<any[] | { error: string }> {
+  let slackValue;
 
   if (!slack_token) {
     slackValue = { error: "no slack token" };
