@@ -367,7 +367,7 @@ export default async (req, res) => {
           repo,
           //@ts-ignore
           issue_number: number,
-          body: "Thank you for your pull request! We will review it shortly.",
+          body: textToWrite,
         };
 
         await octokit
