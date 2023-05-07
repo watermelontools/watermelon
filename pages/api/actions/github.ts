@@ -360,6 +360,7 @@ export default async (req, res) => {
             textToWrite += `\n No results found :(`;
           }
         }
+        console.log(textToWrite);
         // Add a comment to the pull request
         const comment = {
           owner,
@@ -375,7 +376,7 @@ export default async (req, res) => {
             comment
           )
           .then((response) => {
-            console.log(response);
+            console.log(response.data);
           })
           .catch((error) => {
             console.log(error);
