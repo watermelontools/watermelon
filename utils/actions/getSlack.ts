@@ -1,5 +1,6 @@
 import { StandardAPIResponse } from "../../types/watermelon";
 import searchMessageByText from "../../utils/slack/searchMessageByText";
+type SlackResult = { error: string } | any[];
 async function getSlack({
   title,
   body,
