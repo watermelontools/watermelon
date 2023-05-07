@@ -1,10 +1,11 @@
 import searchMessageByText from "../../utils/slack/searchMessageByText";
+type SlackResult = { error: string } | any[];
 async function getSlack({
   title,
   body,
   slack_token,
   randomWords,
-}): Promise<any[] | { error: string }> {
+}): Promise<SlackResult> {
   let slackValue;
 
   if (!slack_token) {
