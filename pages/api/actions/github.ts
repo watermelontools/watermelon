@@ -309,14 +309,14 @@ export default async (req, res) => {
           textToWrite += "Error getting summary" + businessLogicSummary.error;
         }
         textToWrite += "### GitHub PRs";
-        if (ghValue?.length) {
+        if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
+          textToWrite += `\n No results found :(`;
+        } else if (Array.isArray(ghValue) && ghValue?.length) {
           for (let index = 0; index < ghValue?.length; index++) {
             const element = ghValue[index];
             textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
             textToWrite += `\n`;
           }
-        } else {
-          textToWrite += `\n No results found :(`;
         }
 
         textToWrite += `\n`;
@@ -338,16 +338,15 @@ export default async (req, res) => {
         textToWrite += `\n`;
 
         textToWrite += "### Slack Threads";
-        if (slackValue?.error === "no slack token") {
+        if (
+          !Array.isArray(slackValue) &&
+          slackValue?.error === "no slack token"
+        ) {
           textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
-        } else {
-          if (slackValue?.messages?.matches?.length) {
-            for (
-              let index = 0;
-              index < slackValue.messages.matches.length;
-              index++
-            ) {
-              const element = slackValue.messages.matches[index];
+        } else if (Array.isArray(slackValue)) {
+          if (slackValue?.length) {
+            for (let index = 0; index < slackValue.length; index++) {
+              const element = slackValue[index];
               textToWrite += `\n - [#${element.channel.name} - ${
                 element.username
               }\n ${
