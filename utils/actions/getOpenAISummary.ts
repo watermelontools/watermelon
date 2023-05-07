@@ -40,7 +40,7 @@ export default async function getOpenAISummary({
     }
   }
   for (let i = 0; i < commitList.split(",").length; i++) {
-    prompt += `Commit ${i + 1} message: ${commitList.split(",")[i]} \n`;
+    prompt += `Commit ${i + 1} message: ${commitList[i]} \n`;
   }
   prompt += `Current PR Title: ${title} \n ${
     body ? `Current PR Body: ${body} \n` : ""
