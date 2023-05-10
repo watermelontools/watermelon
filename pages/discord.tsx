@@ -59,16 +59,15 @@ export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
     console.log("code", context.query.code);
+    return {
+      props: {
+        context,
+      },
+    };
   } else
     return {
       props: {
         error: "no code",
       },
     };
-  console.log("context", context);
-  return {
-    props: {
-      context,
-    },
-  };
 }
