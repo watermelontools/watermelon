@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-export default function GitHub({ code, error }) {
+export default function Discord({ code, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
   console.log(code);
   const router = useRouter();
@@ -49,6 +49,7 @@ export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
     console.log("code", context.query.code);
+    console.log("context AAAAAAAAA");
     return {
       props: {
         code: context.query.code,
