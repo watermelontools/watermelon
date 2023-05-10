@@ -6,16 +6,6 @@ export default function GitHub({ code, error }) {
   console.log(code);
   const router = useRouter();
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeToRedirect(timeToRedirect - 1);
-      if (timeToRedirect === 0) {
-        router.push("/");
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeToRedirect]);
-
   /* useEffect(() => {
     // use getByEmail to check if user has paid
     fetch("/api/payments/getByEmail", {
