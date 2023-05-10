@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ context, error }) {
-  const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
   console.log(context);
   const router = useRouter();
@@ -39,17 +37,12 @@ export default function GitHub({ context, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Discord as {login}
+          You have logged in with Discord as
         </h2>
       </div>
-      <img
-        src={avatar_url}
-        alt="github user image"
-        className="avatar avatar-8"
-      />
+
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
