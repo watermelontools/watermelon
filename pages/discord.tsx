@@ -49,8 +49,8 @@ export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
     const API_ENDPOINT = "https://discord.com/api/v10";
-    const CLIENT_ID = "332269999912132097";
-    const CLIENT_SECRET = "937it3ow87i4ery69876wqire";
+    const CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+    const CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
     const REDIRECT_URI = "https://app.watermelontools.com/discord";
     const data = {
       client_id: CLIENT_ID,
