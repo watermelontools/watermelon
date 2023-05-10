@@ -48,8 +48,27 @@ export default function Discord({ code, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    console.log("code", context.query.code);
-    console.log("context AAAAAAAAA");
+    const API_ENDPOINT = "https://discord.com/api/v10";
+    const CLIENT_ID = "332269999912132097";
+    const CLIENT_SECRET = "937it3ow87i4ery69876wqire";
+    const REDIRECT_URI = "https://app.watermelontools.com/discord";
+    const data = {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      grant_type: "authorization_code",
+      code: context.query.code,
+      redirect_uri: REDIRECT_URI,
+    };
+    const headers = {
+      "Content-Type": "application/x-www-form-urlencoded",
+    };
+    const response = await fetch(`${API_ENDPOINT}/oauth2/token`, {
+      method: "POST",
+      headers: headers,
+      body: new URLSearchParams(data),
+    });
+    const json = await response.json();
+    console.log(json);
     return {
       props: {
         code: context.query.code,
