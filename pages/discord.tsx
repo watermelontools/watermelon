@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/github/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error }) {
+export default function GitHub({ context, error }) {
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
-
+  console.log(context);
   const router = useRouter();
 
   useEffect(() => {
@@ -74,4 +73,9 @@ export async function getServerSideProps(context) {
       },
     };
   console.log("context", context);
+  return {
+    props: {
+      context,
+    },
+  };
 }
