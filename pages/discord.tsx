@@ -1,38 +1,36 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-export default function Discord({ code, error }) {
+import JiraLoginLink from "../components/JiraLoginLink";
+export default function Discord({ userData, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
-  console.log(code);
   const router = useRouter();
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeToRedirect(timeToRedirect - 1);
+      if (timeToRedirect === 0) {
+        router.push("/");
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [timeToRedirect]);
 
-  /* useEffect(() => {
-    // use getByEmail to check if user has paid
-    fetch("/api/payments/getByEmail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: userEmail }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.email) {
-          setHasPaid(true);
-        }
-      });
-  }, []);
- */
   return (
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
           You have logged in with Discord as
         </h2>
+        <img
+          src={`https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`}
+          alt="github user image"
+          className="avatar avatar-8"
+        />
       </div>
 
       <div>
         <p className="text-emphasized">We recommend you login to Jira</p>
+        <JiraLoginLink userEmail={userEmail} />
       </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
@@ -68,10 +66,18 @@ export async function getServerSideProps(context) {
       body: new URLSearchParams(data),
     });
     const json = await response.json();
-    console.log(json);
+    const user = await fetch(`${API_ENDPOINT}/users/@me`, {
+      headers: {
+        Authorization: `Bearer ${json.access_token}`,
+      },
+    });
+
+    const userData = await user.json();
+    console.log(userData);
     return {
       props: {
-        code: context.query.code,
+        userData,
+        userEmail: context.query.state,
       },
     };
   } else
