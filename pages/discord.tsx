@@ -20,7 +20,7 @@ export default function Discord({ userData, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Discord as
+          You have logged in with Discord as {userData.login}
         </h2>
         <img
           src={`https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`}
