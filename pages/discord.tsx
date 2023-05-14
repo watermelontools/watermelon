@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import JiraLoginLink from "../components/JiraLoginLink";
+import saveUser from "../utils/db/discord/saveUser";
 export default function Discord({ userData, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
   const router = useRouter();
@@ -72,11 +73,20 @@ export async function getServerSideProps(context) {
       },
     });
 
-    const userData = await user.json();
-    console.log(userData);
+    const userJson = await user.json();
+    await saveUser({
+      access_token: json.access_token,
+      scope: json.scope,
+      login: userJson.login,
+      id: userJson.id,
+      avatar_url: userJson.avatar_url,
+      watermelon_user: context.query.state,
+      email: userJson.email,
+      refresh_token: json.refresh_token,
+    });
     return {
       props: {
-        userData,
+        userData: userJson,
         userEmail: context.query.state,
       },
     };
