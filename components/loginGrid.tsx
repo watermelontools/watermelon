@@ -148,13 +148,13 @@ function LoginGrid({ userEmail }) {
               )}
             </div>
             <div className="p-3">
-              {discordUserData?.user_username || discordUserData?.user_email ? (
+              {discordUserData?.username || discordUserData?.email ? (
                 <InfoPanel
                   info={{
-                    organization: discordUserData?.team_name,
-                    user_avatar_url: discordUserData?.user_picture_url,
-                    user_displayname: discordUserData?.user_real_name,
-                    user_email: discordUserData?.user_email,
+                    organization: discordUserData?.server_name,
+                    user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
+                    user_displayname: discordUserData?.username,
+                    user_email: discordUserData?.email,
                     service_name: "Discord",
                   }}
                 />
