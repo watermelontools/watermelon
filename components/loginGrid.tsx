@@ -1,19 +1,21 @@
+import { useEffect, useState } from "react";
+
 import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraLoginLink from "../components/JiraLoginLink";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
+import DiscordLoginLink from "./DiscordLoginLink";
 
 import getJiraInfo from "../utils/api/getJiraInfo";
 import getGitHubInfo from "../utils/api/getGitHubInfo";
 import getSlackInfo from "../utils/api/getSlackInfo";
 import getBitbucketInfo from "../utils/api/getBitbucketInfo";
 import getGitLabInfo from "../utils/api/getGitLabInfo";
-import getPaymentInfo from "../utils/api/getPaymentInfo";
-import { useEffect, useState } from "react";
-import DiscordLoginLink from "./DiscordLoginLink";
 import getDiscordInfo from "../utils/api/getDiscordInfo";
+
+import getPaymentInfo from "../utils/api/getPaymentInfo";
 
 function LoginGrid({ userEmail }) {
   const [jiraUserData, setJiraUserData] = useState(null);
