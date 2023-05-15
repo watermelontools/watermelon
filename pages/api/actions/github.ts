@@ -360,15 +360,6 @@ export default async (req, res) => {
             textToWrite += `\n No results found :(`;
           }
         }
-        console.log(textToWrite);
-        // Add a comment to the pull request
-        const comment = {
-          owner,
-          repo,
-          //@ts-ignore
-          issue_number: number,
-          body: textToWrite,
-        };
 
         // Fetch all comments on the PR
         const comments = await octokit.request(
@@ -379,11 +370,12 @@ export default async (req, res) => {
             issue_number: number,
           }
         );
-
-        // Find your bot's comment
+        console.log(comments);
+        // Find our bot's comment
         let botComment = comments.data.find(
           (comment) => comment.user.login === "watermelon-context"
         );
+        console.log(botComment);
         if (botComment) {
           // Update the existing comment
           await octokit.request(
@@ -397,7 +389,6 @@ export default async (req, res) => {
           );
         } else {
           // Post a new comment if no existing comment was found
-
           await octokit
             .request(
               "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
