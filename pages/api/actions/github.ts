@@ -370,17 +370,54 @@ export default async (req, res) => {
           body: textToWrite,
         };
 
-        await octokit
-          .request(
-            `POST /repos/${repository.owner.login}/${repository.name}/issues/${pull_request.number}/comments`,
-            comment
-          )
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // Fetch all comments on the PR
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/comments",
+          {
+            owner,
+            repo,
+            issue_number: number,
+          }
+        );
+
+        // Find your bot's comment
+        let botComment = comments.data.find(
+          (comment) => comment.user.login === "watermelon-context"
+        );
+
+        if (botComment) {
+          // Update the existing comment
+          await octokit.request(
+            "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+            {
+              owner,
+              repo,
+              comment_id: botComment.id,
+              body: textToWrite,
+            }
+          );
+        } else {
+          // Post a new comment if no existing comment was found
+
+          await octokit
+            .request(
+              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+              {
+                owner,
+                issue_number: number,
+                repo,
+                comment_id: botComment.id,
+                body: textToWrite,
+              }
+            )
+
+            .then((response) => {
+              console.log(response.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       }
 
       res.status(200).send("Webhook event processed");
