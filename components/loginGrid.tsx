@@ -12,6 +12,7 @@ import getBitbucketInfo from "../utils/api/getBitbucketInfo";
 import getGitLabInfo from "../utils/api/getGitLabInfo";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
 import { useEffect, useState } from "react";
+import DiscordLoginLink from "./DiscordLoginLink";
 
 function LoginGrid({ userEmail }) {
   const [jiraUserData, setJiraUserData] = useState(null);
@@ -19,6 +20,7 @@ function LoginGrid({ userEmail }) {
   const [bitbucketUserData, setBitbucketUserData] = useState(null);
   const [gitlabUserData, setGitlabUserData] = useState(null);
   const [slackUserData, setSlackUserData] = useState(null);
+  const [discordUserData, setDiscordUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
 
   useEffect(() => {
@@ -37,6 +39,9 @@ function LoginGrid({ userEmail }) {
       });
       getGitLabInfo(userEmail).then((data) => {
         setGitlabUserData(data);
+      });
+      getDiscordInfo(userEmail).then((data) => {
+        setDiscordUserData(data);
       });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
@@ -137,6 +142,21 @@ function LoginGrid({ userEmail }) {
                 />
               ) : (
                 <SlackLoginLink userEmail={userEmail} />
+              )}
+            </div>
+            <div className="p-3">
+              {discordUserData?.user_username || discordUserData?.user_email ? (
+                <InfoPanel
+                  info={{
+                    organization: discordUserData?.team_name,
+                    user_avatar_url: discordUserData?.user_picture_url,
+                    user_displayname: discordUserData?.user_real_name,
+                    user_email: discordUserData?.user_email,
+                    service_name: "Discord",
+                  }}
+                />
+              ) : (
+                <DiscordLoginLink userEmail={userEmail} />
               )}
             </div>
           </div>
