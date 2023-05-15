@@ -370,12 +370,12 @@ export default async (req, res) => {
             issue_number: number,
           }
         );
-        console.log(comments);
+        console.log("length", comments.data.length);
         // Find our bot's comment
         let botComment = comments.data.find(
           (comment) => comment.user.login === "watermelon-context"
         );
-        console.log(botComment);
+        console.log("bc", botComment);
         if (botComment) {
           // Update the existing comment
           await octokit.request(
