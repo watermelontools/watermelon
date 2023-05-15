@@ -79,7 +79,7 @@ export async function getServerSideProps(context) {
       scope: json.scope,
       username: userJson.username,
       id: userJson.id,
-      avatar_url: userJson.avatar_url,
+      avatar_url: userJson.avatar,
       watermelon_user: context.query.state,
       email: userJson.email,
       refresh_token: json.refresh_token,
