@@ -20,7 +20,7 @@ export default function Discord({ userData, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Discord as {userData.login}
+          You have logged in with Discord as {userData.username}
         </h2>
         <img
           src={`https://cdn.discordapp.com/avatars/${userData.id}/${userData.avatar}`}
@@ -77,7 +77,7 @@ export async function getServerSideProps(context) {
     await saveUser({
       access_token: json.access_token,
       scope: json.scope,
-      login: userJson.login,
+      username: userJson.username,
       id: userJson.id,
       avatar_url: userJson.avatar_url,
       watermelon_user: context.query.state,
