@@ -7,7 +7,7 @@ const DiscordLoginLink = ({ userEmail }) => (
       className="button block"
     >
       <div className="Box d-flex flex-items-center flex-justify-start p-2">
-        <img className="avatar avatar-8" src="/logos/github.svg" />
+        <img className="avatar avatar-8" src="/logos/discord.svg" />
         <div className="p-2">
           <h2>Login to Discord</h2>
           <p>View your Messages from the selected Server</p>
