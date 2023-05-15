@@ -5,7 +5,7 @@ const getDiscordInfo = async (userEmail: string) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      user: userEmail,
+      email: userEmail,
     }),
   })
     .then((res) => res.json())
