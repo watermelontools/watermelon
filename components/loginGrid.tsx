@@ -13,6 +13,7 @@ import getGitLabInfo from "../utils/api/getGitLabInfo";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
 import { useEffect, useState } from "react";
 import DiscordLoginLink from "./DiscordLoginLink";
+import getDiscordInfo from "../utils/api/getDiscordInfo";
 
 function LoginGrid({ userEmail }) {
   const [jiraUserData, setJiraUserData] = useState(null);
