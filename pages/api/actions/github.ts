@@ -375,7 +375,7 @@ export default async (req, res) => {
         let botComment = comments.data.find(
           (comment) => comment.user.login === "watermelon-context"
         );
-        console.log("bc", botComment);
+        console.log("bc", botComment.id);
         if (botComment) {
           // Update the existing comment
           await octokit.request(
