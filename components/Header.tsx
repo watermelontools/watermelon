@@ -10,14 +10,16 @@ export default function Header() {
   }, [data]);
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
-      <div className="Header-item">
-        <Image
-          src="/logos/watermelon.png"
-          alt="Watermelon Tools"
-          width="36"
-          height="23"
-        />
-      </div>
+      <a href="/" className="Header-link">
+        <div className="Header-item">
+          <Image
+            src="/logos/watermelon.png"
+            alt="Watermelon Tools"
+            width="36"
+            height="23"
+          />
+        </div>
+      </a>
       <div className="Header-item mr-0">
         <div>
           <details className="dropdown details-reset details-overlay d-inline-block">
@@ -35,7 +37,9 @@ export default function Header() {
               <li>
                 <a
                   className="dropdown-item"
-                  href={"https://github.com/marketplace/actions/watermelon-context-action"}
+                  href={
+                    "https://github.com/marketplace/actions/watermelon-context-action"
+                  }
                 >
                   GitHub Action
                 </a>
