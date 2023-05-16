@@ -8,40 +8,41 @@ import getUserSettings from "../utils/api/getUserSettings";
 
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
-  const [userSettings, setUserSettings] = useState(null);
   const [saveDisabled, setSaveDisabled] = useState(false);
   const { data: session, status } = useSession();
 
   const setUserSettingsState = async (userEmail) => {
     let settings = await getUserSettings(userEmail);
-    console.log(settings);
-    setUserSettings(settings);
+    setFormState(settings);
   };
   useEffect(() => {
     setUserEmail(session?.user?.email);
     setUserSettingsState(session?.user?.email);
   }, [session]);
   const [formState, setFormState] = useState({
-    JiraTickets: userSettings?.JiraTickets || 3,
-    SlackMessages: userSettings?.SlackMessages || 3,
-    GitHubPRs: userSettings?.GitHubPRs || 3,
-    AISummary: userSettings?.AISummary || 3,
+    JiraTickets: 3,
+    SlackMessages: 3,
+    GitHubPRs: 3,
+    AISummary: 1,
   });
 
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
-      const response = await fetch("/api/user/settings", {
-        method: "PATCH",
+      const response = await fetch("/api/user/updateSettings", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formState),
-      });
-
-      if (response.ok) {
-        console.log("Form saved successfully");
-        console.log(response);
+        body: JSON.stringify({ userSettings: formState, user: userEmail }),
+      }).then((res) => res.json());
+      if (
+        response.AISummary === formState.AISummary ||
+        response.JiraTickets === formState.JiraTickets ||
+        response.SlackMessages === formState.SlackMessages ||
+        response.GitHubPRs === formState.GitHubPRs
+      ) {
+        setUserSettingsState(session?.user?.email);
       } else {
         console.error("Failed to save the form");
       }
@@ -75,11 +76,11 @@ function HomePage({}) {
                     <select
                       className="form-select"
                       aria-label="Amount of Jira Tickets"
-                      defaultValue={userSettings?.JiraTickets}
+                      defaultValue={formState?.JiraTickets}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          JiraTickets: e.target.value,
+                          JiraTickets: parseInt(e.target.value),
                         })
                       }
                       value={formState.JiraTickets}
@@ -97,12 +98,12 @@ function HomePage({}) {
                     <select
                       className="form-select"
                       aria-label="Amount of Slack Messages"
-                      defaultValue={userSettings?.SlackMessages}
+                      defaultValue={formState?.SlackMessages}
                       value={formState.SlackMessages}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          SlackMessages: e.target.value,
+                          SlackMessages: parseInt(e.target.value),
                         })
                       }
                     >
@@ -119,12 +120,12 @@ function HomePage({}) {
                     <select
                       className="form-select"
                       aria-label="Amount of GitHub PRs"
-                      defaultValue={userSettings?.GitHubPRs}
+                      defaultValue={formState?.GitHubPRs}
                       value={formState.GitHubPRs}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          GitHubPRs: e.target.value,
+                          GitHubPRs: parseInt(e.target.value),
                         })
                       }
                     >
@@ -141,12 +142,12 @@ function HomePage({}) {
                     <select
                       className="form-select"
                       aria-label="AI Summary"
-                      defaultValue={userSettings?.AISummary}
+                      defaultValue={formState?.AISummary}
                       value={formState.AISummary}
                       onChange={(e) =>
                         setFormState({
                           ...formState,
-                          AISummary: e.target.value,
+                          AISummary: parseInt(e.target.value),
                         })
                       }
                     >
