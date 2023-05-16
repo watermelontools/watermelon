@@ -69,7 +69,6 @@ function HomePage({}) {
                     This controls how the action behaves.
                   </div>
                 </div>
-                //form goes here
                 <form>
                   <div className="">
                     <span>Jira Tickets: </span>
