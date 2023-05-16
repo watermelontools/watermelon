@@ -23,12 +23,24 @@ function LoginGrid({ userEmail }) {
   useEffect(() => {
     if (userEmail) {
       getAllUserData(userEmail).then((data) => {
-        setGithubUserData(JSON.parse(data.github_data));
-        setBitbucketUserData(JSON.parse(data.bitbucket_data));
-        setGitlabUserData(JSON.parse(data.gitlab_data));
-        setSlackUserData(JSON.parse(data.slack_data));
-        setJiraUserData(JSON.parse(data.jira_data));
-        setDiscordUserData(JSON.parse(data.discord_data));
+        if (data?.github_data) {
+          setGithubUserData(JSON.parse(data.github_data));
+        }
+        if (data?.bitbucket_data) {
+          setBitbucketUserData(JSON.parse(data.bitbucket_data));
+        }
+        if (data?.gitlab_data) {
+          setGitlabUserData(JSON.parse(data.gitlab_data));
+        }
+        if (data?.slack_data) {
+          setSlackUserData(JSON.parse(data.slack_data));
+        }
+        if (data?.jira_data) {
+          setJiraUserData(JSON.parse(data.jira_data));
+        }
+        if (data?.discord_data) {
+          setDiscordUserData(JSON.parse(data.discord_data));
+        }
       });
 
       // use getByEmail to check if user has paid
