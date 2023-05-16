@@ -9,6 +9,7 @@ import getUserSettings from "../utils/api/getUserSettings";
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
   const [userSettings, setUserSettings] = useState(null);
+  const [saveDisabled, setSaveDisabled] = useState(false);
   const { data: session, status } = useSession();
 
   const setUserSettingsState = async (userEmail) => {
@@ -28,6 +29,7 @@ function HomePage({}) {
   });
 
   const handleSubmit = async () => {
+    setSaveDisabled(true);
     try {
       const response = await fetch("/api/user/settings", {
         method: "PATCH",
@@ -39,11 +41,14 @@ function HomePage({}) {
 
       if (response.ok) {
         console.log("Form saved successfully");
+        console.log(response);
       } else {
         console.error("Failed to save the form");
       }
     } catch (error) {
       console.error("An error occurred while saving the form", error);
+    } finally {
+      setSaveDisabled(false);
     }
   };
 
@@ -150,8 +155,13 @@ function HomePage({}) {
                       <option value={0}>Inactive</option>;
                     </select>
                   </div>
-                  <button className="btn btn-primary" type="button">
-                    Save
+                  <button
+                    className="btn btn-primary"
+                    type="button"
+                    disabled={saveDisabled}
+                    onClick={handleSubmit}
+                  >
+                    {saveDisabled ? "Saving..." : "Save"}
                   </button>
                 </form>
               </div>
