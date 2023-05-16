@@ -29,21 +29,62 @@ function HomePage({}) {
         <>
           {session ? <Header /> : <LogInBtn />}
           {userEmail ? (
-            <>
+            <div className="p-3">
               <h2>Settings</h2>
-              <div className="p-3">
-                Action Settings
-                <div className="p-3">
-                  <span>Jira Tickets: {userSettings?.JiraTickets}</span>
+              <div className="">
+                <div className="Subhead">
+                  <span className="Subhead-heading">Action Settings</span>
+                  <div className="Subhead-description">
+                    This controls how the action behaves.
+                  </div>
                 </div>
-                <div className="p-3">
-                  <span>GitHub Issues: {userSettings?.GitHubPRs}</span>
+                <div className="">
+                  <span>Jira Tickets: </span>
+                  <select
+                    className="form-select"
+                    aria-label="Amount of Jira Tickets"
+                    defaultValue={userSettings?.JiraTickets}
+                  >
+                    {Array.from(Array(11)).map((i, index) => {
+                      if (index === 0) {
+                        return null;
+                      }
+                      return <option value={index}>{index}</option>;
+                    })}
+                  </select>
                 </div>
-                <div className="p-3">
-                  <span>Slack Messages: {userSettings?.SlackMessages}</span>
+                <div className="">
+                  <span>Slack Messages: </span>
+                  <select
+                    className="form-select"
+                    aria-label="Amount of Slack Messages"
+                    defaultValue={userSettings?.SlackMessages}
+                  >
+                    {Array.from(Array(11)).map((i, index) => {
+                      if (index === 0) {
+                        return null;
+                      }
+                      return <option value={index}>{index}</option>;
+                    })}
+                  </select>
+                </div>
+                <div className="">
+                  <span>GitHub PRs: </span>
+                  <select
+                    className="form-select"
+                    aria-label="Amount of GitHub PRs"
+                    defaultValue={userSettings?.GitHubPRs}
+                  >
+                    {Array.from(Array(11)).map((i, index) => {
+                      if (index === 0) {
+                        return null;
+                      }
+                      return <option value={index}>{index}</option>;
+                    })}
+                  </select>
                 </div>
               </div>
-            </>
+            </div>
           ) : null}
         </>
       )}
