@@ -83,6 +83,17 @@ function HomePage({}) {
                     })}
                   </select>
                 </div>
+                <div className="">
+                  <span>AI Summary: </span>
+                  <select
+                    className="form-select"
+                    aria-label="AI Summary"
+                    defaultValue={userSettings?.AISummary}
+                  >
+                    <option value={1}>Active</option>;
+                    <option value={0}>Inactive</option>;
+                  </select>
+                </div>
               </div>
             </div>
           ) : null}
