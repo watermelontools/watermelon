@@ -35,7 +35,11 @@ function HomePage({}) {
                 Action Settings
                 <div className="p-3">
                   <span>Jira Tickets: {userSettings?.JiraTickets}</span>
-                  <span>GitHub Issues: {userSettings?.githubIssues}</span>
+                </div>
+                <div className="p-3">
+                  <span>GitHub Issues: {userSettings?.GitHubPRs}</span>
+                </div>
+                <div className="p-3">
                   <span>Slack Messages: {userSettings?.SlackMessages}</span>
                 </div>
               </div>
