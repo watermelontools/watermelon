@@ -38,62 +38,68 @@ function HomePage({}) {
                     This controls how the action behaves.
                   </div>
                 </div>
-                <div className="">
-                  <span>Jira Tickets: </span>
-                  <select
-                    className="form-select"
-                    aria-label="Amount of Jira Tickets"
-                    defaultValue={userSettings?.JiraTickets}
-                  >
-                    {Array.from(Array(11)).map((i, index) => {
-                      if (index === 0) {
-                        return null;
-                      }
-                      return <option value={index}>{index}</option>;
-                    })}
-                  </select>
-                </div>
-                <div className="">
-                  <span>Slack Messages: </span>
-                  <select
-                    className="form-select"
-                    aria-label="Amount of Slack Messages"
-                    defaultValue={userSettings?.SlackMessages}
-                  >
-                    {Array.from(Array(11)).map((i, index) => {
-                      if (index === 0) {
-                        return null;
-                      }
-                      return <option value={index}>{index}</option>;
-                    })}
-                  </select>
-                </div>
-                <div className="">
-                  <span>GitHub PRs: </span>
-                  <select
-                    className="form-select"
-                    aria-label="Amount of GitHub PRs"
-                    defaultValue={userSettings?.GitHubPRs}
-                  >
-                    {Array.from(Array(11)).map((i, index) => {
-                      if (index === 0) {
-                        return null;
-                      }
-                      return <option value={index}>{index}</option>;
-                    })}
-                  </select>
-                </div>
-                <div className="">
-                  <span>AI Summary: </span>
-                  <select
-                    className="form-select"
-                    aria-label="AI Summary"
-                    defaultValue={userSettings?.AISummary}
-                  >
-                    <option value={1}>Active</option>;
-                    <option value={0}>Inactive</option>;
-                  </select>
-                </div>
+                //form goes here
+                <form>
+                  <div className="">
+                    <span>Jira Tickets: </span>
+                    <select
+                      className="form-select"
+                      aria-label="Amount of Jira Tickets"
+                      defaultValue={userSettings?.JiraTickets}
+                    >
+                      {Array.from(Array(11)).map((i, index) => {
+                        if (index === 0) {
+                          return null;
+                        }
+                        return <option value={index}>{index}</option>;
+                      })}
+                    </select>
+                  </div>
+                  <div className="">
+                    <span>Slack Messages: </span>
+                    <select
+                      className="form-select"
+                      aria-label="Amount of Slack Messages"
+                      defaultValue={userSettings?.SlackMessages}
+                    >
+                      {Array.from(Array(11)).map((i, index) => {
+                        if (index === 0) {
+                          return null;
+                        }
+                        return <option value={index}>{index}</option>;
+                      })}
+                    </select>
+                  </div>
+                  <div className="">
+                    <span>GitHub PRs: </span>
+                    <select
+                      className="form-select"
+                      aria-label="Amount of GitHub PRs"
+                      defaultValue={userSettings?.GitHubPRs}
+                    >
+                      {Array.from(Array(11)).map((i, index) => {
+                        if (index === 0) {
+                          return null;
+                        }
+                        return <option value={index}>{index}</option>;
+                      })}
+                    </select>
+                  </div>
+                  <div className="">
+                    <span>AI Summary: </span>
+                    <select
+                      className="form-select"
+                      aria-label="AI Summary"
+                      defaultValue={userSettings?.AISummary}
+                    >
+                      <option value={1}>Active</option>;
+                      <option value={0}>Inactive</option>;
+                    </select>
+                  </div>
+                  <button className="btn btn-primary" type="button">
+                    Save
+                  </button>
+                </form>
               </div>
             </div>
           ) : null}
