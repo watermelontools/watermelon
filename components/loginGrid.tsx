@@ -8,12 +8,6 @@ import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 
-import getJiraInfo from "../utils/api/getJiraInfo";
-import getGitHubInfo from "../utils/api/getGitHubInfo";
-import getSlackInfo from "../utils/api/getSlackInfo";
-import getBitbucketInfo from "../utils/api/getBitbucketInfo";
-import getGitLabInfo from "../utils/api/getGitLabInfo";
-import getDiscordInfo from "../utils/api/getDiscordInfo";
 import getAllUserData from "../utils/api/getAllUserData";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
 
