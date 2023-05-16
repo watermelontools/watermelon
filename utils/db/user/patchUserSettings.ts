@@ -4,6 +4,8 @@ export default async function updateUserSettings(
   user,
   userSettings
 ): Promise<any> {
+  console.log(userSettings);
+  console.log(user);
   try {
     let data = await executeRequest(
       `EXEC dbo.update_userSettings @watermelon_user = '${user}', @AISummary='${userSettings.AISummary}', @JiraTickets='${userSettings.JiraTickets}', @SlackMessages='${userSettings.SlackMessages}', @GitHubPRs='${userSettings.GitHubPRs}', @NotionPages= '${userSettings.NotionPages}', @LinearTickets= '${userSettings.LinearTickets}', @ConfluenceDocs= '${userSettings.ConfluenceDocs}'`
