@@ -20,6 +20,32 @@ function HomePage({}) {
     setUserEmail(session?.user?.email);
     setUserSettingsState(session?.user?.email);
   }, [session]);
+  const [formState, setFormState] = useState({
+    JiraTickets: userSettings?.JiraTickets || 3,
+    SlackMessages: userSettings?.SlackMessages || 3,
+    GitHubPRs: userSettings?.GitHubPRs || 3,
+    AISummary: userSettings?.AISummary || 3,
+  });
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("/api/user/settings", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formState),
+      });
+
+      if (response.ok) {
+        console.log("Form saved successfully");
+      } else {
+        console.error("Failed to save the form");
+      }
+    } catch (error) {
+      console.error("An error occurred while saving the form", error);
+    }
+  };
 
   return (
     <div>
@@ -46,6 +72,13 @@ function HomePage({}) {
                       className="form-select"
                       aria-label="Amount of Jira Tickets"
                       defaultValue={userSettings?.JiraTickets}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          JiraTickets: e.target.value,
+                        })
+                      }
+                      value={formState.JiraTickets}
                     >
                       {Array.from(Array(11)).map((i, index) => {
                         if (index === 0) {
@@ -61,6 +94,13 @@ function HomePage({}) {
                       className="form-select"
                       aria-label="Amount of Slack Messages"
                       defaultValue={userSettings?.SlackMessages}
+                      value={formState.SlackMessages}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          SlackMessages: e.target.value,
+                        })
+                      }
                     >
                       {Array.from(Array(11)).map((i, index) => {
                         if (index === 0) {
@@ -76,6 +116,13 @@ function HomePage({}) {
                       className="form-select"
                       aria-label="Amount of GitHub PRs"
                       defaultValue={userSettings?.GitHubPRs}
+                      value={formState.GitHubPRs}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          GitHubPRs: e.target.value,
+                        })
+                      }
                     >
                       {Array.from(Array(11)).map((i, index) => {
                         if (index === 0) {
@@ -91,6 +138,13 @@ function HomePage({}) {
                       className="form-select"
                       aria-label="AI Summary"
                       defaultValue={userSettings?.AISummary}
+                      value={formState.AISummary}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          AISummary: e.target.value,
+                        })
+                      }
                     >
                       <option value={1}>Active</option>;
                       <option value={0}>Inactive</option>;
