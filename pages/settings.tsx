@@ -28,7 +28,19 @@ function HomePage({}) {
       {status === "authenticated" && (
         <>
           {session ? <Header /> : <LogInBtn />}
-          {userEmail ? <></> : null}
+          {userEmail ? (
+            <>
+              <h2>Settings</h2>
+              <div className="p-3">
+                Action Settings
+                <div className="p-3">
+                  <span>Jira Tickets: {userSettings?.JiraTickets}</span>
+                  <span>GitHub Issues: {userSettings?.githubIssues}</span>
+                  <span>Slack Messages: {userSettings?.SlackMessages}</span>
+                </div>
+              </div>
+            </>
+          ) : null}
         </>
       )}
     </div>
