@@ -51,6 +51,10 @@ export default async (req, res) => {
           jira_refresh_token,
           slack_token,
           cloudId,
+          AISummary,
+          JiraTickets,
+          GitHubPRs,
+          SlackMessages,
           user_email,
         } = wmUserData;
         let octoCommitList = await octokit.request(
@@ -278,6 +282,7 @@ export default async (req, res) => {
             owner,
             github_token,
             randomWords,
+            amount: GitHubPRs,
           }),
           getJira({
             user: user_email,
@@ -286,8 +291,15 @@ export default async (req, res) => {
             jira_token,
             jira_refresh_token,
             randomWords,
+            amount: JiraTickets,
           }),
-          getSlack({ title, body, slack_token, randomWords }),
+          getSlack({
+            title,
+            body,
+            slack_token,
+            randomWords,
+            amount: SlackMessages,
+          }),
         ]);
 
         const businessLogicSummary = await getOpenAISummary({

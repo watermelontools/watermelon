@@ -5,6 +5,7 @@ async function getSlack({
   body,
   slack_token,
   randomWords,
+  amount = 3,
 }): Promise<SlackResult> {
   let slackValue;
 

@@ -5,6 +5,7 @@ async function getGitHub({
   owner,
   github_token,
   randomWords,
+  amount = 3,
 }): Promise<GHResult> {
   let ghValue;
 
@@ -22,7 +23,7 @@ async function getGitHub({
       is: "pr",
       type: "pr",
     });
-    ghValue = issues.data?.items?.slice(0, 3);
+    ghValue = issues.data?.items?.slice(0, amount);
     return ghValue;
   }
 }
