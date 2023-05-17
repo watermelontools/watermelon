@@ -62,6 +62,14 @@ export default function Header() {
                   API Docs
                 </a>
               </li>
+              <li>
+                <a
+                  className="dropdown-item"
+                  href={`https://app.watermelontools.com/settings`}
+                >
+                  Settings
+                </a>
+              </li>
               <li className="d-flex flex-items-center flex-justify-center">
                 <button className="btn" onClick={() => signOut()}>
                   Sign out

@@ -8,13 +8,7 @@ import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 
-import getJiraInfo from "../utils/api/getJiraInfo";
-import getGitHubInfo from "../utils/api/getGitHubInfo";
-import getSlackInfo from "../utils/api/getSlackInfo";
-import getBitbucketInfo from "../utils/api/getBitbucketInfo";
-import getGitLabInfo from "../utils/api/getGitLabInfo";
-import getDiscordInfo from "../utils/api/getDiscordInfo";
-
+import getAllUserData from "../utils/api/getAllUserData";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
 
 function LoginGrid({ userEmail }) {
@@ -28,23 +22,25 @@ function LoginGrid({ userEmail }) {
 
   useEffect(() => {
     if (userEmail) {
-      getJiraInfo(userEmail).then((data) => {
-        setJiraUserData(data);
-      });
-      getGitHubInfo(userEmail).then((data) => {
-        setGithubUserData(data);
-      });
-      getSlackInfo(userEmail).then((data) => {
-        setSlackUserData(data);
-      });
-      getBitbucketInfo(userEmail).then((data) => {
-        setBitbucketUserData(data);
-      });
-      getGitLabInfo(userEmail).then((data) => {
-        setGitlabUserData(data);
-      });
-      getDiscordInfo(userEmail).then((data) => {
-        setDiscordUserData(data);
+      getAllUserData(userEmail).then((data) => {
+        if (data?.github_data) {
+          setGithubUserData(JSON.parse(data.github_data));
+        }
+        if (data?.bitbucket_data) {
+          setBitbucketUserData(JSON.parse(data.bitbucket_data));
+        }
+        if (data?.gitlab_data) {
+          setGitlabUserData(JSON.parse(data.gitlab_data));
+        }
+        if (data?.slack_data) {
+          setSlackUserData(JSON.parse(data.slack_data));
+        }
+        if (data?.jira_data) {
+          setJiraUserData(JSON.parse(data.jira_data));
+        }
+        if (data?.discord_data) {
+          setDiscordUserData(JSON.parse(data.discord_data));
+        }
       });
       // use getByEmail to check if user has paid
       // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
@@ -71,13 +67,10 @@ function LoginGrid({ userEmail }) {
             }}
           >
             <div className="p-3">
-              {githubUserData?.name || githubUserData?.email ? (
+              {githubUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: githubUserData?.company,
-                    user_avatar_url: githubUserData?.avatar_url,
-                    user_displayname: githubUserData?.name,
-                    user_email: githubUserData?.email,
+                    ...githubUserData,
                     service_name: "GitHub",
                   }}
                 />
@@ -87,13 +80,10 @@ function LoginGrid({ userEmail }) {
             </div>
 
             <div className="p-3">
-              {bitbucketUserData?.name || bitbucketUserData?.email ? (
+              {bitbucketUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: bitbucketUserData?.organization,
-                    user_avatar_url: bitbucketUserData?.avatar_url,
-                    user_displayname: bitbucketUserData?.name,
-                    user_email: bitbucketUserData?.email,
+                    ...bitbucketUserData,
                     service_name: "Bitbucket",
                   }}
                 />
@@ -103,13 +93,10 @@ function LoginGrid({ userEmail }) {
             </div>
 
             <div className="p-3">
-              {gitlabUserData?.name || gitlabUserData?.email ? (
+              {gitlabUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: gitlabUserData?.organization,
-                    user_avatar_url: gitlabUserData?.avatar_url,
-                    user_displayname: gitlabUserData?.name,
-                    user_email: gitlabUserData?.email,
+                    ...gitlabUserData,
                     service_name: "GitLab",
                   }}
                 />
@@ -118,13 +105,10 @@ function LoginGrid({ userEmail }) {
               )}
             </div>
             <div className="p-3">
-              {jiraUserData?.organization ? (
+              {jiraUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: jiraUserData?.organization,
-                    user_avatar_url: jiraUserData?.user_avatar_url,
-                    user_displayname: jiraUserData?.user_displayname,
-                    user_email: jiraUserData?.user_email,
+                    ...jiraUserData,
                     service_name: "Jira",
                   }}
                 />
@@ -133,13 +117,10 @@ function LoginGrid({ userEmail }) {
               )}
             </div>
             <div className="p-3">
-              {slackUserData?.user_username || slackUserData?.user_email ? (
+              {slackUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: slackUserData?.team_name,
-                    user_avatar_url: slackUserData?.user_picture_url,
-                    user_displayname: slackUserData?.user_real_name,
-                    user_email: slackUserData?.user_email,
+                    ...slackUserData,
                     service_name: "Slack",
                   }}
                 />
@@ -148,13 +129,11 @@ function LoginGrid({ userEmail }) {
               )}
             </div>
             <div className="p-3">
-              {discordUserData?.username || discordUserData?.email ? (
+              {discordUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    organization: discordUserData?.server_name,
                     user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
-                    user_displayname: discordUserData?.username,
-                    user_email: discordUserData?.email,
+                    ...discordUserData,
                     service_name: "Discord",
                   }}
                 />
