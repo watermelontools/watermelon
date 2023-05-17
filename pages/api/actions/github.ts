@@ -329,56 +329,74 @@ export default async (req, res) => {
 
         textToWrite += `\n`;
         textToWrite += "### GitHub PRs";
-        if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
-          textToWrite += `\n No results found :(`;
-        } else if (Array.isArray(ghValue) && ghValue?.length) {
-          for (let index = 0; index < ghValue?.length; index++) {
-            const element = ghValue[index];
-            textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
-            textToWrite += `\n`;
+        if (GitHubPRs) {
+          if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
+            textToWrite += `\n No results found :(`;
+          } else if (Array.isArray(ghValue) && ghValue?.length) {
+            for (let index = 0; index < ghValue?.length; index++) {
+              const element = ghValue[index];
+              textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
+              textToWrite += `\n`;
+            }
           }
+        } else {
+          textToWrite += `GitHub PRs deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
 
         textToWrite += `\n`;
 
         textToWrite += "### Jira Tickets";
-        if (jiraValue?.error === "no jira token") {
-          textToWrite += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
-        } else {
-          if (jiraValue?.length) {
-            for (let index = 0; index < jiraValue.length; index++) {
-              const element = jiraValue[index];
-              textToWrite += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
-              textToWrite += `\n`;
-            }
+        if (JiraTickets) {
+          if (jiraValue?.error === "no jira token") {
+            textToWrite += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
           } else {
-            textToWrite += `\n No results found :(`;
+            if (jiraValue?.length) {
+              for (let index = 0; index < jiraValue.length; index++) {
+                const element = jiraValue[index];
+                textToWrite += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
+                textToWrite += `\n`;
+              }
+            } else {
+              textToWrite += `\n No results found :(`;
+            }
           }
+        } else {
+          textToWrite += `Jira Ticketss deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
         textToWrite += `\n`;
 
         textToWrite += "### Slack Threads";
-        if (
-          !Array.isArray(slackValue) &&
-          slackValue?.error === "no slack token"
-        ) {
-          textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
-        } else if (Array.isArray(slackValue)) {
-          if (slackValue?.length) {
-            for (let index = 0; index < slackValue.length; index++) {
-              const element = slackValue[index];
-              textToWrite += `\n - [#${element.channel.name} - ${
-                element.username
-              }\n ${
-                element.text.length > 100
-                  ? element.text.substring(0, 100) + "..."
-                  : element.text
-              }](${element.permalink})`;
-              textToWrite += `\n`;
+        if (SlackMessages) {
+          if (
+            !Array.isArray(slackValue) &&
+            slackValue?.error === "no slack token"
+          ) {
+            textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
+          } else if (Array.isArray(slackValue)) {
+            if (slackValue?.length) {
+              for (let index = 0; index < slackValue.length; index++) {
+                const element = slackValue[index];
+                textToWrite += `\n - [#${element.channel.name} - ${
+                  element.username
+                }\n ${
+                  element.text.length > 100
+                    ? element.text.substring(0, 100) + "..."
+                    : element.text
+                }](${element.permalink})`;
+                textToWrite += `\n`;
+              }
+            } else {
+              textToWrite += `\n No results found :(`;
             }
-          } else {
-            textToWrite += `\n No results found :(`;
           }
+        } else {
+          textToWrite += `Slack Threadss deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
 
         // Fetch all comments on the PR
