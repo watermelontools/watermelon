@@ -408,7 +408,7 @@ export default async (req, res) => {
             issue_number: number,
           }
         );
-        console.log("length", comments.data.length);
+        console.log("comments.data.length", comments.data.length);
         // Find our bot's comment
         let botComment = comments.data.find((comment) =>
           comment.user.login.includes("watermelon-context")
