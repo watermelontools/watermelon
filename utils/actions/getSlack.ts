@@ -5,6 +5,7 @@ async function getSlack({
   body,
   slack_token,
   randomWords,
+  amount = 3,
 }): Promise<SlackResult> {
   let slackValue;
 
@@ -15,7 +16,7 @@ async function getSlack({
       text: `${title}`,
       user_token: slack_token,
     });
-    slackValue = response?.messages?.matches.slice(0, 3);
+    slackValue = response?.messages?.matches.slice(0, amount);
   }
   return slackValue;
 }
