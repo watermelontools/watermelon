@@ -1,10 +1,10 @@
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-import Header from "../components/Header";
-import LogInBtn from "../components/login-btn";
-import LoginGrid from "../components/loginGrid";
-import DownloadExtension from "../components/dashboard/DownloadExtension";
+import Header from "../../components/Header";
+import LogInBtn from "../../components/login-btn";
+import LoginGrid from "../../components/loginGrid";
+import DownloadExtension from "../../components/dashboard/DownloadExtension";
 
 function HomePage({}) {
   const [userEmail, setUserEmail] = useState(null);
@@ -56,12 +56,12 @@ function HomePage({}) {
                 </div>
               </div>
               <a
-                href="https://github.com/apps/watermelon-context"
+                href="https://github.com/marketplace/actions/watermelon-context-action"
                 target="_blank"
               >
                 <div className="Box d-flex flex-items-center flex-justify-start p-2">
                   <div className="p-2">
-                    <h2>Try our GitHub App</h2>
+                    <h2>Try our GitHub Action</h2>
                     <p>Context on each Pr</p>
                   </div>
                 </div>

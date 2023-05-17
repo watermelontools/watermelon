@@ -1,6 +1,13 @@
 import { Octokit } from "octokit";
-async function getGitHub({ repo, owner, github_token, randomWords }) {
-  let ghValue = {};
+type GHResult = { error: string } | any[];
+async function getGitHub({
+  repo,
+  owner,
+  github_token,
+  randomWords,
+  amount = 3,
+}): Promise<GHResult> {
+  let ghValue;
 
   // create the query with the random words and the owner
   const q = `${randomWords.join(" OR ")} org:${owner}`;
@@ -16,7 +23,7 @@ async function getGitHub({ repo, owner, github_token, randomWords }) {
       is: "pr",
       type: "pr",
     });
-    ghValue = issues.data?.items?.slice(0, 3);
+    ghValue = issues.data?.items?.slice(0, amount);
     return ghValue;
   }
 }

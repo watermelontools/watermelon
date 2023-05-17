@@ -16,6 +16,7 @@ async function getJira({
   jira_token,
   jira_refresh_token,
   randomWords,
+  amount = 3,
 }) {
   if (!jira_token || !jira_refresh_token) {
     return { error: "no jira token" };
@@ -54,7 +55,7 @@ async function getJira({
 
     // Sorting by description might be better than completely filtering out tickets without a description
     let jql = `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`;
-    
+
     let returnVal = await fetch(
       `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
       {
@@ -102,7 +103,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    return returnVal?.slice(0, 3);
+    return returnVal?.slice(0, amount);
   }
 }
 export default getJira;
