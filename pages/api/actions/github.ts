@@ -7,7 +7,7 @@ import getSlack from "../../../utils/actions/getSlack";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
 const app = new App({
-  appId: process.env.GITHUB_APP_ID,
+  appId: process.env.GITHUB_APP_IDx,
   privateKey: process.env.GITHUB_PRIVATE_KEY,
 });
 
@@ -422,8 +422,8 @@ export default async (req, res) => {
           comment.user.login.includes("watermelon-context")
         );
         console.log("bc", botComment);
-        console.log("bcID", botComment.id);
         if (botComment) {
+          console.log("bcID", botComment.id);
           // Update the existing comment
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
