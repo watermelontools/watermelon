@@ -4,6 +4,7 @@
 yarn
 yarn dev
 ```
+(Check your node version, we recommend 18)
 
 We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
 
