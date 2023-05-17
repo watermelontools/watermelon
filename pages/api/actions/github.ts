@@ -414,8 +414,8 @@ export default async (req, res) => {
           comment.user.login.includes("watermelon-context")
         );
         console.log("bc", botComment);
-        console.log("bcID", botComment.id);
         if (botComment) {
+        console.log("bcID", botComment.id);
           // Update the existing comment
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
