@@ -394,7 +394,7 @@ export default async (req, res) => {
             }
           }
         } else {
-          textToWrite += `Slack Threadss deactivated by ${pull_request.user.login}`;
+          textToWrite += `Slack Threads deactivated by ${pull_request.user.login}`;
 
           textToWrite += `\n`;
         }
