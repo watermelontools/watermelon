@@ -51,6 +51,10 @@ export default async (req, res) => {
           jira_refresh_token,
           slack_token,
           cloudId,
+          AISummary,
+          JiraTickets,
+          GitHubPRs,
+          SlackMessages,
           user_email,
         } = wmUserData;
         let octoCommitList = await octokit.request(
@@ -278,6 +282,7 @@ export default async (req, res) => {
             owner,
             github_token,
             randomWords,
+            amount: GitHubPRs,
           }),
           getJira({
             user: user_email,
@@ -286,79 +291,112 @@ export default async (req, res) => {
             jira_token,
             jira_refresh_token,
             randomWords,
+            amount: JiraTickets,
           }),
-          getSlack({ title, body, slack_token, randomWords }),
+          getSlack({
+            title,
+            body,
+            slack_token,
+            randomWords,
+            amount: SlackMessages,
+          }),
         ]);
-
-        const businessLogicSummary = await getOpenAISummary({
-          ghValue,
-          commitList,
-          jiraValue,
-          slackValue,
-          title,
-          body,
-        });
+        let businessLogicSummary;
         let textToWrite = "";
 
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
-        if (businessLogicSummary) {
-          textToWrite += businessLogicSummary;
-          textToWrite += `\n`;
-        } else {
-          textToWrite += "Error getting summary" + businessLogicSummary.error;
-        }
-        textToWrite += "### GitHub PRs";
-        if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
-          textToWrite += `\n No results found :(`;
-        } else if (Array.isArray(ghValue) && ghValue?.length) {
-          for (let index = 0; index < ghValue?.length; index++) {
-            const element = ghValue[index];
-            textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
-            textToWrite += `\n`;
+
+        if (AISummary) {
+          businessLogicSummary = await getOpenAISummary({
+            ghValue,
+            commitList,
+            jiraValue,
+            slackValue,
+            title,
+            body,
+          });
+
+          if (businessLogicSummary) {
+            console.log(businessLogicSummary);
+            textToWrite += businessLogicSummary;
+          } else {
+            textToWrite += "Error getting summary" + businessLogicSummary.error;
           }
+        } else {
+          textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
+        }
+
+        textToWrite += `\n`;
+        textToWrite += "### GitHub PRs";
+        if (GitHubPRs) {
+          if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
+            textToWrite += `\n No results found :(`;
+          } else if (Array.isArray(ghValue) && ghValue?.length) {
+            for (let index = 0; index < ghValue?.length; index++) {
+              const element = ghValue[index];
+              textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
+              textToWrite += `\n`;
+            }
+          }
+        } else {
+          textToWrite += `GitHub PRs deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
 
         textToWrite += `\n`;
 
         textToWrite += "### Jira Tickets";
-        if (jiraValue?.error === "no jira token") {
-          textToWrite += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
-        } else {
-          if (jiraValue?.length) {
-            for (let index = 0; index < jiraValue.length; index++) {
-              const element = jiraValue[index];
-              textToWrite += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
-              textToWrite += `\n`;
-            }
+        if (JiraTickets) {
+          if (jiraValue?.error === "no jira token") {
+            textToWrite += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
           } else {
-            textToWrite += `\n No results found :(`;
+            if (jiraValue?.length) {
+              for (let index = 0; index < jiraValue.length; index++) {
+                const element = jiraValue[index];
+                textToWrite += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
+                textToWrite += `\n`;
+              }
+            } else {
+              textToWrite += `\n No results found :(`;
+            }
           }
+        } else {
+          textToWrite += `Jira Tickets deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
         textToWrite += `\n`;
 
         textToWrite += "### Slack Threads";
-        if (
-          !Array.isArray(slackValue) &&
-          slackValue?.error === "no slack token"
-        ) {
-          textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
-        } else if (Array.isArray(slackValue)) {
-          if (slackValue?.length) {
-            for (let index = 0; index < slackValue.length; index++) {
-              const element = slackValue[index];
-              textToWrite += `\n - [#${element.channel.name} - ${
-                element.username
-              }\n ${
-                element.text.length > 100
-                  ? element.text.substring(0, 100) + "..."
-                  : element.text
-              }](${element.permalink})`;
-              textToWrite += `\n`;
+        if (SlackMessages) {
+          if (
+            !Array.isArray(slackValue) &&
+            slackValue?.error === "no slack token"
+          ) {
+            textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
+          } else if (Array.isArray(slackValue)) {
+            if (slackValue?.length) {
+              for (let index = 0; index < slackValue.length; index++) {
+                const element = slackValue[index];
+                textToWrite += `\n - [#${element.channel.name} - ${
+                  element.username
+                }\n ${
+                  element.text.length > 100
+                    ? element.text.substring(0, 100) + "..."
+                    : element.text
+                }](${element.permalink})`;
+                textToWrite += `\n`;
+              }
+            } else {
+              textToWrite += `\n No results found :(`;
             }
-          } else {
-            textToWrite += `\n No results found :(`;
           }
+        } else {
+          textToWrite += `Slack Threads deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
         }
         // Add a comment to the pull request
         const comment = {
@@ -369,17 +407,52 @@ export default async (req, res) => {
           body: "Thank you for your pull request! We will review it shortly.",
         };
 
-        await octokit
-          .request(
-            `POST /repos/${repository.owner.login}/${repository.name}/issues/${pull_request.number}/comments`,
-            comment
-          )
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // Fetch all comments on the PR
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/comments",
+          {
+            owner,
+            repo,
+            issue_number: number,
+          }
+        );
+        console.log("length", comments.data.length);
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) =>
+          comment.user.login.includes("watermelon-context")
+        );
+        console.log("bc", botComment);
+        console.log("bcID", botComment.id);
+        if (botComment) {
+          // Update the existing comment
+          await octokit.request(
+            "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+            {
+              owner,
+              repo,
+              comment_id: botComment.id,
+              body: textToWrite,
+            }
+          );
+        } else {
+          // Post a new comment if no existing comment was found
+          await octokit
+            .request(
+              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+              {
+                owner,
+                issue_number: number,
+                repo,
+                body: textToWrite,
+              }
+            )
+            .then((response) => {
+              console.log(response.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       }
 
       res.status(200).send("Webhook event processed");
