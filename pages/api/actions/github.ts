@@ -415,7 +415,7 @@ export default async (req, res) => {
         );
         console.log("bc", botComment);
         if (botComment) {
-        console.log("bcID", botComment.id);
+          console.log("bcID", botComment.id);
           // Update the existing comment
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
