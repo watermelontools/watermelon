@@ -5,7 +5,6 @@ yarn
 yarn dev
 ```
 
-aaaa
 We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
 
 This repo is automatically deployed on vercel to [app.watermelon.tools](app.watermelon.tools) on merges to `main`.
