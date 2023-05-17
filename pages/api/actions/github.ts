@@ -301,25 +301,33 @@ export default async (req, res) => {
             amount: SlackMessages,
           }),
         ]);
-
-        const businessLogicSummary = await getOpenAISummary({
-          ghValue,
-          commitList,
-          jiraValue,
-          slackValue,
-          title,
-          body,
-        });
+        let businessLogicSummary;
         let textToWrite = "";
 
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
-        if (businessLogicSummary) {
-          textToWrite += businessLogicSummary;
-          textToWrite += `\n`;
+
+        if (AISummary) {
+          businessLogicSummary = await getOpenAISummary({
+            ghValue,
+            commitList,
+            jiraValue,
+            slackValue,
+            title,
+            body,
+          });
+
+          if (businessLogicSummary) {
+            console.log(businessLogicSummary);
+            textToWrite += businessLogicSummary;
+          } else {
+            textToWrite += "Error getting summary" + businessLogicSummary.error;
+          }
         } else {
-          textToWrite += "Error getting summary" + businessLogicSummary.error;
+          textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
         }
+
+        textToWrite += `\n`;
         textToWrite += "### GitHub PRs";
         if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
           textToWrite += `\n No results found :(`;
