@@ -363,7 +363,7 @@ export default async (req, res) => {
             }
           }
         } else {
-          textToWrite += `Jira Ticketss deactivated by ${pull_request.user.login}`;
+          textToWrite += `Jira Tickets deactivated by ${pull_request.user.login}`;
 
           textToWrite += `\n`;
         }
