@@ -37,11 +37,9 @@ export default function Header() {
               <li>
                 <a
                   className="dropdown-item"
-                  href={
-                    "https://github.com/marketplace/actions/watermelon-context-action"
-                  }
+                  href={"https://github.com/apps/watermelon-context"}
                 >
-                  GitHub Action
+                  GitHub App
                 </a>
               </li>
               <li>
