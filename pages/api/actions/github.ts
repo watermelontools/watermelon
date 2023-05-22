@@ -404,7 +404,7 @@ export default async (req, res) => {
 
         // Fetch all comments on the PR
         const comments = await octokit.request(
-          "GET /repos/{owner}/{repo}/issues/comments",
+          "GET /repos/{owner}/{repo}/issues/comments?sort=created&direction=desc",
           {
             owner,
             repo,
