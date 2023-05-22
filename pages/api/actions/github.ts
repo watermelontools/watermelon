@@ -5,6 +5,7 @@ import getGitHub from "../../../utils/actions/getGitHub";
 import getJira from "../../../utils/actions/getJira";
 import getSlack from "../../../utils/actions/getSlack";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
+import addActionCount from "../../../utils/db/teams/addActionCount";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID,
@@ -56,6 +57,7 @@ export default async (req, res) => {
           GitHubPRs,
           SlackMessages,
           user_email,
+          watermelon_user,
         } = wmUserData;
         let octoCommitList = await octokit.request(
           "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
@@ -445,8 +447,8 @@ export default async (req, res) => {
               console.log(error);
             });
         }
+        await addActionCount({ watermelon_user });
       }
-
       res.status(200).send("Webhook event processed");
     } catch (error) {
       console.error(error);
