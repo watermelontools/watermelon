@@ -305,6 +305,7 @@ export default async (req, res) => {
         ]);
         let businessLogicSummary;
         let textToWrite = "";
+        addActionCount({ watermelon_user });
 
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
@@ -447,9 +448,6 @@ export default async (req, res) => {
               console.log(error);
             });
         }
-        console.log("addActionCount");
-        await addActionCount({ watermelon_user });
-        console.log("addActionCount done");
       }
       res.status(200).send("Webhook event processed");
     } catch (error) {
