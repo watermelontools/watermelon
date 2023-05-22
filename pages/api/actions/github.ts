@@ -447,7 +447,9 @@ export default async (req, res) => {
               console.log(error);
             });
         }
+        console.log("addActionCount");
         await addActionCount({ watermelon_user });
+        console.log("addActionCount done");
       }
       res.status(200).send("Webhook event processed");
     } catch (error) {
