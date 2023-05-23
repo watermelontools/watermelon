@@ -14,6 +14,11 @@ export default NextAuth({
   pages: {
     verifyRequest: "/auth/verify",
   },
+  theme: {
+    colorScheme: "dark", // "auto" | "dark" | "light"
+    brandColor: "#238636", // Hex color code
+    logo: "public/logo.png", // Absolute URL to image
+  },
   // Configure one or more authentication providers
   providers: [
     EmailProvider({
