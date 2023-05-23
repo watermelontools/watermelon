@@ -7,7 +7,7 @@ import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
-
+import NotionLoginLink from "./NotionLoginLink";
 import getAllUserData from "../utils/api/getAllUserData";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
 
@@ -18,6 +18,7 @@ function LoginGrid({ userEmail }) {
   const [gitlabUserData, setGitlabUserData] = useState(null);
   const [slackUserData, setSlackUserData] = useState(null);
   const [discordUserData, setDiscordUserData] = useState(null);
+  const [notionUserData, setNotionUserData] = useState(null);
   const [hasPaid, setHasPaid] = useState(false);
 
   useEffect(() => {
@@ -40,6 +41,9 @@ function LoginGrid({ userEmail }) {
         }
         if (data?.discord_data) {
           setDiscordUserData(JSON.parse(data.discord_data));
+        }
+        if (data?.notion_data) {
+          setNotionUserData(JSON.parse(data.notion_data));
         }
       });
       // use getByEmail to check if user has paid
@@ -139,6 +143,19 @@ function LoginGrid({ userEmail }) {
                 />
               ) : (
                 <DiscordLoginLink userEmail={userEmail} />
+              )}
+            </div>
+            <div className="p-3">
+              {notionUserData?.user_displayname ? (
+                <InfoPanel
+                  info={{
+                    user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
+                    ...discordUserData,
+                    service_name: "Notion",
+                  }}
+                />
+              ) : (
+                <NotionLoginLink userEmail={userEmail} />
               )}
             </div>
           </div>
