@@ -132,7 +132,10 @@ function LoginGrid({ userEmail }) {
                 <SlackLoginLink userEmail={userEmail} />
               )}
             </div>
-            <div className="p-3">
+            {/*         
+  DISCORD DOES NOT ALLOW MESSAGE SEARCH, DEVELOPMENT PAUSED FOR NOW
+  MAYBE READ THE LAST FEW DAYS?
+    <div className="p-3">
               {discordUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
@@ -144,7 +147,7 @@ function LoginGrid({ userEmail }) {
               ) : (
                 <DiscordLoginLink userEmail={userEmail} />
               )}
-            </div>
+            </div> */}
             {/* <div className="p-3">
               {notionUserData?.user_displayname ? (
                 <InfoPanel
