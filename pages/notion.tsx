@@ -71,7 +71,9 @@ export async function getServerSideProps(context) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Basic "${process.env.NOTION_CLIENT_ID}:${process.env.NOTION_CLIENT_SECRET}"`,
+        Authorization: `Basic "${btoa(
+          process.env.NOTION_CLIENT_ID + ":" + process.env.NOTION_CLIENT_SECRET
+        )}"`,
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
@@ -85,6 +87,7 @@ export async function getServerSideProps(context) {
         error: "no code",
       },
     };
+  console.log(f);
   const json = await f.json();
   if (json.error) {
     return {
