@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/gitlab/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error, json }) {
+export default function GitHub({ login, avatar_url, userEmail, error }) {
   console.log(json);
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
@@ -72,13 +72,12 @@ export async function getServerSideProps(context) {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        Authorization: `Basic "${process.env.NOTION_CLIENT_ID}:${process.env.NOTION_CLIENT_SECRET}"`,
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
         redirect_uri: "https://app.watermelontools.com/notion",
-        client_id: process.env.NOTION_APP_ID,
-        client_secret: process.env.NOTION_CLIENT_SECRET,
       }),
     });
   } else
@@ -87,7 +86,6 @@ export async function getServerSideProps(context) {
         error: "no code",
       },
     };
-  console.log("f", f);
   const json = await f.json();
   if (json.error) {
     return {
@@ -96,15 +94,12 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    console.log(json);
-
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
         login: json.workspace_name,
         avatar_url: json.workspace_icon,
-        json,
       },
     };
   }
