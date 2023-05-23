@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/gitlab/saveUser";
+import saveUser from "../utils/db/notion/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
   const [hasPaid, setHasPaid] = useState(false);
@@ -97,6 +97,20 @@ export async function getServerSideProps(context) {
     };
   } else {
     console.log(json);
+    saveUser({
+      watermelon_user: context.query.state,
+      access_token: json.access_token,
+      token_type: json.token_type,
+      bot_id: json.bot_id,
+      workspace_name: json.workspace_name,
+      workspace_icon: json.workspace_icon,
+      workspace_id: json.workspace_id,
+      owner_type: json.owner_type,
+      owner_user_object: json.owner_user_object,
+      owner_user_id: json.owner_user_id,
+      duplicated_template_id: json.duplicated_template_id,
+    });
+    }
     return {
       props: {
         loggedIn: true,
