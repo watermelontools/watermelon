@@ -93,6 +93,7 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
+    console.log(json);
     return {
       props: {
         loggedIn: true,
