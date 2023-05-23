@@ -265,7 +265,7 @@ function LoginGrid({ userEmail, data }) {
                 )}
               </div>
             </div>
-            <div className="p-3">
+            {/* <div className="p-3">
               {notionUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
@@ -277,7 +277,7 @@ function LoginGrid({ userEmail, data }) {
               ) : (
                 <NotionLoginLink userEmail={userEmail} />
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       )}
