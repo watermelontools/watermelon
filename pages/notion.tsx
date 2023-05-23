@@ -3,7 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/gitlab/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error }) {
+export default function GitHub({ login, avatar_url, userEmail, error, json }) {
+  console.log(json);
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
@@ -102,6 +103,7 @@ export async function getServerSideProps(context) {
         userEmail: context.query.state,
         login: json.workspace_name,
         avatar_url: json.workspace_icon,
+        json,
       },
     };
   }
