@@ -4,7 +4,6 @@ import Link from "next/link";
 import saveUserInfo from "../utils/db/gitlab/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
 export default function GitHub({ login, avatar_url, userEmail, error }) {
-  console.log(json);
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
