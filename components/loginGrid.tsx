@@ -145,7 +145,7 @@ function LoginGrid({ userEmail }) {
                 <DiscordLoginLink userEmail={userEmail} />
               )}
             </div>
-            <div className="p-3">
+            {/* <div className="p-3">
               {notionUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
@@ -157,7 +157,7 @@ function LoginGrid({ userEmail }) {
               ) : (
                 <NotionLoginLink userEmail={userEmail} />
               )}
-            </div>
+            </div> */}
           </div>
           <div
             style={{
