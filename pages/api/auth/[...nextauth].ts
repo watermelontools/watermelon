@@ -11,6 +11,9 @@ export default NextAuth({
       return session;
     },
   },
+  pages: {
+    verifyRequest: "/auth/verify",
+  },
   // Configure one or more authentication providers
   providers: [
     EmailProvider({
