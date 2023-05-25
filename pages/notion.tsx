@@ -109,7 +109,7 @@ export async function getServerSideProps(context) {
       owner_user_id: json.owner.user.id,
       duplicated_template_id: json.duplicated_template_id,
     });
-    await fetch(`https://api.notion.com/v1/users/json.owner.user.id`, {
+    await fetch(`https://api.notion.com/v1/users/${json.owner.user.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
