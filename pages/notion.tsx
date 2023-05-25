@@ -40,7 +40,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with GitLab as {login}
+          You have logged in with Notion as {login}
         </h2>
       </div>
       <img
@@ -109,6 +109,18 @@ export async function getServerSideProps(context) {
       owner_user_id: json.owner.user.id,
       duplicated_template_id: json.duplicated_template_id,
     });
+    await fetch(`https://api.notion.com/v1/users/json.owner.user.id`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${json.access_token}`,
+        "Notion-Version": "2021-05-13",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      });
   }
   return {
     props: {
