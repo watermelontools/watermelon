@@ -105,19 +105,18 @@ export async function getServerSideProps(context) {
       workspace_name: json.workspace_name,
       workspace_icon: json.workspace_icon,
       workspace_id: json.workspace_id,
-      owner_type: json.owner_type,
-      owner_user_object: json.owner_user_object,
-      owner_user_id: json.owner_user_id,
+      owner_type: json.owner,
+      owner_user_object: json.owner.user,
+      owner_user_id: json.owner.user.id,
       duplicated_template_id: json.duplicated_template_id,
     });
-    }
-    return {
-      props: {
-        loggedIn: true,
-        userEmail: context.query.state,
-        login: json.workspace_name,
-        avatar_url: json.workspace_icon,
-      },
-    };
   }
+  return {
+    props: {
+      loggedIn: true,
+      userEmail: context.query.state,
+      login: json.workspace_name,
+      avatar_url: json.workspace_icon,
+    },
+  };
 }
