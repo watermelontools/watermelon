@@ -87,7 +87,6 @@ export async function getServerSideProps(context) {
         error: "no code",
       },
     };
-  console.log(f);
   const json = await f.json();
   if (json.error) {
     return {
@@ -97,7 +96,7 @@ export async function getServerSideProps(context) {
     };
   } else {
     console.log(json);
-    saveUser({
+    await saveUser({
       watermelon_user: context.query.state,
       access_token: json.access_token,
       token_type: json.token_type,
