@@ -312,7 +312,7 @@ export default async (req, res) => {
             }),
           ]
         );
-        console.log(notionValue);
+        console.log("notionValue", notionValue);
         let businessLogicSummary;
         let textToWrite = "";
         addActionCount({ watermelon_user });
@@ -331,7 +331,7 @@ export default async (req, res) => {
           });
 
           if (businessLogicSummary) {
-            console.log(businessLogicSummary);
+            console.log("businessLogicSummary", businessLogicSummary);
             textToWrite += businessLogicSummary;
           } else {
             textToWrite += "Error getting summary" + businessLogicSummary.error;
@@ -451,10 +451,10 @@ export default async (req, res) => {
               }
             )
             .then((response) => {
-              console.log(response.data);
+              console.log("post comment", response.data);
             })
             .catch((error) => {
-              console.log(error);
+              console.error(error);
             });
         }
       }
