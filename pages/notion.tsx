@@ -96,6 +96,19 @@ export async function getServerSideProps(context) {
     };
   } else {
     console.log(json);
+
+    let userInfo = await fetch(
+      `https://api.notion.com/v1/users/${json.owner.user.id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${json.access_token}`,
+          "Notion-Version": "2021-05-13",
+        },
+      }
+    ).then((res) => res.json());
+
     await saveUser({
       watermelon_user: context.query.state,
       access_token: json.access_token,
@@ -108,19 +121,11 @@ export async function getServerSideProps(context) {
       owner_user_object: json.owner.user,
       owner_user_id: json.owner.user.id,
       duplicated_template_id: json.duplicated_template_id,
+      user_id: userInfo.id,
+      user_name: userInfo.name,
+      user_avatar_url: userInfo.avatar_url,
+      user_email: userInfo.person.email,
     });
-    await fetch(`https://api.notion.com/v1/users/${json.owner.user.id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${json.access_token}`,
-        "Notion-Version": "2021-05-13",
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
   }
   return {
     props: {
