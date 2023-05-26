@@ -321,6 +321,7 @@ export default async (req, res) => {
         textToWrite += `\n`;
 
         if (AISummary) {
+          console.log("getting AISummary", AISummary);
           businessLogicSummary = await getOpenAISummary({
             ghValue,
             commitList,
@@ -413,14 +414,7 @@ export default async (req, res) => {
         }
 
         // Fetch all comments on the PR
-        console.log("request to get comments", {
-          owner,
-          repo,
-          issue_number: number,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-        });
+        console.log("request to get comments", number);
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
           {
