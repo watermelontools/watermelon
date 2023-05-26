@@ -269,8 +269,7 @@ function LoginGrid({ userEmail, data }) {
               {notionUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
-                    user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
-                    ...discordUserData,
+                    ...notionUserData,
                     service_name: "Notion",
                   }}
                 />
