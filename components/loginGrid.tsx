@@ -82,7 +82,6 @@ function LoginGrid({ userEmail }) {
                 <GitHubLoginLink userEmail={userEmail} />
               )}
             </div>
-
             <div className="p-3">
               {bitbucketUserData?.user_displayname ? (
                 <InfoPanel
@@ -95,7 +94,6 @@ function LoginGrid({ userEmail }) {
                 <BitbucketLoginLink userEmail={userEmail} />
               )}
             </div>
-
             <div className="p-3">
               {gitlabUserData?.user_displayname ? (
                 <InfoPanel
@@ -148,7 +146,7 @@ function LoginGrid({ userEmail }) {
                 <DiscordLoginLink userEmail={userEmail} />
               )}
             </div> */}
-            {/* <div className="p-3">
+            <div className="p-3">
               {notionUserData?.user_displayname ? (
                 <InfoPanel
                   info={{
@@ -160,7 +158,8 @@ function LoginGrid({ userEmail }) {
               ) : (
                 <NotionLoginLink userEmail={userEmail} />
               )}
-            </div> */}
+            </div>
+            */
           </div>
           <div
             style={{
