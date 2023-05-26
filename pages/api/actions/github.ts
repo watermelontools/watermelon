@@ -5,6 +5,8 @@ import getGitHub from "../../../utils/actions/getGitHub";
 import getJira from "../../../utils/actions/getJira";
 import getSlack from "../../../utils/actions/getSlack";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
+import addActionCount from "../../../utils/db/teams/addActionCount";
+import getNotion from "../../../utils/actions/getNotion";
 
 const app = new App({
   appId: process.env.GITHUB_APP_IDx,
@@ -50,6 +52,7 @@ export default async (req, res) => {
           jira_token,
           jira_refresh_token,
           slack_token,
+          notion_token,
           cloudId,
           AISummary,
           JiraTickets,
@@ -276,31 +279,38 @@ export default async (req, res) => {
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
 
-        const [ghValue, jiraValue, slackValue] = await Promise.all([
-          getGitHub({
-            repo,
-            owner,
-            github_token,
-            randomWords,
-            amount: GitHubPRs,
-          }),
-          getJira({
-            user: user_email,
-            title,
-            body,
-            jira_token,
-            jira_refresh_token,
-            randomWords,
-            amount: JiraTickets,
-          }),
-          getSlack({
-            title,
-            body,
-            slack_token,
-            randomWords,
-            amount: SlackMessages,
-          }),
-        ]);
+        const [ghValue, jiraValue, slackValue, notionValue] = await Promise.all(
+          [
+            getGitHub({
+              repo,
+              owner,
+              github_token,
+              randomWords,
+              amount: GitHubPRs,
+            }),
+            getJira({
+              user: user_email,
+              title,
+              body,
+              jira_token,
+              jira_refresh_token,
+              randomWords,
+              amount: JiraTickets,
+            }),
+            getSlack({
+              title,
+              body,
+              slack_token,
+              randomWords,
+              amount: SlackMessages,
+            }),
+            getNotion({
+              notion_token,
+              randomWords,
+              amount: 3,
+            }),
+          ]
+        );
         let businessLogicSummary;
         let textToWrite = "";
 
