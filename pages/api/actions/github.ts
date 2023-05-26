@@ -418,12 +418,23 @@ export default async (req, res) => {
         };
 
         // Fetch all comments on the PR
+        console.log("request to get comments", {
+          owner,
+          repo,
+          issue_number: number,
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        });
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/comments",
           {
             owner,
             repo,
             issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
           }
         );
         console.log("length", comments.data.length);
@@ -460,14 +471,13 @@ export default async (req, res) => {
               console.log(response.data);
             })
             .catch((error) => {
-              console.log(error);
+              return console.error("posting comment error", error);
             });
         }
       }
-
-      res.status(200).send("Webhook event processed");
+      return res.status(200).send("Webhook event processed");
     } catch (error) {
-      console.error(error);
+      console.error("general action processing error", error);
       res.status(500).send("Error processing webhook event");
     }
   } else {
