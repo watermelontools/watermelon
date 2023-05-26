@@ -312,6 +312,7 @@ export default async (req, res) => {
             }),
           ]
         );
+        console.log(notionValue);
         let businessLogicSummary;
         let textToWrite = "";
         addActionCount({ watermelon_user });
