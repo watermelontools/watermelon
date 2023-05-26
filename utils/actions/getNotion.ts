@@ -31,8 +31,7 @@ async function getNotion({ notion_token, randomWords, amount = 3 }) {
         console.error("notion error", error);
       });
 
-    console.log(returnVal);
-    return returnVal?.slice(0, amount);
+    return returnVal?.results?.slice(0, amount);
   }
 }
 export default getNotion;
