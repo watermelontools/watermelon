@@ -26,9 +26,8 @@ async function getNotion({ notion_token, randomWords, amount = 3 }) {
       }),
     })
       .then((res) => res.json())
-      .then((resJson) => resJson.issues)
       .catch((error) => {
-        console.error(error);
+        console.error("notion error", error);
       });
 
     console.log(returnVal);
