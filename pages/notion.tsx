@@ -3,7 +3,13 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUser from "../utils/db/notion/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error }) {
+export default function GitHub({
+  login,
+  avatar_url,
+  userEmail,
+  workspace,
+  error,
+}) {
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
@@ -40,7 +46,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Notion as {login}
+          You have logged in with Notion as {login} in the workspace {workspace}
         </h2>
       </div>
       <img
@@ -106,7 +112,6 @@ export async function getServerSideProps(context) {
         },
       }
     ).then((res) => res.json());
-    console.log(userInfo);
     await saveUser({
       watermelon_user: context.query.state,
       access_token: json.access_token,
@@ -124,13 +129,14 @@ export async function getServerSideProps(context) {
       user_avatar_url: userInfo.avatar_url,
       user_email: userInfo.person.email,
     });
+    return {
+      props: {
+        loggedIn: true,
+        userEmail: context.query.state,
+        login: userInfo.name,
+        avatar_url: userInfo.avatar_url,
+        workspace: json.workspace_name,
+      },
+    };
   }
-  return {
-    props: {
-      loggedIn: true,
-      userEmail: context.query.state,
-      login: json.workspace_name,
-      avatar_url: json.workspace_icon,
-    },
-  };
 }
