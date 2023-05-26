@@ -316,7 +316,7 @@ export default async (req, res) => {
         let businessLogicSummary;
         let textToWrite = "";
         addActionCount({ watermelon_user });
-
+        console.log("added action value");
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
 
