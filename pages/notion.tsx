@@ -95,8 +95,6 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    console.log(json);
-
     let userInfo = await fetch(
       `https://api.notion.com/v1/users/${json.owner.user.id}`,
       {
@@ -108,7 +106,7 @@ export async function getServerSideProps(context) {
         },
       }
     ).then((res) => res.json());
-
+    console.log(userInfo);
     await saveUser({
       watermelon_user: context.query.state,
       access_token: json.access_token,
