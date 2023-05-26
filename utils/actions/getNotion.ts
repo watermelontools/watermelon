@@ -20,6 +20,7 @@ async function getNotion({ notion_token, randomWords, amount = 3 }) {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${notion_token}`,
+        "Notion-Version": "2022-06-28",
       },
       body: JSON.stringify({
         query: cleanRW.join(" "),
