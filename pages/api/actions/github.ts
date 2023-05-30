@@ -58,6 +58,7 @@ export default async (req, res) => {
           JiraTickets,
           GitHubPRs,
           SlackMessages,
+          NotionPages,
           user_email,
           watermelon_user,
         } = wmUserData;
@@ -308,7 +309,7 @@ export default async (req, res) => {
             getNotion({
               notion_token,
               randomWords,
-              amount: 3,
+              amount: NotionPages,
             }),
           ]
         );
@@ -409,6 +410,25 @@ export default async (req, res) => {
           }
         } else {
           textToWrite += `Slack Threads deactivated by ${pull_request.user.login}`;
+
+          textToWrite += `\n`;
+        }
+        textToWrite += `\n`;
+        textToWrite += "### Notion Pages";
+        if (NotionPages) {
+          if (Array.isArray(notionValue)) {
+            if (notionValue?.length) {
+              for (let index = 0; index < notionValue.length; index++) {
+                const element = notionValue[index];
+                textToWrite += `\n - [${element.title} - ${element.url}](${element.url})`;
+                textToWrite += `\n`;
+              }
+            } else {
+              textToWrite += `\n No results found :(`;
+            }
+          }
+        } else {
+          textToWrite += `Notion Pages deactivated by ${pull_request.user.login}`;
 
           textToWrite += `\n`;
         }
