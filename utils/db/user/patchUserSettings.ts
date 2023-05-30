@@ -6,7 +6,7 @@ export default async function updateUserSettings(
 ): Promise<any> {
   try {
     let data = await executeRequest(
-      `EXEC dbo.update_userSettings @watermelon_user = '${user}', @AISummary='${userSettings.AISummary}', @JiraTickets='${userSettings.JiraTickets}', @SlackMessages='${userSettings.SlackMessages}', @GitHubPRs='${userSettings.GitHubPRs}'`
+      `EXEC dbo.update_userSettings @watermelon_user = '${user}', @AISummary='${userSettings.AISummary}', @JiraTickets='${userSettings.JiraTickets}', @SlackMessages='${userSettings.SlackMessages}', @GitHubPRs='${userSettings.GitHubPRs}', @NotionPages= '${userSettings.NotionPages}'`
     );
     return data;
   } catch (err) {
