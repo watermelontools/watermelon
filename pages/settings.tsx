@@ -23,6 +23,7 @@ function HomePage({}) {
     JiraTickets: 3,
     SlackMessages: 3,
     GitHubPRs: 3,
+    NotionPages: 3,
     AISummary: 1,
   });
 
@@ -40,7 +41,8 @@ function HomePage({}) {
         response.AISummary === formState.AISummary ||
         response.JiraTickets === formState.JiraTickets ||
         response.SlackMessages === formState.SlackMessages ||
-        response.GitHubPRs === formState.GitHubPRs
+        response.GitHubPRs === formState.GitHubPRs ||
+        response.NotionPages === formState.NotionPages
       ) {
         setUserSettingsState(session?.user?.email);
       } else {
@@ -137,6 +139,30 @@ function HomePage({}) {
                       })}
                     </select>
                   </div>
+
+                  <div className="">
+                    <span>Notion Pages:</span>
+                    <select
+                      className="form-select"
+                      aria-label="Amount of Notion Pages"
+                      defaultValue={formState?.NotionPages}
+                      value={formState.NotionPages}
+                      onChange={(e) =>
+                        setFormState({
+                          ...formState,
+                          NotionPages: parseInt(e.target.value),
+                        })
+                      }
+                    >
+                      {Array.from(Array(11)).map((i, index) => {
+                        if (index === 0) {
+                          return null;
+                        }
+                        return <option value={index}>{index}</option>;
+                      })}
+                    </select>
+                  </div>
+
                   <div className="">
                     <span>AI Summary: </span>
                     <select
