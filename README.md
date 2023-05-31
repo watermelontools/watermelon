@@ -34,3 +34,5 @@ The developer has to match the `utils` folder structure to the `api` route schem
 We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
 
 ### New integrations
+
+To integrate a new service, several steps are to be taken, but it's pretty much copying code.
