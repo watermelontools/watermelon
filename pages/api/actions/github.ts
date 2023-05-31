@@ -421,7 +421,13 @@ export default async (req, res) => {
             if (notionValue?.length) {
               for (let index = 0; index < notionValue.length; index++) {
                 const element = notionValue[index];
-                textToWrite += `\n - [${element.title} - ${element.url}](${element.url})`;
+                textToWrite += `\n - [${
+                  element?.icon.type === "external"
+                    ? `![Page icon](${element?.icon.external.url} "Page icon")`
+                    : element?.icon.type === "emoji"
+                    ? `![Page icon](${element?.icon.emoji} "Page icon")`
+                    : ""
+                } ${element.properties.title.plain_text}](${element.url})`;
                 textToWrite += `\n`;
               }
             } else {
