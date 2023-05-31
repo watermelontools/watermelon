@@ -36,3 +36,5 @@ We do all of this as a security measure. We don't want data exposed and we consi
 ### New integrations
 
 To integrate a new service, several steps are to be taken, but it's pretty much copying code.
+
+First, we use oauth so you need to ensure that the service supports it.
