@@ -427,7 +427,9 @@ export default async (req, res) => {
                     : element?.icon.type === "emoji"
                     ? `![Page icon](${element?.icon.emoji} "Page icon")`
                     : ""
-                } ${element.properties.title.plain_text}](${element.url})`;
+                } ${element.properties.title.title.plain_text}](${
+                  element.url
+                })`;
                 textToWrite += `\n`;
               }
             } else {
