@@ -158,7 +158,6 @@ function LoginGrid({ userEmail }) {
                 <NotionLoginLink userEmail={userEmail} />
               )}
             </div>
-            */
           </div>
           <div
             style={{
