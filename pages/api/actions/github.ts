@@ -415,6 +415,7 @@ export default async (req, res) => {
         }
         textToWrite += `\n`;
         textToWrite += "### Notion Pages";
+        textToWrite += `\n`;
         if (NotionPages) {
           if (Array.isArray(notionValue)) {
             if (notionValue?.length) {
