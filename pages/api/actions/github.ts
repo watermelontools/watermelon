@@ -423,9 +423,9 @@ export default async (req, res) => {
                 const element = notionValue[index];
                 textToWrite += `\n - [${
                   element?.icon.type === "external"
-                    ? `![Page icon](${element?.icon.external.url} "Page icon")`
+                    ? `<img src="${element?.icon.external.url}" alt="Page icon" width="20" height="20" />`
                     : element?.icon.type === "emoji"
-                    ? `![Page icon](${element?.icon.emoji} "Page icon")`
+                    ? `<img src="${element?.icon.emoji}" alt="Page icon" width="20" height="20" />`
                     : ""
                 } ${element.properties.title.title.plain_text}](${
                   element.url
