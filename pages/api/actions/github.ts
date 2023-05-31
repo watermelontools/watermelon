@@ -417,7 +417,9 @@ export default async (req, res) => {
         textToWrite += "### Notion Pages";
         textToWrite += `\n`;
         if (NotionPages) {
-          if (Array.isArray(notionValue)) {
+          if (notionValue?.error === "no notion token") {
+            textToWrite += `\n [Click here to login to Notion](https://app.watermelontools.com)`;
+          } else if (Array.isArray(notionValue)) {
             if (notionValue?.length) {
               for (let index = 0; index < notionValue.length; index++) {
                 const element = notionValue[index];
