@@ -16,7 +16,10 @@ async function getSlack({
       text: `${title}`,
       user_token: slack_token,
     });
-    slackValue = response?.messages?.matches.slice(0, amount);
+    let publicMessages = response.messages.matches.filter(
+      (message) => !message.channel.is_private
+    );
+    slackValue = publicMessages?.matches.slice(0, amount);
   }
   return slackValue;
 }
