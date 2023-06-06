@@ -136,7 +136,7 @@ export default async function handler(req, res) {
   }
   const githubIssues = await fetchGitHubIssues(userTokens, owner, repo);
   let PRTitles = githubIssues.map((issue) => issue.title);
-  const jiraTickets = await fetchJiraTickets({ user, ...userTokens }, PRTitles);
+  const jiraTickets = await fetchJiraTickets(userTokens, PRTitles);
   const slackConversations = await fetchSlackConversations(
     userTokens,
     PRTitles
