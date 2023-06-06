@@ -18,7 +18,7 @@ export default async function handler({
     const foundMessages = await fetch(
       `https://slack.com/api/search.messages?query=${text}${
         count ? `&count=${count}` : ""
-      }}`,
+      }`,
       {
         method: "GET",
         headers: {
