@@ -1,9 +1,11 @@
 export default async function handler({
   text,
   user_token,
+  count,
 }: {
   text: string;
   user_token: string;
+  count?: number;
 }) {
   if (!text) {
     return { error: "no text" };
@@ -14,7 +16,9 @@ export default async function handler({
 
   try {
     const foundMessages = await fetch(
-      `https://slack.com/api/search.messages?query=${text}`,
+      `https://slack.com/api/search.messages?query=${text}${
+        count ? `&count=${count}` : ""
+      }}`,
       {
         method: "GET",
         headers: {
