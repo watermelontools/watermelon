@@ -63,9 +63,8 @@ export default async function handler(req, res) {
     }
     return issues?.data?.items;
   }
-  async function fetchJiraTickets(userTokens, PRTitles) {
+  async function fetchJiraTickets(userTokens, commitTitle) {
     const parsedJiraData = JSON.parse(userTokens.jira_data);
-
     if (!parsedJiraData.access_token || !parsedJiraData.refresh_token) {
       return { error: "no jira token" };
     } else {
@@ -85,18 +84,7 @@ export default async function handler(req, res) {
         user: userTokens.user,
       });
 
-      let cleanPRTitles = Array.from(
-        new Set(PRTitles.map((title) => replaceSpecialChars(title)))
-      );
-
-      const summaryQuery = cleanPRTitles
-        .map((title) => `summary ~ "${title}"`)
-        .join(" OR ");
-
-      const descriptionQuery = cleanPRTitles
-        .map((title) => `description ~ "${title}"`)
-        .join(" OR ");
-      let jql = `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`;
+      let jql = `(summary ~ "${commitTitle}") AND (description ~ "${commitTitle}") ORDER BY created DESC`;
       let returnVal = await fetch(
         `https://api.atlassian.com/ex/jira/${parsedJiraData.cloudId}/rest/api/3/search`,
         {
@@ -122,7 +110,7 @@ export default async function handler(req, res) {
       return returnVal;
     }
   }
-  async function fetchSlackConversations(userTokens, PRTitles) {
+  async function fetchSlackConversations(userTokens, commitTitle) {
     let parsedSlackData = JSON.parse(userTokens.slack_data);
     let slackValue = {};
 
@@ -130,7 +118,7 @@ export default async function handler(req, res) {
       slackValue = { error: "no slack token" };
     } else {
       let response = await searchMessageByText({
-        text: `${PRTitles.join("  ")}`,
+        text: commitTitle,
         user_token: parsedSlackData.user_token,
         count: 1,
       });
