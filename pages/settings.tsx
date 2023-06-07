@@ -67,9 +67,9 @@ function HomePage({}) {
               <h2>Settings</h2>
               <div className="">
                 <div className="Subhead">
-                  <span className="Subhead-heading">Action Settings</span>
+                  <span className="Subhead-heading">App Settings</span>
                   <div className="Subhead-description">
-                    This controls how the action behaves.
+                    This controls how the GitHub App behaves.
                   </div>
                 </div>
                 <form>
