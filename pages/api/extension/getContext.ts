@@ -144,7 +144,7 @@ async function fetchSlackConversations(userTokens, PRTitles) {
       text: `${PRTitles.join("  ")}`,
       user_token: parsedSlackData.user_token,
     });
-    slackValue = response?.messages?.matches.slice(0, 3);
+    slackValue = response?.messages?.matches?.slice(0, 3);
   }
   return slackValue;
 }

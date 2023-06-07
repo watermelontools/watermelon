@@ -19,7 +19,7 @@ async function getSlack({
     let publicMessages = response.messages.matches.filter(
       (message) => !message.channel.is_private
     );
-    slackValue = publicMessages?.matches.slice(0, amount);
+    slackValue = publicMessages?.matches?.slice(0, amount);
   }
   return slackValue;
 }
