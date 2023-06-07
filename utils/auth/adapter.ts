@@ -5,7 +5,9 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters";
-import { Account } from "next-auth";
+const client = require("@sendgrid/client");
+client.setApiKey(process.env.SENDGRID_API_KEY);
+
 /** @return { import("next-auth/adapters").Adapter } */
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
@@ -20,6 +22,25 @@ export default function MyAdapter(): Adapter {
         } @emailVerified = '${makeISO(user.emailVerified as any)}';
         `
       );
+
+      const request = await client
+        .request({
+          url: `/v3/contactdb/recipients`,
+          method: "POST",
+          body: [
+            {
+              email: user.email,
+            },
+          ],
+        })
+        .then(([response, body]) => {
+          console.log(response.statusCode);
+          console.log(response.body);
+          console.log(body);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
       return {
         id: createdUser.id,
         name: createdUser.name,
