@@ -56,12 +56,12 @@ function HomePage({}) {
                 </div>
               </div>
               <a
-                href="https://github.com/marketplace/actions/watermelon-context-action"
+                href="https://github.com/apps/watermelon-context"
                 target="_blank"
               >
                 <div className="Box d-flex flex-items-center flex-justify-start p-2">
                   <div className="p-2">
-                    <h2>Try our GitHub Action</h2>
+                    <h2>Try our GitHub App</h2>
                     <p>Context on each Pr</p>
                   </div>
                 </div>
