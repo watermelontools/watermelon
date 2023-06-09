@@ -313,14 +313,14 @@ export default async (req, res) => {
             }),
           ]
         );
-        console.log("notionValue", notionValue);
-        let businessLogicSummary;
-        let textToWrite = "";
         addActionCount({ watermelon_user });
         console.log("added action value");
+
+        let textToWrite = "";
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
 
+        let businessLogicSummary;
         if (AISummary) {
           console.log("getting AISummary", AISummary);
           businessLogicSummary = await getOpenAISummary({
@@ -416,10 +416,12 @@ export default async (req, res) => {
         textToWrite += `\n`;
         textToWrite += "### Notion Pages";
         textToWrite += `\n`;
+        console.log("notionValue", notionValue);
+
         if (NotionPages) {
           if (notionValue?.error === "no notion token") {
             textToWrite += `\n [Click here to login to Notion](https://app.watermelontools.com)`;
-          } else if (Array.isArray(notionValue)) {
+          } else {
             if (notionValue?.length) {
               for (let index = 0; index < notionValue.length; index++) {
                 const element = notionValue[index];
