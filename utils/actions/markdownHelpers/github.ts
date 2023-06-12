@@ -6,7 +6,7 @@ const githubMarkdown = ({ ghValue }: { ghValue: any }) => {
   } else {
     for (let index = 0; index < ghValue?.length; index++) {
       const element = ghValue[index];
-      markdown += `\n [#${element.number} - ${element.title}](${element.html_url}) \n`;
+      markdown += `\n - [#${element.number} - ${element.title}](${element.html_url}) \n`;
     }
   }
 

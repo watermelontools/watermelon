@@ -1,5 +1,4 @@
 import { Octokit } from "octokit";
-type GHResult = { error: string } | any[];
 const getGitHubData = async ({ github_token, amount, query }) => {
   let ghValue;
   const octokit = new Octokit({
