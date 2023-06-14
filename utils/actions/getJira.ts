@@ -67,6 +67,7 @@ async function getJira({
         },
         body: JSON.stringify({
           jql,
+          maxResults: amount,
           expand: ["renderedFields"],
         }),
       }
@@ -103,7 +104,7 @@ async function getJira({
     if (returnVal) {
       await Promise.allSettled([serverPromise()]);
     }
-    return returnVal?.slice(0, amount);
+    return returnVal;
   }
 }
 export default getJira;

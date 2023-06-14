@@ -280,7 +280,7 @@ export default async (req, res) => {
           .split(" ")
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
-
+        let userLogin = pull_request.user.login;
         const [ghValue, jiraValue, slackValue, notionValue] = await Promise.all(
           [
             getGitHub({
@@ -289,6 +289,7 @@ export default async (req, res) => {
               github_token,
               randomWords,
               amount: GitHubPRs,
+              userLogin,
             }),
             getJira({
               user: user_email,
@@ -305,6 +306,7 @@ export default async (req, res) => {
               slack_token,
               randomWords,
               amount: SlackMessages,
+              userLogin,
             }),
             getNotion({
               notion_token,
@@ -320,43 +322,13 @@ export default async (req, res) => {
         textToWrite += "### WatermelonAI Summary (BETA)";
         textToWrite += `\n`;
 
-        let businessLogicSummary;
-        if (AISummary) {
-          console.log("getting AISummary", AISummary);
-          businessLogicSummary = await getOpenAISummary({
-            ghValue,
-            commitList,
-            jiraValue,
-            slackValue,
-            title,
-            body,
-          });
-
-          if (businessLogicSummary) {
-            console.log("businessLogicSummary", businessLogicSummary);
-            textToWrite += businessLogicSummary;
-          } else {
-            textToWrite += "Error getting summary" + businessLogicSummary.error;
-          }
-        } else {
-          textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
-        }
-
-        textToWrite += githubMarkdown({
-          GitHubPRs,
-          ghValue,
-          userLogin: pull_request.user.login,
-        });
+        textToWrite += ghValue;
         textToWrite += jiraMarkdown({
           JiraTickets,
           jiraValue,
           userLogin: pull_request.user.login,
         });
-        textToWrite += slackMarkdown({
-          SlackMessages,
-          slackValue,
-          userLogin: pull_request.user.login,
-        });
+        textToWrite += slackValue;
         textToWrite += notionMarkdown({
           NotionPages,
           notionValue,
