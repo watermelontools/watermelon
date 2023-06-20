@@ -318,7 +318,6 @@ export default async (req, res) => {
           ]
         );
         addActionCount({ watermelon_user });
-        console.log("added action value");
 
         let textToWrite = "";
         textToWrite += "### WatermelonAI Summary (BETA)";
@@ -326,7 +325,6 @@ export default async (req, res) => {
 
         let businessLogicSummary;
         if (AISummary) {
-          console.log("getting AISummary", AISummary);
           businessLogicSummary = await getOpenAISummary({
             ghValue,
             commitList,
@@ -337,7 +335,6 @@ export default async (req, res) => {
           });
 
           if (businessLogicSummary) {
-            console.log("businessLogicSummary", businessLogicSummary);
             textToWrite += businessLogicSummary;
           } else {
             textToWrite += "Error getting summary" + businessLogicSummary.error;
@@ -368,7 +365,6 @@ export default async (req, res) => {
         });
 
         // Fetch all comments on the PR
-        console.log("request to get comments", number);
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
           {
