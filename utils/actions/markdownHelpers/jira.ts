@@ -33,3 +33,4 @@ const jiraMarkdown = ({
   }
   return markdown;
 };
+export default jiraMarkdown;
