@@ -328,7 +328,6 @@ export default async (req, res) => {
           });
 
           if (businessLogicSummary) {
-            console.log(businessLogicSummary);
             textToWrite += businessLogicSummary;
           } else {
             textToWrite += "Error getting summary" + businessLogicSummary.error;
@@ -418,14 +417,6 @@ export default async (req, res) => {
         };
 
         // Fetch all comments on the PR
-        console.log("request to get comments", {
-          owner,
-          repo,
-          issue_number: number,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-        });
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/comments",
           {
