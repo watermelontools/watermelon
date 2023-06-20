@@ -66,6 +66,28 @@ export default async (req, res) => {
           user_email,
           watermelon_user,
         } = wmUserData;
+        if (!watermelon_user) {
+          {
+            // Post a new comment if no existing comment was found
+            await octokit
+              .request(
+                "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+                {
+                  owner,
+                  issue_number: number,
+                  repo,
+                  body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
+                }
+              )
+              .then((response) => {
+                console.log("post comment", response.data);
+              })
+              .catch((error) => {
+                return console.error("posting comment error", error);
+              });
+            return res.status(401).send("User not registered");
+          }
+        }
         let octoCommitList = await octokit.request(
           "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
           {
@@ -78,7 +100,6 @@ export default async (req, res) => {
           }
         );
         let commitList: string[] = [];
-
         for (let index = 0; index < octoCommitList?.data?.length; index++) {
           commitList.push(octoCommitList.data[index].commit.message);
         }
