@@ -379,7 +379,7 @@ export default async (req, res) => {
         console.log("comments.data.length", comments.data.length);
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
-          comment.user.login.includes("watermelon-context");
+          return comment.user.login.includes("watermelon-context");
         });
         if (botComment?.id) {
           console.log("bcID", botComment.id);
