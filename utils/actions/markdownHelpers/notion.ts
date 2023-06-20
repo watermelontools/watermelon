@@ -11,7 +11,6 @@ const notionMarkdown = ({
   markdown += `\n`;
   markdown += "### Notion Pages";
   markdown += `\n`;
-  console.log("notionValue", notionValue);
 
   if (NotionPages) {
     if (notionValue?.error === "no notion token") {
@@ -20,6 +19,11 @@ const notionMarkdown = ({
       if (notionValue?.length) {
         for (let index = 0; index < notionValue.length; index++) {
           const element = notionValue[index];
+          console.log("element", {
+            icon: element?.icon,
+            title: element?.properties.title,
+            url: element?.url,
+          });
           markdown += `\n - [${
             element?.icon.type === "external"
               ? `<img src="${element?.icon.external.url}" alt="Page icon" width="20" height="20" />`
