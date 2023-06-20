@@ -35,3 +35,4 @@ const slackMarkdown = ({
   }
   return markdown;
 };
+export default slackMarkdown;
