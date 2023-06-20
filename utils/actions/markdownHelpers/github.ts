@@ -28,3 +28,4 @@ const githubMarkdown = ({
   }
   return markdown;
 };
+export default githubMarkdown;

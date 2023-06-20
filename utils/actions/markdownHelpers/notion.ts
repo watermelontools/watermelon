@@ -40,3 +40,4 @@ const notionMarkdown = ({
   }
   return markdown;
 };
+export default notionMarkdown;
