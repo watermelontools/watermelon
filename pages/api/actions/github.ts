@@ -383,7 +383,9 @@ export default async (req, res) => {
           notionValue,
           userLogin: pull_request.user.login,
         });
-        textToWrite += `\n Your team ${count.name} has used WatermelonAI ${count.github_app_uses} times.`;
+        if (!count.error) {
+          textToWrite += `\n Your team ${count.name} has used WatermelonAI ${count.github_app_uses} times.`;
+        }
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
