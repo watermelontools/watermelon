@@ -427,7 +427,11 @@ export default async (req, res) => {
               }
             )
             .then((response) => {
-              console.log("post comment", response.data);
+              console.log("post comment", {
+                url: response.data.html_url,
+                body: response.data.body,
+                user: response.data.user.login,
+              });
             })
             .catch((error) => {
               return console.error("posting comment error", error);
