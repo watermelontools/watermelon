@@ -305,10 +305,9 @@ export default async (req, res) => {
           .split(" ")
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
-        addActionCount({ watermelon_user });
 
-        const [ghValue, jiraValue, slackValue, notionValue] = await Promise.all(
-          [
+        const [ghValue, jiraValue, slackValue, notionValue, count] =
+          await Promise.all([
             getGitHub({
               repo,
               owner,
@@ -337,8 +336,8 @@ export default async (req, res) => {
               randomWords,
               amount: NotionPages,
             }),
-          ]
-        );
+            addActionCount({ watermelon_user }),
+          ]);
 
         let textToWrite = "";
         textToWrite += "### WatermelonAI Summary (BETA)";
@@ -384,7 +383,7 @@ export default async (req, res) => {
           notionValue,
           userLogin: pull_request.user.login,
         });
-
+        textToWrite += `\n Your team ${count.name} has used WatermelonAI ${count.github_app_uses} times.`;
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
