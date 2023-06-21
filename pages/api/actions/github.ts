@@ -305,6 +305,7 @@ export default async (req, res) => {
           .split(" ")
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
+        addActionCount({ watermelon_user });
 
         const [ghValue, jiraValue, slackValue, notionValue] = await Promise.all(
           [
@@ -338,7 +339,6 @@ export default async (req, res) => {
             }),
           ]
         );
-        addActionCount({ watermelon_user });
 
         let textToWrite = "";
         textToWrite += "### WatermelonAI Summary (BETA)";
