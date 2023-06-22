@@ -384,7 +384,9 @@ export default async (req, res) => {
           userLogin: pull_request.user.login,
         });
         if (repository.private) {
-          if (!count.error) {
+          if (count.error) {
+            textToWrite += `\n We're sorry, we ran into an error${count.error}`;
+          } else {
             textToWrite += `\n Your team ${count.name} has used Watermelon ${count.github_app_uses} times.`;
           }
         } else {
