@@ -383,16 +383,12 @@ export default async (req, res) => {
           notionValue,
           userLogin: pull_request.user.login,
         });
-        if (repository.private) {
-          if (count.error) {
-            textToWrite += `\n We're sorry, we ran into an error${count.error}`;
-          } else {
-            textToWrite += `\n Your team ${count.name} has used Watermelon ${count.github_app_uses} times.`;
-          }
-        } else {
-          textToWrite += `\n ${repository.name} is an open repo and Watermelon will serve it for free.`;
-          textToWrite += `\n 🍉🫶`;
-        }
+        textToWrite += countMarkdown({
+          count,
+          isPrivateRepo: repository.private,
+          repoName: repo,
+        });
+
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
