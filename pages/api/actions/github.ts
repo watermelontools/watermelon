@@ -336,85 +336,31 @@ export default async (req, res) => {
           textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
         }
 
-        textToWrite += `\n`;
-        textToWrite += "### GitHub PRs";
-        if (GitHubPRs) {
-          if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
-            textToWrite += `\n No results found :(`;
-          } else if (Array.isArray(ghValue) && ghValue?.length) {
-            for (let index = 0; index < ghValue?.length; index++) {
-              const element = ghValue[index];
-              textToWrite += `\n - [#${element.number} - ${element.title}](${element.html_url})`;
-              textToWrite += `\n`;
-            }
-          }
-        } else {
-          textToWrite += `GitHub PRs deactivated by ${pull_request.user.login}`;
-
-          textToWrite += `\n`;
-        }
-
-        textToWrite += `\n`;
-
-        textToWrite += "### Jira Tickets";
-        if (JiraTickets) {
-          if (jiraValue?.error === "no jira token") {
-            textToWrite += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
-          } else {
-            if (jiraValue?.length) {
-              for (let index = 0; index < jiraValue.length; index++) {
-                const element = jiraValue[index];
-                textToWrite += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
-                textToWrite += `\n`;
-              }
-            } else {
-              textToWrite += `\n No results found :(`;
-            }
-          }
-        } else {
-          textToWrite += `Jira Tickets deactivated by ${pull_request.user.login}`;
-
-          textToWrite += `\n`;
-        }
-        textToWrite += `\n`;
-
-        textToWrite += "### Slack Threads";
-        if (SlackMessages) {
-          if (
-            !Array.isArray(slackValue) &&
-            slackValue?.error === "no slack token"
-          ) {
-            textToWrite += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
-          } else if (Array.isArray(slackValue)) {
-            if (slackValue?.length) {
-              for (let index = 0; index < slackValue.length; index++) {
-                const element = slackValue[index];
-                textToWrite += `\n - [#${element.channel.name} - ${
-                  element.username
-                }\n ${
-                  element.text.length > 100
-                    ? element.text.substring(0, 100) + "..."
-                    : element.text
-                }](${element.permalink})`;
-                textToWrite += `\n`;
-              }
-            } else {
-              textToWrite += `\n No results found :(`;
-            }
-          }
-        } else {
-          textToWrite += `Slack Threads deactivated by ${pull_request.user.login}`;
-
-          textToWrite += `\n`;
-        }
-        // Add a comment to the pull request
-        const comment = {
-          owner,
-          repo,
-          //@ts-ignore
-          issue_number: number,
-          body: "Thank you for your pull request! We will review it shortly.",
-        };
+        textToWrite += githubMarkdown({
+          GitHubPRs,
+          ghValue,
+          userLogin: pull_request.user.login,
+        });
+        textToWrite += jiraMarkdown({
+          JiraTickets,
+          jiraValue,
+          userLogin: pull_request.user.login,
+        });
+        textToWrite += slackMarkdown({
+          SlackMessages,
+          slackValue,
+          userLogin: pull_request.user.login,
+        });
+        textToWrite += notionMarkdown({
+          NotionPages,
+          notionValue,
+          userLogin: pull_request.user.login,
+        });
+        textToWrite += countMarkdown({
+          count,
+          isPrivateRepo: repository.private,
+          repoName: repo,
+        });
 
         // Fetch all comments on the PR
         const comments = await octokit.request(
