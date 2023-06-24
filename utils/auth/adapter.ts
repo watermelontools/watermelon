@@ -12,7 +12,13 @@ client.setApiKey(process.env.SENDGRID_API_KEY);
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
 }
-
+const emptyUser = {
+  id: "",
+  name: null,
+  email: "",
+  image: null,
+  emailVerified: null,
+};
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
@@ -55,7 +61,7 @@ export default function MyAdapter(): Adapter {
       );
       console.log("getUser", userData);
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return {
         id: userData.id,
@@ -70,7 +76,7 @@ export default function MyAdapter(): Adapter {
         `EXEC [dbo].[get_user_by_email] @email = '${email}';`
       );
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return {
         id: userData.id,
@@ -88,13 +94,19 @@ export default function MyAdapter(): Adapter {
         `EXEC [dbo].[get_user_by_account] @providerAccountId = '${providerAccountId}', @provider = '${provider}';`
       );
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
-        return null;
+        return {
+          id: "",
+          name: null,
+          email: "",
+          image: null,
+          emailVerified: null,
+        };
       }
       let updatedUser = await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', ${
@@ -113,7 +125,7 @@ export default function MyAdapter(): Adapter {
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
-      return;
+      return emptyUser;
     },
     async linkAccount(account): Promise<void> {
       await executeRequest(
@@ -172,12 +184,11 @@ export default function MyAdapter(): Adapter {
       expires,
     }): Promise<AdapterSession> {
       let updatedSession = await executeRequest(
-        `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
-          expires
-        ).toISOString()}';`
+        `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${
+          expires ? new Date(expires).toISOString() : null
+        }';`
       );
-      const session = {
-        id: updatedSession.id as string,
+      const session: AdapterSession = {
         sessionToken: updatedSession.session_token as string,
         userId: updatedSession.user_id as string,
         expires: new Date(updatedSession.expires),
