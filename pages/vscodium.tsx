@@ -11,7 +11,7 @@ function VSCodium({}) {
     },
   });
   const [timeToRedirect, setTimeToRedirect] = useState(10);
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
 
   useEffect(() => {
     setUserEmail(data?.user?.email);
@@ -20,7 +20,7 @@ function VSCodium({}) {
   let system = "vscode";
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
     userEmail ?? ""
-  }&token=${data?.user.name ?? ""}`;
+  }&token=${data?.user?.name ?? ""}`;
 
   useEffect(() => {
     const interval = setInterval(() => {
