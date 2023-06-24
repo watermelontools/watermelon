@@ -20,3 +20,4 @@ const countMarkdown = ({
   }
   return textToWrite;
 };
+export default countMarkdown;
