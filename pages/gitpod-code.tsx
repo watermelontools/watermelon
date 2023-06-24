@@ -16,8 +16,8 @@ function Gitpod() {
   let system = `https://${router.query.podURL}.gitpod.io`;
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
     data?.user?.email ?? ""
-  }&token=${data?.user.name ?? ""}`;
-  const [userEmail, setUserEmail] = useState(null);
+  }&token=${data?.user?.name ?? ""}`;
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
 
   useEffect(() => {
     setUserEmail(data?.user?.email);
