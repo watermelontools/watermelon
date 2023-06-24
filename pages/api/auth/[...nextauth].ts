@@ -7,7 +7,9 @@ export default NextAuth({
   callbacks: {
     // add the id to the session as accessToken
     async session({ session, token, user }) {
-      session.user.name = user.id;
+      if (session.user) {
+        session.user.name = user.id;
+      }
       return session;
     },
   },
