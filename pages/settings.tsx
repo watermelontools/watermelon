@@ -7,7 +7,7 @@ import LogInBtn from "../components/login-btn";
 import getUserSettings from "../utils/api/getUserSettings";
 
 function HomePage({}) {
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
   const [saveDisabled, setSaveDisabled] = useState(false);
   const { data: session, status } = useSession();
 
