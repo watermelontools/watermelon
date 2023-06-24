@@ -1,24 +1,19 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-
 import Header from "../components/Header";
 import LogInBtn from "../components/login-btn";
 import LoginGrid from "../components/loginGrid";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
-
-function HomePage({}) {
-  const [userEmail, setUserEmail] = useState(null);
-
-  const { data: session, status } = useSession();
-  useEffect(() => {
-    setUserEmail(session?.user?.email);
-  }, [session]);
+import { getServerSession } from "next-auth";
+import authOptions from "../pages/api/auth/[...nextauth]";
+async function HomePage({}) {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+  let userEmail = session?.user?.email;
 
   return (
     <div>
-      {status === "loading" && <Header />}
-      {status === "unauthenticated" && <LogInBtn />}
-      {status === "authenticated" && (
+      {!session && <LogInBtn />}
+      {session && <Header />}
+      {session && (
         <>
           {session ? <Header /> : <LogInBtn />}
           {userEmail ? (

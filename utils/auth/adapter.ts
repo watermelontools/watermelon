@@ -51,9 +51,9 @@ export default function MyAdapter(): Adapter {
     },
     async getUser(id): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user] @id = '${id}';
-        `
+        `EXEC [dbo].[get_user] @id = '${id}';`
       );
+      console.log("getUser", userData);
       if (!userData.email) {
         return null;
       }
