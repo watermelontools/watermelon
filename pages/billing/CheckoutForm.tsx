@@ -6,32 +6,34 @@ import {
 } from "@stripe/react-stripe-js";
 import dynamic from "next/dynamic";
 
-const CheckoutForm = ({numberOfSeats}) => {;
+const CheckoutForm = ({ numberOfSeats }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState<string | null | undefined>(
+    null
+  );
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
+    if (stripe && elements) {
+      const { error } = await stripe.confirmPayment({
+        //`Elements` instance that was used to create the Payment Element
+        elements,
+        confirmParams: {
+          return_url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/billing/paymentSuccess/?seats=${numberOfSeats}`,
+        },
+      });
 
-    const { error } = await stripe.confirmPayment({
-      //`Elements` instance that was used to create the Payment Element
-      elements,
-      confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/billing/paymentSuccess/?seats=${numberOfSeats}`
-      },
-    });
-
-    if (error) {
-      // This point will only be reached if there is an immediate error when
-      // confirming the payment. Show error to your customer (for example, payment
-      // details incomplete)
-      setErrorMessage(error.message);
+      if (error) {
+        // This point will only be reached if there is an immediate error when
+        // confirming the payment. Show error to your customer (for example, payment
+        // details incomplete)
+        setErrorMessage(error.message);
+      }
     }
   };
-
   return (
     <form onSubmit={handleSubmit}>
       <PaymentElement />
