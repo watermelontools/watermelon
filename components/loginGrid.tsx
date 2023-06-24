@@ -10,15 +10,30 @@ import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import getAllUserData from "../utils/api/getAllUserData";
 import getPaymentInfo from "../utils/api/getPaymentInfo";
+type LoginGridProps = {
+  userEmail: string;
+  user_displayname: string;
+};
 
 function LoginGrid({ userEmail }) {
-  const [jiraUserData, setJiraUserData] = useState(null);
-  const [githubUserData, setGithubUserData] = useState(null);
-  const [bitbucketUserData, setBitbucketUserData] = useState(null);
-  const [gitlabUserData, setGitlabUserData] = useState(null);
-  const [slackUserData, setSlackUserData] = useState(null);
-  const [discordUserData, setDiscordUserData] = useState(null);
-  const [notionUserData, setNotionUserData] = useState(null);
+  const [jiraUserData, setJiraUserData] = useState<LoginGridProps | null>(null);
+  const [githubUserData, setGithubUserData] = useState<LoginGridProps | null>(
+    null
+  );
+  const [bitbucketUserData, setBitbucketUserData] =
+    useState<LoginGridProps | null>(null);
+  const [gitlabUserData, setGitlabUserData] = useState<LoginGridProps | null>(
+    null
+  );
+  const [slackUserData, setSlackUserData] = useState<LoginGridProps | null>(
+    null
+  );
+  const [discordUserData, setDiscordUserData] = useState<LoginGridProps | null>(
+    null
+  );
+  const [notionUserData, setNotionUserData] = useState<LoginGridProps | null>(
+    null
+  );
   const [hasPaid, setHasPaid] = useState(false);
 
   useEffect(() => {
