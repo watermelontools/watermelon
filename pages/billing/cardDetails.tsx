@@ -6,7 +6,9 @@ import { useRouter } from "next/router";
 import LogInBtn from "../../components/login-btn";
 import { useSession } from "next-auth/react";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
+);
 
 function BillingPage() {
   const [retrievedClientSecret, setRetrievedClientSecret] = useState("");
