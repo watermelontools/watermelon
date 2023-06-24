@@ -14,8 +14,8 @@ import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 const app = new App({
-  appId: process.env.GITHUB_APP_ID || "",
-  privateKey: process.env.GITHUB_PRIVATE_KEY || "",
+  appId: process.env.GITHUB_APP_ID!,
+  privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 
 export default async (req, res) => {

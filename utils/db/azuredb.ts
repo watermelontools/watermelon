@@ -1,12 +1,12 @@
-const executeRequest = async (query) => {
+const executeRequest = async (query: string) => {
   const queryString = JSON.stringify({ query: query });
   try {
     console.log("queryString", queryString);
-    let resp = await fetch(process.env.AZURE_WEBAPP_URL, {
+    let resp = await fetch(process.env.AZURE_WEBAPP_URL!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-vercel-azure-auth-token": process.env.AZURE_WEBAPP_TOKEN,
+        "x-vercel-azure-auth-token": process.env.AZURE_WEBAPP_TOKEN!,
       },
       body: queryString,
     })
