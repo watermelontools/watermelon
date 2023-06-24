@@ -7,7 +7,10 @@ import authOptions from "../pages/api/auth/[...nextauth]";
 async function HomePage({}) {
   const session = await getServerSession(authOptions);
   console.log(session);
+  // @ts-ignore
   let userEmail = session?.user?.email;
+  // @ts-ignore
+  let userName = session?.user?.name;
 
   return (
     <div>
@@ -30,7 +33,7 @@ async function HomePage({}) {
                     name="VSCode"
                     email={userEmail}
                     urlStart="vscode"
-                    accessToken={session.user.name}
+                    accessToken={userName}
                   />
                 </div>
                 <div className="p-3">
@@ -38,7 +41,7 @@ async function HomePage({}) {
                     name="VSCode Insiders"
                     urlStart="vscode-insiders"
                     email={userEmail}
-                    accessToken={session.user.name}
+                    accessToken={userName}
                   />
                 </div>
                 <div className="p-3">
@@ -46,7 +49,7 @@ async function HomePage({}) {
                     name="VSCodium"
                     urlStart="vscodium"
                     email={userEmail}
-                    accessToken={session.user.name}
+                    accessToken={userName}
                   />
                 </div>
               </div>
