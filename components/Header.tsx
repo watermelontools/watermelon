@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import HeaderSignOut from "./HeaderSignOut";
 export default function Header({ userEmail, userToken }) {

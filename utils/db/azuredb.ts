@@ -11,6 +11,7 @@ const executeRequest = async (query: string) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log("data", data);
         return data;
       })
       .catch((error) => {
