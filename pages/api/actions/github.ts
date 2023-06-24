@@ -11,6 +11,7 @@ import githubMarkdown from "../../../utils/actions/markdownHelpers/github";
 import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
 import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
+import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID,
