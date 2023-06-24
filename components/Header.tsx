@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 export default function Header() {
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | null | undefined>(null);
   const { data } = useSession();
 
   useEffect(() => {
