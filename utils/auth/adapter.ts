@@ -25,8 +25,7 @@ export default function MyAdapter(): Adapter {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as any)}';
-        `
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';`
       );
 
       const request = await client
@@ -100,13 +99,7 @@ export default function MyAdapter(): Adapter {
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
-        return {
-          id: "",
-          name: null,
-          email: "",
-          image: null,
-          emailVerified: null,
-        };
+        return emptyUser;
       }
       let updatedUser = await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', ${
@@ -184,9 +177,9 @@ export default function MyAdapter(): Adapter {
       expires,
     }): Promise<AdapterSession> {
       let updatedSession = await executeRequest(
-        `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${
-          expires ? new Date(expires).toISOString() : null
-        }';`
+        `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
+          new Date(expires!).toISOString()
+        )}';`
       );
       const session: AdapterSession = {
         sessionToken: updatedSession.session_token as string,
