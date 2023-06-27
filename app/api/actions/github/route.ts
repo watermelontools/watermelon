@@ -1,3 +1,4 @@
+"use client";
 import { App } from "@octokit/app";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import executeRequest from "../../../utils/db/azuredb";
