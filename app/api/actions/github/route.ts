@@ -20,7 +20,7 @@ const app = new App({
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 
-export default async function POST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
     // Verify and parse the webhook event
     const req = await request.json();
