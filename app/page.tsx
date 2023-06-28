@@ -3,7 +3,7 @@ import LogInBtn from "../components/login-btn";
 import LoginGrid from "../components/loginGrid";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 import { getServerSession } from "next-auth";
-import authOptions from "./auth/[...nextauth]/route";
+import authOptions from "./api/auth/[...nextauth]/route";
 async function HomePage({}) {
   const session = await getServerSession(authOptions);
   console.log(session);
