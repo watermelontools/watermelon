@@ -7,7 +7,7 @@ import LoginGrid from "../../components/loginGrid";
 import DownloadExtension from "../../components/dashboard/DownloadExtension";
 
 function HomePage({}) {
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
 
   const { data: session, status } = useSession();
   useEffect(() => {
