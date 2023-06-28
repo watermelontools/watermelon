@@ -87,7 +87,7 @@ function HomePage({}) {
                       }
                       value={formState.JiraTickets}
                     >
-                      {Array.from(Array(11)).map((i, index) => {
+                      {Array.from(Array(6)).map((i, index) => {
                         if (index === 0) {
                           return null;
                         }
@@ -109,7 +109,7 @@ function HomePage({}) {
                         })
                       }
                     >
-                      {Array.from(Array(11)).map((i, index) => {
+                      {Array.from(Array(6)).map((i, index) => {
                         if (index === 0) {
                           return null;
                         }
@@ -131,7 +131,7 @@ function HomePage({}) {
                         })
                       }
                     >
-                      {Array.from(Array(11)).map((i, index) => {
+                      {Array.from(Array(6)).map((i, index) => {
                         if (index === 0) {
                           return null;
                         }
@@ -154,7 +154,7 @@ function HomePage({}) {
                         })
                       }
                     >
-                      {Array.from(Array(11)).map((i, index) => {
+                      {Array.from(Array(6)).map((i, index) => {
                         if (index === 0) {
                           return null;
                         }
