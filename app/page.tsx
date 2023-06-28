@@ -1,4 +1,3 @@
-import Header from "../components/Header";
 import LogInBtn from "../components/login-btn";
 import LoginGrid from "../components/loginGrid";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
@@ -15,10 +14,9 @@ async function HomePage({}) {
   return (
     <div>
       {!session && <LogInBtn />}
-      {session && <Header />}
       {session && (
         <>
-          {session ? <Header /> : <LogInBtn />}
+          {session ? null : <LogInBtn />}
           {userEmail ? (
             <>
               <LoginGrid userEmail={userEmail} />
