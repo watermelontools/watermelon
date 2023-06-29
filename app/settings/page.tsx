@@ -1,8 +1,6 @@
 import { getServerSession } from "next-auth";
 
-import Header from "../../components/Header";
 import LogInBtn from "../../components/login-btn";
-import Navbar from "../../components/Navbar";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Form from "./form";
@@ -16,22 +14,19 @@ async function Settings({}) {
 
   return (
     <div>
-      <Header userEmail={userEmail} userToken={userName} />
-      <Navbar>
-        <div className="p-3">
-          <h2>Settings</h2>
-          <div className="">
-            <div className="Subhead">
-              <span className="Subhead-heading">App Settings</span>
-              <div className="Subhead-description">
-                This controls how the GitHub App behaves.
-              </div>
+      <div className="p-3">
+        <h2>Settings</h2>
+        <div className="">
+          <div className="Subhead">
+            <span className="Subhead-heading">App Settings</span>
+            <div className="Subhead-description">
+              This controls how the GitHub App behaves.
             </div>
-
-            <Form userEmail={userEmail} />
           </div>
+
+          <Form userEmail={userEmail} />
         </div>
-      </Navbar>
+      </div>
     </div>
   );
 }
