@@ -58,7 +58,6 @@ export default function MyAdapter(): Adapter {
       let userData = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${id}';`
       );
-      console.log("getUser", userData);
       if (!userData.email) {
         return emptyUser;
       }

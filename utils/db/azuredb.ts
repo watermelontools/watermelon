@@ -1,7 +1,6 @@
 const executeRequest = async (query: string) => {
   const queryString = JSON.stringify({ query: query });
   try {
-    console.log("queryString", queryString);
     let resp = await fetch(process.env.AZURE_WEBAPP_URL!, {
       method: "POST",
       headers: {
