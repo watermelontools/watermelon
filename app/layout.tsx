@@ -2,6 +2,7 @@ import "@primer/css/index.scss";
 
 import AuthProvider from "../lib/auth/AuthProvider";
 import Header from "../components/Header";
+import Navbar from "../components/Navbar";
 
 export const metadata = {
   title: "Next.js",
@@ -19,21 +20,7 @@ export default function RootLayout({
         <AuthProvider>
           <Header />
           <div className="d-flex flex-row">
-            <nav className="SideNav border">
-              {" "}
-              <a className="SideNav-item" href="#url">
-                Account
-              </a>
-              <a className="SideNav-item" href="#url" aria-current="page">
-                Profile
-              </a>
-              <a className="SideNav-item" href="#url">
-                Emails
-              </a>
-              <a className="SideNav-item" href="#url">
-                Notifications
-              </a>
-            </nav>
+            <Navbar />
             {children}
           </div>
           {children}
