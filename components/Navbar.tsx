@@ -1,6 +1,16 @@
+"use client";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../app/api/auth/[...nextauth]/route";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await getServerSession(authOptions);
+  console.log(session);
+
+  if (!session) {
+    return null;
+  }
+
   return (
     <nav className="SideNav border">
       {" "}

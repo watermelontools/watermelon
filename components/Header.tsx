@@ -9,6 +9,7 @@ export default function Header() {
   useEffect(() => {
     setUserEmail(data?.user?.email);
   }, [data]);
+  if (!userEmail) return null;
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
       <a href="/" className="Header-link">
