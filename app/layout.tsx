@@ -18,6 +18,24 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <Header />
+          <div className="flex flex-row">
+            <nav className="SideNav border">
+              {" "}
+              <a className="SideNav-item" href="#url">
+                Account
+              </a>
+              <a className="SideNav-item" href="#url" aria-current="page">
+                Profile
+              </a>
+              <a className="SideNav-item" href="#url">
+                Emails
+              </a>
+              <a className="SideNav-item" href="#url">
+                Notifications
+              </a>
+            </nav>
+            {children}
+          </div>
           {children}
         </AuthProvider>
       </body>
