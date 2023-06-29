@@ -1,6 +1,3 @@
-"use client";
-import { useEffect, useState } from "react";
-
 import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraLoginLink from "../components/JiraLoginLink";
 import SlackLoginLink from "../components/SlackLoginLink";
@@ -9,67 +6,41 @@ import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
-import getAllUserData from "../utils/api/getAllUserData";
-import getPaymentInfo from "../utils/api/getPaymentInfo";
 type LoginGridProps = {
   userEmail: string;
   user_displayname: string;
 };
+function LoginGrid({ userEmail, data }) {
+  let githubUserData: null | LoginGridProps = null;
+  let bitbucketUserData: null | LoginGridProps = null;
+  let gitlabUserData: null | LoginGridProps = null;
+  let slackUserData: null | LoginGridProps = null;
+  let jiraUserData: null | LoginGridProps = null;
+  let discordUserData: null | LoginGridProps = null;
+  let notionUserData: null | LoginGridProps = null;
 
-function LoginGrid({ userEmail }) {
-  const [jiraUserData, setJiraUserData] = useState<LoginGridProps | null>(null);
-  const [githubUserData, setGithubUserData] = useState<LoginGridProps | null>(
-    null
-  );
-  const [bitbucketUserData, setBitbucketUserData] =
-    useState<LoginGridProps | null>(null);
-  const [gitlabUserData, setGitlabUserData] = useState<LoginGridProps | null>(
-    null
-  );
-  const [slackUserData, setSlackUserData] = useState<LoginGridProps | null>(
-    null
-  );
-  const [discordUserData, setDiscordUserData] = useState<LoginGridProps | null>(
-    null
-  );
-  const [notionUserData, setNotionUserData] = useState<LoginGridProps | null>(
-    null
-  );
-  const [hasPaid, setHasPaid] = useState(false);
+  if (data?.github_data) {
+    githubUserData = JSON.parse(data.github_data);
+  }
+  if (data?.bitbucket_data) {
+    bitbucketUserData = JSON.parse(data.bitbucket_data);
+  }
+  if (data?.gitlab_data) {
+    gitlabUserData = JSON.parse(data.gitlab_data);
+  }
+  if (data?.slack_data) {
+    slackUserData = JSON.parse(data.slack_data);
+  }
+  if (data?.jira_data) {
+    jiraUserData = JSON.parse(data.jira_data);
+  }
+  if (data?.discord_data) {
+    discordUserData = JSON.parse(data.discord_data);
+  }
+  if (data?.notion_data) {
+    notionUserData = JSON.parse(data.notion_data);
+  }
 
-  useEffect(() => {
-    if (userEmail) {
-      getAllUserData(userEmail).then((data) => {
-        if (data?.github_data) {
-          setGithubUserData(JSON.parse(data.github_data));
-        }
-        if (data?.bitbucket_data) {
-          setBitbucketUserData(JSON.parse(data.bitbucket_data));
-        }
-        if (data?.gitlab_data) {
-          setGitlabUserData(JSON.parse(data.gitlab_data));
-        }
-        if (data?.slack_data) {
-          setSlackUserData(JSON.parse(data.slack_data));
-        }
-        if (data?.jira_data) {
-          setJiraUserData(JSON.parse(data.jira_data));
-        }
-        if (data?.discord_data) {
-          setDiscordUserData(JSON.parse(data.discord_data));
-        }
-        if (data?.notion_data) {
-          setNotionUserData(JSON.parse(data.notion_data));
-        }
-      });
-      // use getByEmail to check if user has paid
-      // TODO: As stated on Jira ticket WM-66, we'll refactor this later in order to not block render
-      // and have a perfect self-serve experience
-      getPaymentInfo(userEmail).then((data) => {
-        setHasPaid(data);
-      });
-    }
-  }, [userEmail]);
   return (
     <div
       style={{

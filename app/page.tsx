@@ -5,13 +5,17 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
+import getAllPublicUserData from "../utils/api/getAllUserPublicData";
+
 async function HomePage({}) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
   let userName = session?.user?.name;
   // if not logged in, do not show anything
   if (!session) return <LogInBtn />;
-
+  console.log("userEmail", userEmail);
+  const data = await getAllPublicUserData({ userEmail });
+  console.log("data", data);
   return (
     <div>
       <>
@@ -19,7 +23,7 @@ async function HomePage({}) {
         <Navbar>
           {userEmail ? (
             <>
-              <LoginGrid userEmail={userEmail} />
+              <LoginGrid userEmail={userEmail} data={data} />
               <div
                 style={{
                   display: "grid",
