@@ -1,31 +1,24 @@
-"use client";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 
-export default function Navbar() {
-  const [userEmail, setUserEmail] = useState<string | null | undefined>(null);
-  const { data } = useSession();
-
-  useEffect(() => {
-    setUserEmail(data?.user?.email);
-  }, [data]);
-  if (!userEmail) return null;
+export default function Navbar({ children }: { children: React.ReactNode }) {
   return (
-    <nav className="SideNav border">
-      {" "}
-      <Link className="SideNav-item" href="/">
-        Home
-      </Link>
-      <Link className="SideNav-item" href="/settings">
-        Settings
-      </Link>
-      <Link className="SideNav-item" href="/team">
-        Team
-      </Link>
-      <Link className="SideNav-item" href="/billing">
-        Billing
-      </Link>
-    </nav>
+    <div className="d-flex flex-row" style={{ height: "98vh" }}>
+      <nav className="SideNav border">
+        {" "}
+        <Link className="SideNav-item" href="/">
+          Home
+        </Link>
+        <Link className="SideNav-item" href="/settings">
+          Settings
+        </Link>
+        <Link className="SideNav-item" href="/team">
+          Team
+        </Link>
+        <Link className="SideNav-item" href="/billing">
+          Billing
+        </Link>
+      </nav>
+      <div style={{ width: "100%" }}>{children}</div>
+    </div>
   );
 }

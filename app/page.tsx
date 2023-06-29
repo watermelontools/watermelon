@@ -3,20 +3,20 @@ import LoginGrid from "../components/loginGrid";
 import DownloadExtension from "../components/dashboard/DownloadExtension";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]/route";
+import Header from "../components/Header";
+import Navbar from "../components/Navbar";
 async function HomePage({}) {
   const session = await getServerSession(authOptions);
-  console.log(session);
-  // @ts-ignore
   let userEmail = session?.user?.email;
-  // @ts-ignore
   let userName = session?.user?.name;
+  // if not logged in, do not show anything
+  if (!session) return <LogInBtn />;
 
   return (
     <div>
-      {!session && <LogInBtn />}
-      {session && (
-        <>
-          {session ? null : <LogInBtn />}
+      <>
+        <Header userEmail={userEmail} userToken={userName} />
+        <Navbar>
           {userEmail ? (
             <>
               <LoginGrid userEmail={userEmail} />
@@ -64,8 +64,8 @@ async function HomePage({}) {
               </a>
             </>
           ) : null}
-        </>
-      )}
+        </Navbar>
+      </>
     </div>
   );
 }
