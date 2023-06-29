@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../app/api/auth/[...nextauth]/route";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export default async function Navbar() {
-  const session = await getServerSession(authOptions);
-  console.log(session);
+export default function Navbar() {
+  const [userEmail, setUserEmail] = useState<string | null | undefined>(null);
+  const { data } = useSession();
 
-  if (!session) {
-    return null;
-  }
-
+  useEffect(() => {
+    setUserEmail(data?.user?.email);
+  }, [data]);
+  if (!userEmail) return null;
   return (
     <nav className="SideNav border">
       {" "}
