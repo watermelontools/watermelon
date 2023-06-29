@@ -18,7 +18,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <Header />
-          <div className="flex flex-row">
+          <div className="d-flex flex-row">
             <nav className="SideNav border">
               {" "}
               <a className="SideNav-item" href="#url">
