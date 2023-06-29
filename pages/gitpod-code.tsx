@@ -51,7 +51,6 @@ function Gitpod() {
               </div>
             </div>
           </Link>
-          <LoginGrid userEmail={userEmail} />
         </>
       )}
     </div>
