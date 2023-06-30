@@ -13,7 +13,6 @@ async function HomePage({}) {
   let userName = session?.user?.name;
   // if not logged in, do not show anything
   if (!session) return <LogInBtn />;
-  console.log("userEmail", userEmail);
   const data = await getAllPublicUserData({ userEmail });
   console.log("data", data);
   return (
