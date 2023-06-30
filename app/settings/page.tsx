@@ -15,7 +15,7 @@ async function Settings({}) {
   return (
     <div>
       <div className="p-3">
-        <h2>Settings</h2>
+        <h1>Settings</h1>
         <div className="">
           <div className="Subhead">
             <span className="Subhead-heading">App Settings</span>
