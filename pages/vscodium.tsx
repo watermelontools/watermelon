@@ -11,7 +11,7 @@ function VSCodium({}) {
     },
   });
   const [timeToRedirect, setTimeToRedirect] = useState(10);
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
 
   useEffect(() => {
     setUserEmail(data?.user?.email);

@@ -7,7 +7,7 @@ import LoginGrid from "../../components/loginGrid";
 import DownloadExtension from "../../components/dashboard/DownloadExtension";
 
 function HomePage({}) {
-  const [userEmail, setUserEmail] = useState(null);
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
 
   const { data: session, status } = useSession();
   useEffect(() => {
@@ -35,7 +35,7 @@ function HomePage({}) {
                     name="VSCode"
                     email={userEmail}
                     urlStart="vscode"
-                    accessToken={session.user.name}
+                    accessToken={session?.user?.name}
                   />
                 </div>
                 <div className="p-3">
@@ -43,7 +43,7 @@ function HomePage({}) {
                     name="VSCode Insiders"
                     urlStart="vscode-insiders"
                     email={userEmail}
-                    accessToken={session.user.name}
+                    accessToken={session?.user?.name}
                   />
                 </div>
                 <div className="p-3">
@@ -51,7 +51,7 @@ function HomePage({}) {
                     name="VSCodium"
                     urlStart="vscodium"
                     email={userEmail}
-                    accessToken={session.user.name}
+                    accessToken={session?.user?.name}
                   />
                 </div>
               </div>
