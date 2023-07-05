@@ -83,6 +83,18 @@ export async function getServerSideProps(context) {
       }),
     });
     let userJson = await user.json();
+    console.log(userJson);
+    console.log({
+      access_token: json.access_token,
+      id: userJson.id,
+      avatarUrl: userJson.avatarUrl,
+      watermelon_user: context.query.state,
+      displayName: userJson.displayName,
+      name: userJson.name,
+      email: userJson.email,
+      team_id: userJson.team_id,
+      team_name: userJson.team_name,
+    });
     await saveUserInfo({
       access_token: json.access_token,
       id: userJson.id,
