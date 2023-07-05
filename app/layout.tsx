@@ -24,10 +24,10 @@ export default async function RootLayout({
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
       <body>
-        <AuthProvider>
-          <Header userEmail={userEmail} userToken={userName} />
-          <Navbar>{children}</Navbar>
-        </AuthProvider>
+        <Header userEmail={userEmail} userToken={userName} />
+        <Navbar>
+          <AuthProvider>{children}</AuthProvider>
+        </Navbar>
       </body>
     </html>
   );
