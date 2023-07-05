@@ -2,14 +2,12 @@
 
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 
 export default function CardElement({ userEmail }) {
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-  const [clientSecret, setClientSecret] = useState<string | null | undefined>(
-    null
-  );
+  const [clientSecret, setClientSecret] = useState<string | undefined>("");
   const fetchClientSecret = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,
@@ -30,7 +28,7 @@ export default function CardElement({ userEmail }) {
   useEffect(() => {
     fetchClientSecret();
   }, []);
-  const options = {
+  const options: StripeElementsOptions = {
     clientSecret,
     loader: "auto",
     appearance: {
@@ -43,7 +41,6 @@ export default function CardElement({ userEmail }) {
         colorText: "#c9d1d9",
         colorDanger: "#df1b41",
         fontFamily: "Ideal Sans, system-ui, sans-serif",
-        fontSize: "14-px",
         spacingUnit: "2px",
         borderRadius: "4px",
       },
