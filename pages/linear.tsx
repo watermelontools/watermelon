@@ -65,6 +65,7 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
 
 export async function getServerSideProps(context) {
   let f;
+  console.log("code", context.query.code);
 
   if (context.query.code) {
     console.log("code", context.query.code);
