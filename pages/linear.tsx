@@ -94,8 +94,8 @@ export async function getServerSideProps(context) {
       displayName: userJson.viewer.displayName,
       name: userJson.viewer.name,
       email: userJson.email,
-      team_id: userJson.teams.nodes.id,
-      team_name: userJson.teams.nodes.name,
+      team_id: userJson.teams.nodes[0].id,
+      team_name: userJson.teams.nodes[0].name,
     });
     return {
       props: {
@@ -103,7 +103,7 @@ export async function getServerSideProps(context) {
         userEmail: context.query.state,
         login: userJson.viewer.displayName,
         avatar_url: userJson.viewer.avatarUrl,
-        team_name: userJson.teams.nodes.name,
+        team_name: userJson.teams.nodes[0].name,
       },
     };
   }
