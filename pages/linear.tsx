@@ -79,6 +79,7 @@ export async function getServerSideProps(context) {
     let user = await fetch(`https://api.linear.app/graphql`, {
       method: "POST",
       headers: {
+        "content-type": "application/json",
         Authorization: `Bearer ${json.access_token}`,
       },
       body: graphql,
