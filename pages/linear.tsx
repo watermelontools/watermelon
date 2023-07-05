@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/github/saveUser";
+import saveUserInfo from "../utils/db/linear/saveUser";
 import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({ login, avatar_url, userEmail, error }) {
+export default function GitHub({
+  login,
+  avatar_url,
+  userEmail,
+  team_name,
+  error,
+}) {
   const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
@@ -40,12 +46,12 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Linear as {login}
+          You have logged in with Linear as {login} in the team {team_name}
         </h2>
       </div>
       <img
         src={avatar_url}
-        alt="github user image"
+        alt="linear user image"
         className="avatar avatar-8"
       />
       <div>
@@ -100,13 +106,24 @@ export async function getServerSideProps(context) {
       }),
     });
     let userJson = await user.json();
-    console.log(userJson);
+    await saveUserInfo({
+      access_token: json.access_token,
+      id: userJson.id,
+      avatarUrl: userJson.avatarUrl,
+      watermelon_user: context.query.state,
+      displayName: userJson.displayName,
+      name: userJson.name,
+      email: userJson.email,
+      team_id: userJson.team_id,
+      team_name: userJson.team_name,
+    });
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
         login: userJson.displayName,
         avatar_url: userJson.avatarUrl,
+        team_name: userJson.team_name,
       },
     };
   }
