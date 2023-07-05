@@ -86,36 +86,24 @@ export async function getServerSideProps(context) {
     });
     let userText = await user.text();
     let userJson = JSON.parse(userText).data;
-    console.log(userJson);
-    console.log({
-      access_token: json.access_token,
-      id: userJson.id,
-      avatarUrl: userJson.avatarUrl,
-      watermelon_user: context.query.state,
-      displayName: userJson.displayName,
-      name: userJson.name,
-      email: userJson.email,
-      team_id: userJson.team_id,
-      team_name: userJson.team_name,
-    });
     await saveUserInfo({
       access_token: json.access_token,
-      id: userJson.id,
-      avatarUrl: userJson.avatarUrl,
+      id: userJson.viewer.id,
+      avatarUrl: userJson.viewer.avatarUrl,
       watermelon_user: context.query.state,
-      displayName: userJson.displayName,
-      name: userJson.name,
+      displayName: userJson.viewer.displayName,
+      name: userJson.viewer.name,
       email: userJson.email,
-      team_id: userJson.team_id,
-      team_name: userJson.team_name,
+      team_id: userJson.teams.nodes.id,
+      team_name: userJson.teams.nodes.name,
     });
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
-        login: userJson.displayName,
-        avatar_url: userJson.avatarUrl,
-        team_name: userJson.team_name,
+        login: userJson.viewer.displayName,
+        avatar_url: userJson.viewer.avatarUrl,
+        team_name: userJson.teams.nodes.name,
       },
     };
   }
