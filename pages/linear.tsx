@@ -82,6 +82,8 @@ export async function getServerSideProps(context) {
         variables: {},
       }),
     });
+    let userText = await user.text();
+    console.log(userText);
     let userJson = await user.json();
     console.log(userJson);
     console.log({
