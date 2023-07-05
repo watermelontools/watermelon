@@ -6,6 +6,7 @@ import SlackLoginLink from "../components/SlackLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
+import LinearLoginLink from "../components/LinearLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import getAllUserData from "../utils/api/getAllUserData";
@@ -29,6 +30,9 @@ function LoginGrid({ userEmail }) {
     null
   );
   const [discordUserData, setDiscordUserData] = useState<LoginGridProps | null>(
+    null
+  );
+  const [linearUserData, setLinearUserData] = useState<LoginGridProps | null>(
     null
   );
   const [notionUserData, setNotionUserData] = useState<LoginGridProps | null>(
@@ -59,6 +63,9 @@ function LoginGrid({ userEmail }) {
         }
         if (data?.notion_data) {
           setNotionUserData(JSON.parse(data.notion_data));
+        }
+        if (data?.linear_data) {
+          setLinearUserData(JSON.parse(data.linear_data));
         }
       });
       // use getByEmail to check if user has paid
@@ -143,6 +150,18 @@ function LoginGrid({ userEmail }) {
                 />
               ) : (
                 <SlackLoginLink userEmail={userEmail} />
+              )}
+            </div>
+            <div className="p-3">
+              {linearUserData?.user_displayname ? (
+                <InfoPanel
+                  info={{
+                    ...linearUserData,
+                    service_name: "Linear",
+                  }}
+                />
+              ) : (
+                <LinearLoginLink userEmail={userEmail} />
               )}
             </div>
             {/*         
