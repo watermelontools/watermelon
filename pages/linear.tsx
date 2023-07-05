@@ -93,7 +93,7 @@ export async function getServerSideProps(context) {
       watermelon_user: context.query.state,
       displayName: userJson.viewer.displayName,
       name: userJson.viewer.name,
-      email: userJson.email,
+      email: context.query.state,
       team_id: userJson.teams.nodes[0].id,
       team_name: userJson.teams.nodes[0].name,
     });
