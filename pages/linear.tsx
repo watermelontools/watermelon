@@ -66,7 +66,6 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
 export async function getServerSideProps(context) {
   let f;
   if (context.query.code) {
-    console.log(process.env.LINEAR_CLIENT_ID);
     f = await fetch(`https://api.linear.app/oauth/token`, {
       method: "POST",
       headers: {
@@ -82,8 +81,6 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
-  console.log(json);
-
   if (json.error) {
     return {
       props: {
@@ -96,18 +93,20 @@ export async function getServerSideProps(context) {
       headers: {
         Authorization: `Bearer ${json.access_token}`,
       },
-      body: "{“query”:“query ExampleQuery($userId: String!) {  authorizedApplications {    name  }  workspaceAuthorizedApplications {    name  }  auditEntryTypes {    type  }  user(id: $userId) {    id,    displayName    , email,    avatarUrl,    organization {      name,      logoUrl    }  }}“,”variables”:{“userId”:null}}",
+      body: JSON.stringify({
+        query:
+          "query Me {viewer{id,name,displayName,email,avatarUrl},teams{nodes{id,name}}}",
+        variables: {},
+      }),
     });
-    console.log(user);
-
     let userJson = await user.json();
     console.log(userJson);
     return {
       props: {
         loggedIn: true,
         userEmail: context.query.state,
-        login: userJson.login,
-        avatar_url: userJson.avatar_url,
+        login: userJson.displayName,
+        avatar_url: userJson.avatarUrl,
       },
     };
   }
