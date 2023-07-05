@@ -2,15 +2,13 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import saveUserInfo from "../utils/db/linear/saveUser";
-import JiraLoginLink from "../components/JiraLoginLink";
-export default function GitHub({
+export default function Linear({
   login,
   avatar_url,
   userEmail,
   team_name,
   error,
 }) {
-  const [hasPaid, setHasPaid] = useState(false);
   const [timeToRedirect, setTimeToRedirect] = useState(10);
 
   const router = useRouter();
@@ -25,23 +23,6 @@ export default function GitHub({
     return () => clearInterval(interval);
   }, [timeToRedirect]);
 
-  useEffect(() => {
-    // use getByEmail to check if user has paid
-    fetch("/api/payments/getByEmail", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: userEmail }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.email) {
-          setHasPaid(true);
-        }
-      });
-  }, []);
-
   return (
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
@@ -54,10 +35,6 @@ export default function GitHub({
         alt="linear user image"
         className="avatar avatar-8"
       />
-      <div>
-        <p className="text-emphasized">We recommend you login to Jira</p>
-        <JiraLoginLink userEmail={userEmail} />
-      </div>
       <div>
         <p>You will be redirected in {timeToRedirect}...</p>
         <p>
