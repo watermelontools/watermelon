@@ -5,7 +5,6 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/", label: "Home" },
     { href: "/settings", label: "Settings" },
     { href: "/team", label: "Team" },
-    { href: "/billing", label: "Billing" },
   ];
   return (
     <div className="d-flex flex-row" style={{ height: "98vh" }}>
