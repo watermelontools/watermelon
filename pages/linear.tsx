@@ -71,16 +71,17 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
+    var graphql = JSON.stringify({
+      query:
+        "query Me {viewer {  id,  name,  displayName, email,  avatarUrl},teams {  nodes {    id,    name  }}}",
+      variables: {},
+    });
     let user = await fetch(`https://api.linear.app/graphql`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${json.access_token}`,
       },
-      body: JSON.stringify({
-        query:
-          "query Me {viewer{id,name,displayName,email,avatarUrl},teams{nodes{id,name}}}",
-        variables: {},
-      }),
+      body: graphql,
     });
     let userText = await user.text();
     console.log(userText);
