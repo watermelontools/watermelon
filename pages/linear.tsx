@@ -71,9 +71,9 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    var graphql = JSON.stringify({
+    const graphql = JSON.stringify({
       query:
-        "query Me {viewer {  id,  name,  displayName, email,  avatarUrl},teams {  nodes {    id,    name  }}}",
+        "query Me {\nviewer {\n  id,\n  name,\n  displayName, email,\n  avatarUrl\n},\nteams {\n  nodes {\n    id,\n    name\n  }\n}\n}",
       variables: {},
     });
     let user = await fetch(`https://api.linear.app/graphql`, {
