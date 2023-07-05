@@ -80,6 +80,9 @@ export default function CardElement({ userEmail }) {
   };
   return (
     <div>
+      You will be purchasing {numberOfTeammates} 
+        {numberOfTeammates === 1 ? ' seat ' : ' seats '} 
+        for your GitHub Organization for a total of ${numberOfTeammates * 30} USD per month
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
           <CheckoutForm numberOfSeats={numberOfTeammates} />
