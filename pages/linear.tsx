@@ -75,7 +75,7 @@ export async function getServerSideProps(context) {
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/LINEAR",
+        redirect_uri: "https://app.watermelontools.com/linear",
         client_id: process.env.LINEAR_CLIENT_ID,
         client_secret: process.env.LINEAR_CLIENT_SECRET,
       }),
