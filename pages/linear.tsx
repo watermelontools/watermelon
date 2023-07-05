@@ -85,8 +85,7 @@ export async function getServerSideProps(context) {
       body: graphql,
     });
     let userText = await user.text();
-    console.log(userText);
-    let userJson = await user.json();
+    let userJson = JSON.parse(userText).data;
     console.log(userJson);
     console.log({
       access_token: json.access_token,
