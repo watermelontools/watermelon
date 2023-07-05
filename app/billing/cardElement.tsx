@@ -12,13 +12,13 @@ export default function CardElement({ userEmail }) {
   const [clientSecret, setClientSecret] = useState<string | undefined>("");
   const [numberOfTeammates, setNumberOfTeammates] = useState(1);
 
-
   async function getOrgMemberCount() {
     let { access_token } = await getToken(userEmail);
     const octokit = new Octokit({
       auth: access_token,
     })
 
+    // TODO: Programmatic org name
     const membersList = await octokit.request('GET /orgs/watermelontools/members', {
       org: 'ORG',
       headers: {
@@ -51,6 +51,7 @@ export default function CardElement({ userEmail }) {
     setClientSecret(clientSecret);
   };
 
+   // TODO: Programmatic org name
   useEffect(() => {
     getOrgMemberCount();
   }, [])
