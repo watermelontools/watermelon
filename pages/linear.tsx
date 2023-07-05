@@ -65,7 +65,11 @@ export default function GitHub({ login, avatar_url, userEmail, error }) {
 
 export async function getServerSideProps(context) {
   let f;
+  console.log("code", context.query.code);
+
   if (context.query.code) {
+    console.log("code", context.query.code);
+
     f = await fetch(`https://api.linear.app/oauth/token`, {
       method: "POST",
       headers: {
@@ -75,7 +79,8 @@ export async function getServerSideProps(context) {
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: context.query.code,
-        redirect_uri: "https://app.watermelontools.com/LINEAR",
+        redirect_uri: "https://app.watermelontools.com/linear",
+
         client_id: process.env.LINEAR_CLIENT_ID,
         client_secret: process.env.LINEAR_CLIENT_SECRET,
       }),
@@ -87,6 +92,8 @@ export async function getServerSideProps(context) {
       },
     };
   const json = await f.json();
+  console.log(json);
+
   if (json.error) {
     return {
       props: {
@@ -101,6 +108,8 @@ export async function getServerSideProps(context) {
       },
       body: "{“query”:“query ExampleQuery($userId: String!) {  authorizedApplications {    name  }  workspaceAuthorizedApplications {    name  }  auditEntryTypes {    type  }  user(id: $userId) {    id,    displayName    , email,    avatarUrl,    organization {      name,      logoUrl    }  }}“,”variables”:{“userId”:null}}",
     });
+    console.log(user);
+
     let userJson = await user.json();
     console.log(userJson);
     return {
