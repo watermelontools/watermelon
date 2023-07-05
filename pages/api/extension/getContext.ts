@@ -35,7 +35,7 @@ async function fetchGitHubIssues(userTokens, owner, repo) {
           .then((comments) => {
             issues.data.items[index].comments = comments.data.filter(
               (comment) => {
-                if (comment.user.type === "Bot") {
+                if (comment?.user?.type === "Bot") {
                   return false;
                 }
                 return true;

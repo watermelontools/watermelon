@@ -9,7 +9,7 @@ yarn dev
 
 We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
 
-This repo is automatically deployed on vercel to [app.watermelon.tools](app.watermelon.tools) on merges to `main`.
+This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
 
 All the backend lives as serverless functions under `api`, with the route being the filename.
 
@@ -32,3 +32,9 @@ The developer has to match the `utils` folder structure to the `api` route schem
 > As an example, we have `utils/user/getProfile.ts` that is imported in `pages/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
 
 We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
+
+### New integrations
+
+To integrate a new service, several steps are to be taken, but it's pretty much copying code.
+
+First, we use oauth so you need to ensure that the service supports it.
