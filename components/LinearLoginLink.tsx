@@ -7,7 +7,7 @@ const LinearLoginLink = ({ userEmail }) => (
       className="button block"
     >
       <div className="Box d-flex flex-items-center flex-justify-start p-2">
-        <img className="avatar avatar-8" src="/logos/slack.svg" />
+        <img className="avatar avatar-8" src="/logos/linear.svg" />
         <div className="p-2">
           <h2>Login to Linear</h2>
           <p>View your Most Relevant Tickets</p>
