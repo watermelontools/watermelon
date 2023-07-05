@@ -70,11 +70,11 @@ function HomePage({}) {
           ) : null}
         </>
       )}
-              <a
-          href={`https://linear.app/oauth/authorize&client_id=7247b6d23748af49ec0d7fd6cb5dae75&scope=read%20issues:create%20comments:create&redirect_uri=https://app.watermelontools.com/linear&state=${userEmail}&response_type=code&prompt=consent&actor=application`}
-        >
-          linear
-        </a>
+      <a
+        href={`https://linear.app/oauth/authorize?client_id=7247b6d23748af49ec0d7fd6cb5dae75&scope=read%20issues:create%20comments:create&redirect_uri=https://app.watermelontools.com/linear&state=${userEmail}&response_type=code&prompt=consent&actor=application`}
+      >
+        linear
+      </a>
     </div>
   );
 }
