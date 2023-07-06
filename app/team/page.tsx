@@ -8,10 +8,11 @@ import AddTeammateButton from "./addTeammateButton";
 
 async function Settings({}) {
   const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  let userName = session?.user?.name;
-  const teammates = await getTeammates({ watermelon_user: userName });
-  const teamName = getUserTeam({ watermelon_user: userName });
+  const { email: userEmail, name: userName } = session?.user ?? {};
+  const [teammates, teamName] = await Promise.all([
+    getTeammates({ watermelon_user: userName }),
+    getUserTeam({ watermelon_user: userName }),
+  ]);
   return (
     <div>
       <div className="p-3">
