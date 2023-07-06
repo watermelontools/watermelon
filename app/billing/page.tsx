@@ -12,7 +12,7 @@ async function BillingPage({
   console.log("BillingPage", { params, searchParams });
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
-
+  let { repo, owner, number } = searchParams;
   return (
     <div
       style={{
@@ -29,6 +29,10 @@ async function BillingPage({
             <h1 className="h3 mb-3 f4 text-normal">
               Purchase your Watermelon subscription
             </h1>
+            <p>
+              You are paying from the repo {repo} for team {owner} {number}{" "}
+              seats
+            </p>
             <CardElement userEmail={userEmail} />
           </div>
         </div>
