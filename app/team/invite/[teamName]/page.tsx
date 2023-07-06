@@ -1,11 +1,14 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
+import executeRequest from "../../../../utils/db/azuredb";
 import { authOptions } from "../../../api/auth/[...nextauth]/route";
 
 async function teamInviteLanding({ params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
-  let userName = session?.user?.name;
+  await executeRequest(
+    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.slug}';`
+  );
 
   return (
     <div>
