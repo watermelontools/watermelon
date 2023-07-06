@@ -1,18 +1,17 @@
 import { getServerSession } from "next-auth";
 
-import LogInBtn from "../../components/login-btn";
 import getTeammates from "../../utils/db/teams/getTeammates";
+import getUserTeam from "../../utils/db/teams/getUserTeam";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import AddTeammateButton from "./addTeammateButton";
 
 async function Settings({}) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
   let userName = session?.user?.name;
-  // if not logged in, do not show anything
-  if (!session) return <LogInBtn />;
   const teammates = await getTeammates({ watermelon_user: userName });
-  console.log(teammates);
+  const teamName = getUserTeam({ watermelon_user: userName });
   return (
     <div>
       <div className="p-3">
@@ -33,7 +32,7 @@ async function Settings({}) {
               View and invite people you work with
             </div>
           </div>
-          <button>Add Teammate</button>
+          <AddTeammateButton teamName={teamName} />
           {teammates?.length && (
             <div>
               {teammates.map((teammate) => {
