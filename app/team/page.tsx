@@ -14,7 +14,6 @@ async function Team({}) {
     getTeammates({ watermelon_user: userName }),
     getUserTeam({ watermelon_user: userName }),
   ]);
-
   return (
     <div>
       <div className="p-3">
