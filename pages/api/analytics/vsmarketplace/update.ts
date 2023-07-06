@@ -41,6 +41,7 @@ export default async function handler(req, res) {
       chunk = 10;
     for (i = 0, j = records.length; i < j; i += chunk) {
       temparray = records.slice(i, i + chunk);
+      // @ts-ignore
       chunkedRecords.push(temparray);
     }
     // now we have an array of arrays of 10 records each
@@ -49,6 +50,7 @@ export default async function handler(req, res) {
     for (let index = 0; index < chunkedRecords.length; index++) {
       const element = chunkedRecords[index];
       let createdRecord = await base("vscmarketplace").create(element);
+      // @ts-ignore
       createdRecords.push(createdRecord);
     }
     res.status(200).json(createdRecords);

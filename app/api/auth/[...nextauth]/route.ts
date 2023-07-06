@@ -1,13 +1,14 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import EmailProvider from "next-auth/providers/email";
-import MyAdapter from "../../../utils/auth/adapter";
-
-export default NextAuth({
+import MyAdapter from "../../../../utils/auth/adapter";
+export const authOptions: NextAuthOptions = {
   adapter: MyAdapter(),
   callbacks: {
     // add the id to the session as accessToken
     async session({ session, token, user }) {
-      session.user.name = user.id;
+      if (session.user) {
+        session.user.name = user.id;
+      }
       return session;
     },
   },
@@ -36,4 +37,7 @@ export default NextAuth({
       name: "Watermelon Auth",
     }),
   ],
-});
+};
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };

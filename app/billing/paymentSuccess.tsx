@@ -6,7 +6,7 @@ function Paymentsuccess() {
   const router = useRouter();
 
   const [numberOfSeats, setNumberOfSeats] = useState(4);
-  const [emailArray, setEmailArray] = useState([]);
+  const [emailArray, setEmailArray] = useState<[] | string[]>([]);
 
   useEffect(() => {
     const { seats } = router.query as { seats: string };
@@ -19,15 +19,18 @@ function Paymentsuccess() {
     emailArray.forEach((email) => {
       // Add email to github query count table
       // addEmailToGitHubQueryCountTable(email);
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/github/addEmailToGitHubQueryCountTable`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email
-        })
-      });
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/github/addEmailToGitHubQueryCountTable`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
 
       // Add email to the list of paying users
       fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/payments/addEmails`, {
@@ -47,7 +50,10 @@ function Paymentsuccess() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ emails: emailArray, sender: "info@watermelon.tools" }),
+      body: JSON.stringify({
+        emails: emailArray,
+        sender: "info@watermelon.tools",
+      }),
     });
 
     router.push("/billing/teammatesInvited");
