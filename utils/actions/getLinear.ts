@@ -14,9 +14,10 @@ async function getLinear({
     return ghValue;
   } else {
     const graphql = JSON.stringify({
-  query: "query SearchIssues($term: String!, $first: Int) {\n  searchIssues(term: $term, first: $first) {\n    nodes {\n      title\n      number\n      url\n    }\n  }\n}\n",
-  variables: {"term":randomWords,"first":amount}
-})
+      query:
+        "query SearchIssues($term: String!, $first: Int) {\n  searchIssues(term: $term, first: $first) {\n    nodes {\n      title\n      number\n      url\n    }\n  }\n}\n",
+      variables: { term: randomWords, first: amount },
+    });
 
     let linearTickets = await fetch("https://api.linear.app/graphql", {
       method: "POST",
@@ -29,7 +30,8 @@ async function getLinear({
       .then((response) => response.json())
       .then((result) => result)
       .catch((error) => console.log("error", error));
-    return linearTickets.data.searchIssues.nodes;
+    console.log("linearTickets from API", linearTickets);
+    return linearTickets?.data?.searchIssues?.nodes;
   }
 }
 export default getLinear;
