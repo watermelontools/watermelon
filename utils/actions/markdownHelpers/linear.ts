@@ -19,7 +19,7 @@ const linearMarkdown = ({
       if (linearValue.length) {
         for (let index = 0; index < linearValue.length; index++) {
           const element = linearValue[index];
-          markdown += `\n - [${element.title} - ${element.number}](${element.url})`;
+          markdown += `\n - [${element.number} - ${element.title}](${element.url})`;
           markdown += `\n`;
         }
       } else {
