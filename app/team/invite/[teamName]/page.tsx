@@ -3,15 +3,15 @@ import Link from "next/link";
 import executeRequest from "../../../../utils/db/azuredb";
 import { authOptions } from "../../../api/auth/[...nextauth]/route";
 
-async function teamInviteLanding({ params }: { params: { slug: string } }) {
+async function teamInviteLanding({ params }: { params: { teamName: string } }) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
-  console.log("slug", params.slug);
+  console.log("teamName", params.teamName);
   let added = await executeRequest(
-    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.slug}';`
+    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.teamName}';`
   );
   console.log(
-    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.slug}';`,
+    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.teamName}';`,
     added
   );
   return (
@@ -21,7 +21,7 @@ async function teamInviteLanding({ params }: { params: { slug: string } }) {
         <div className="">
           <div className="Subhead">
             <h2 className="Subhead-heading">
-              You have been added to team {params.slug}{" "}
+              You have been added to team {params.teamName}{" "}
             </h2>
             <div className="Subhead-description">Congratulations!</div>
           </div>
