@@ -12,6 +12,7 @@ async function Settings({}) {
   // if not logged in, do not show anything
   if (!session) return <LogInBtn />;
   const teammates = await getTeammates({ watermelon_user: userName });
+  console.log(teammates);
   return (
     <div>
       <div className="p-3">
@@ -33,15 +34,17 @@ async function Settings({}) {
             </div>
           </div>
           <button>Add Teammate</button>
-          <div>
-            {teammates.map((teammate) => {
-              return (
-                <div key={teammate.email}>
-                  <p>{teammate.email}</p>
-                </div>
-              );
-            })}
-          </div>
+          {teammates.length && (
+            <div>
+              {teammates.map((teammate) => {
+                return (
+                  <div key={teammate.email}>
+                    <p>{teammate.email}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
     </div>
