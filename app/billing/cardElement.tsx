@@ -6,7 +6,7 @@ import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 
 export default function CardElement({ userEmail }) {
-  let promptNumber = window.prompt("Number of seats");
+  let promptNumber = window.prompt("Number of seats") || 2;
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
   const [clientSecret, setClientSecret] = useState<string | undefined>("");
   const fetchClientSecret = async () => {
@@ -49,6 +49,11 @@ export default function CardElement({ userEmail }) {
   };
   return (
     <div>
+      <p>
+        You are about to purchase {promptNumber}
+        {promptNumber === 1 ? " seat " : " seats "}
+        for ${+promptNumber * 30} per month
+      </p>
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
           {promptNumber ? <CheckoutForm numberOfSeats={promptNumber} /> : null}
