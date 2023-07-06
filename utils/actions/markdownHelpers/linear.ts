@@ -24,3 +24,4 @@ const linearMarkdown = ({
   }
   return markdown;
 };
+export default linearMarkdown;
