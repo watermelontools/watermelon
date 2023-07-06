@@ -32,6 +32,7 @@ async function Settings({}) {
               View and invite people you work with
             </div>
           </div>
+          <button>Add Teammate</button>
           <div>
             {teammates.map((teammate) => {
               return (
