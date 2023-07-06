@@ -13,17 +13,18 @@ import jiraMarkdown from "../../../../utils/actions/markdownHelpers/jira";
 import slackMarkdown from "../../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../../utils/actions/markdownHelpers/count";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
     // Verify and parse the webhook event
     const req = await request.json();
+    console.log("request", req);
 
     const eventName = req.headers["x-github-event"];
     let payload = req.body;
