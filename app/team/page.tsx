@@ -33,7 +33,7 @@ async function Settings({}) {
               View and invite people you work with
             </div>
           </div>
-          <AddTeammateButton teamName={teamName} />
+          <AddTeammateButton teamName={teamName.name} />
           {teammates?.length && (
             <div>
               {teammates.map((teammate) => {
