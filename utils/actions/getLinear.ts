@@ -16,7 +16,7 @@ async function getLinear({
     const graphql = JSON.stringify({
       query:
         "query SearchIssues($term: String!, $first: Int) {\n  searchIssues(term: $term, first: $first) {\n    nodes {\n      title\n      number\n      url\n    }\n  }\n}\n",
-      variables: { term: randomWords, first: amount },
+      variables: { term: randomWords.join(" "), first: amount },
     });
 
     let linearTickets = await fetch("https://api.linear.app/graphql", {
