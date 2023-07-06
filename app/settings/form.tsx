@@ -15,6 +15,7 @@ export default function form({ userEmail }) {
     SlackMessages: 3,
     GitHubPRs: 3,
     NotionPages: 3,
+    LinearTickets: 3,
     AISummary: 1,
   });
   const handleSubmit = async () => {
@@ -32,7 +33,8 @@ export default function form({ userEmail }) {
         response.JiraTickets === formState.JiraTickets ||
         response.SlackMessages === formState.SlackMessages ||
         response.GitHubPRs === formState.GitHubPRs ||
-        response.NotionPages === formState.NotionPages
+        response.NotionPages === formState.NotionPages ||
+        response.LinearTickets === formState.LinearTickets
       ) {
         setUserSettingsState(userEmail);
       } else {
@@ -129,6 +131,29 @@ export default function form({ userEmail }) {
           }
         >
           {Array.from(Array(11)).map((i, index) => {
+            if (index === 0) {
+              return null;
+            }
+            return <option value={index}>{index}</option>;
+          })}
+        </select>
+      </div>
+
+      <div className="">
+        <span>Linear Tickets:</span>
+        <select
+          className="form-select"
+          aria-label="Amount of Linear Tickets"
+          defaultValue={formState?.LinearTickets}
+          value={formState.LinearTickets}
+          onChange={(e) =>
+            setFormState({
+              ...formState,
+              LinearTickets: parseInt(e.target.value),
+            })
+          }
+        >
+          {Array.from(Array(6)).map((i, index) => {
             if (index === 0) {
               return null;
             }
