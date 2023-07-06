@@ -30,7 +30,10 @@ async function getLinear({
       .then((response) => response.json())
       .then((result) => result)
       .catch((error) => console.log("error", error));
-    console.log("linearTickets from API", linearTickets);
+    console.log(
+      "linearTickets.data.searchIssues.nodes from API",
+      linearTickets.data.searchIssues.nodes
+    );
     return linearTickets?.data?.searchIssues?.nodes;
   }
 }
