@@ -28,9 +28,8 @@ const linearMarkdown = ({
     }
   } else {
     markdown += `Linear Tickets deactivated by ${userLogin}`;
-
-    markdown += `\n`;
   }
+  markdown += `\n`;
   return markdown;
 };
 export default linearMarkdown;
