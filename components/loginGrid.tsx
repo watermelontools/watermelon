@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraLoginLink from "../components/JiraLoginLink";
 import SlackLoginLink from "../components/SlackLoginLink";
