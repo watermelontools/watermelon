@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getUserSettings from "../../utils/api/getUserSettings";
 
 export default function form({ userEmail }) {
@@ -44,6 +44,9 @@ export default function form({ userEmail }) {
       setSaveDisabled(false);
     }
   };
+  useEffect(() => {
+    setUserSettingsState(userEmail);
+  }, [userEmail]);
 
   return (
     <form>
