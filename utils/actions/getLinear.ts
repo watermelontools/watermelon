@@ -5,13 +5,13 @@ async function getLinear({
   randomWords,
   amount = 3,
 }): Promise<LinearResult> {
-  let ghValue;
+  let linearValue;
 
   // create the query with the random words and the owner
   const q = ``;
   if (!linear_token) {
-    ghValue = { error: "no linear token" };
-    return ghValue;
+    linearValue = { error: "no linear token" };
+    return linearValue;
   } else {
     const graphql = JSON.stringify({
       query:
