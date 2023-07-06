@@ -9,7 +9,6 @@ async function teamInviteLanding({ params }: { params: { teamName: string } }) {
   await executeRequest(
     `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.teamName}';`
   );
-
   return (
     <div>
       <div className="p-3">
