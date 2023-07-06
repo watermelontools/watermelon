@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
+
 export default function addTeammateButton({ teamName }) {
   // onclick should copy to the clipboard the link to invite a teammate
-  console.log(teamName);
+  const [copied, setCopied] = useState(false);
   return (
     <button
       className="btn btn-primary"
@@ -11,9 +13,10 @@ export default function addTeammateButton({ teamName }) {
         navigator.clipboard.writeText(
           `https://${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/${teamName}`
         );
+        setCopied(true);
       }}
     >
-      Add Teammate
+      {copied ? "Copied to clipboard 🍉" : "Invite Teammate"}
     </button>
   );
 }
