@@ -13,6 +13,7 @@ import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 import getLinear from "../../../utils/actions/getLinear";
+import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -37,10 +38,11 @@ export default async (req, res) => {
         const owner = repository.owner.login;
         const repo = repository.name;
         const number = pull_request.number;
+        const userLogin = pull_request.user.login;
         trackEvent({
           name: "gitHubApp",
           properties: {
-            user: pull_request.user.login,
+            user: userLogin,
             owner,
             repo,
             action: payload.action,
@@ -51,7 +53,7 @@ export default async (req, res) => {
 
         const octokit = await app.getInstallationOctokit(installationId);
 
-        const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${pull_request.user.login}'`;
+        const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${userLogin}'`;
         const wmUserData = await executeRequest(query);
         const {
           github_token,
@@ -375,35 +377,39 @@ export default async (req, res) => {
             textToWrite += "Error getting summary" + businessLogicSummary.error;
           }
         } else {
-          textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
+          textToWrite += `AI Summary deactivated by ${userLogin}`;
         }
 
         textToWrite += githubMarkdown({
           GitHubPRs,
           ghValue,
-          userLogin: pull_request.user.login,
+          userLogin,
         });
         textToWrite += jiraMarkdown({
           JiraTickets,
           jiraValue,
-          userLogin: pull_request.user.login,
+          userLogin,
         });
         textToWrite += slackMarkdown({
           SlackMessages,
           slackValue,
-          userLogin: pull_request.user.login,
+          userLogin,
         });
         textToWrite += notionMarkdown({
           NotionPages,
           notionValue,
-          userLogin: pull_request.user.login,
+          userLogin,
+        });
+        textToWrite += linearMarkdown({
+          LinearTickets,
+          linearValue,
+          userLogin,
         });
         textToWrite += countMarkdown({
           count,
           isPrivateRepo: repository.private,
           repoName: repo,
         });
-        console.log("LinearTickets", LinearTickets);
 
         // Fetch all comments on the PR
         const comments = await octokit.request(

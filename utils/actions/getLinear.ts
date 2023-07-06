@@ -1,4 +1,3 @@
-import { Octokit } from "octokit";
 type LinearResult = { error: string } | any[];
 async function getLinear({
   linear_token,
