@@ -5,7 +5,8 @@ import CheckoutForm from "./CheckoutForm";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 
-export default function CardElement({ userEmail, number }) {
+export default function CardElement({ userEmail }) {
+  let promptNumber = window.prompt("Number of seats");
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
   const [clientSecret, setClientSecret] = useState<string | undefined>("");
   const fetchClientSecret = async () => {
@@ -17,7 +18,7 @@ export default function CardElement({ userEmail, number }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          quantity: number,
+          quantity: promptNumber,
           email: userEmail,
         }),
       }
@@ -27,7 +28,7 @@ export default function CardElement({ userEmail, number }) {
   };
   useEffect(() => {
     fetchClientSecret();
-  }, []);
+  }, [promptNumber]);
   const options: StripeElementsOptions = {
     clientSecret,
     loader: "auto",
@@ -50,7 +51,7 @@ export default function CardElement({ userEmail, number }) {
     <div>
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm numberOfSeats={number} />
+          {promptNumber ? <CheckoutForm numberOfSeats={promptNumber} /> : null}
         </Elements>
       )}
     </div>
