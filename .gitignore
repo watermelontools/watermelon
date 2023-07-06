@@ -14,3 +14,4 @@ next-env.d.ts
 yarn.lock
 .vercel
 .env
+.env*.local
