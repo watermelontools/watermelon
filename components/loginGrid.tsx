@@ -4,6 +4,7 @@ import SlackLoginLink from "../components/SlackLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
+import LinearLoginLink from "../components/LinearLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 type LoginGridProps = {
@@ -18,6 +19,7 @@ function LoginGrid({ userEmail, data }) {
   let jiraUserData: null | LoginGridProps = null;
   let discordUserData: null | LoginGridProps = null;
   let notionUserData: null | LoginGridProps = null;
+  let linearUserData: null | LoginGridProps = null;
 
   if (data?.github_data) {
     githubUserData = JSON.parse(data.github_data);
@@ -39,6 +41,9 @@ function LoginGrid({ userEmail, data }) {
   }
   if (data?.notion_data) {
     notionUserData = JSON.parse(data.notion_data);
+  }
+  if (data?.linear_data) {
+    linearUserData = JSON.parse(data.linear_data);
   }
 
   return (
@@ -115,6 +120,18 @@ function LoginGrid({ userEmail, data }) {
                 />
               ) : (
                 <SlackLoginLink userEmail={userEmail} />
+              )}
+            </div>
+            <div className="p-3">
+              {linearUserData?.user_displayname ? (
+                <InfoPanel
+                  info={{
+                    ...linearUserData,
+                    service_name: "Linear",
+                  }}
+                />
+              ) : (
+                <LinearLoginLink userEmail={userEmail} />
               )}
             </div>
             {/*         
