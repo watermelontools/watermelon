@@ -34,7 +34,7 @@ async function Settings({}) {
             </div>
           </div>
           <button>Add Teammate</button>
-          {teammates.length && (
+          {teammates?.length && (
             <div>
               {teammates.map((teammate) => {
                 return (
