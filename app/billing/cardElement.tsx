@@ -5,7 +5,7 @@ import CheckoutForm from "./CheckoutForm";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
 
-export default function CardElement({ userEmail }) {
+export default function CardElement({ userEmail, number }) {
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
   const [clientSecret, setClientSecret] = useState<string | undefined>("");
   const fetchClientSecret = async () => {
@@ -17,7 +17,7 @@ export default function CardElement({ userEmail }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          quantity: 4,
+          quantity: number,
           email: userEmail,
         }),
       }
@@ -50,7 +50,7 @@ export default function CardElement({ userEmail }) {
     <div>
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
-          <CheckoutForm numberOfSeats={4} />
+          <CheckoutForm numberOfSeats={number} />
         </Elements>
       )}
     </div>

@@ -33,7 +33,7 @@ async function BillingPage({
               You are paying from the repo {repo} for team {owner} {number}{" "}
               seats
             </p>
-            <CardElement userEmail={userEmail} />
+            <CardElement userEmail={userEmail} number={number || 2} />
           </div>
         </div>
       </div>
