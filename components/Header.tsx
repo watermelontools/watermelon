@@ -1,14 +1,7 @@
 "use client";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
-export default function Header() {
-  const [userEmail, setUserEmail] = useState<string | null | undefined>(null);
-  const { data } = useSession();
-
-  useEffect(() => {
-    setUserEmail(data?.user?.email);
-  }, [data]);
+import HeaderSignOut from "./HeaderSignOut";
+export default function Header({ userEmail, userToken }) {
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
       <a href="/" className="Header-link">
@@ -48,7 +41,7 @@ export default function Header() {
                   className="dropdown-item"
                   href={`vscode://watermelontools.watermelon-tools?email=${
                     userEmail ?? ""
-                  }&token=${data?.user?.name ? data.user.name : ""}`}
+                  }&token=${userToken ? userToken : ""}`}
                 >
                   VSCode Extension
                 </a>
