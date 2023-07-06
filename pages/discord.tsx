@@ -64,7 +64,7 @@ export async function getServerSideProps(context) {
     const response = await fetch(`${API_ENDPOINT}/oauth2/token`, {
       method: "POST",
       headers: headers,
-      body: new URLSearchParams(data),
+      body: new URLSearchParams(data.toString()),
     });
     const json = await response.json();
     const user = await fetch(`${API_ENDPOINT}/users/@me`, {
