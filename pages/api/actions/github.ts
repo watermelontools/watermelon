@@ -12,6 +12,7 @@ import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
 import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
+import getLinear from "../../../utils/actions/getLinear";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -56,14 +57,16 @@ export default async (req, res) => {
           github_token,
           jira_token,
           jira_refresh_token,
+          cloudId,
           slack_token,
           notion_token,
-          cloudId,
+          linear_token,
           AISummary,
           JiraTickets,
           GitHubPRs,
           SlackMessages,
           NotionPages,
+          LinearTickets,
           user_email,
           watermelon_user,
         } = wmUserData;
@@ -307,38 +310,49 @@ export default async (req, res) => {
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
 
-        const [ghValue, jiraValue, slackValue, notionValue, count] =
-          await Promise.all([
-            getGitHub({
-              repo,
-              owner,
-              github_token,
-              randomWords,
-              amount: GitHubPRs,
-            }),
-            getJira({
-              user: user_email,
-              title,
-              body,
-              jira_token,
-              jira_refresh_token,
-              randomWords,
-              amount: JiraTickets,
-            }),
-            getSlack({
-              title,
-              body,
-              slack_token,
-              randomWords,
-              amount: SlackMessages,
-            }),
-            getNotion({
-              notion_token,
-              randomWords,
-              amount: NotionPages,
-            }),
-            addActionCount({ watermelon_user }),
-          ]);
+        const [
+          ghValue,
+          jiraValue,
+          slackValue,
+          notionValue,
+          linearValue,
+          count,
+        ] = await Promise.all([
+          getGitHub({
+            repo,
+            owner,
+            github_token,
+            randomWords,
+            amount: GitHubPRs,
+          }),
+          getJira({
+            user: user_email,
+            title,
+            body,
+            jira_token,
+            jira_refresh_token,
+            randomWords,
+            amount: JiraTickets,
+          }),
+          getSlack({
+            title,
+            body,
+            slack_token,
+            randomWords,
+            amount: SlackMessages,
+          }),
+          getNotion({
+            notion_token,
+            randomWords,
+            amount: NotionPages,
+          }),
+          getLinear({
+            linear_token,
+            randomWords,
+            amount: LinearTickets,
+          }),
+          addActionCount({ watermelon_user }),
+        ]);
 
         let textToWrite = "";
         textToWrite += "### WatermelonAI Summary (BETA)";
@@ -389,6 +403,7 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
+        console.log("LinearTickets", LinearTickets);
 
         // Fetch all comments on the PR
         const comments = await octokit.request(
