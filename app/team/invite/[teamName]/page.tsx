@@ -6,10 +6,14 @@ import { authOptions } from "../../../api/auth/[...nextauth]/route";
 async function teamInviteLanding({ params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
+  console.log("slug", params.slug);
   let added = await executeRequest(
     `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.slug}';`
   );
-  console.log(added);
+  console.log(
+    `EXEC [dbo].[add_user_to_team] @watermelon_user = '${userEmail}', @teamName = '${params.slug}';`,
+    added
+  );
   return (
     <div>
       <div className="p-3">
