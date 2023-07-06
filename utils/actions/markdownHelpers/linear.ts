@@ -13,6 +13,10 @@ const linearMarkdown = ({
   markdown += `\n`;
 
   if (LinearTickets) {
+    if (linearValue?.error === "no linear token") {
+      markdown += `\n [Click here to login to Linear](https://app.watermelontools.com)`;
+    } else {
+    }
   } else {
     markdown += `Linear Tickets deactivated by ${userLogin}`;
 
