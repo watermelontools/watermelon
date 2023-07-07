@@ -14,6 +14,15 @@ async function Team({}) {
     getTeammates({ watermelon_user: userName }),
     getUserTeam({ watermelon_user: userName }),
   ]);
+  const sendTeammateInvite = async (email) => {
+    const invitation = sendTeammateInvite({
+      email,
+      teamName,
+      inviteUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/{teamName`,
+    });
+    console.log(invitation);
+    return invitation;
+  };
   return (
     <div>
       <div className="p-3">
