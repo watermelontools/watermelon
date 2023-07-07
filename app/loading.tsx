@@ -11,27 +11,13 @@ async function loading({}) {
     user_email: "tulia@watermelontools.com",
   });
   const fakeData = {
-    github_data: {
-      fakeObject,
-    },
-    bitbucket_data: {
-      fakeObject,
-    },
-    gitlab_data: {
-      fakeObject,
-    },
-    slack_data: {
-      fakeObject,
-    },
-    jira_data: {
-      fakeObject,
-    },
-    linear_data: {
-      fakeObject,
-    },
-    notion_data: {
-      fakeObject,
-    },
+    github_data: fakeObject,
+    bitbucket_data: fakeObject,
+    gitlab_data: fakeObject,
+    slack_data: fakeObject,
+    jira_data: fakeObject,
+    linear_data: fakeObject,
+    notion_data: fakeObject,
   };
 
   return (
