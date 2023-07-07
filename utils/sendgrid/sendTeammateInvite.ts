@@ -22,7 +22,7 @@ export default async function sendTeammateInvite({
     },
   };
   sgMail
-    .sendSingle(msg)
+    .send(msg)
     .then(() => {
       console.log("Email sent");
       return { success: true };
