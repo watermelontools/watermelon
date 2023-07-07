@@ -28,10 +28,11 @@ export default function sendInviteForm({ teamName, userEmail }) {
   return (
     <form
       className="my-2"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         const email = e.target[0].value;
-        sendTeammateInviteEmail({ email });
+        console.log(email);
+        await sendTeammateInviteEmail({ email });
       }}
     >
       <input
@@ -40,7 +41,7 @@ export default function sendInviteForm({ teamName, userEmail }) {
         placeholder={`Teammate@${teamName.toLowerCase()}.com`}
         aria-label="Teammate email"
       />
-      <button className="btn mx-2" type="button" disabled={buttonDisabled}>
+      <button className="btn mx-2" type="submit" disabled={buttonDisabled}>
         {buttonText}
       </button>
     </form>
