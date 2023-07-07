@@ -31,12 +31,12 @@ async function Team({}) {
         <div className="">
           <div className="Subhead">
             <h2 className="Subhead-heading">My Team</h2>
-            <div className="Subhead-description">
-              View and invite people you work with
-            </div>
           </div>
+          <h3 className="Subhead-heading">Invite</h3>
+
           <AddTeammateButton teamName={teamName.name} />
           <SendInviteForm teamName={teamName.name} userEmail={userEmail} />
+          <h3 className="Subhead-heading">Teammates</h3>
           {teammates?.length && (
             <div>
               {teammates.map((teammate) => {

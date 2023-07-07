@@ -17,8 +17,6 @@ export default function sendInviteForm({ teamName, userEmail }) {
         inviteUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/${teamName}`,
       }),
     });
-
-    console.log(invitation);
     setButtonDisabled(false);
     setButtonText("Send Invite");
     return invitation;
