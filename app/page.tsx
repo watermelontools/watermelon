@@ -16,6 +16,15 @@ async function HomePage({}) {
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
+      <a href="https://github.com/apps/watermelon-context" target="_blank">
+        <div className="Box d-flex flex-items-center flex-justify-start m-3 p-2">
+          <img className="avatar avatar-8" src="/logos/github.svg" />
+          <div className="p-2">
+            <h2>Try our GitHub App</h2>
+            <p>Context on each Pr</p>
+          </div>
+        </div>
+      </a>
       {userEmail && (
         <div
           style={{
@@ -49,15 +58,6 @@ async function HomePage({}) {
           </div>
         </div>
       )}
-      <a href="https://github.com/apps/watermelon-context" target="_blank">
-        <div className="Box d-flex flex-items-center flex-justify-start m-3 p-2">
-          <img className="avatar avatar-8" src="/logos/github.svg" />
-          <div className="p-2">
-            <h2>Try our GitHub App</h2>
-            <p>Context on each Pr</p>
-          </div>
-        </div>
-      </a>
     </div>
   );
 }
