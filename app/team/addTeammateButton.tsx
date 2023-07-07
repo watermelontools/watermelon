@@ -20,7 +20,7 @@ export default function addTeammateButton({ teamName }) {
           setCopied(true);
         }}
       >
-        {copied ? "Copied to clipboard 🍉" : "Copy Invite"}
+        {copied ? "Copied to clipboard 🍉" : "Copy Invite Link"}
       </button>
     </div>
   );
