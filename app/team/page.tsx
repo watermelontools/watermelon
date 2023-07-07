@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 
 import getTeammates from "../../utils/db/teams/getTeammates";
 import getUserTeam from "../../utils/db/teams/getUserTeam";
+import sendTeammateInvite from "../../utils/sendgrid/sendTeammateInvite";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import AddTeammateButton from "./addTeammateButton";
@@ -14,9 +15,10 @@ async function Team({}) {
     getTeammates({ watermelon_user: userName }),
     getUserTeam({ watermelon_user: userName }),
   ]);
-  const sendTeammateInvite = async (email) => {
+  const sendTeammateInviteEmail = async ({ email: receiverEmail }) => {
     const invitation = sendTeammateInvite({
-      email,
+      sender: userEmail || "info@watermelon.tools",
+      email: receiverEmail,
       teamName,
       inviteUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/{teamName`,
     });
