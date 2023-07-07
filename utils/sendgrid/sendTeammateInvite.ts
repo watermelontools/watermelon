@@ -14,7 +14,7 @@ export default async function sendTeammateInvite({
   const msg = {
     to: email,
     from: "info@watermelon.tools",
-    templateId: "d-789789fdd54046659d75103ba36c89bc",
+    templateId: "d-dd5c729f0be5439daac6b1faaf0431d6",
     dynamic_template_data: {
       sender,
       inviteUrl,
