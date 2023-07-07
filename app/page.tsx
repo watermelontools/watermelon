@@ -27,7 +27,6 @@ async function HomePage() {
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
-
       {userEmail && (
         <div>
           <div
