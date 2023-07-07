@@ -14,7 +14,7 @@ export default async function sendTeammateInvite({
   const msg = {
     to: email,
     from: "info@watermelon.tools",
-    templateId: "d-dd5c729f0be5439daac6b1faaf0431d6",
+    templateId: "d-789789fdd54046659d75103ba36c89bc",
     dynamic_template_data: {
       sender,
       inviteUrl,
@@ -22,7 +22,7 @@ export default async function sendTeammateInvite({
     },
   };
   sgMail
-    .send(msg)
+    .sendSingle(msg)
     .then(() => {
       console.log("Email sent");
       return { success: true };
