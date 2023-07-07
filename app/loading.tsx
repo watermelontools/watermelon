@@ -4,12 +4,12 @@ import DownloadExtension from "../components/dashboard/DownloadExtension";
 async function loading({}) {
   const userEmail = "tulia@watermelontools.com";
   const userName = "Tulia";
-  const fakeObject = {
+  const fakeObject = JSON.stringify({
     organization: "watermelon",
     user_avatar_url: "/logos/watermelon.png",
     user_displayname: "Watermelon",
     user_email: "tulia@watermelontools.com",
-  };
+  });
   const fakeData = {
     github_data: {
       ...fakeObject,
