@@ -8,14 +8,14 @@ export default function addTeammateButton({ teamName }) {
   return (
     <div>
       <p>
-        https://${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/${teamName}
+        {process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/{teamName}
       </p>
       <button
         className="btn btn-primary"
         type="button"
         onClick={() => {
           navigator.clipboard.writeText(
-            `https://${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/${teamName}`
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/${teamName}`
           );
           setCopied(true);
         }}
