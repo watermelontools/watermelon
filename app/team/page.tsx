@@ -6,13 +6,22 @@ import getUserTeam from "../../utils/db/teams/getUserTeam";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import AddTeammateButton from "./addTeammateButton";
 
-async function Settings({}) {
+async function Team({}) {
   const session = await getServerSession(authOptions);
   const { email: userEmail, name: userName } = session?.user ?? {};
   const [teammates, teamName] = await Promise.all([
     getTeammates({ watermelon_user: userName }),
     getUserTeam({ watermelon_user: userName }),
   ]);
+  const sendTeammateInvite = async (email) => {
+    const invitation = sendTeammateInvite({
+      email,
+      teamName,
+      inviteUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/{teamName`,
+    });
+    console.log(invitation);
+    return invitation;
+  };
   return (
     <div>
       <div className="p-3">
@@ -34,6 +43,17 @@ async function Settings({}) {
             </div>
           </div>
           <AddTeammateButton teamName={teamName.name} />
+          <form className="my-2">
+            <input
+              className="form-control "
+              type="email"
+              placeholder={`Teammate@${teamName.name.toLowerCase()}.com`}
+              aria-label="Teammate email"
+            />
+            <button className="btn mx-2" type="button">
+              Send Invite
+            </button>
+          </form>
           {teammates?.length && (
             <div>
               {teammates.map((teammate) => {
@@ -51,4 +71,4 @@ async function Settings({}) {
   );
 }
 
-export default Settings;
+export default Team;
