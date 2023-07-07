@@ -2,10 +2,10 @@ import { getServerSession } from "next-auth";
 
 import getTeammates from "../../utils/db/teams/getTeammates";
 import getUserTeam from "../../utils/db/teams/getUserTeam";
-import sendTeammateInvite from "../../utils/sendgrid/sendTeammateInvite";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import AddTeammateButton from "./addTeammateButton";
+import SendInviteForm from "./sendInviteForm";
 
 async function Team({}) {
   const session = await getServerSession(authOptions);
@@ -14,16 +14,7 @@ async function Team({}) {
     getTeammates({ watermelon_user: userName }),
     getUserTeam({ watermelon_user: userName }),
   ]);
-  const sendTeammateInviteEmail = async ({ email: receiverEmail }) => {
-    const invitation = sendTeammateInvite({
-      sender: userEmail || "info@watermelon.tools",
-      email: receiverEmail,
-      teamName,
-      inviteUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/team/invite/{teamName`,
-    });
-    console.log(invitation);
-    return invitation;
-  };
+
   return (
     <div>
       <div className="p-3">
@@ -45,24 +36,7 @@ async function Team({}) {
             </div>
           </div>
           <AddTeammateButton teamName={teamName.name} />
-          <form
-            className="my-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              const email = e.target[0].value;
-              sendTeammateInviteEmail({ email });
-            }}
-          >
-            <input
-              className="form-control "
-              type="email"
-              placeholder={`Teammate@${teamName.name.toLowerCase()}.com`}
-              aria-label="Teammate email"
-            />
-            <button className="btn mx-2" type="button">
-              Send Invite
-            </button>
-          </form>
+          <SendInviteForm teamName={teamName.name} userEmail={userEmail} />
           {teammates?.length && (
             <div>
               {teammates.map((teammate) => {
