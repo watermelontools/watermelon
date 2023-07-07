@@ -12,32 +12,25 @@ async function loading({}) {
   });
   const fakeData = {
     github_data: {
-      ...fakeObject,
-      service_name: "github",
+      fakeObject,
     },
     bitbucket_data: {
-      ...fakeObject,
-      service_name: "bitbucket",
+      fakeObject,
     },
     gitlab_data: {
-      ...fakeObject,
-      service_name: "gitlab",
+      fakeObject,
     },
     slack_data: {
-      ...fakeObject,
-      service_name: "slack",
+      fakeObject,
     },
     jira_data: {
-      ...fakeObject,
-      service_name: "jira",
+      fakeObject,
     },
     linear_data: {
-      ...fakeObject,
-      service_name: "linear",
+      fakeObject,
     },
     notion_data: {
-      ...fakeObject,
-      service_name: "notion",
+      fakeObject,
     },
   };
 
