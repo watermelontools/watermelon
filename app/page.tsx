@@ -9,7 +9,10 @@ async function HomePage({}) {
   let userEmail = session?.user?.email;
   let userName = session?.user?.name;
   // if not logged in, do not show anything
-  const data = await getAllPublicUserData({ userEmail });
+  const data = await getAllPublicUserData({ userEmail }).catch((e) => {
+    console.log(e);
+    return null;
+  });
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
