@@ -357,8 +357,7 @@ export default async (req, res) => {
         ]);
 
         let textToWrite = "";
-        textToWrite += "### WatermelonAI Summary (BETA)";
-        textToWrite += `\n`;
+        textToWrite += `### WatermelonAI Summary (BETA) \n`;
 
         let businessLogicSummary;
         if (AISummary) {
