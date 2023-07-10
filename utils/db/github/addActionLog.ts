@@ -30,7 +30,7 @@ export default async function addActionLog({
     @github_repo='${repo}', 
     @github_issue_number=${number}, 
     @github_event_type='${payload.action}', 
-    @userTeam=${count.name}, 
+    @userTeam=${count.id}, 
     @watermelon_user='${watermelon_user}'`;
     const savedLog = await executeRequest(saveLog);
     console.log("savedLog", savedLog);
