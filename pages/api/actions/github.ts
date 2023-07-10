@@ -426,7 +426,6 @@ export default async (req, res) => {
         @userTeam=${count.name}, 
         @watermelon_user='${userLogin}'`;
         const savedLog = await executeRequest(saveLog);
-
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
