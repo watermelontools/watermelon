@@ -425,6 +425,7 @@ export default async (req, res) => {
         @github_event_type='${payload.action}', 
         @userTeam=${count.name}, 
         @watermelon_user='${userLogin}'`;
+        console.log("saveLog", saveLog)
         const savedLog = await executeRequest(saveLog);
         console.log("savedLog", savedLog);
         // Fetch all comments on the PR
