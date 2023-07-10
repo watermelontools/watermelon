@@ -410,7 +410,23 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
-
+        const saveLog = `EXEC dbo.create_gh_action_log 
+        @randomWords='${randomWords.join(" ")}', 
+        @github_response='${ghValue}', 
+        @jira_response='${jiraValue}', 
+        @slack_response='${slackValue}', 
+        @notion_response='${notionValue}', 
+        @linear_response='${linearValue}', 
+        @markdown='${textToWrite}', 
+        @GPT_summary='${businessLogicSummary}', 
+        @github_owner='${owner}', 
+        @github_repo='${repo}', 
+        @github_issue_number=${number}, 
+        @github_event_type='${payload.action}', 
+        @userTeam=${count.name}, 
+        @watermelon_user='${userLogin}'`;
+        const savedLog = await executeRequest(saveLog);
+        console.log("savedLog", savedLog);
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
