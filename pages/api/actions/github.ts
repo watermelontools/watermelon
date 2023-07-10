@@ -412,11 +412,11 @@ export default async (req, res) => {
         });
         const saveLog = `EXEC dbo.create_gh_action_log 
         @randomWords='${randomWords.join(" ")}', 
-        @github_response='${ghValue}', 
-        @jira_response='${jiraValue}', 
-        @slack_response='${slackValue}', 
-        @notion_response='${notionValue}', 
-        @linear_response='${linearValue}', 
+        @github_response='${ghValue.toString()}', 
+        @jira_response='${jiraValue.toString()}', 
+        @slack_response='${slackValue.toString()}', 
+        @notion_response='${notionValue.toString()}', 
+        @linear_response='${linearValue.toString()}', 
         @markdown='${textToWrite}', 
         @GPT_summary='${businessLogicSummary}', 
         @github_owner='${owner}', 
@@ -425,7 +425,7 @@ export default async (req, res) => {
         @github_event_type='${payload.action}', 
         @userTeam=${count.name}, 
         @watermelon_user='${userLogin}'`;
-        console.log("saveLog", saveLog)
+        console.log("saveLog", saveLog);
         const savedLog = await executeRequest(saveLog);
         console.log("savedLog", savedLog);
         // Fetch all comments on the PR
