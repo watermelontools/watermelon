@@ -14,7 +14,7 @@ import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 import getLinear from "../../../utils/actions/getLinear";
 import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
-
+import addActionLog from "../../../utils/db/github/addActionLog";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -410,24 +410,22 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
-        const saveLog = `EXEC dbo.create_gh_action_log 
-        @randomWords='${randomWords.join(" ")}', 
-        @github_response='${ghValue.toString()}', 
-        @jira_response='${jiraValue.toString()}', 
-        @slack_response='${slackValue.toString()}', 
-        @notion_response='${notionValue.toString()}', 
-        @linear_response='${linearValue.toString()}', 
-        @markdown='${textToWrite}', 
-        @GPT_summary='${businessLogicSummary}', 
-        @github_owner='${owner}', 
-        @github_repo='${repo}', 
-        @github_issue_number=${number}, 
-        @github_event_type='${payload.action}', 
-        @userTeam=${count.name}, 
-        @watermelon_user='${userLogin}'`;
-        console.log("saveLog", saveLog);
-        const savedLog = await executeRequest(saveLog);
-        console.log("savedLog", savedLog);
+        await addActionLog({
+          randomWords,
+          ghValue,
+          jiraValue,
+          slackValue,
+          notionValue,
+          linearValue,
+          textToWrite,
+          businessLogicSummary,
+          owner,
+          repo,
+          number,
+          payload,
+          count,
+          watermelon_user,
+        });
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
