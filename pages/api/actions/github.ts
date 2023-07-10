@@ -410,6 +410,7 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
+        // save log trail
         const saveLog = `EXEC dbo.create_gh_action_log 
         @randomWords='${randomWords.join(" ")}', 
         @github_response='${ghValue}', 
