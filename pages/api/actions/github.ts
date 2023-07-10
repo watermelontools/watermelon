@@ -423,7 +423,7 @@ export default async (req, res) => {
         @github_repo='${repo}', 
         @github_issue_number=${number}, 
         @github_event_type='${payload.action}', 
-        @userTeam=${count.name}, 
+        @userTeam=${count.id}, 
         @watermelon_user='${userLogin}'`;
         console.log("saveLog", saveLog);
         const savedLog = await executeRequest(saveLog);
