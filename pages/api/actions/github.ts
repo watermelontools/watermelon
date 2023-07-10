@@ -412,11 +412,11 @@ export default async (req, res) => {
         });
         const saveLog = `EXEC dbo.create_gh_action_log 
         @randomWords='${randomWords.join(" ")}', 
-        @github_response='${ghValue.toString()}', 
-        @jira_response='${jiraValue.toString()}', 
-        @slack_response='${slackValue.toString()}', 
-        @notion_response='${notionValue.toString()}', 
-        @linear_response='${linearValue.toString()}', 
+        @github_response='${ghValue?.toString()}', 
+        @jira_response='${jiraValue?.toString()}', 
+        @slack_response='${slackValue?.toString()}', 
+        @notion_response='${notionValue?.toString()}', 
+        @linear_response='${linearValue?.toString()}', 
         @markdown='${textToWrite}', 
         @GPT_summary='${businessLogicSummary}', 
         @github_owner='${owner}', 
