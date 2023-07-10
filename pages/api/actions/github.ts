@@ -411,7 +411,7 @@ export default async (req, res) => {
           repoName: repo,
         });
         const saveLog = `EXEC dbo.create_gh_action_log 
-        @randomWords='${randomWords}', 
+        @randomWords='${randomWords.join(" ")}', 
         @github_response='${ghValue}', 
         @jira_response='${jiraValue}', 
         @slack_response='${slackValue}', 
