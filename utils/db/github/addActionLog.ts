@@ -19,18 +19,18 @@ export default async function addActionLog({
   try {
     const saveLog = `EXEC dbo.create_gh_action_log 
     @randomWords='${randomWords.join(" ")}', 
-    @github_response='${ghValue.toString()}', 
-    @jira_response='${jiraValue.toString()}', 
-    @slack_response='${slackValue.toString()}', 
-    @notion_response='${notionValue.toString()}', 
-    @linear_response='${linearValue.toString()}', 
+    @github_response='${JSON.stringify(ghValue)}', 
+    @jira_response='${JSON.stringify(jiraValue)}', 
+    @slack_response='${JSON.stringify(slackValue)}', 
+    @notion_response='${JSON.stringify(notionValue)}', 
+    @linear_response='${JSON.stringify(linearValue)}', 
     @markdown='${textToWrite}', 
     @GPT_summary='${businessLogicSummary}', 
     @github_owner='${owner}', 
     @github_repo='${repo}', 
     @github_issue_number=${number}, 
     @github_event_type='${payload.action}', 
-    @userTeam=${count.name}, 
+    @userTeam=${count.id}, 
     @watermelon_user='${watermelon_user}'`;
     const savedLog = await executeRequest(saveLog);
     console.log("savedLog", savedLog);
