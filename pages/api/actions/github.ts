@@ -1,13 +1,15 @@
 import { App } from "@octokit/app";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import executeRequest from "../../../utils/db/azuredb";
+
 import getGitHub from "../../../utils/actions/getGitHub";
 import getJira from "../../../utils/actions/getJira";
 import getSlack from "../../../utils/actions/getSlack";
-import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 import addActionCount from "../../../utils/db/teams/addActionCount";
 import getNotion from "../../../utils/actions/getNotion";
 import getLinear from "../../../utils/actions/getLinear";
+import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
+
 import githubMarkdown from "../../../utils/actions/markdownHelpers/github";
 import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
 import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
