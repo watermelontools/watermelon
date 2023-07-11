@@ -425,6 +425,7 @@ export default async (req, res) => {
           count,
           watermelon_user,
         });
+
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
