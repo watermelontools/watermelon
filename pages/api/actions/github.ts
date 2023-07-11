@@ -14,7 +14,7 @@ import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 import getLinear from "../../../utils/actions/getLinear";
 import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
-
+import addActionLog from "../../../utils/db/github/addActionLog";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -357,8 +357,7 @@ export default async (req, res) => {
         ]);
 
         let textToWrite = "";
-        textToWrite += "### WatermelonAI Summary (BETA)";
-        textToWrite += `\n`;
+        textToWrite += `### WatermelonAI Summary (BETA) \n`;
 
         let businessLogicSummary;
         if (AISummary) {
@@ -410,23 +409,23 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
-        // save log trail
-        const saveLog = `EXEC dbo.create_gh_action_log 
-        @randomWords='${randomWords.join(" ")}', 
-        @github_response='${ghValue}', 
-        @jira_response='${jiraValue}', 
-        @slack_response='${slackValue}', 
-        @notion_response='${notionValue}', 
-        @linear_response='${linearValue}', 
-        @markdown='${textToWrite}', 
-        @GPT_summary='${businessLogicSummary}', 
-        @github_owner='${owner}', 
-        @github_repo='${repo}', 
-        @github_issue_number=${number}, 
-        @github_event_type='${payload.action}', 
-        @userTeam=${count.name}, 
-        @watermelon_user='${userLogin}'`;
-        const savedLog = await executeRequest(saveLog);
+
+        await addActionLog({
+          randomWords,
+          ghValue,
+          jiraValue,
+          slackValue,
+          notionValue,
+          linearValue,
+          textToWrite,
+          businessLogicSummary,
+          owner,
+          repo,
+          number,
+          payload,
+          count,
+          watermelon_user,
+        });
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
