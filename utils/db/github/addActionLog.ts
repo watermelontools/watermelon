@@ -43,11 +43,11 @@ export default async function addActionLog({
   try {
     const saveLog = `EXEC dbo.create_gh_action_log 
     @randomWords='${randomWords.join(" ")}', 
-    @github_response='${JSON.stringify(ghValue)}', 
-    @jira_response='${JSON.stringify(jiraValue)}', 
-    @slack_response='${JSON.stringify(slackValue)}', 
-    @notion_response='${JSON.stringify(notionValue)}', 
-    @linear_response='${JSON.stringify(linearValue)}', 
+    @github_response='${JSON.stringify(ghValue).replace(/'/g, "''")}', 
+    @jira_response='${JSON.stringify(jiraValue).replace(/'/g, "''")}', 
+    @slack_response='${JSON.stringify(slackValue).replace(/'/g, "''")}', 
+    @notion_response='${JSON.stringify(notionValue).replace(/'/g, "''")}', 
+    @linear_response='${JSON.stringify(linearValue).replace(/'/g, "''")}', 
     @markdown='${textToWrite}', 
     @GPT_summary='${businessLogicSummary}', 
     @github_owner='${owner}', 
