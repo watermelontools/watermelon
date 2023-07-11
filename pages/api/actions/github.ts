@@ -379,7 +379,7 @@ export default async (req, res) => {
             textToWrite += "Error getting summary" + businessLogicSummary.error;
           }
         } else {
-          textToWrite += `AI Summary deactivated by ${userLogin}`;
+          textToWrite += `AI Summary deactivated by ${userLogin} \n`;
         }
 
         textToWrite += githubMarkdown({
