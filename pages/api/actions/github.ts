@@ -376,7 +376,7 @@ export default async (req, res) => {
           if (businessLogicSummary) {
             textToWrite += businessLogicSummary;
           } else {
-            textToWrite += "Error getting summary" + businessLogicSummary.error;
+            textToWrite += "Error getting summary" + businessLogicSummary.error + "\n";
           }
         } else {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;
