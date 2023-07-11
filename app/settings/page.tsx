@@ -4,7 +4,11 @@ import LogInBtn from "../../components/login-btn";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Form from "./form";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Settings",
+  description: "Configure the Context of your team",
+};
 async function Settings({}) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;

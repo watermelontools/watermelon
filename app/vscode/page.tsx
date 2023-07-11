@@ -5,6 +5,11 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "VSCode Login",
+  description: "Login to Watermelon Context on VSCode",
+};
 async function VSCode() {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
