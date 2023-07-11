@@ -4,7 +4,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "VSCodium Login",
+  description: "Login to Watermelon Context on VSCodium",
+};
 async function VSCodium({}) {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;

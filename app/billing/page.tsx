@@ -2,6 +2,12 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { getServerSession } from "next-auth";
 import CardElement from "./cardElement";
 
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Billing",
+  description: "Pay for the Context of your team",
+};
+
 async function BillingPage({
   params,
   searchParams,
