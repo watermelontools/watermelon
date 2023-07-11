@@ -7,13 +7,13 @@ import getSlack from "../../../utils/actions/getSlack";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 import addActionCount from "../../../utils/db/teams/addActionCount";
 import getNotion from "../../../utils/actions/getNotion";
+import getLinear from "../../../utils/actions/getLinear";
 import githubMarkdown from "../../../utils/actions/markdownHelpers/github";
 import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
 import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
-import countMarkdown from "../../../utils/actions/markdownHelpers/count";
-import getLinear from "../../../utils/actions/getLinear";
 import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
+import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
