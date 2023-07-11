@@ -7,7 +7,10 @@ import Header from "../components/Header";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import LogInBtn from "../components/login-btn";
 export const metadata = {
-  title: "Watermelon",
+  title: {
+    template: "%s | Watermelon",
+    default: "Watermelon",
+  },
   description: "Get context on each PR",
 };
 
