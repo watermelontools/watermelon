@@ -424,7 +424,7 @@ export default async (req, res) => {
         @github_issue_number=${number}, 
         @github_event_type='${payload.action}', 
         @userTeam=${count.id}, 
-        @watermelon_user='${userLogin}'`;
+        @watermelon_user='${watermelon_user}'`;
         console.log("saveLog", saveLog);
         const savedLog = await executeRequest(saveLog);
         console.log("savedLog", savedLog);
