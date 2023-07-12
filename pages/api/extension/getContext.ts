@@ -4,6 +4,7 @@ import getAllData from "../../../utils/db/user/getAllData";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
+import PostHogTracker from "../../../lib/track/posthogTracker";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
@@ -183,12 +184,24 @@ export default async function handler(req, res) {
   }
 
   const githubIssues = await fetchGitHubIssues(userTokens, owner, repo);
-  let PRTitles = githubIssues.map((issue) => issue.title);
-  const jiraIssues = await fetchJiraTickets({ user, ...userTokens }, PRTitles);
-  const slackConversations = await fetchSlackConversations(
-    userTokens,
-    PRTitles
-  );
+  const PRTitles = githubIssues.map((issue) => issue.title);
+  const [jiraIssues, slackConversations] = await Promise.all([
+    fetchJiraTickets({ user, ...userTokens }, PRTitles),
+    fetchSlackConversations(userTokens, PRTitles),
+  ]);
+  PostHogTracker().capture({
+    distinctId: user,
+    event: "extensionContext",
+    properties: {
+      githubIssues,
+      jiraIssues,
+      slackConversations,
+      user,
+      repo,
+      owner,
+      gitSystem,
+    },
+  });
 
   return res.send({
     github: githubIssues,
