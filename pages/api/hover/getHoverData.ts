@@ -9,6 +9,10 @@ function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
 }
+function handleRejection(reason) {
+  console.error(reason);
+  return { error: reason };
+}
 export default async function handler(req, res) {
   const { user, gitSystem, repo, owner, commitTitle } = req.body;
 
@@ -123,15 +127,28 @@ export default async function handler(req, res) {
     }
     return slackValue;
   }
-  const githubIssues = await fetchGitHubIssues(userTokens, owner, repo);
-  const jiraTickets = await fetchJiraTickets(userTokens, commitTitle);
-  const slackConversations = await fetchSlackConversations(
-    userTokens,
-    commitTitle
-  );
+  const [githubResult, jiraResult, slackResult] = await Promise.allSettled([
+    fetchGitHubIssues(userTokens, owner, repo),
+    fetchJiraTickets(userTokens, commitTitle),
+    fetchSlackConversations(userTokens, commitTitle),
+  ]);
+
+  const githubIssues =
+    githubResult.status === "fulfilled"
+      ? githubResult.value
+      : handleRejection(githubResult.reason);
+  const jiraTickets =
+    jiraResult.status === "fulfilled"
+      ? jiraResult.value
+      : handleRejection(jiraResult.reason);
+  const slackConversations =
+    slackResult.status === "fulfilled"
+      ? slackResult.value
+      : handleRejection(slackResult.reason);
+
   PostHogTracker().capture({
     distinctId: user,
-    event: "GetHoverData",
+    event: "unifiedHoverData",
     properties: {
       gitSystem,
       repo,
