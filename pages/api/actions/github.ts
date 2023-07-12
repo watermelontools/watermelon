@@ -302,12 +302,10 @@ export default async (req, res) => {
             searchStringSet
               .concat(` ${title.split("/").join(" ")}`)
               .concat(` ${body}`.split("\n").join(" "))
-              .split("\n")
-              .flatMap((line) => line.split(","))
-              .map((commit: string) => commit.toLowerCase())
-              .filter((commit) => !stopwords.includes(commit))
-              .join(" ")
               .split(" ")
+              .flatMap((word) => word.split(","))
+              .map((word: string) => word.toLowerCase())
+              .filter((word) => !stopwords.includes(word))
           )
         ).join(" ");
         // select six random words from the search string
