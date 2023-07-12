@@ -183,12 +183,11 @@ export default async function handler(req, res) {
   }
 
   const githubIssues = await fetchGitHubIssues(userTokens, owner, repo);
-  let PRTitles = githubIssues.map((issue) => issue.title);
-  const jiraIssues = await fetchJiraTickets({ user, ...userTokens }, PRTitles);
-  const slackConversations = await fetchSlackConversations(
-    userTokens,
-    PRTitles
-  );
+  const PRTitles = githubIssues.map((issue) => issue.title);
+  const [jiraIssues, slackConversations] = await Promise.all([
+    fetchJiraTickets({ user, ...userTokens }, PRTitles),
+    fetchSlackConversations(userTokens, PRTitles),
+  ]);
 
   return res.send({
     github: githubIssues,
