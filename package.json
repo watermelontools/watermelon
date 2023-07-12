@@ -26,6 +26,7 @@
     "nodemailer": "^6.7.8",
     "octokit": "^2.0.9",
     "openai": "^3.2.1",
+    "posthog-js": "^1.70.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "server-only": "0.0.1",
