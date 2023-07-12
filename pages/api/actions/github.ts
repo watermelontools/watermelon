@@ -414,6 +414,19 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
+
+        PostHogTracker().capture({
+          distinctId: watermelon_user,
+          event: "GitHub Action",
+          properties: {
+            user: userLogin,
+            owner,
+            repo,
+            action: payload.action,
+            //@ts-ignore
+            issue_number: number,
+          },
+        });
         await addActionLog({
           randomWords,
           ghValue,
@@ -430,19 +443,6 @@ export default async (req, res) => {
           count,
           watermelon_user,
         });
-        PostHogTracker().capture({
-          distinctId: watermelon_user,
-          event: "GitHub Action",
-          properties: {
-            user: userLogin,
-            owner,
-            repo,
-            action: payload.action,
-            //@ts-ignore
-            issue_number: number,
-          },
-        });
-
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
