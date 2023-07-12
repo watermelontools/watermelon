@@ -4,6 +4,7 @@ import getAllData from "../../../utils/db/user/getAllData";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
+import PostHogTracker from "../../../lib/track/posthogTracker";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
@@ -188,6 +189,19 @@ export default async function handler(req, res) {
     fetchJiraTickets({ user, ...userTokens }, PRTitles),
     fetchSlackConversations(userTokens, PRTitles),
   ]);
+  PostHogTracker().capture({
+    distinctId: user,
+    event: "extensionContext",
+    properties: {
+      githubIssues,
+      jiraIssues,
+      slackConversations,
+      user,
+      repo,
+      owner,
+      gitSystem,
+    },
+  });
 
   return res.send({
     github: githubIssues,
