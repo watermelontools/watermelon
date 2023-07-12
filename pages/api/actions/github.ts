@@ -18,6 +18,7 @@ import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
+import PostHogTracker from "../../../lib/track/posthogTracker";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -301,12 +302,10 @@ export default async (req, res) => {
             searchStringSet
               .concat(` ${title.split("/").join(" ")}`)
               .concat(` ${body}`.split("\n").join(" "))
-              .split("\n")
-              .flatMap((line) => line.split(","))
-              .map((commit: string) => commit.toLowerCase())
-              .filter((commit) => !stopwords.includes(commit))
-              .join(" ")
               .split(" ")
+              .flatMap((word) => word.split(","))
+              .map((word: string) => word.toLowerCase())
+              .filter((word) => !stopwords.includes(word))
           )
         ).join(" ");
         // select six random words from the search string
@@ -376,7 +375,8 @@ export default async (req, res) => {
           if (businessLogicSummary) {
             textToWrite += businessLogicSummary;
           } else {
-            textToWrite += "Error getting summary" + businessLogicSummary.error + "\n";
+            textToWrite +=
+              "Error getting summary" + businessLogicSummary.error + "\n";
           }
         } else {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;
@@ -412,6 +412,19 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
+
+        PostHogTracker().capture({
+          distinctId: watermelon_user,
+          event: "GitHub Action",
+          properties: {
+            user: userLogin,
+            owner,
+            repo,
+            action: payload.action,
+            //@ts-ignore
+            issue_number: number,
+          },
+        });
         await addActionLog({
           randomWords,
           ghValue,
@@ -428,7 +441,6 @@ export default async (req, res) => {
           count,
           watermelon_user,
         });
-
         // Fetch all comments on the PR
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
