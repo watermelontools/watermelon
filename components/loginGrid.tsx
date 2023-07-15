@@ -7,6 +7,7 @@ import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import LinearLoginLink from "../components/LinearLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
+import ConfluenceLoginLink from "./ConfluenceLoginLink";
 type LoginGridProps = {
   userEmail: string;
   user_displayname: string;
@@ -17,6 +18,7 @@ function LoginGrid({ userEmail, data }) {
   let gitlabUserData: null | LoginGridProps = null;
   let slackUserData: null | LoginGridProps = null;
   let jiraUserData: null | LoginGridProps = null;
+  let confluenceUserData: null | LoginGridProps = null;
   let discordUserData: null | LoginGridProps = null;
   let notionUserData: null | LoginGridProps = null;
   let linearUserData: null | LoginGridProps = null;
@@ -35,6 +37,9 @@ function LoginGrid({ userEmail, data }) {
   }
   if (data?.jira_data) {
     jiraUserData = JSON.parse(data.jira_data);
+  }
+  if (data?.confluence_data) {
+    confluenceUserData = JSON.parse(data.confluence_data);
   }
   if (data?.discord_data) {
     discordUserData = JSON.parse(data.discord_data);
@@ -108,6 +113,18 @@ function LoginGrid({ userEmail, data }) {
                 />
               ) : (
                 <JiraLoginLink userEmail={userEmail} />
+              )}
+            </div>
+            <div className="p-3">
+              {confluenceUserData?.user_displayname ? (
+                <InfoPanel
+                  info={{
+                    ...confluenceUserData,
+                    service_name: "Confluence",
+                  }}
+                />
+              ) : (
+                <ConfluenceLoginLink userEmail={userEmail} />
               )}
             </div>
             <div className="p-3">
