@@ -4,7 +4,6 @@ import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
-import PostHogTracker from "../../../lib/track/posthogTracker";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");

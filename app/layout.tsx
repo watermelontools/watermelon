@@ -8,8 +8,6 @@ import LogInBtn from "../components/login-btn";
 
 import AuthProvider from "../lib/auth/AuthProvider";
 
-import { PostHogPageview } from "./providers";
-
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ReactNode, Suspense } from "react";
 
@@ -32,9 +30,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
-      <Suspense fallback={null}>
-        <PostHogPageview />
-      </Suspense>
       <body>
         {userEmail ? (
           <>
