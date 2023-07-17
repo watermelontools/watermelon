@@ -78,7 +78,6 @@ export async function getServerSideProps(context) {
     };
   } else {
     const { access_token } = json;
-    console.log("access_token", access_token);
     const orgInfo = await fetch(
       "https://api.atlassian.com/oauth/token/accessible-resources",
       {
@@ -103,7 +102,7 @@ export async function getServerSideProps(context) {
         }
       );
       const userInfoJson = await userInfo.json();
-      await saveConfluenceUserInfo({
+      let t = await saveConfluenceUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
         confluence_id: orgInfoJson[0].id,
@@ -117,6 +116,7 @@ export async function getServerSideProps(context) {
         user_id: userInfoJson.accountId,
         user_displayname: userInfoJson.displayName,
       });
+      console.log("t", t);
     } else {
       const userInfo = await fetch(
         `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
@@ -144,7 +144,6 @@ export async function getServerSideProps(context) {
         user_displayname: userInfoJson.displayName,
       });
     }
-    console.log("orgInfoJson", orgInfoJson);
     return {
       props: {
         userEmail: context.query.state,
