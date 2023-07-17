@@ -149,7 +149,7 @@ export async function getServerSideProps(context) {
       props: {
         userEmail: context.query.state,
         organization: orgInfoJson[0]?.name,
-        avatar_url: orgInfoJson[0]?.avatar_url,
+        avatar_url: orgInfoJson[0]?.avatarUrl,
       },
     };
   }
