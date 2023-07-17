@@ -44,7 +44,9 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
 }
 export async function getServerSideProps(context) {
   let f;
-  console.log(context);
+  console.log("req", context.req);
+  console.log("params", context.query);
+
   if (context.query.code) {
     f = await fetch(`https://auth.atlassian.com/oauth/token`, {
       method: "POST",
