@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import saveUserInfo from "../utils/db/jira/saveUserInfo";
+import saveJiraUserInfo from "../utils/db/jira/saveUserInfo";
+import saveConfluenceUserInfo from "../utils/db/confluence/saveUserInfo";
 import GitHubLoginLink from "../components/GitHubLoginLink";
 export default function Jira({ organization, avatar_url, userEmail, error }) {
   const [timeToRedirect, setTimeToRedirect] = useState(10);
@@ -15,17 +16,18 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
     }, 1000);
     return () => clearInterval(interval);
   }, [timeToRedirect]);
+  let isConfluence = userEmail.startsWith("c");
 
   return (
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with Jira to {organization}
+          You have logged in with {isConfluence? "Confluence": "Jira"} to {organization}
         </h2>
       </div>
       <img
         src={avatar_url}
-        alt="jira organization image"
+        alt={`${isConfluence? "Confluence": "Jira"} organization image`}
         className="avatar avatar-8"
       />
       <div>
@@ -90,7 +92,7 @@ export async function getServerSideProps(context) {
     let isConfluence = context.query.state.startsWith("c");
     if (isConfluence) {
       const userInfo = await fetch(
-        `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
+        `https://api.atlassian.com/ex/confluence/${orgInfoJson.[0].id}/rest/api/user/current`,
         {
           method: "GET",
           headers: {
@@ -100,6 +102,21 @@ export async function getServerSideProps(context) {
         }
       );
       const userInfoJson = await userInfo.json();
+      await saveConfluenceUserInfo({
+        access_token: json.access_token,
+        refresh_token: json.refresh_token,
+        confluence_id: orgInfoJson[0].id,
+        organization: orgInfoJson[0].name,
+        url: orgInfoJson[0].url,
+        org_avatar_url: orgInfoJson[0].avatarUrl,
+        scopes: orgInfoJson[0].scopes,
+        watermelon_user: context.query.state,
+        user_email: userInfoJson.emailAddress,
+        user_avatar_url: userInfoJson?.avatarUrls?.["48x48"],
+        user_id: userInfoJson.accountId,
+        user_displayname: userInfoJson.displayName,
+      });
+
     } else {
       const userInfo = await fetch(
         `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
@@ -112,7 +129,7 @@ export async function getServerSideProps(context) {
         }
       );
       const userInfoJson = await userInfo.json();
-      await saveUserInfo({
+      await saveJiraUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
         jira_id: orgInfoJson[0].id,
@@ -127,7 +144,7 @@ export async function getServerSideProps(context) {
         user_displayname: userInfoJson.displayName,
       });
     }
-
+console.log("orgInfoJson", orgInfoJson);
     return {
       props: {
         userEmail: context.query.state,
