@@ -89,11 +89,10 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
-    console.log("orgInfoJson", orgInfoJson);
     let isConfluence = context.query.state.startsWith("c");
     if (isConfluence) {
       const userInfo = await fetch(
-        `https://api.atlassian.com/ex/confluence/${orgInfoJson.id}/rest/api/user/current`,
+        `https://api.atlassian.com/ex/confluence/${orgInfoJson[0].id}/rest/api/user/current`,
         {
           method: "GET",
           headers: {
