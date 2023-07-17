@@ -55,7 +55,7 @@ export async function getServerSideProps(context) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        grant_type: "refresh_token",
+        grant_type: "authorization_code",
         code: context.query.code,
         redirect_uri: "https://app.watermelontools.com/atlassian",
         client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
