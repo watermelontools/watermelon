@@ -101,8 +101,10 @@ export async function getServerSideProps(context) {
           },
         }
       );
+      console.log("json", json);
       const userInfoJson = await userInfo.json();
-      let t = await saveConfluenceUserInfo({
+      console.log("userInfoJson", userInfoJson);
+      await saveConfluenceUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
         confluence_id: orgInfoJson[0].id,
@@ -116,7 +118,6 @@ export async function getServerSideProps(context) {
         user_id: userInfoJson.accountId,
         user_displayname: userInfoJson.displayName,
       });
-      console.log("t", t);
     } else {
       const userInfo = await fetch(
         `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
