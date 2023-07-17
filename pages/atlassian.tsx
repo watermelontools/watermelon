@@ -89,6 +89,7 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
+    console.log("orgInfoJson", orgInfoJson);
     let isConfluence = context.query.state.startsWith("c");
     if (isConfluence) {
       const userInfo = await fetch(
@@ -101,9 +102,7 @@ export async function getServerSideProps(context) {
           },
         }
       );
-      console.log("json", json);
       const userInfoJson = await userInfo.json();
-      console.log("userInfoJson", userInfoJson);
       await saveConfluenceUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
