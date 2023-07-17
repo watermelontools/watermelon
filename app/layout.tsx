@@ -8,8 +8,6 @@ import LogInBtn from "../components/login-btn";
 
 import AuthProvider from "../lib/auth/AuthProvider";
 
-import { PHProvider, PostHogPageview } from "./providers";
-
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ReactNode, Suspense } from "react";
 
