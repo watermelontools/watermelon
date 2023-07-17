@@ -18,7 +18,6 @@ import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
-import PostHogTracker from "../../../lib/track/posthogTracker";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -413,18 +412,6 @@ export default async (req, res) => {
           repoName: repo,
         });
 
-        PostHogTracker().capture({
-          distinctId: watermelon_user,
-          event: "GitHub Action",
-          properties: {
-            user: userLogin,
-            owner,
-            repo,
-            action: payload.action,
-            //@ts-ignore
-            issue_number: number,
-          },
-        });
         await addActionLog({
           randomWords,
           ghValue,
