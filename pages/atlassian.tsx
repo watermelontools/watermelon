@@ -22,12 +22,13 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
     <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
       <div className="Subhead">
         <h2 className="Subhead-heading px-2">
-          You have logged in with {isConfluence? "Confluence": "Jira"} to {organization}
+          You have logged in with {isConfluence ? "Confluence" : "Jira"} to{" "}
+          {organization}
         </h2>
       </div>
       <img
         src={avatar_url}
-        alt={`${isConfluence? "Confluence": "Jira"} organization image`}
+        alt={`${isConfluence ? "Confluence" : "Jira"} organization image`}
         className="avatar avatar-8"
       />
       <div>
@@ -92,7 +93,7 @@ export async function getServerSideProps(context) {
     let isConfluence = context.query.state.startsWith("c");
     if (isConfluence) {
       const userInfo = await fetch(
-        `https://api.atlassian.com/ex/confluence/${orgInfoJson.[0].id}/rest/api/user/current`,
+        `https://api.atlassian.com/ex/confluence/${orgInfoJson.id}/rest/api/user/current`,
         {
           method: "GET",
           headers: {
@@ -116,7 +117,6 @@ export async function getServerSideProps(context) {
         user_id: userInfoJson.accountId,
         user_displayname: userInfoJson.displayName,
       });
-
     } else {
       const userInfo = await fetch(
         `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
@@ -144,7 +144,7 @@ export async function getServerSideProps(context) {
         user_displayname: userInfoJson.displayName,
       });
     }
-console.log("orgInfoJson", orgInfoJson);
+    console.log("orgInfoJson", orgInfoJson);
     return {
       props: {
         userEmail: context.query.state,
