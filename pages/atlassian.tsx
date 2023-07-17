@@ -44,7 +44,6 @@ export default function Jira({ organization, avatar_url, userEmail, error }) {
 }
 export async function getServerSideProps(context) {
   let f;
-  console.log("req", context.req);
 
   if (context.query.code) {
     f = await fetch(`https://auth.atlassian.com/oauth/token`, {
@@ -68,7 +67,7 @@ export async function getServerSideProps(context) {
     };
   const json = await f.json();
   if (json.error) {
-    console.error("Jira error", json);
+    console.error("Atlassian error", json);
     return {
       props: {
         error: json.error,
@@ -76,6 +75,7 @@ export async function getServerSideProps(context) {
     };
   } else {
     const { access_token } = json;
+    console.log("access_token", access_token);
     const orgInfo = await fetch(
       "https://api.atlassian.com/oauth/token/accessible-resources",
       {
@@ -87,31 +87,46 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
-    const userInfo = await fetch(
-      `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
-    const userInfoJson = await userInfo.json();
-    await saveUserInfo({
-      access_token: json.access_token,
-      refresh_token: json.refresh_token,
-      jira_id: orgInfoJson[0].id,
-      organization: orgInfoJson[0].name,
-      url: orgInfoJson[0].url,
-      org_avatar_url: orgInfoJson[0].avatarUrl,
-      scopes: orgInfoJson[0].scopes,
-      watermelon_user: context.query.state,
-      user_email: userInfoJson.emailAddress,
-      user_avatar_url: userInfoJson?.avatarUrls?.["48x48"],
-      user_id: userInfoJson.accountId,
-      user_displayname: userInfoJson.displayName,
-    });
+    let isConfluence = context.query.state.startsWith("c");
+    if (isConfluence) {
+      const userInfo = await fetch(
+        `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      const userInfoJson = await userInfo.json();
+    } else {
+      const userInfo = await fetch(
+        `https://api.atlassian.com/ex/jira/${orgInfoJson[0].id}/rest/api/3/myself`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      );
+      const userInfoJson = await userInfo.json();
+      await saveUserInfo({
+        access_token: json.access_token,
+        refresh_token: json.refresh_token,
+        jira_id: orgInfoJson[0].id,
+        organization: orgInfoJson[0].name,
+        url: orgInfoJson[0].url,
+        org_avatar_url: orgInfoJson[0].avatarUrl,
+        scopes: orgInfoJson[0].scopes,
+        watermelon_user: context.query.state,
+        user_email: userInfoJson.emailAddress,
+        user_avatar_url: userInfoJson?.avatarUrls?.["48x48"],
+        user_id: userInfoJson.accountId,
+        user_displayname: userInfoJson.displayName,
+      });
+    }
 
     return {
       props: {
