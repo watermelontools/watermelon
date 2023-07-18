@@ -6,12 +6,6 @@ export const metadata: Metadata = {
   description: "Pay for the Context of your team",
 };
 
-import { Metadata } from "next";
-export const metadata: Metadata = {
-  title: "Billing",
-  description: "Pay for the Context of your team",
-};
-
 async function BillingPage({
   params,
   searchParams,
