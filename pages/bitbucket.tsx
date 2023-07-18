@@ -93,7 +93,16 @@ export async function getServerSideProps(context) {
       },
     });
     let userJson = await user.json();
-    console.log("userJson", userJson);
+    let workspace = await fetch(
+      `https://api.bitbucket.org/2.0/user/permissions/workspaces`,
+      {
+        headers: {
+          Authorization: `Bearer ${json.access_token}`,
+        },
+      }
+    );
+    let workspaceJson = await workspace.json();
+    console.log("workspaceJson", workspaceJson);
     await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
