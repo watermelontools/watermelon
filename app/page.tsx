@@ -17,6 +17,13 @@ async function HomePage({}) {
     console.log(e);
     return null;
   });
+  const comingSoon = [
+    "PHPStorm",
+    "IntelliJ",
+    "WebStorm",
+    "PyCharm",
+    "RubyMine",
+  ];
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
@@ -64,6 +71,20 @@ async function HomePage({}) {
                 accessToken={userName}
               />
             </div>
+            {comingSoon.map((name) => (
+              <div className="p-3">
+                <div className="Box d-flex flex-items-center flex-justify-start p-2">
+                  <img
+                    className="avatar avatar-8"
+                    src={`/logos/${name.toLowerCase()}.svg`}
+                  />
+                  <div className="p-2">
+                    <h2>{name}</h2>
+                    <p>Coming Soon</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}
