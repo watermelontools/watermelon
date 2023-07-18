@@ -263,18 +263,6 @@ function LoginGrid({ userEmail, data }) {
                 )}
               </div>
             </div>
-            {/* <div className="p-3">
-              {notionUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...notionUserData,
-                    service_name: "Notion",
-                  }}
-                />
-              ) : (
-                <NotionLoginLink userEmail={userEmail} />
-              )}
-            </div>
           </div>
         </div>
       )}
