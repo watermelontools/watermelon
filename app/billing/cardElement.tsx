@@ -4,11 +4,23 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe, StripeElementsOptions } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 
-export default function CardElement({ userEmail }) {
+export default function CardElement() {
+  const { status, data } = useSession({
+    required: true,
+    onUnauthenticated() {
+      signIn();
+    },
+  });
   let promptNumber = window.prompt("Number of seats") || 2;
   const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
   const [clientSecret, setClientSecret] = useState<string | undefined>("");
+  const [userEmail, setUserEmail] = useState<string | undefined | null>(null);
+
+  useEffect(() => {
+    setUserEmail(data?.user?.email);
+  }, [data]);
   const fetchClientSecret = async () => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/stripe/createSubscription`,

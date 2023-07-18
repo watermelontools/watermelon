@@ -1,5 +1,3 @@
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import getServerSession from "next-auth";
 import CardElement from "./cardElement";
 
 import { Metadata } from "next";
@@ -8,17 +6,7 @@ export const metadata: Metadata = {
   description: "Pay for the Context of your team",
 };
 
-async function BillingPage({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  console.log("BillingPage", { params, searchParams });
-  const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  let { repo, owner, number } = searchParams;
+async function BillingPage() {
   return (
     <div
       style={{
@@ -35,7 +23,7 @@ async function BillingPage({
             <h1 className="h3 mb-3 f4 text-normal">
               Purchase your Watermelon subscription
             </h1>
-            <CardElement userEmail={userEmail} />
+            <CardElement />
           </div>
         </div>
       </div>
