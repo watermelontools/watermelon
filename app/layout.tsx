@@ -30,7 +30,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
-      <body>
+      <body style={{ minHeight: "100vh" }}>
         {userEmail ? (
           <>
             <Header userEmail={userEmail} userToken={userName} />
