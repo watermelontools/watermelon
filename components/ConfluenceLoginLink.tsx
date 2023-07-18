@@ -9,7 +9,7 @@ const ConfluenceLoginLink = ({ userEmail }) => (
       className="button block"
     >
       <div className="Box d-flex flex-items-center flex-justify-start p-2">
-        <img className="avatar avatar-8" src="/logos/jira.svg" />
+        <img className="avatar avatar-8" src="/logos/confluence.svg" />
         <div className="p-2">
           <h2>Login to Confluence</h2>
           <p>View your Most Relevant Docs</p>
