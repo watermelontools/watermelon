@@ -1,5 +1,5 @@
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import { getServerSession } from "next-auth";
+import getServerSession from "next-auth";
 import CardElement from "./cardElement";
 import { Metadata } from "next";
 export const metadata: Metadata = {
