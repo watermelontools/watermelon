@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = {
         },
       },
       from: process.env.EMAIL_FROM,
+      // @ts-ignore
       name: "Watermelon Auth",
     }),
   ],
