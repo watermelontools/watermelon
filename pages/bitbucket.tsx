@@ -87,29 +87,23 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://api.bitbucket.org/2.0/user`, {
-      headers: {
-        Authorization: `Bearer ${json.access_token}`,
-      },
-    });
-    let userJson = await user.json();
+    const headers = {
+      Authorization: `Bearer ${json.access_token}`,
+    };
 
-    let workspace = await fetch(
-      `https://api.bitbucket.org/2.0/user/permissions/workspaces`,
-      {
-        headers: {
-          Authorization: `Bearer ${json.access_token}`,
-        },
-      }
-    );
+    const requests = [
+      fetch(`https://api.bitbucket.org/2.0/user`, { headers }),
+      fetch(`https://api.bitbucket.org/2.0/user/permissions/workspaces`, {
+        headers,
+      }),
+      fetch(`https://api.bitbucket.org/2.0/user/emails`, { headers }),
+    ];
+
+    let [user, workspace, email] = await Promise.all(requests);
+
+    let userJson = await user.json();
     let workspaceJson = await workspace.json();
-    let email = await fetch(`https://api.bitbucket.org/2.0/user/emails`, {
-      headers: {
-        Authorization: `Bearer ${json.access_token}`,
-      },
-    });
     let emailJson = await email.json();
-    console.log("user", emailJson);
 
     await saveUserInfo({
       access_token: json.access_token,
@@ -120,6 +114,7 @@ export async function getServerSideProps(context) {
       name: userJson.display_name,
       location: userJson.location,
       workspace: workspaceJson.values[0].workspace.slug,
+      email: emailJson.values[0].email,
     });
     return {
       props: {
