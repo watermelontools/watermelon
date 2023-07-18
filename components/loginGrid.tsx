@@ -61,97 +61,149 @@ function LoginGrid({ userEmail, data }) {
     >
       {userEmail && (
         <div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-            }}
-          >
-            <div className="p-3">
-              {githubUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...githubUserData,
-                    service_name: "GitHub",
-                  }}
-                />
-              ) : (
-                <GitHubLoginLink userEmail={userEmail} />
-              )}
+          <div>
+            <div
+              className="Subhead p-3"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
+                backgroundColor: "var(--color-canvas-default)",
+              }}
+            >
+              <h2 className="Subhead-heading">Git Platforms</h2>
             </div>
-            <div className="p-3">
-              {bitbucketUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...bitbucketUserData,
-                    service_name: "Bitbucket",
-                  }}
-                />
-              ) : (
-                <BitbucketLoginLink userEmail={userEmail} />
-              )}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+              }}
+            >
+              <div className="p-3">
+                {githubUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...githubUserData,
+                      service_name: "GitHub",
+                    }}
+                  />
+                ) : (
+                  <GitHubLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {bitbucketUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...bitbucketUserData,
+                      service_name: "Bitbucket",
+                    }}
+                  />
+                ) : (
+                  <BitbucketLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {gitlabUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...gitlabUserData,
+                      service_name: "GitLab",
+                    }}
+                  />
+                ) : (
+                  <GitLabLoginLink userEmail={userEmail} />
+                )}
+              </div>
             </div>
-            <div className="p-3">
-              {gitlabUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...gitlabUserData,
-                    service_name: "GitLab",
-                  }}
-                />
-              ) : (
-                <GitLabLoginLink userEmail={userEmail} />
-              )}
+            <a
+              href="https://github.com/apps/watermelon-context"
+              target="_blank"
+            >
+              <div className="Box d-flex flex-items-center flex-justify-start m-3 p-2">
+                <img className="avatar avatar-8" src="/logos/github.svg" />
+                <div className="p-2">
+                  <h2>Try our GitHub App</h2>
+                  <p>Context on each Pr</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div>
+            <div
+              className="Subhead p-3"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
+                backgroundColor: "var(--color-canvas-default)",
+              }}
+            >
+              <h2 className="Subhead-heading">Internal Messaging</h2>
             </div>
-            <div className="p-3">
-              {jiraUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...jiraUserData,
-                    service_name: "Jira",
-                  }}
-                />
-              ) : (
-                <JiraLoginLink userEmail={userEmail} />
-              )}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
+              }}
+            >
+              <div className="p-3">
+                {slackUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...slackUserData,
+                      service_name: "Slack",
+                    }}
+                  />
+                ) : (
+                  <SlackLoginLink userEmail={userEmail} />
+                )}
+              </div>
             </div>
-            <div className="p-3">
-              {confluenceUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...confluenceUserData,
-                    service_name: "Confluence",
-                  }}
-                />
-              ) : (
-                <ConfluenceLoginLink userEmail={userEmail} />
-              )}
+          </div>
+          <div>
+            <div
+              className="Subhead p-3"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
+                backgroundColor: "var(--color-canvas-default)",
+              }}
+            >
+              <h2 className="Subhead-heading">Project Management</h2>
             </div>
-            <div className="p-3">
-              {slackUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...slackUserData,
-                    service_name: "Slack",
-                  }}
-                />
-              ) : (
-                <SlackLoginLink userEmail={userEmail} />
-              )}
-            </div>
-            <div className="p-3">
-              {linearUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...linearUserData,
-                    service_name: "Linear",
-                  }}
-                />
-              ) : (
-                <LinearLoginLink userEmail={userEmail} />
-              )}
-            </div>
-            {/*         
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
+              }}
+            >
+              <div className="p-3">
+                {jiraUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...jiraUserData,
+                      service_name: "Jira",
+                    }}
+                  />
+                ) : (
+                  <JiraLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {linearUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...linearUserData,
+                      service_name: "Linear",
+                    }}
+                  />
+                ) : (
+                  <LinearLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              {/*         
   DISCORD DOES NOT ALLOW MESSAGE SEARCH, DEVELOPMENT PAUSED FOR NOW
   MAYBE READ THE LAST FEW DAYS?
     <div className="p-3">
@@ -167,25 +219,52 @@ function LoginGrid({ userEmail, data }) {
                 <DiscordLoginLink userEmail={userEmail} />
               )}
             </div> */}
-            <div className="p-3">
-              {notionUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    ...notionUserData,
-                    service_name: "Notion",
-                  }}
-                />
-              ) : (
-                <NotionLoginLink userEmail={userEmail} />
-              )}
             </div>
           </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-            }}
-          ></div>
+          <div>
+            <div
+              className="Subhead p-3"
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 2,
+                backgroundColor: "var(--color-canvas-default)",
+              }}
+            >
+              <h2 className="Subhead-heading">Documentation</h2>
+            </div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
+              }}
+            >
+              <div className="p-3">
+                {notionUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...notionUserData,
+                      service_name: "Notion",
+                    }}
+                  />
+                ) : (
+                  <NotionLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {confluenceUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...confluenceUserData,
+                      service_name: "Confluence",
+                    }}
+                  />
+                ) : (
+                  <ConfluenceLoginLink userEmail={userEmail} />
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
