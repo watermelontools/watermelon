@@ -8,13 +8,22 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/billing", label: "Billing" },
   ];
   return (
-    <div className="d-flex flex-row" style={{ height: "98vh" }}>
+    <div className="d-flex flex-row" style={{ height: "100%" }}>
       <nav className="SideNav border">
-        {links.map(({ href, label }) => (
-          <Link href={href} key={href} className="SideNav-item">
-            {label}
-          </Link>
-        ))}
+        <div
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+            backgroundColor: "var(--color-canvas-subtle)",
+          }}
+        >
+          {links.map(({ href, label }) => (
+            <Link href={href} key={href} className="SideNav-item">
+              {label}
+            </Link>
+          ))}
+        </div>
       </nav>
       <div style={{ width: "100%" }}>{children}</div>
     </div>
