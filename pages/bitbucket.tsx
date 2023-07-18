@@ -102,7 +102,9 @@ export async function getServerSideProps(context) {
       }
     );
     let workspaceJson = await workspace.json();
-    console.log("workspaceJson", workspaceJson);
+    console.log("user", workspaceJson[0].user);
+    console.log("workspace", workspaceJson[0].workspace);
+    console.log("links", workspaceJson[0].links);
     await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
