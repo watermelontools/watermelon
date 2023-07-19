@@ -46,7 +46,6 @@ async function getConfluence({
     let cql = `(${titleQuery}) AND (${textQuery}) ORDER BY created DESC`;
     const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
     console.log(reqUrl);
-    console.log(newAccessTokens.access_token);
     let returnVal = await fetch(reqUrl, {
       method: "GET",
       headers: {
