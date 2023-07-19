@@ -23,7 +23,6 @@ export default async function handler(req, res) {
       owner,
       project_name,
     });
-    console.log(issueComments);
     return res.send(issueComments);
   } catch (error) {
     return res.send({ error });

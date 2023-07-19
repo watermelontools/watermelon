@@ -14,7 +14,7 @@ async function HomePage() {
   let userName = session?.user?.name;
   // if not logged in, do not show anything
   const data = await getAllPublicUserData({ userEmail }).catch((e) => {
-    console.log(e);
+    console.error(e);
     return null;
   });
   const comingSoon = [

@@ -44,18 +44,17 @@ async function getConfluence({
 
     // Sorting by description might be better than completely filtering out tickets without a description
     let cql = `(${titleQuery}) AND (${textQuery}) ORDER BY created DESC`;
-
-    let returnVal = await fetch(
-      `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${confluence_token}`,
-        },
-      }
-    )
+    const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
+    console.log(reqUrl);
+    console.log(newAccessTokens.access_token);
+    let returnVal = await fetch(reqUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${newAccessTokens.access_token}`,
+      },
+    })
       .then((res) => res.json())
       .then((resJson) => resJson.issues)
       .catch((error) => {

@@ -22,7 +22,6 @@ function LoginGrid({ userEmail, data }) {
   let discordUserData: null | LoginGridProps = null;
   let notionUserData: null | LoginGridProps = null;
   let linearUserData: null | LoginGridProps = null;
-  console.log("data", data);
   if (data?.github_data) {
     githubUserData = JSON.parse(data.github_data);
   }
