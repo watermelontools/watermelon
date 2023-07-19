@@ -93,7 +93,7 @@ export default async (req, res) => {
                 }
               )
               .then((response) => {
-                console.log("post comment", response.data);
+                console.info("post comment", response.data);
               })
               .catch((error) => {
                 return console.error("posting comment error", error);
@@ -453,13 +453,12 @@ export default async (req, res) => {
             },
           }
         );
-        console.log("comments.data.length", comments.data.length);
+        console.info("comments.data.length", comments.data.length);
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
           return comment.user.login.includes("watermelon-context");
         });
         if (botComment?.id) {
-          console.log("bcID", botComment.id);
           // Update the existing comment
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
