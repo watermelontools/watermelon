@@ -1,5 +1,5 @@
 # Watermelon.tools
-
+To start developing, clone and: 
 ```
 yarn
 yarn dev
