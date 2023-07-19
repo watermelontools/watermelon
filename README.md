@@ -4,6 +4,12 @@
 yarn
 yarn dev
 ```
+Or with npm
+
+```
+npm i
+npm run dev
+```
 
 (Check your node version, we recommend 18)
 
