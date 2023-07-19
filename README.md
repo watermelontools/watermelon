@@ -46,3 +46,5 @@ We do all of this as a security measure. We don't want data exposed and we consi
 To integrate a new service, several steps are to be taken, but it's pretty much copying code.
 
 First, we use oauth so you need to ensure that the service supports it.
+
+Remember that there are several procedures in our db to replicate.
