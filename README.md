@@ -17,7 +17,9 @@ We use a recent version of Next. You may refer to the documentation at https://n
 
 This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
 
-All the backend lives as serverless functions under `api`, with the route being the filename.
+All the backend lives as serverless functions under `api`, with the route being the filename. 
+
+We now use the new app router for some features.
 
 As we now use OAuth2.0, local development cannot be done on new integrations.
 
