@@ -51,7 +51,10 @@ async function getConfluence({
       },
     })
       .then((res) => res.json())
-      .then((resJson) => resJson.results)
+      .then((resJson) => {
+        console.log("resJson", resJson);
+        return resJson.results;
+      })
       .catch((error) => {
         console.error(error);
       });
