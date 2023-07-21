@@ -336,8 +336,6 @@ export default async (req, res) => {
           }),
           getJira({
             user: user_email,
-            title,
-            body,
             jira_token,
             jira_refresh_token,
             randomWords,
