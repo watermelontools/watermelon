@@ -38,6 +38,9 @@ export default async function handler(req, res) {
     jira_refresh_token,
     slack_token,
     cloudId,
+    confluence_id,
+    confluence_token,
+    confluence_refresh_token,
     user_email,
   } = resp;
   const commitSet = new Set(commitList.split(","));
@@ -253,8 +256,6 @@ export default async function handler(req, res) {
     }),
     getJira({
       user: user_email,
-      title,
-      body,
       jira_token,
       jira_refresh_token,
       randomWords,

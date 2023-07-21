@@ -1,5 +1,6 @@
 import updateTokensFromConfluence from "../../utils/confluence/updateTokens";
 import updateTokensInDB from "../../utils/db/confluence/updateTokens";
+import getFreshConfluenceTokens from "../confluence/getFreshConfluenceTokens";
 
 type ConfluenceResult = { error: string } | any[];
 function removeSpecialChars(inputString) {
@@ -21,7 +22,11 @@ async function fetchFromConfluence(cql, amount, accessToken, confluence_id) {
     },
   })
     .then((res) => res.json())
-    .then((resJson) => resJson.results);
+    .then((resJson) => resJson.results)
+    .catch((error) => {
+      console.error("Error in fetchFromConfluence:", error);
+      return { error: "Failed to fetch data from Confluence." };
+    });
 }
 
 async function getConfluence({
@@ -39,15 +44,8 @@ async function getConfluence({
   if (!confluence_id) return { error: "no confluence cloudId" };
 
   // Refresh tokens
-  const newAccessTokens = await updateTokensFromConfluence({
-    refresh_token: confluence_refresh_token,
-  });
-
-  console.log("newAccessTokens", newAccessTokens);
-
-  await updateTokensInDB({
-    access_token: newAccessTokens.access_token,
-    refresh_token: newAccessTokens.refresh_token,
+  const newAccessTokens = await getFreshConfluenceTokens({
+    confluence_refresh_token,
     user,
   });
 
@@ -71,7 +69,6 @@ async function getConfluence({
       newAccessTokens.access_token,
       confluence_id
     );
-    console.log("Confluence results", results);
     return results;
   } catch (error) {
     console.error(error);
