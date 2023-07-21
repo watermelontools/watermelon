@@ -1,5 +1,5 @@
 import getJiraOrganization from "../../utils/db/jira/getOrganization";
-import updateTokens from "../../utils/db/jira/updateTokens";
+import updateTokensInDB from "../../utils/db/jira/updateTokens";
 import updateTokensFromJira from "../../utils/jira/updateTokens";
 function removeSpecialChars(inputString) {
   const specialChars = '!"#$%&/()=-_"{}¨*[]'; // Edit this list to include or exclude characters
@@ -24,7 +24,7 @@ async function getJira({
     const newAccessTokens = await updateTokensFromJira({
       refresh_token: jira_refresh_token,
     });
-    await updateTokens({
+    await updateTokensInDB({
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
       user,
