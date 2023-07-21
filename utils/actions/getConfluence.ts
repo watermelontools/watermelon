@@ -1,5 +1,5 @@
 import updateTokensFromConfluence from "../../utils/confluence/updateTokens";
-import updateTokens from "../../utils/db/confluence/updateTokens";
+import updateTokensInDB from "../../utils/db/confluence/updateTokens";
 
 type ConfluenceResult = { error: string } | any[];
 function removeSpecialChars(inputString) {
@@ -29,7 +29,8 @@ async function getConfluence({
     const newAccessTokens = await updateTokensFromConfluence({
       refresh_token: confluence_refresh_token,
     });
-    await updateTokens({
+    console.log("newAccessTokens", newAccessTokens);
+    await updateTokensInDB({
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
       user,
