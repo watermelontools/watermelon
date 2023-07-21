@@ -62,7 +62,7 @@ async function getFreshJiraTokens({ jira_refresh_token, user }) {
   });
 
   if (!newAccessTokens?.access_token) {
-    throw new Error("Failed to fetch a new access token from Jira.");
+    console.error("Failed to fetch a new access token from Jira.");
   }
 
   await updateTokensInDB({

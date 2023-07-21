@@ -62,7 +62,7 @@ async function getFreshConfluenceTokens({ confluence_refresh_token, user }) {
   });
 
   if (!newAccessTokens?.access_token) {
-    throw new Error("Failed to fetch a new access token from Confluence.");
+    console.error("Failed to fetch a new access token from Confluence.");
   }
 
   await updateTokensInDB({
