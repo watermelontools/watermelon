@@ -19,6 +19,7 @@ import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
 import getConfluence from "../../../utils/actions/getConfluence";
+import confluenceMarkdown from "../../../utils/actions/markdownHelpers/confluence";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -369,7 +370,6 @@ export default async (req, res) => {
           }),
           addActionCount({ watermelon_user }),
         ]);
-        console.log("confluenceValue", confluenceValue);
         let textToWrite = "";
         textToWrite += `### WatermelonAI Summary (BETA) \n`;
 
@@ -402,6 +402,11 @@ export default async (req, res) => {
         textToWrite += jiraMarkdown({
           JiraTickets,
           jiraValue,
+          userLogin,
+        });
+        textToWrite += confluenceMarkdown({
+          ConfluenceDocs: 3,
+          confluenceValue,
           userLogin,
         });
         textToWrite += slackMarkdown({
