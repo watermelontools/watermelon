@@ -9,6 +9,21 @@ function removeSpecialChars(inputString) {
     .filter((char) => !specialChars.includes(char))
     .join("");
 }
+
+async function fetchFromConfluence(cql, amount, accessToken) {
+  const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
+  return fetch(reqUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((resJson) => resJson.results);
+}
+
 async function getConfluence({
   confluence_token,
   confluence_refresh_token,
@@ -16,50 +31,51 @@ async function getConfluence({
   user,
   randomWords,
   amount = 3,
-}) {
-  if (!confluence_token || !confluence_refresh_token) {
+}): Promise<ConfluenceResult> {
+  // Error handling
+  if (!confluence_token || !confluence_refresh_token)
     return { error: "no confluence token" };
-  } else {
-    if (!user) {
-      return { error: "no user" };
-    }
-    if (!confluence_id) {
-      return { error: "no confluence cloudId" };
-    }
-    const newAccessTokens = await updateTokensFromConfluence({
-      refresh_token: confluence_refresh_token,
-    });
-    console.log("newAccessTokens", newAccessTokens);
-    await updateTokensInDB({
-      access_token: newAccessTokens.access_token,
-      refresh_token: newAccessTokens.refresh_token,
-      user,
-    });
-    let cleanRW = Array.from(
-      new Set(randomWords.map((word) => removeSpecialChars(word)))
+  if (!user) return { error: "no user" };
+  if (!confluence_id) return { error: "no confluence cloudId" };
+
+  // Refresh tokens
+  const newAccessTokens = await updateTokensFromConfluence({
+    refresh_token: confluence_refresh_token,
+  });
+
+  console.log("newAccessTokens", newAccessTokens);
+
+  await updateTokensInDB({
+    access_token: newAccessTokens.access_token,
+    refresh_token: newAccessTokens.refresh_token,
+    user,
+  });
+
+  // Constructing search query
+  const cleanRandomWords = Array.from(
+    new Set(randomWords.map((word) => removeSpecialChars(word)))
+  );
+  const titleQuery = cleanRandomWords
+    .map((word) => `title ~ "${word}"`)
+    .join(" OR ");
+  const textQuery = cleanRandomWords
+    .map((word) => `text ~ "${word}"`)
+    .join(" OR ");
+  const cql = `(${titleQuery}) OR (${textQuery}) ORDER BY created DESC`;
+
+  // Fetch data from Confluence
+  try {
+    const results = await fetchFromConfluence(
+      cql,
+      amount,
+      newAccessTokens.access_token
     );
-    const titleQuery = cleanRW.map((word) => `title ~ "${word}"`).join(" OR ");
-    const textQuery = cleanRW.map((word) => `text ~ "${word}"`).join(" OR ");
-    // Sorting by description might be better than completely filtering out tickets without a description
-    let cql = `(${titleQuery}) OR (${textQuery}) ORDER BY created DESC`;
-    const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
-    let returnVal = await fetch(reqUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${newAccessTokens.access_token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((resJson) => {
-        console.log("resJson", resJson);
-        return resJson.results;
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    return returnVal;
+    console.log("Confluence results", results);
+    return results;
+  } catch (error) {
+    console.error(error);
+    return { error: "Failed to fetch data from Confluence." };
   }
 }
+
 export default getConfluence;
