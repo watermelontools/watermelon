@@ -28,7 +28,7 @@ async function getLinear({
     })
       .then((response) => response.json())
       .then((result) => result)
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.error("error", error));
     return linearTickets?.data?.searchIssues?.nodes;
   }
 }

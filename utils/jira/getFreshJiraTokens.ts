@@ -46,7 +46,6 @@ async function updateTokensFromJira({
       .catch((error) => {
         console.error(error);
       });
-    console.log("newAccessTokens", newAccessTokens);
     return {
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
