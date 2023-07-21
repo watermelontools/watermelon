@@ -10,7 +10,7 @@ function removeSpecialChars(inputString) {
     .join("");
 }
 
-async function fetchFromConfluence(cql, amount, accessToken) {
+async function fetchFromConfluence(cql, amount, accessToken, confluence_id) {
   const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
   return fetch(reqUrl, {
     method: "GET",
@@ -68,7 +68,8 @@ async function getConfluence({
     const results = await fetchFromConfluence(
       cql,
       amount,
-      newAccessTokens.access_token
+      newAccessTokens.access_token,
+      confluence_id
     );
     console.log("Confluence results", results);
     return results;
