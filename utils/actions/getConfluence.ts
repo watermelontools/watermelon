@@ -17,7 +17,6 @@ async function getConfluence({
   randomWords,
   amount = 3,
 }) {
-  console.log("randomWords", randomWords);
   if (!confluence_token || !confluence_refresh_token) {
     return { error: "no confluence token" };
   } else {
@@ -38,15 +37,11 @@ async function getConfluence({
     let cleanRW = Array.from(
       new Set(randomWords.map((word) => removeSpecialChars(word)))
     );
-    console.log("cleanRW", cleanRW);
     const titleQuery = cleanRW.map((word) => `title ~ "${word}"`).join(" OR ");
-    console.log("titleQuery", titleQuery);
     const textQuery = cleanRW.map((word) => `text ~ "${word}"`).join(" OR ");
-    console.log("textQuery", textQuery);
     // Sorting by description might be better than completely filtering out tickets without a description
-    let cql = `(${titleQuery}) AND (${textQuery}) ORDER BY created DESC`;
+    let cql = `(${titleQuery}) OR (${textQuery}) ORDER BY created DESC`;
     const reqUrl = `https://api.atlassian.com/ex/confluence/${confluence_id}/rest/api/search?cql=${cql}&limit=${amount}`;
-    console.log(reqUrl);
     let returnVal = await fetch(reqUrl, {
       method: "GET",
       headers: {
@@ -56,11 +51,10 @@ async function getConfluence({
       },
     })
       .then((res) => res.json())
-      .then((resJson) => resJson.issues)
+      .then((resJson) => resJson.results)
       .catch((error) => {
         console.error(error);
       });
-    console.log(returnVal);
     return returnVal;
   }
 }
