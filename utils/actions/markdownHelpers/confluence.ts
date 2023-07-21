@@ -9,7 +9,6 @@ const confluenceMarkdown = ({
 }) => {
   let markdown = "";
   markdown += `\n`;
-  console.log("confluenceValue", confluenceValue);
   markdown += "### Confluence Docs";
   if (ConfluenceDocs) {
     if (
