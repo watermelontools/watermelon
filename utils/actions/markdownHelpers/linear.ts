@@ -14,7 +14,7 @@ const linearMarkdown = ({
 
   if (LinearTickets) {
     if (linearValue?.error === "no linear token") {
-      markdown += `\n [Click here to login to Linear](https://app.watermelontools.com)`;
+      markdown = `\n [Click here to login to Linear](https://app.watermelontools.com)`;
     } else {
       if (linearValue.length) {
         for (let index = 0; index < linearValue.length; index++) {

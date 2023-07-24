@@ -14,7 +14,7 @@ const jiraMarkdown = ({
   markdown += "### Jira Tickets";
   if (JiraTickets) {
     if (jiraValue?.error === "no jira token") {
-      markdown += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
+      markdown = `\n [Click here to login to Jira](https://app.watermelontools.com)`;
     } else {
       if (jiraValue?.length) {
         for (let index = 0; index < jiraValue.length; index++) {

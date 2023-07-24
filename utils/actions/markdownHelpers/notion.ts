@@ -14,7 +14,7 @@ const notionMarkdown = ({
 
   if (NotionPages) {
     if (notionValue?.error === "no notion token") {
-      markdown += `\n [Click here to login to Notion](https://app.watermelontools.com)`;
+      markdown = `\n [Click here to login to Notion](https://app.watermelontools.com)`;
     } else {
       if (notionValue?.length) {
         for (let index = 0; index < notionValue.length; index++) {

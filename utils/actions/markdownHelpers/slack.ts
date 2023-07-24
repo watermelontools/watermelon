@@ -13,7 +13,7 @@ const slackMarkdown = ({
   markdown += "### Slack Threads";
   if (SlackMessages) {
     if (!Array.isArray(slackValue) && slackValue?.error === "no slack token") {
-      markdown += `\n [Click here to login to Slack](https://app.watermelontools.com)`;
+      markdown = `\n [Click here to login to Slack](https://app.watermelontools.com)`;
     } else if (Array.isArray(slackValue)) {
       if (slackValue?.length) {
         for (let index = 0; index < slackValue.length; index++) {

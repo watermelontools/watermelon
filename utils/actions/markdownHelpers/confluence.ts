@@ -15,7 +15,7 @@ const confluenceMarkdown = ({
       !Array.isArray(confluenceValue) &&
       confluenceValue?.error === "no confluence token"
     ) {
-      markdown += `\n [Click here to login to Confluence](https://app.watermelontools.com)`;
+      markdown = `\n [Click here to login to Confluence](https://app.watermelontools.com)`;
     } else if (Array.isArray(confluenceValue)) {
       if (confluenceValue?.length) {
         for (let index = 0; index < confluenceValue.length; index++) {
