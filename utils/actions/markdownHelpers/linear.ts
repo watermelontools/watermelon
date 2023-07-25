@@ -7,10 +7,7 @@ const linearMarkdown = ({
   linearValue: any;
   userLogin: string;
 }) => {
-  let markdown = "";
-  markdown += `\n`;
-  markdown += "### Linear Tickets";
-  markdown += `\n`;
+  let markdown = `\n ### Linear Tickets`;
 
   if (LinearTickets) {
     if (linearValue?.error === "no linear token") {
@@ -19,17 +16,15 @@ const linearMarkdown = ({
       if (linearValue.length) {
         for (let index = 0; index < linearValue.length; index++) {
           const element = linearValue[index];
-          markdown += `\n - [${element.number} - ${element.title}](${element.url})`;
-          markdown += `\n`;
+          markdown += `\n - [${element.number} - ${element.title}](${element.url}) \n`;
         }
       } else {
         markdown += `\n No results found :(`;
       }
     }
   } else {
-    markdown += `Linear Tickets deactivated by ${userLogin}`;
+    markdown += `Linear Tickets deactivated by ${userLogin} \n`;
   }
-  markdown += `\n`;
   return markdown;
 };
 export default linearMarkdown;

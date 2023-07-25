@@ -7,9 +7,7 @@ const confluenceMarkdown = ({
   confluenceValue: any;
   userLogin: string;
 }) => {
-  let markdown = "";
-  markdown += `\n`;
-  markdown += "### Confluence Docs";
+  let markdown = `\n ### Confluence Docs`;
   if (ConfluenceDocs) {
     if (
       !Array.isArray(confluenceValue) &&
@@ -26,16 +24,14 @@ const confluenceMarkdown = ({
               : element.excerpt
           }](${element.content._links.self.split("/rest")[0]})${
             element.content._links.webui
-          }`;
-          markdown += `\n`;
+          } \n`;
         }
       } else {
         markdown += `\n No results found :(`;
       }
     }
   } else {
-    markdown += `Confluence Docs deactivated by ${userLogin}`;
-    markdown += `\n`;
+    markdown += `Confluence Docs deactivated by ${userLogin} \n`;
   }
   return markdown;
 };

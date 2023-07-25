@@ -7,10 +7,7 @@ const slackMarkdown = ({
   slackValue: any;
   userLogin: string;
 }) => {
-  let markdown = "";
-  markdown += `\n`;
-
-  markdown += "### Slack Threads";
+  let markdown = `\n ### Slack Threads`;
   if (SlackMessages) {
     if (!Array.isArray(slackValue) && slackValue?.error === "no slack token") {
       markdown = `\n [Click here to login to Slack](https://app.watermelontools.com)`;
@@ -22,16 +19,14 @@ const slackMarkdown = ({
             element.text.length > 100
               ? element.text.substring(0, 100) + "..."
               : element.text
-          }](${element.permalink})`;
-          markdown += `\n`;
+          }](${element.permalink}) \n`;
         }
       } else {
         markdown += `\n No results found :(`;
       }
     }
   } else {
-    markdown += `Slack Threads deactivated by ${userLogin}`;
-    markdown += `\n`;
+    markdown += `Slack Threads deactivated by ${userLogin} \n`;
   }
   return markdown;
 };
