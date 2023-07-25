@@ -22,6 +22,7 @@ const app = new App({
 
 export default async (req, res) => {
   if (req.method === "POST") {
+    let textToWrite = "";
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
@@ -363,7 +364,6 @@ export default async (req, res) => {
           }),
           addActionCount({ watermelon_user }),
         ]);
-        let textToWrite = "";
         textToWrite += `### WatermelonAI Summary (BETA) \n`;
 
         let businessLogicSummary;
@@ -503,10 +503,17 @@ export default async (req, res) => {
             });
         }
       }
-      return res.status(200).send("Webhook event processed");
+      return res.status(200).json({
+        message: "success",
+        textToWrite,
+      });
     } catch (error) {
       console.error("general action processing error", error);
-      res.status(500).send("Error processing webhook event");
+      res.status(500).json({
+        message: "Error processing webhook event",
+        error,
+        textToWrite,
+      });
     }
   } else {
     res.setHeader("Allow", "POST");
