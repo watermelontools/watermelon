@@ -5,22 +5,21 @@ const githubMarkdown = ({
   value,
   userLogin,
 }: MarkdownRequest): MarkdownResponse => {
-  let markdown: MarkdownResponse = "";
-
-  markdown += `\n ### GitHub PRs`;
-  if (amount) {
-    if (!Array.isArray(value) && value?.error === "no github token") {
-      markdown += `\n No results found :(`;
-    } else if (Array.isArray(value) && value?.length) {
-      for (let index = 0; index < value?.length; index++) {
-        const element = value[index];
-        markdown += `\n - [#${element.number} - ${element.title}](${element.html_url}) \n`;
-      }
-    }
+  if (!amount) {
+    return `\n GitHub PRs deactivated by ${userLogin}`;
+  }
+  if (value?.error === "no github token") {
+    return `\n [Click here to login to GitHub](https://app.watermelontools.com)`;
+  }
+  let markdown: MarkdownResponse = `\n ### GitHub PRs`;
+  if (Array.isArray(value.data) && value?.data?.length) {
+    markdown += (value?.data || [])
+      .map(
+        ({ number, title, link }) => `\n - [#${number} - ${title}](${link}) \n`
+      )
+      .join("");
   } else {
-    markdown += `GitHub PRs deactivated by ${userLogin}`;
-
-    markdown += `\n`;
+    markdown += `\n No results found :(`;
   }
   return markdown;
 };

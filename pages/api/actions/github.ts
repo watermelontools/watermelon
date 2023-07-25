@@ -393,13 +393,13 @@ export default async (req, res) => {
         }
 
         textToWrite += githubMarkdown({
-          GitHubPRs,
-          ghValue,
+          amount: GitHubPRs,
+          value: ghValue,
           userLogin,
         });
         textToWrite += jiraMarkdown({
-          JiraTickets,
-          jiraValue,
+          amount: JiraTickets,
+          value: jiraValue,
           userLogin,
         });
         textToWrite += confluenceMarkdown({

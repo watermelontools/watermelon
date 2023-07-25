@@ -1,36 +1,30 @@
+import { MarkdownRequest, MarkdownResponse } from "../../../types/watermelon";
+
 const jiraMarkdown = ({
-  JiraTickets,
-  jiraValue,
+  amount,
+  value,
   userLogin,
-}: {
-  JiraTickets: number;
-  jiraValue: any;
-  userLogin: string;
-}) => {
-  let markdown = "";
+}: MarkdownRequest): MarkdownResponse => {
+  if (!amount) {
+    return `\n Jira Tickets deactivated by ${userLogin}`;
+  }
 
-  markdown += `\n`;
+  if (value?.error === "no jira token") {
+    return `\n [Click here to login to Jira](https://app.watermelontools.com)`;
+  }
 
-  markdown += "### Jira Tickets";
-  if (JiraTickets) {
-    if (jiraValue?.error === "no jira token") {
-      markdown = `\n [Click here to login to Jira](https://app.watermelontools.com)`;
-    } else {
-      if (jiraValue?.length) {
-        for (let index = 0; index < jiraValue.length; index++) {
-          const element = jiraValue[index];
-          markdown += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
-          markdown += `\n`;
-        }
-      } else {
-        markdown += `\n No results found :(`;
-      }
-    }
+  let markdown: MarkdownResponse = `\n ### Jira Tickets`;
+
+  if (Array.isArray(value.data) && value?.data?.length) {
+    markdown += (value?.data || [])
+      .map(
+        ({ number, title, link }) => `\n - [#${number} - ${title}](${link}) \n`
+      )
+      .join("");
   } else {
-    markdown += `Jira Tickets deactivated by ${userLogin}`;
-
-    markdown += `\n`;
+    markdown += `\n No results found :(`;
   }
   return markdown;
 };
+
 export default jiraMarkdown;
