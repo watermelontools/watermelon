@@ -10,7 +10,7 @@ export type StandardAPIResponse = {
     title: string;
     body?: string;
     link?: string;
-    number?: number;
+    number?: number | string;
   }[];
   fullData?: any;
   error?: string;
