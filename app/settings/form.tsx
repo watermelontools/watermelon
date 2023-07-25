@@ -38,6 +38,18 @@ export default function form({ userEmail }) {
   useEffect(() => {
     setUserSettingsState(userEmail);
   }, [userEmail]);
+  function OptionDropdown() {
+    return (
+      <div>
+        {Array.from(Array(11)).map((i, index) => {
+          if (index === 0) {
+            return null;
+          }
+          return <option value={index}>{index}</option>;
+        })}
+      </div>
+    );
+  }
 
   function SettingsSelector({ label, valueLabel }) {
     return (
