@@ -15,10 +15,11 @@ async function getSlack({
     let response = await searchMessageByText({
       text: `${title}`,
       user_token: slack_token,
+      count: amount,
     });
-    slackValue = response.messages.matches
-      .filter((message) => !message.channel.is_private)
-      ?.slice(0, amount);
+    slackValue = response.messages.matches.filter(
+      (message) => !message.channel.is_private
+    );
   }
   return {
     fullData: slackValue,
