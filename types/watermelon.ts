@@ -11,6 +11,7 @@ export type StandardAPIResponse = {
     body?: string;
     link?: string;
     number?: number | string;
+    image?: string;
   }[];
   fullData?: any;
   error?: string;
