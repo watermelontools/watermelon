@@ -16,16 +16,21 @@ async function getSlack({
       text: `${title}`,
       user_token: slack_token,
     });
-    let publicMessages = response.messages.matches.filter(
-      (message) => !message.channel.is_private
-    );
-    slackValue = publicMessages?.matches?.slice(0, amount);
+    slackValue = response.messages.matches
+      .filter((message) => !message.channel.is_private)
+      ?.slice(0, amount);
   }
   return {
     fullData: slackValue,
     data:
       slackValue?.map(({ permalink, username, channel, text }) => ({
-        title: username,
+        title:
+          username +
+          `: ${
+            text.length && text?.length > 100
+              ? text.substring(0, 100) + "..."
+              : text
+          } `,
         link: permalink,
         number: channel.name,
         body: text,
