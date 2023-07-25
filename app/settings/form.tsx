@@ -54,7 +54,7 @@ export default function form({ userEmail }) {
   function SettingsSelector({ label, value, onChange, defaultValue }) {
     return (
       <div className="">
-        <span>{label} </span>
+        <span>{label}</span>
         <select
           className="form-select"
           aria-label={label}
