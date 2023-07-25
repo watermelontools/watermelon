@@ -369,10 +369,15 @@ export default async (req, res) => {
         let businessLogicSummary;
         if (AISummary) {
           businessLogicSummary = await getOpenAISummary({
-            ghValue,
+            values: {
+              ghValue,
+              jiraValue,
+              confluenceValue,
+              slackValue,
+              notionValue,
+              linearValue,
+            },
             commitList,
-            jiraValue,
-            slackValue,
             title,
             body,
           });
