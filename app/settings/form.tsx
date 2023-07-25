@@ -16,6 +16,7 @@ export default function form({ userEmail }) {
     GitHubPRs: 3,
     NotionPages: 3,
     LinearTickets: 3,
+    ConfluenceDocs: 3,
     AISummary: 1,
   });
   const handleSubmit = async () => {
@@ -49,6 +50,18 @@ export default function form({ userEmail }) {
   useEffect(() => {
     setUserSettingsState(userEmail);
   }, [userEmail]);
+  function OptionDropdown() {
+    return (
+      <div>
+        {Array.from(Array(11)).map((i, index) => {
+          if (index === 0) {
+            return null;
+          }
+          return <option value={index}>{index}</option>;
+        })}
+      </div>
+    );
+  }
 
   return (
     <form>
@@ -66,12 +79,7 @@ export default function form({ userEmail }) {
           }
           value={formState.JiraTickets}
         >
-          {Array.from(Array(11)).map((i, index) => {
-            if (index === 0) {
-              return null;
-            }
-            return <option value={index}>{index}</option>;
-          })}
+          <OptionDropdown />
         </select>
       </div>
       <div className="">
@@ -88,12 +96,7 @@ export default function form({ userEmail }) {
             })
           }
         >
-          {Array.from(Array(11)).map((i, index) => {
-            if (index === 0) {
-              return null;
-            }
-            return <option value={index}>{index}</option>;
-          })}
+          <OptionDropdown />
         </select>
       </div>
       <div className="">
@@ -110,12 +113,7 @@ export default function form({ userEmail }) {
             })
           }
         >
-          {Array.from(Array(11)).map((i, index) => {
-            if (index === 0) {
-              return null;
-            }
-            return <option value={index}>{index}</option>;
-          })}
+          <OptionDropdown />
         </select>
       </div>
 
@@ -133,12 +131,7 @@ export default function form({ userEmail }) {
             })
           }
         >
-          {Array.from(Array(11)).map((i, index) => {
-            if (index === 0) {
-              return null;
-            }
-            return <option value={index}>{index}</option>;
-          })}
+          <OptionDropdown />
         </select>
       </div>
 

@@ -1,4 +1,3 @@
-import getUserSettings from "../../../utils/db/user/settings";
 import patchUserSettings from "../../../utils/db/user/patchUserSettings";
 
 export default async function handler(req, res) {
