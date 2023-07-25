@@ -5,6 +5,16 @@ export type MarkdownRequest = {
   amount: number;
   value: StandardAPIResponse;
 };
+export type StandardAPIInput = {
+  token: string;
+  refresh_token?: string;
+  searchText: string;
+  amount: number;
+  user?: string;
+  id?: string;
+  owner?: string;
+  repo?: string;
+};
 export type StandardAPIResponse = {
   data?: {
     title: string;
