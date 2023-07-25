@@ -41,8 +41,8 @@ async function getNotion({
       fullData: returnVal,
       data: returnVal?.results?.map((result) => {
         return {
-          title: result.properties.title.title[0].plain_text,
-          body: result.properties.excerpt.rich_text[0].plain_text,
+          title: result?.properties?.title?.title[0]?.plain_text,
+          body: result?.properties?.excerpt?.rich_text[0]?.plain_text,
           link: result.url,
           image:
             result.icon?.type === "external"
