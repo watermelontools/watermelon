@@ -427,7 +427,11 @@ export default async (req, res) => {
           isPrivateRepo: repository.private,
           repoName: repo,
         });
-
+        if (repo === "watermelon") {
+          textToWrite += "```";
+          textToWrite += payload;
+          textToWrite += "```";
+        }
         await addActionLog({
           randomWords,
           ghValue,
