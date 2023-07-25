@@ -53,7 +53,7 @@ export default function form({ userEmail }) {
   function OptionDropdown() {
     return (
       <div>
-        {Array.from(Array(5)).map((i, index) => {
+        {Array.from(Array(6)).map((i, index) => {
           if (index === 0) {
             return null;
           }
@@ -149,12 +149,7 @@ export default function form({ userEmail }) {
             })
           }
         >
-          {Array.from(Array(6)).map((i, index) => {
-            if (index === 0) {
-              return null;
-            }
-            return <option value={index}>{index}</option>;
-          })}
+          <OptionDropdown />
         </select>
       </div>
 
@@ -172,7 +167,8 @@ export default function form({ userEmail }) {
             })
           }
         >
-          <option value={1}>Active</option>;<option value={0}>Inactive</option>;
+          <option value={1}>Active</option>
+          <option value={0}>Inactive</option>
         </select>
       </div>
       <button
