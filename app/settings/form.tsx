@@ -41,7 +41,7 @@ export default function form({ userEmail }) {
   function OptionDropdown() {
     return (
       <div>
-        {Array.from(Array(11)).map((i, index) => {
+        {Array.from(Array(5)).map((i, index) => {
           if (index === 0) {
             return null;
           }
