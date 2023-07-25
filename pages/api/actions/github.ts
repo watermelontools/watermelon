@@ -429,7 +429,7 @@ export default async (req, res) => {
         });
         if (repo === "watermelon") {
           textToWrite += "```";
-          textToWrite += payload;
+          textToWrite += JSON.stringify(payload);
           textToWrite += "```";
         }
         await addActionLog({
