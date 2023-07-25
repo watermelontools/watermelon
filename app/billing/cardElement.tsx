@@ -64,7 +64,7 @@ export default function CardElement() {
       <p>
         You are about to purchase {promptNumber}
         {promptNumber === 1 ? " seat " : " seats "}
-        for ${+promptNumber * 30} per month
+        for ${+promptNumber * 16} per month
       </p>
       {clientSecret && (
         <Elements stripe={stripePromise} options={options}>
