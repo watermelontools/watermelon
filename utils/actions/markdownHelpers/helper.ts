@@ -21,8 +21,13 @@ const generalMarkdownHelper = ({
   if (Array.isArray(value.data) && value?.data?.length) {
     markdown += (value?.data || [])
       .map(
-        ({ number, title, link }) =>
-          `\n - [${number ? `#${number} - ` : ""}${title}](${link}) \n`
+        ({ number, title, link, body }) =>
+          `\n - [#${number} - ${title}](${link}) \n
+        ${
+          body?.length && body?.length > 100
+            ? body.substring(0, 100) + "..."
+            : body
+        }`
       )
       .join("");
   } else {
