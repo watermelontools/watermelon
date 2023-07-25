@@ -46,7 +46,7 @@ async function getConfluence({
     confluence_refresh_token,
     user,
   });
-
+  if (!newAccessTokens.access_token) return { error: "no confluence token" };
   // Constructing search query
   const cleanRandomWords = Array.from(
     new Set(randomWords.map((word) => removeSpecialChars(word)))
