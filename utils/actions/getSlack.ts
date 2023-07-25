@@ -1,12 +1,12 @@
+import { StandardAPIResponse } from "../../types/watermelon";
 import searchMessageByText from "../../utils/slack/searchMessageByText";
-type SlackResult = { error: string } | any[];
 async function getSlack({
   title,
   body,
   slack_token,
   randomWords,
   amount = 3,
-}): Promise<SlackResult> {
+}): Promise<StandardAPIResponse> {
   let slackValue;
 
   if (!slack_token) {
@@ -21,6 +21,15 @@ async function getSlack({
     );
     slackValue = publicMessages?.matches?.slice(0, amount);
   }
-  return slackValue;
+  return {
+    fullData: slackValue,
+    data:
+      slackValue?.map(({ permalink, username, channel, text }) => ({
+        title: username,
+        link: permalink,
+        number: channel.name,
+        body: text,
+      })) || [],
+  };
 }
 export default getSlack;

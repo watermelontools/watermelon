@@ -10,9 +10,6 @@ import getNotion from "../../../utils/actions/getNotion";
 import getLinear from "../../../utils/actions/getLinear";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
-import githubMarkdown from "../../../utils/actions/markdownHelpers/github";
-import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
-import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
 import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
 import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
@@ -20,6 +17,7 @@ import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 import addActionLog from "../../../utils/db/github/addActionLog";
 import getConfluence from "../../../utils/actions/getConfluence";
 import confluenceMarkdown from "../../../utils/actions/markdownHelpers/confluence";
+import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -392,25 +390,31 @@ export default async (req, res) => {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;
         }
 
-        textToWrite += githubMarkdown({
+        textToWrite += generalMarkdownHelper({
           amount: GitHubPRs,
           value: ghValue,
           userLogin,
+          systemName: "GitHub",
+          systemResponseName: "GitHub PRs",
         });
-        textToWrite += jiraMarkdown({
+        textToWrite += generalMarkdownHelper({
           amount: JiraTickets,
           value: jiraValue,
           userLogin,
+          systemName: "Jira",
+          systemResponseName: "Jira Tickets",
         });
         textToWrite += confluenceMarkdown({
           ConfluenceDocs: 3,
           confluenceValue,
           userLogin,
         });
-        textToWrite += slackMarkdown({
-          SlackMessages,
-          slackValue,
+        textToWrite += generalMarkdownHelper({
+          amount: SlackMessages,
+          value: slackValue,
           userLogin,
+          systemName: "Slack",
+          systemResponseName: "Slack Threads",
         });
         textToWrite += notionMarkdown({
           NotionPages,
