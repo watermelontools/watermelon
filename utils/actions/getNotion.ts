@@ -30,6 +30,7 @@ async function getNotion({
       },
       body: JSON.stringify({
         query: cleanRW.join(" "),
+        page_size: amount,
       }),
     })
       .then((res) => res.json())
