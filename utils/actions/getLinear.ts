@@ -1,9 +1,10 @@
-type LinearResult = { error: string } | any[];
+import { StandardAPIResponse } from "../../types/watermelon";
+
 async function getLinear({
   linear_token,
   randomWords,
   amount = 3,
-}): Promise<LinearResult> {
+}): Promise<StandardAPIResponse> {
   let linearValue;
 
   // create the query with the random words and the owner
@@ -29,7 +30,16 @@ async function getLinear({
       .then((response) => response.json())
       .then((result) => result)
       .catch((error) => console.error("error", error));
-    return linearTickets?.data?.searchIssues?.nodes;
+    return {
+      fullData: linearTickets,
+      data: linearTickets?.data?.searchIssues?.nodes.map((result) => {
+        return {
+          title: result.title,
+          number: result.number,
+          url: result.url,
+        };
+      }),
+    };
   }
 }
 export default getLinear;

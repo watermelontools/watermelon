@@ -10,14 +10,11 @@ import getNotion from "../../../utils/actions/getNotion";
 import getLinear from "../../../utils/actions/getLinear";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
-import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
-import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
+import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
 import getConfluence from "../../../utils/actions/getConfluence";
-import confluenceMarkdown from "../../../utils/actions/markdownHelpers/confluence";
-import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -404,10 +401,12 @@ export default async (req, res) => {
           systemName: "Jira",
           systemResponseName: "Jira Tickets",
         });
-        textToWrite += confluenceMarkdown({
-          ConfluenceDocs: 3,
-          confluenceValue,
+        textToWrite += generalMarkdownHelper({
+          amount: 3,
+          value: confluenceValue,
           userLogin,
+          systemName: "Confluence",
+          systemResponseName: "Confluence Docs",
         });
         textToWrite += generalMarkdownHelper({
           amount: SlackMessages,
@@ -416,15 +415,19 @@ export default async (req, res) => {
           systemName: "Slack",
           systemResponseName: "Slack Threads",
         });
-        textToWrite += notionMarkdown({
-          NotionPages,
-          notionValue,
+        textToWrite += generalMarkdownHelper({
+          amount: NotionPages,
+          value: notionValue,
           userLogin,
+          systemName: "Notion",
+          systemResponseName: "Notion Pages",
         });
-        textToWrite += linearMarkdown({
-          LinearTickets,
-          linearValue,
+        textToWrite += generalMarkdownHelper({
+          amount: LinearTickets,
+          value: linearValue,
           userLogin,
+          systemName: "Linear",
+          systemResponseName: "Linear Tickets",
         });
         textToWrite += countMarkdown({
           count,
