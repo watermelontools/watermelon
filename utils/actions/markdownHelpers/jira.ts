@@ -7,11 +7,7 @@ const jiraMarkdown = ({
   jiraValue: any;
   userLogin: string;
 }) => {
-  let markdown = "";
-
-  markdown += `\n`;
-
-  markdown += "### Jira Tickets";
+  let markdown = `\n ### Jira Tickets`;
   if (JiraTickets) {
     if (jiraValue?.error === "no jira token") {
       markdown += `\n [Click here to login to Jira](https://app.watermelontools.com)`;
@@ -19,17 +15,14 @@ const jiraMarkdown = ({
       if (jiraValue?.length) {
         for (let index = 0; index < jiraValue.length; index++) {
           const element = jiraValue[index];
-          markdown += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key})`;
-          markdown += `\n`;
+          markdown += `\n - [${element.key} - ${element.fields.summary}](${element.serverInfo.baseUrl}/browse/${element.key}) \n`;
         }
       } else {
         markdown += `\n No results found :(`;
       }
     }
   } else {
-    markdown += `Jira Tickets deactivated by ${userLogin}`;
-
-    markdown += `\n`;
+    markdown += `Jira Tickets deactivated by ${userLogin} \n`;
   }
   return markdown;
 };

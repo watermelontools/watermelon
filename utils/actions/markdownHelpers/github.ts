@@ -7,10 +7,7 @@ const githubMarkdown = ({
   ghValue: any;
   userLogin: string;
 }) => {
-  let markdown = "";
-
-  markdown += `\n`;
-  markdown += "### GitHub PRs";
+  let markdown = `\n ### GitHub PRs`;
   if (GitHubPRs) {
     if (!Array.isArray(ghValue) && ghValue?.error === "no github token") {
       markdown += `\n No results found :(`;
@@ -22,9 +19,7 @@ const githubMarkdown = ({
       }
     }
   } else {
-    markdown += `GitHub PRs deactivated by ${userLogin}`;
-
-    markdown += `\n`;
+    markdown += `GitHub PRs deactivated by ${userLogin} \n`;
   }
   return markdown;
 };
