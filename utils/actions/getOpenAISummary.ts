@@ -1,3 +1,5 @@
+import { StandardProcessedDataArray } from "../../types/watermelon";
+
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
@@ -5,17 +7,37 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 export default async function getOpenAISummary({
-  ghValue,
   commitList,
-  jiraValue,
-  slackValue,
   title,
   body,
+  values,
 }) {
+  let ghValue: StandardProcessedDataArray = values?.github?.data;
+  let jiraValue: StandardProcessedDataArray = values?.jira?.data;
+  let slackValue: StandardProcessedDataArray = values?.slack?.data;
+  let confluenceValue: StandardProcessedDataArray = values?.confluence?.data;
+  let linearValue: StandardProcessedDataArray = values?.linear?.data;
+  let notionValue: StandardProcessedDataArray = values?.notion?.data;
+
   let prompt = "";
-  if (ghValue.error && jiraValue.error && slackValue.error) {
-    return { error: "no data" };
-  }
+  const promptGenerator = (value, name) => {
+    if (value?.length) {
+      for (let i = 0; i < value.length; i++) {
+        prompt += `${name} ${i + 1} title: ${value[i].title || ""} \n ${
+          value[i].body
+            ? `${name} ${i + 1} body: ${value[i].body || ""} \n`
+            : ""
+        }`;
+      }
+    }
+  };
+  promptGenerator(ghValue, "PR");
+  promptGenerator(jiraValue, "Jira");
+  promptGenerator(slackValue, "Slack");
+  promptGenerator(confluenceValue, "Confluence");
+  promptGenerator(linearValue, "Linear");
+  promptGenerator(notionValue, "Notion");
+
   for (let i = 0; i < ghValue.length; i++) {
     prompt += `PR ${i + 1} title: ${ghValue[i].title || ""} \n ${
       ghValue[i].body ? `PR ${i + 1} body: ${ghValue[i].body || ""} \n` : ""
