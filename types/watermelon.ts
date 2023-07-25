@@ -14,6 +14,7 @@ export type StandardAPIInput = {
   id?: string;
   owner?: string;
   repo?: string;
+  randomWords?: string[];
 };
 export type StandardAPIResponse = {
   data?: {
