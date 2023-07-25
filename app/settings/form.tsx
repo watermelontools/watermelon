@@ -50,18 +50,7 @@ export default function form({ userEmail }) {
   useEffect(() => {
     setUserSettingsState(userEmail);
   }, [userEmail]);
-  function OptionDropdown() {
-    return (
-      <div>
-        {Array.from(Array(6)).map((i, index) => {
-          if (index === 0) {
-            return null;
-          }
-          return <option value={index}>{index}</option>;
-        })}
-      </div>
-    );
-  }
+
   function SettingsSelector({ label, value, onChange, defaultValue }) {
     return (
       <div className="">
@@ -73,7 +62,11 @@ export default function form({ userEmail }) {
           onChange={onChange}
           value={value}
         >
-          <OptionDropdown />
+          {Array.from({ length: 5 }, (_, index) => (
+            <option key={index} value={index + 1}>
+              {index + 1}
+            </option>
+          ))}
         </select>
       </div>
     );
