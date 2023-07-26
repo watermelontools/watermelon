@@ -5,11 +5,11 @@ export type MarkdownRequest = {
   amount: number;
   value: StandardAPIResponse;
 };
-type searchText = string | string[];
+
 export type StandardAPIInput = {
   token: string;
   refresh_token?: string;
-  searchText?: string;
+  searchText: string;
   amount: number;
   user?: string;
   id?: string;
