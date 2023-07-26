@@ -19,6 +19,9 @@ export default function form({ userEmail }) {
     ConfluenceDocs: 3,
     AISummary: 1,
   });
+  const handleChange = (index, value) => {
+    setFormState({ ...formState, [index]: value });
+  };
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -51,14 +54,14 @@ export default function form({ userEmail }) {
     setUserSettingsState(userEmail);
   }, [userEmail]);
 
-  function SettingsSelector({ label, value, onChange, defaultValue }) {
+  function SettingsSelector({ label, value, onChange }) {
     return (
       <div className="">
         <span>{label}</span>
         <select
           className="form-select"
           aria-label={label}
-          defaultValue={defaultValue}
+          defaultValue={value}
           onChange={onChange}
           value={value}
         >
@@ -76,55 +79,34 @@ export default function form({ userEmail }) {
       <SettingsSelector
         label="Jira Tickets"
         value={formState.JiraTickets}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            JiraTickets: parseInt(e.target.value),
-          })
-        }
+        onChange={(e) => handleChange("JiraTickets", parseInt(e.target.value))}
         defaultValue={formState?.JiraTickets}
       />
       <SettingsSelector
         label="Slack Messages"
         value={formState.SlackMessages}
         onChange={(e) =>
-          setFormState({
-            ...formState,
-            SlackMessages: parseInt(e.target.value),
-          })
+          handleChange("SlackMessages", parseInt(e.target.value))
         }
         defaultValue={formState?.SlackMessages}
       />
       <SettingsSelector
         label="GitHub PRs"
         value={formState.GitHubPRs}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            GitHubPRs: parseInt(e.target.value),
-          })
-        }
+        onChange={(e) => handleChange("GitHubPRs", parseInt(e.target.value))}
         defaultValue={formState?.GitHubPRs}
       />
       <SettingsSelector
         label="Notion Pages"
         value={formState.NotionPages}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            NotionPages: parseInt(e.target.value),
-          })
-        }
+        onChange={(e) => handleChange("NotionPages", parseInt(e.target.value))}
         defaultValue={formState?.NotionPages}
       />
       <SettingsSelector
         label="Linear Tickets"
         value={formState.LinearTickets}
         onChange={(e) =>
-          setFormState({
-            ...formState,
-            LinearTickets: parseInt(e.target.value),
-          })
+          handleChange("LinearTickets", parseInt(e.target.value))
         }
         defaultValue={formState?.LinearTickets}
       />
@@ -132,10 +114,7 @@ export default function form({ userEmail }) {
         label="Confluence Docs"
         value={formState.ConfluenceDocs}
         onChange={(e) =>
-          setFormState({
-            ...formState,
-            ConfluenceDocs: parseInt(e.target.value),
-          })
+          handleChange("ConfluenceDocs", parseInt(e.target.value))
         }
         defaultValue={formState?.ConfluenceDocs}
       />
@@ -147,12 +126,7 @@ export default function form({ userEmail }) {
           aria-label="AI Summary"
           defaultValue={formState?.AISummary}
           value={formState.AISummary}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              AISummary: parseInt(e.target.value),
-            })
-          }
+          onChange={(e) => handleChange("AISummary", parseInt(e.target.value))}
         >
           <option value={1}>Active</option>
           <option value={0}>Inactive</option>
