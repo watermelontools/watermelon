@@ -1,8 +1,14 @@
 # Watermelon.tools
-
+To start developing, clone and: 
 ```
 yarn
 yarn dev
+```
+Or with npm
+
+```
+npm i
+npm run dev
 ```
 
 (Check your node version, we recommend 18)
@@ -11,7 +17,9 @@ We use a recent version of Next. You may refer to the documentation at https://n
 
 This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
 
-All the backend lives as serverless functions under `api`, with the route being the filename.
+All the backend lives as serverless functions under `api`, with the route being the filename. 
+
+We now use the new app router for some features.
 
 As we now use OAuth2.0, local development cannot be done on new integrations.
 
@@ -38,3 +46,5 @@ We do all of this as a security measure. We don't want data exposed and we consi
 To integrate a new service, several steps are to be taken, but it's pretty much copying code.
 
 First, we use oauth so you need to ensure that the service supports it.
+
+Remember that there are several procedures in our db to replicate.

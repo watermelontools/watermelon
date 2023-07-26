@@ -63,95 +63,94 @@ export default function form({ userEmail }) {
     );
   }
 
+  function SettingsSelector({ label, value, onChange, defaultValue }) {
+    return (
+      <div className="">
+        <span>{label}</span>
+        <select
+          className="form-select"
+          aria-label={label}
+          defaultValue={defaultValue}
+          onChange={onChange}
+          value={value}
+        >
+          {Array.from({ length: 5 }, (_, index) => (
+            <option key={index} value={index + 1}>
+              {index + 1}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
   return (
     <form>
-      <div className="">
-        <span>Jira Tickets: </span>
-        <select
-          className="form-select"
-          aria-label="Amount of Jira Tickets"
-          defaultValue={formState?.JiraTickets}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              JiraTickets: parseInt(e.target.value),
-            })
-          }
-          value={formState.JiraTickets}
-        >
-          <OptionDropdown />
-        </select>
-      </div>
-      <div className="">
-        <span>Slack Messages: </span>
-        <select
-          className="form-select"
-          aria-label="Amount of Slack Messages"
-          defaultValue={formState?.SlackMessages}
-          value={formState.SlackMessages}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              SlackMessages: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
-      <div className="">
-        <span>GitHub PRs: </span>
-        <select
-          className="form-select"
-          aria-label="Amount of GitHub PRs"
-          defaultValue={formState?.GitHubPRs}
-          value={formState.GitHubPRs}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              GitHubPRs: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
-
-      <div className="">
-        <span>Notion Pages:</span>
-        <select
-          className="form-select"
-          aria-label="Amount of Notion Pages"
-          defaultValue={formState?.NotionPages}
-          value={formState.NotionPages}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              NotionPages: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
-
-      <div className="">
-        <span>Linear Tickets:</span>
-        <select
-          className="form-select"
-          aria-label="Amount of Linear Tickets"
-          defaultValue={formState?.LinearTickets}
-          value={formState.LinearTickets}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              LinearTickets: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
+      <SettingsSelector
+        label="Jira Tickets"
+        value={formState.JiraTickets}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            JiraTickets: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.JiraTickets}
+      />
+      <SettingsSelector
+        label="Slack Messages"
+        value={formState.SlackMessages}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            SlackMessages: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.SlackMessages}
+      />
+      <SettingsSelector
+        label="GitHub PRs"
+        value={formState.GitHubPRs}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            GitHubPRs: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.GitHubPRs}
+      />
+      <SettingsSelector
+        label="Notion Pages"
+        value={formState.NotionPages}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            NotionPages: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.NotionPages}
+      />
+      <SettingsSelector
+        label="Linear Tickets"
+        value={formState.LinearTickets}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            LinearTickets: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.LinearTickets}
+      />
+      <SettingsSelector
+        label="Confluence Docs"
+        value={formState.ConfluenceDocs}
+        onChange={(e) =>
+          setFormState({
+            ...formState,
+            ConfluenceDocs: parseInt(e.target.value),
+          })
+        }
+        defaultValue={formState?.ConfluenceDocs}
+      />
 
       <div className="">
         <span>AI Summary: </span>
