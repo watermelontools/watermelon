@@ -79,12 +79,12 @@ export default function form({ userEmail }) {
           className="form-select"
           aria-label="AI Summary"
           value={formState.AISummary}
-          onChange={(e) => {
+          onChange={(e) =>
             setFormState({
               ...formState,
               AISummary: parseInt(e.target.value),
-            });
-          }}
+            })
+          }
         >
           <option value={1}>Active</option>
           <option value={0}>Inactive</option>
