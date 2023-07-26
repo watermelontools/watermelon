@@ -12,77 +12,67 @@ export default async function getOpenAISummary({
   body,
   values,
 }) {
-  let ghValue: StandardProcessedDataArray = values?.github?.data;
-  let jiraValue: StandardProcessedDataArray = values?.jira?.data;
-  let slackValue: StandardProcessedDataArray = values?.slack?.data;
-  let confluenceValue: StandardProcessedDataArray = values?.confluence?.data;
-  let linearValue: StandardProcessedDataArray = values?.linear?.data;
-  let notionValue: StandardProcessedDataArray = values?.notion?.data;
+  const extractData = (key: string) => values?.[key]?.data || [];
 
-  let prompt = "";
+  const ghValue: StandardProcessedDataArray = extractData("ghValue");
+  const jiraValue: StandardProcessedDataArray = extractData("jiraValue");
+  const slackValue: StandardProcessedDataArray = extractData("slackValue");
+  const confluenceValue: StandardProcessedDataArray =
+    extractData("confluenceValue");
+  const linearValue: StandardProcessedDataArray = extractData("linearValue");
+  const notionValue: StandardProcessedDataArray = extractData("notionValue");
+
+  let promptList = "";
   const promptGenerator = (value, name) => {
     if (value?.length) {
       for (let i = 0; i < value.length; i++) {
-        prompt += `${name} ${i + 1} title: ${value[i].title || ""} \n ${
-          value[i].body
-            ? `${name} ${i + 1} body: ${value[i].body || ""} \n`
-            : ""
-        }`;
+        promptList += `${name} ${i + 1} title: ${value[i].title || ""} \n`;
       }
     }
   };
-  promptGenerator(ghValue, "PR");
-  promptGenerator(jiraValue, "Jira");
-  promptGenerator(slackValue, "Slack");
-  promptGenerator(confluenceValue, "Confluence");
-  promptGenerator(linearValue, "Linear");
-  promptGenerator(notionValue, "Notion");
-
-  for (let i = 0; i < ghValue.length; i++) {
-    prompt += `PR ${i + 1} title: ${ghValue[i].title || ""} \n ${
-      ghValue[i].body ? `PR ${i + 1} body: ${ghValue[i].body || ""} \n` : ""
-    }`;
-  }
-  if (jiraValue?.length) {
-    for (let i = 0; i < jiraValue.length; i++) {
-      prompt += `Jira ${i + 1} title: ${
-        jiraValue[i].fields.summary || ""
-      } \n  ${
-        jiraValue[i].renderedFields.description
-          ? `Jira ${i + 1} body: ${
-              jiraValue[i].renderedFields.description || ""
-            } \n`
-          : ""
-      }`;
+  let summaryPrompt = "";
+  const summaryGenerator = (value, name) => {
+    if (value.length) {
+      summaryPrompt += `${value.length} ${name}, `;
     }
-  }
-  if (slackValue?.length) {
-    for (let i = 0; i < slackValue.length; i++) {
-      prompt += `Slack ${i + 1} text: ${slackValue[i].text || ""} \n`;
-    }
+  };
+  const callList = [
+    { value: ghValue, name: "GitHub PRs" },
+    { value: jiraValue, name: "Jira Tickets" },
+    { value: slackValue, name: "Slack Messages" },
+    { value: confluenceValue, name: "Confluence Docs" },
+    { value: linearValue, name: "Linear Tickets" },
+    { value: notionValue, name: "Notion Pages" },
+  ];
+  for (let i = 0; i < callList.length; i++) {
+    const { value, name } = callList[i];
+    promptGenerator(value, name);
+    summaryGenerator(value, name);
   }
   for (let i = 0; i < commitList.length; i++) {
-    prompt += `Commit ${i + 1} message: ${commitList[i]} \n`;
+    promptList += `Commit ${i + 1} message: ${commitList[i]} \n`;
   }
-  prompt += `Current PR Title: ${title} \n ${
+  promptList += `Current PR Title: ${title} \n ${
     body ? `Current PR Body: ${body} \n` : ""
   }`;
-  prompt += `Summarize what the ${ghValue?.length} PRs, ${
-    jiraValue?.length ? `the ${jiraValue?.length} Jira tickets, ` : ""
-  } ${slackValue?.length ? `the ${slackValue?.length} Slack messages, ` : ""} ${
-    commitList?.length ? `the ${commitList?.length} commits, ` : ""
-  } are about. What do they tell us about the business logic? Don't summarize each PR and commit separately, combine them. Don't say "these PRs", instead say "related PRs". Take into consideration the current PR title and body. \n\n`;
-  const businessLogicSummary = await openai
-    .createCompletion({
-      model: "text-davinci-003",
-      prompt,
-      max_tokens: 512,
-      temperature: 0.7,
-    })
-    .then((res) => {
-      return res.data.choices[0].text.trim();
-    })
-    .catch((err) => console.error("error: ", err.message));
 
-  return businessLogicSummary;
+  const prompt = `Summarize what the ${summaryPrompt} ${
+    commitList?.length ? `the ${commitList?.length} commits,` : ""
+  } are about. What do they tell us about the business logic? Don't summarize each PR and commit separately, combine them. Don't say "these PRs", instead say "related PRs". Take into consideration the current PR title and body.
+  Here is the list:\n  ${promptList} \n`;
+  console.log("prompt: ", prompt);
+
+  const completion = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a Technical PM, that understands the business and will help the user what is going in this recently opened Pull Request. The user will give you some context and you will summarize it in a succinct but not jargon filled way.",
+      },
+      { role: "user", content: prompt },
+    ],
+  });
+  console.log(completion.data.choices[0].message);
+  return completion.data.choices[0].message;
 }
