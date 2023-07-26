@@ -1,15 +1,4 @@
-import { getServerSession } from "next-auth";
-
-import LogInBtn from "../../components/login-btn";
-
-import { authOptions } from "../api/auth/[...nextauth]/route";
-
 async function Settings({}) {
-  const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  // if not logged in, do not show anything
-  if (!session) return <LogInBtn />;
-
   function SettingsSelector({ label }) {
     return (
       <div className="">
@@ -49,7 +38,7 @@ async function Settings({}) {
                 <option value={0}>Inactive</option>
               </select>
             </div>
-            <button className="btn btn-primary" type="button" disabled={false}>
+            <button className="btn btn-primary" type="button" disabled={true}>
               {"Save"}
             </button>
           </form>
