@@ -332,8 +332,8 @@ export default async (req, res) => {
           }),
           getJira({
             user: user_email,
-            jira_token,
-            jira_refresh_token,
+            token: jira_token,
+            refresh_token: jira_refresh_token,
             randomWords,
             amount: JiraTickets,
           }),
@@ -369,6 +369,7 @@ export default async (req, res) => {
         let businessLogicSummary;
         if (AISummary) {
           businessLogicSummary = await getOpenAISummary({
+            commitList,
             values: {
               ghValue,
               jiraValue,
@@ -377,7 +378,6 @@ export default async (req, res) => {
               notionValue,
               linearValue,
             },
-            commitList,
             title,
             body,
           });
@@ -386,7 +386,7 @@ export default async (req, res) => {
             textToWrite += businessLogicSummary;
           } else {
             textToWrite +=
-              "Error getting summary" + businessLogicSummary.error + "\n";
+              "Error getting summary" + businessLogicSummary?.error + "\n";
           }
         } else {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;
