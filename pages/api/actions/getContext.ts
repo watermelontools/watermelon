@@ -264,10 +264,12 @@ export default async function handler(req, res) {
   ]);
 
   const businessLogicSummary = await getOpenAISummary({
-    ghValue,
+    values: {
+      ghValue,
+      jiraValue,
+      slackValue,
+    },
     commitList,
-    jiraValue,
-    slackValue,
     title,
     body,
   });
