@@ -17,8 +17,9 @@ const generalMarkdownHelper = ({
   if (value?.error?.match(/no (\w+) token/)) {
     return `\n [Click here to login to ${systemName}](https://app.watermelontools.com)`;
   }
-  let markdown: MarkdownResponse = `\n ### ${systemResponseName}`;
+  let markdown: MarkdownResponse = ``;
   if (Array.isArray(value.data) && value?.data?.length) {
+    markdown = `\n #### ${systemResponseName}`;
     markdown += (value?.data || [])
       .map(
         ({ number, title, link, body }) =>
@@ -26,7 +27,7 @@ const generalMarkdownHelper = ({
       )
       .join("");
   } else {
-    markdown += `\n No results found :(`;
+    markdown += `\n No results found in **${systemResponseName}** :( \n`;
   }
   return markdown;
 };
