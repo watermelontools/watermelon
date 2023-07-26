@@ -15,8 +15,23 @@ async function Settings({}) {
     SlackMessages: 3,
     GitHubPRs: 3,
     NotionPages: 3,
+    LinearTickets: 3,
+    ConfluenceDocs: 3,
     AISummary: 1,
   };
+  function SettingsSelector({ label, value, defaultValue }) {
+    return (
+      <div className="">
+        <span>{label}</span>
+        <select
+          className="form-select"
+          aria-label={label}
+          defaultValue={defaultValue}
+          value={value}
+        ></select>
+      </div>
+    );
+  }
   return (
     <div>
       <div className="p-3">
@@ -29,71 +44,36 @@ async function Settings({}) {
             </div>
           </div>
           <form>
-            <div className="">
-              <span>Jira Tickets: </span>
-              <select
-                className="form-select"
-                aria-label="Amount of Jira Tickets"
-                defaultValue={formState?.JiraTickets}
-                value={formState.JiraTickets}
-              >
-                {Array.from(Array(6)).map((i, index) => {
-                  if (index === 0) {
-                    return null;
-                  }
-                  return <option value={index}>{index}</option>;
-                })}
-              </select>
-            </div>
-            <div className="">
-              <span>Slack Messages: </span>
-              <select
-                className="form-select"
-                aria-label="Amount of Slack Messages"
-                defaultValue={formState?.SlackMessages}
-                value={formState.SlackMessages}
-              >
-                {Array.from(Array(6)).map((i, index) => {
-                  if (index === 0) {
-                    return null;
-                  }
-                  return <option value={index}>{index}</option>;
-                })}
-              </select>
-            </div>
-            <div className="">
-              <span>GitHub PRs: </span>
-              <select
-                className="form-select"
-                aria-label="Amount of GitHub PRs"
-                defaultValue={formState?.GitHubPRs}
-                value={formState.GitHubPRs}
-              >
-                {Array.from(Array(6)).map((i, index) => {
-                  if (index === 0) {
-                    return null;
-                  }
-                  return <option value={index}>{index}</option>;
-                })}
-              </select>
-            </div>
-
-            <div className="">
-              <span>Notion Pages:</span>
-              <select
-                className="form-select"
-                aria-label="Amount of Notion Pages"
-                defaultValue={formState?.NotionPages}
-                value={formState.NotionPages}
-              >
-                {Array.from(Array(6)).map((i, index) => {
-                  if (index === 0) {
-                    return null;
-                  }
-                  return <option value={index}>{index}</option>;
-                })}
-              </select>
-            </div>
+            <SettingsSelector
+              label="Jira Tickets"
+              value={formState.JiraTickets}
+              defaultValue={formState?.JiraTickets}
+            />
+            <SettingsSelector
+              label="Slack Messages"
+              value={formState.SlackMessages}
+              defaultValue={formState?.SlackMessages}
+            />
+            <SettingsSelector
+              label="GitHub PRs"
+              value={formState.GitHubPRs}
+              defaultValue={formState?.GitHubPRs}
+            />
+            <SettingsSelector
+              label="Notion Pages"
+              value={formState.NotionPages}
+              defaultValue={formState?.NotionPages}
+            />
+            <SettingsSelector
+              label="Linear Tickets"
+              value={formState.LinearTickets}
+              defaultValue={formState?.LinearTickets}
+            />
+            <SettingsSelector
+              label="Confluence Docs"
+              value={formState.ConfluenceDocs}
+              defaultValue={formState?.ConfluenceDocs}
+            />
 
             <div className="">
               <span>AI Summary: </span>
@@ -103,12 +83,12 @@ async function Settings({}) {
                 defaultValue={formState?.AISummary}
                 value={formState.AISummary}
               >
-                <option value={1}>Active</option>;
-                <option value={0}>Inactive</option>;
+                <option value={1}>Active</option>
+                <option value={0}>Inactive</option>
               </select>
             </div>
-            <button className="btn btn-primary" type="button" disabled={true}>
-              "Save"
+            <button className="btn btn-primary" type="button" disabled={false}>
+              {"Save"}
             </button>
           </form>
         </div>

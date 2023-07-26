@@ -9,7 +9,7 @@ function removeSpecialChars(inputString) {
     .join("");
 }
 
-async function fetchJiraData(jql, jira_id, accessToken) {
+async function fetchJiraData(jql, jira_id, accessToken, amount) {
   return fetch(
     `https://api.atlassian.com/ex/jira/${jira_id}/rest/api/3/search`,
     {
@@ -19,7 +19,11 @@ async function fetchJiraData(jql, jira_id, accessToken) {
         Accept: "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ jql, expand: ["renderedFields"] }),
+      body: JSON.stringify({
+        jql,
+        expand: ["renderedFields"],
+        maxResults: amount,
+      }),
     }
   )
     .then((res) => res.json())
@@ -55,7 +59,7 @@ async function getJira({
     user,
   });
 
-  if (!newAccessTokens?.access_token) return { error: "no access_token" };
+  if (!newAccessTokens?.access_token) return { error: "no jira token" };
 
   const { jira_id } = await getJiraOrganization(user);
   if (!jira_id) return { error: "no Jira cloudId" };
@@ -72,20 +76,24 @@ async function getJira({
   const jql = `(${summaryQuery}) OR (${descriptionQuery}) ORDER BY created DESC`;
 
   try {
-    const results = await fetchJiraData(
-      jql,
-      jira_id,
-      newAccessTokens.access_token
-    );
-    const serverInfo = await getJiraServerInfo(
-      jira_id,
-      newAccessTokens.access_token
-    );
+    const [results, serverInfo] = await Promise.all([
+      fetchJiraData(jql, jira_id, newAccessTokens.access_token, amount),
+      getJiraServerInfo(jira_id, newAccessTokens.access_token),
+    ]);
     results.forEach((element, index) => {
       results[index].serverInfo = serverInfo;
     });
 
-    return results?.slice(0, amount);
+    return {
+      fullData: results,
+      data:
+        results?.map(({ key, fields, serverInfo }) => ({
+          number: key,
+          title: fields.summary,
+          body: fields.description,
+          link: `https://${serverInfo.baseUrl}/browse/${key}`,
+        })) || [],
+    };
   } catch (error) {
     console.error(error);
     return { error: "Failed to fetch data from Jira." };

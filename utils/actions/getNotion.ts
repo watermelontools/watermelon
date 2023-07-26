@@ -1,3 +1,5 @@
+import { StandardAPIResponse } from "../../types/watermelon";
+
 function removeSpecialChars(inputString) {
   const specialChars = '!"#$%&/()=-_"{}¨*[]'; // Edit this list to include or exclude characters
   return inputString
@@ -6,7 +8,11 @@ function removeSpecialChars(inputString) {
     .join("");
 }
 
-async function getNotion({ notion_token, randomWords, amount = 3 }) {
+async function getNotion({
+  notion_token,
+  randomWords,
+  amount = 3,
+}): Promise<StandardAPIResponse> {
   if (!notion_token) {
     return { error: "no notion token" };
   } else {
@@ -24,6 +30,7 @@ async function getNotion({ notion_token, randomWords, amount = 3 }) {
       },
       body: JSON.stringify({
         query: cleanRW.join(" "),
+        page_size: amount,
       }),
     })
       .then((res) => res.json())
@@ -31,7 +38,22 @@ async function getNotion({ notion_token, randomWords, amount = 3 }) {
         console.error("notion error", error);
       });
 
-    return returnVal?.results?.slice(0, amount);
+    return {
+      fullData: returnVal,
+      data: returnVal?.results?.map((result) => {
+        return {
+          title: result?.properties?.title?.title[0]?.plain_text,
+          body: result?.properties?.excerpt?.rich_text[0]?.plain_text,
+          link: result.url,
+          image:
+            result.icon?.type === "external"
+              ? `<img src="${result?.icon?.external.url}" alt="Page icon" width="20" height="20" />`
+              : result?.icon?.type === "emoji"
+              ? `<img src="${result?.icon?.emoji}" alt="Page icon" width="20" height="20" />`
+              : "",
+        };
+      }),
+    };
   }
 }
 export default getNotion;
