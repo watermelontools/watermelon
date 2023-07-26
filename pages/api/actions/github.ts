@@ -364,7 +364,7 @@ export default async (req, res) => {
           }),
           addActionCount({ watermelon_user }),
         ]);
-        textToWrite += `### WatermelonAI Summary (BETA) \n`;
+        textToWrite += `### WatermelonAI Summary \n`;
 
         let businessLogicSummary;
         if (AISummary) {
@@ -383,7 +383,7 @@ export default async (req, res) => {
           });
 
           if (businessLogicSummary) {
-            textToWrite += businessLogicSummary;
+            textToWrite += businessLogicSummary + "\n";
           } else {
             textToWrite +=
               "Error getting summary" + businessLogicSummary?.error + "\n";
