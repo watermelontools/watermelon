@@ -10,15 +10,6 @@ async function Settings({}) {
   // if not logged in, do not show anything
   if (!session) return <LogInBtn />;
 
-  const formState = {
-    JiraTickets: 3,
-    SlackMessages: 3,
-    GitHubPRs: 3,
-    NotionPages: 3,
-    LinearTickets: 3,
-    ConfluenceDocs: 3,
-    AISummary: 1,
-  };
   function SettingsSelector({ label }) {
     return (
       <div className="">
