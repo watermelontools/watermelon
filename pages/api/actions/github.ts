@@ -10,16 +10,11 @@ import getNotion from "../../../utils/actions/getNotion";
 import getLinear from "../../../utils/actions/getLinear";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
-import githubMarkdown from "../../../utils/actions/markdownHelpers/github";
-import jiraMarkdown from "../../../utils/actions/markdownHelpers/jira";
-import slackMarkdown from "../../../utils/actions/markdownHelpers/slack";
-import notionMarkdown from "../../../utils/actions/markdownHelpers/notion";
-import linearMarkdown from "../../../utils/actions/markdownHelpers/linear";
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
+import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
 import getConfluence from "../../../utils/actions/getConfluence";
-import confluenceMarkdown from "../../../utils/actions/markdownHelpers/confluence";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -27,6 +22,7 @@ const app = new App({
 
 export default async (req, res) => {
   if (req.method === "POST") {
+    let textToWrite = "";
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
@@ -368,7 +364,6 @@ export default async (req, res) => {
           }),
           addActionCount({ watermelon_user }),
         ]);
-        let textToWrite = "";
         textToWrite += `### WatermelonAI Summary (BETA) \n`;
 
         let businessLogicSummary;
@@ -392,35 +387,47 @@ export default async (req, res) => {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;
         }
 
-        textToWrite += githubMarkdown({
-          GitHubPRs,
-          ghValue,
+        textToWrite += generalMarkdownHelper({
+          amount: GitHubPRs,
+          value: ghValue,
           userLogin,
+          systemName: "GitHub",
+          systemResponseName: "GitHub PRs",
         });
-        textToWrite += jiraMarkdown({
-          JiraTickets,
-          jiraValue,
+        textToWrite += generalMarkdownHelper({
+          amount: JiraTickets,
+          value: jiraValue,
           userLogin,
+          systemName: "Jira",
+          systemResponseName: "Jira Tickets",
         });
-        textToWrite += confluenceMarkdown({
-          ConfluenceDocs: 3,
-          confluenceValue,
+        textToWrite += generalMarkdownHelper({
+          amount: 3,
+          value: confluenceValue,
           userLogin,
+          systemName: "Confluence",
+          systemResponseName: "Confluence Docs",
         });
-        textToWrite += slackMarkdown({
-          SlackMessages,
-          slackValue,
+        textToWrite += generalMarkdownHelper({
+          amount: SlackMessages,
+          value: slackValue,
           userLogin,
+          systemName: "Slack",
+          systemResponseName: "Slack Threads",
         });
-        textToWrite += notionMarkdown({
-          NotionPages,
-          notionValue,
+        textToWrite += generalMarkdownHelper({
+          amount: NotionPages,
+          value: notionValue,
           userLogin,
+          systemName: "Notion",
+          systemResponseName: "Notion Pages",
         });
-        textToWrite += linearMarkdown({
-          LinearTickets,
-          linearValue,
+        textToWrite += generalMarkdownHelper({
+          amount: LinearTickets,
+          value: linearValue,
           userLogin,
+          systemName: "Linear",
+          systemResponseName: "Linear Tickets",
         });
         textToWrite += countMarkdown({
           count,
@@ -496,10 +503,17 @@ export default async (req, res) => {
             });
         }
       }
-      return res.status(200).send("Webhook event processed");
+      return res.status(200).json({
+        message: "success",
+        textToWrite,
+      });
     } catch (error) {
       console.error("general action processing error", error);
-      res.status(500).send("Error processing webhook event");
+      res.status(500).json({
+        message: "Error processing webhook event",
+        error,
+        textToWrite,
+      });
     }
   } else {
     res.setHeader("Allow", "POST");
