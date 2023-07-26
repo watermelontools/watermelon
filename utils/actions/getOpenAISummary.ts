@@ -60,17 +60,21 @@ export default async function getOpenAISummary({
     commitList?.length ? `the ${commitList?.length} commits,` : ""
   } are about. What do they tell us about the business logic? Don't summarize each piece or block of data separately, combine them and process all data. Take into consideration the current PR title and body. Don't look at each part or service of the list as a separate thing, but as a whole. The list will be available to me so you don't need to repeat it. Try to keep the summary to 5 or 6 sentences.
   Here is the list:\n  ${promptList} \n`;
-
-  const completion = await openai.createChatCompletion({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a Technical PM, that understands the business and will help the user what is going in this recently opened Pull Request. The user will give you some context and you will summarize it in a succinct but not jargon filled way. You will avoid going over each individual data point, but will reason about the business logic.",
-      },
-      { role: "user", content: prompt },
-    ],
-  });
-  return completion.data.choices[0].message.content;
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a Technical PM, that understands the business and will help the user what is going in this recently opened Pull Request. The user will give you some context and you will summarize it in a succinct but not jargon filled way. You will avoid going over each individual data point, but will reason about the business logic.",
+        },
+        { role: "user", content: prompt },
+      ],
+    });
+    return completion.data.choices[0].message.content;
+  } catch (error) {
+    console.log(error);
+    return "Error" + error;
+  }
 }
