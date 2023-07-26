@@ -28,19 +28,7 @@ export default function form({ userEmail }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ userSettings: formState, user: userEmail }),
-      }).then((res) => res.json());
-      if (
-        response.AISummary === formState.AISummary ||
-        response.JiraTickets === formState.JiraTickets ||
-        response.SlackMessages === formState.SlackMessages ||
-        response.GitHubPRs === formState.GitHubPRs ||
-        response.NotionPages === formState.NotionPages ||
-        response.LinearTickets === formState.LinearTickets
-      ) {
-        setUserSettingsState(userEmail);
-      } else {
-        console.error("Failed to save the form");
-      }
+      }).then((res) => setUserSettingsState(userEmail));
     } catch (error) {
       console.error("An error occurred while saving the form", error);
     } finally {
@@ -51,16 +39,21 @@ export default function form({ userEmail }) {
     setUserSettingsState(userEmail);
   }, [userEmail]);
 
-  function SettingsSelector({ label, value, onChange, defaultValue }) {
+  function SettingsSelector({ label, valueLabel }) {
     return (
       <div className="">
         <span>{label}</span>
         <select
           className="form-select"
           aria-label={label}
-          defaultValue={defaultValue}
-          onChange={onChange}
-          value={value}
+          defaultValue={formState[valueLabel]}
+          onChange={(e) =>
+            setFormState({
+              ...formState,
+              [valueLabel]: parseInt(e.target.value),
+            })
+          }
+          value={formState[valueLabel]}
         >
           {Array.from({ length: 5 }, (_, index) => (
             <option key={index} value={index + 1}>
@@ -73,79 +66,18 @@ export default function form({ userEmail }) {
   }
   return (
     <form>
-      <SettingsSelector
-        label="Jira Tickets"
-        value={formState.JiraTickets}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            JiraTickets: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.JiraTickets}
-      />
-      <SettingsSelector
-        label="Slack Messages"
-        value={formState.SlackMessages}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            SlackMessages: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.SlackMessages}
-      />
-      <SettingsSelector
-        label="GitHub PRs"
-        value={formState.GitHubPRs}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            GitHubPRs: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.GitHubPRs}
-      />
-      <SettingsSelector
-        label="Notion Pages"
-        value={formState.NotionPages}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            NotionPages: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.NotionPages}
-      />
-      <SettingsSelector
-        label="Linear Tickets"
-        value={formState.LinearTickets}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            LinearTickets: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.LinearTickets}
-      />
-      <SettingsSelector
-        label="Confluence Docs"
-        value={formState.ConfluenceDocs}
-        onChange={(e) =>
-          setFormState({
-            ...formState,
-            ConfluenceDocs: parseInt(e.target.value),
-          })
-        }
-        defaultValue={formState?.ConfluenceDocs}
-      />
+      <SettingsSelector label="Jira Tickets" valueLabel={"JiraTickets"} />
+      <SettingsSelector label="Slack Messages" valueLabel={"SlackMessages"} />
+      <SettingsSelector label="GitHub PRs" valueLabel={"GitHubPRs"} />
+      <SettingsSelector label="Notion Pages" valueLabel={"NotionPages"} />
+      <SettingsSelector label="Linear Tickets" valueLabel={"LinearTickets"} />
+      <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
 
       <div className="">
         <span>AI Summary: </span>
         <select
           className="form-select"
           aria-label="AI Summary"
-          defaultValue={formState?.AISummary}
           value={formState.AISummary}
           onChange={(e) =>
             setFormState({
