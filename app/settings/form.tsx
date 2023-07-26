@@ -19,9 +19,6 @@ export default function form({ userEmail }) {
     ConfluenceDocs: 3,
     AISummary: 1,
   });
-  const handleChange = (index, value) => {
-    setFormState({ ...formState, [index]: value });
-  };
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -31,12 +28,7 @@ export default function form({ userEmail }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ userSettings: formState, user: userEmail }),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          console.log(json);
-          setUserSettingsState(userEmail);
-        });
+      }).then((res) => setUserSettingsState(userEmail));
     } catch (error) {
       console.error("An error occurred while saving the form", error);
     } finally {
@@ -55,7 +47,12 @@ export default function form({ userEmail }) {
           className="form-select"
           aria-label={label}
           defaultValue={formState[valueLabel]}
-          onChange={(e) => handleChange(valueLabel, parseInt(e.target.value))}
+          onChange={(e) =>
+            setFormState({
+              ...formState,
+              [valueLabel]: parseInt(e.target.value),
+            })
+          }
           value={formState[valueLabel]}
         >
           {Array.from({ length: 5 }, (_, index) => (
@@ -82,7 +79,12 @@ export default function form({ userEmail }) {
           className="form-select"
           aria-label="AI Summary"
           value={formState.AISummary}
-          onChange={(e) => handleChange("AISummary", parseInt(e.target.value))}
+          onChange={(e) => {
+            setFormState({
+              ...formState,
+              AISummary: parseInt(e.target.value),
+            });
+          }}
         >
           <option value={1}>Active</option>
           <option value={0}>Inactive</option>
