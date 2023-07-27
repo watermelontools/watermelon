@@ -331,7 +331,7 @@ export default async (req, res) => {
             amount: GitHubPRs,
           }),
           getJira({
-            user: user_em
+            user: user_e
             jira_token,
             jira_refresh_token,
             randomWords,
