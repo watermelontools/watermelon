@@ -1,3 +1,4 @@
+import { StandardAPIInput } from "../../types/watermelon";
 import getJiraOrganization from "../../utils/db/jira/getOrganization";
 import getFreshJiraTokens from "../jira/getFreshJiraTokens";
 
@@ -46,16 +47,16 @@ async function getJiraServerInfo(jira_id, accessToken) {
 
 async function getJira({
   user,
-  jira_token,
-  jira_refresh_token,
+  token,
+  refresh_token,
   randomWords,
   amount = 3,
-}) {
-  if (!jira_token || !jira_refresh_token) return { error: "no jira token" };
+}: StandardAPIInput) {
+  if (!token || !refresh_token) return { error: "no jira token" };
   if (!user) return { error: "no user" };
 
   const newAccessTokens = await getFreshJiraTokens({
-    jira_refresh_token,
+    jira_refresh_token: refresh_token,
     user,
   });
 
@@ -65,7 +66,7 @@ async function getJira({
   if (!jira_id) return { error: "no Jira cloudId" };
 
   const cleanRandomWords = Array.from(
-    new Set(randomWords.map((word) => removeSpecialChars(word)))
+    new Set(randomWords?.map((word) => removeSpecialChars(word)))
   );
   const summaryQuery = cleanRandomWords
     .map((word) => `summary ~ "${word}"`)

@@ -9,7 +9,7 @@ export type MarkdownRequest = {
 export type StandardAPIInput = {
   token: string;
   refresh_token?: string;
-  searchText: string;
+  searchText?: string;
   amount: number;
   user?: string;
   id?: string;
