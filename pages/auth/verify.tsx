@@ -19,13 +19,13 @@ function verify() {
           className="d-flex flex flex-justify-around flex-content-around"
           style={{ width: "100%" }}
         >
-          <a className="btn btn-primary" href="gmail.com">
+          <a className="btn btn-primary" href="https://gmail.com">
             Gmail
           </a>
-          <a className="btn btn-primary" href="outlook.com">
+          <a className="btn btn-primary" href="https://outlook.com">
             Outlook
           </a>
-          <a className="btn btn-primary" href="yahoo.com">
+          <a className="btn btn-primary" href="https://yahoo.com">
             Yahoo
           </a>
         </div>
