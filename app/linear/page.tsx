@@ -115,14 +115,14 @@ export default async function Linear({
           <p>
             If you are not redirected, please click <Link href="/">here</Link>
           </p>
-          {loginArray.length && (
+          {loginArray.length ? (
             <div>
               <h3>You might also be interested: </h3>
               {loginArray.map((login) => (
                 <>{login}</>
               ))}
             </div>
-          )}
+          ) : null}
           {error && <p>{error}</p>}
         </div>
       </div>
