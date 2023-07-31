@@ -62,7 +62,7 @@ export default async function Linear({
   ];
   const loginArray = services
     .map((service) =>
-      userData?.[service.dataProp] ? service.loginComponent : null
+      userData?.[service.dataProp] ? null : service.loginComponent
     )
     .filter((component) => component !== null);
 
