@@ -25,8 +25,8 @@ export default async function RootLayout({
   children: ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  let userName = session?.user?.name;
+  const userEmail = session?.user?.email;
+  const userName = session?.user?.name;
 
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
