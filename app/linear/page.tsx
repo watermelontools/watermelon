@@ -23,7 +23,7 @@ export default async function Linear({
   const { code, state } = searchParams;
   let error = "";
 
-  const [userData, linearToken] = await Promise.all([
+  const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ userEmail }).catch((e) => {
       console.error(e);
       return null;
@@ -66,7 +66,7 @@ export default async function Linear({
     )
     .filter((component) => component !== null);
 
-  const json = await linearToken.json();
+  const json = await serviceToken.json();
   if (json.error) {
     error = json.error;
   } else {
