@@ -6,7 +6,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 
 async function Settings({}) {
   const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
+  const userEmail = session?.user?.email;
   // if not logged in, do not show anything
   if (!session) return <LogInBtn />;
 
