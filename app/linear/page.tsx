@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-
+//change this to import correctly
 import saveUserInfo from "../../utils/db/linear/saveUser";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
-
+// the recommended services should not be of the same category as the current one
 import SlackLoginLink from "../../components/SlackLoginLink";
 import NotionLoginLink from "../../components/NotionLoginLink";
 import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
@@ -22,12 +22,14 @@ export default async function ServicePage({
   const userName = session?.user?.name;
   const { code, state } = searchParams;
   let error = "";
+  // change service name
   const serviceName = "Linear";
   const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
+    // change this fetch
     fetch(`https://api.linear.app/oauth/token`, {
       method: "POST",
       headers: {
@@ -38,6 +40,7 @@ export default async function ServicePage({
     }),
   ]);
 
+  // the recommended services should not be of the same category as the current one
   const services = [
     {
       name: "GitHub",
@@ -75,6 +78,7 @@ export default async function ServicePage({
         "query Me {\nviewer {\n  id,\n  name,\n  displayName, email,\n  avatarUrl\n},\nteams {\n  nodes {\n    id,\n    name\n  }\n}\n}",
       variables: {},
     });
+    // get user correctly
     let user = await fetch(`https://api.linear.app/graphql`, {
       method: "POST",
       headers: {
@@ -85,6 +89,7 @@ export default async function ServicePage({
     });
     let userText = await user.text();
     let userJson = JSON.parse(userText).data;
+    // save user correctly
     await saveUserInfo({
       access_token: json.access_token,
       id: userJson.viewer.id,
