@@ -22,7 +22,7 @@ export default async function Linear({
   const userName = session?.user?.name;
   const { code, state } = searchParams;
   let error = "";
-
+  const serviceName = "Linear";
   const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ userEmail }).catch((e) => {
       console.error(e);
@@ -101,8 +101,9 @@ export default async function Linear({
       <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
         <div className="Subhead">
           <h2 className="Subhead-heading px-2">
-            You have logged in with Linear as {userJson.viewer.displayName} in
-            the team {userJson.teams.nodes[0].name}
+            You have logged in with {serviceName} as{" "}
+            {userJson.viewer.displayName} in the team{" "}
+            {userJson.teams.nodes[0].name}
           </h2>
         </div>
         <img
