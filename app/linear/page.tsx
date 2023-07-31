@@ -12,7 +12,7 @@ import NotionLoginLink from "../../components/NotionLoginLink";
 import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
 import GitHubLoginLink from "../../components/GitHubLoginLink";
 
-export default async function Linear({
+export default async function ServicePage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
