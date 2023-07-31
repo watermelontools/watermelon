@@ -7,9 +7,7 @@ export default function TimeToRedirect({ url }) {
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeToRedirect(timeToRedirect - 1);
-      if (timeToRedirect === 0) {
-        window.open(url, "_blank");
-      }
+      if (timeToRedirect === 0) window.location.href = url;
     }, 1000);
     return () => clearInterval(interval);
   }, [timeToRedirect]);
