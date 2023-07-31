@@ -3,7 +3,7 @@ import saveUserInfo from "../../utils/db/linear/saveUser";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
-async function Linear({
+export default async function Linear({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
