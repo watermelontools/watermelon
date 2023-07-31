@@ -3,6 +3,7 @@ import saveUserInfo from "../../utils/db/linear/saveUser";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
+import TimeToRedirect from "../../components/redirect";
 export default async function Linear({
   searchParams,
 }: {
@@ -12,14 +13,7 @@ export default async function Linear({
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;
   const { code, state } = searchParams;
-  let timeToRedirect = 10;
   let error = "";
-  setInterval(() => {
-    timeToRedirect = timeToRedirect - 1;
-    if (timeToRedirect === 0) {
-      redirect("/");
-    }
-  }, 1000);
   let f;
   if (code) {
     f = await fetch(`https://api.linear.app/oauth/token`, {
@@ -78,7 +72,7 @@ export default async function Linear({
           className="avatar avatar-8"
         />
         <div>
-          <p>You will be redirected in {timeToRedirect}...</p>
+          <TimeToRedirect url={"/"} />
           <p>
             If you are not redirected, please click <Link href="/">here</Link>
           </p>
