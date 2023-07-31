@@ -60,10 +60,11 @@ export default async function Linear({
       loginComponent: <NotionLoginLink userEmail={userEmail} />,
     },
   ];
-
   const loginArray = services
-    .filter((service) => userData?.[service.dataProp])
-    .map((service) => service.loginComponent);
+    .map((service) =>
+      userData?.[service.dataProp] ? service.loginComponent : null
+    )
+    .filter((component) => component !== null);
 
   const json = await linearToken.json();
   if (json.error) {
@@ -115,8 +116,8 @@ export default async function Linear({
             If you are not redirected, please click <Link href="/">here</Link>
           </p>
           {loginArray.length && (
-            <div className="Box">
-              <h3 className="Box-title">Also login to </h3>
+            <div>
+              <h3>You might also be interested: </h3>
               {loginArray.map((login) => (
                 <>{login}</>
               ))}
