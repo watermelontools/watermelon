@@ -35,7 +35,7 @@ export default async function Linear({
         Accept: "application/json",
       },
       body: `grant_type=authorization_code&code=${code}&client_id=${process.env.LINEAR_CLIENT_ID}&client_secret=${process.env.LINEAR_CLIENT_SECRET}&redirect_uri=https://app.watermelontools.com/linear`,
-    }).then((res) => res.json()),
+    }),
   ]);
 
   const services = [
