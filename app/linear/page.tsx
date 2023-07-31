@@ -1,9 +1,17 @@
 import Link from "next/link";
-import saveUserInfo from "../../utils/db/linear/saveUser";
-import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+
+import saveUserInfo from "../../utils/db/linear/saveUser";
+
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
+import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
+
+import SlackLoginLink from "../components/SlackLoginLink";
+import GitHubLoginLink from "../components/GitHubLoginLink";
+import NotionLoginLink from "./NotionLoginLink";
+import ConfluenceLoginLink from "./ConfluenceLoginLink";
+
 export default async function Linear({
   searchParams,
 }: {
@@ -14,20 +22,50 @@ export default async function Linear({
   const userName = session?.user?.name;
   const { code, state } = searchParams;
   let error = "";
-  let f;
-  if (code) {
-    f = await fetch(`https://api.linear.app/oauth/token`, {
+
+  const [userData, linearToken] = await Promise.all([
+    getAllPublicUserData({ userEmail }).catch((e) => {
+      console.error(e);
+      return null;
+    }),
+    fetch(`https://api.linear.app/oauth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
       },
       body: `grant_type=authorization_code&code=${code}&client_id=${process.env.LINEAR_CLIENT_ID}&client_secret=${process.env.LINEAR_CLIENT_SECRET}&redirect_uri=https://app.watermelontools.com/linear`,
-    });
-  } else {
-    error = "no code";
-  }
-  const json = await f.json();
+    }).then((res) => res.json()),
+  ]);
+
+const services = [
+  {
+    name: "GitHub",
+    dataProp: "github_data",
+    loginComponent: <GitHubLoginLink userEmail={userEmail} />,
+  },
+  {
+    name: "Slack",
+    dataProp: "slack_data",
+    loginComponent: <SlackLoginLink userEmail={userEmail} />,
+  },
+  {
+    name: "Confluence",
+    dataProp: "confluence_data",
+    loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
+  },
+  {
+    name: "Notion",
+    dataProp: "notion_data",
+    loginComponent: <NotionLoginLink userEmail={userEmail} />,
+  },
+];
+
+const loginArray = services
+  .filter((service) => userData?.[service.dataProp])
+  .map((service) => service.loginComponent);
+
+  const json = await linearToken.json();
   if (json.error) {
     error = json.error;
   } else {
@@ -76,6 +114,14 @@ export default async function Linear({
           <p>
             If you are not redirected, please click <Link href="/">here</Link>
           </p>
+          {!fullyLogged && (
+            <div className="Box">
+              <h3 className="Box-title">Also login to </h3>
+                {loginArray.map((login) => (
+                  <>{login}</>
+                ))
+            </div>
+          )}
           {error && <p>{error}</p>}
         </div>
       </div>
