@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 async function HomePage() {
   const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  let userName = session?.user?.name;
+  const userEmail = session?.user?.email;
+  const userName = session?.user?.name;
   // if not logged in, do not show anything
   const data = await getAllPublicUserData({ userEmail }).catch((e) => {
     console.error(e);
