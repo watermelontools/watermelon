@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-
+//change this to import correctly
 import saveUserInfo from "../../utils/db/gitlab/saveUser";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
-
+// the recommended services should not be of the same category as the current one
 import SlackLoginLink from "../../components/SlackLoginLink";
 import NotionLoginLink from "../../components/NotionLoginLink";
 import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
@@ -22,12 +22,14 @@ export default async function ServicePage({
   const userName = session?.user?.name;
   const { code, state } = searchParams;
   let error = "";
+  // change service name
   const serviceName = "GitLab";
   const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
+    // change this fetch
     fetch(`https://gitlab.com/oauth/token`, {
       method: "POST",
       headers: {
@@ -44,6 +46,7 @@ export default async function ServicePage({
     }),
   ]);
 
+  // the recommended services should not be of the same category as the current one
   const services = [
     {
       name: "Jira",
@@ -76,13 +79,14 @@ export default async function ServicePage({
   if (json.error) {
     error = json.error;
   } else {
+    // get user correctly
     let user = await fetch(`https://gitlab.com/api/v4/user`, {
       headers: {
         Authorization: `Bearer ${json.access_token}`,
       },
     });
     let userJson = await user.json();
-
+    // save user correctly
     await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
