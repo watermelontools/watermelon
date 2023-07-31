@@ -7,10 +7,10 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 
-import SlackLoginLink from "../components/SlackLoginLink";
-import GitHubLoginLink from "../components/GitHubLoginLink";
-import NotionLoginLink from "./NotionLoginLink";
-import ConfluenceLoginLink from "./ConfluenceLoginLink";
+import SlackLoginLink from "../../components/SlackLoginLink";
+import NotionLoginLink from "../../components/NotionLoginLink";
+import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
+import GitHubLoginLink from "../../components/GitHubLoginLink";
 
 export default async function Linear({
   searchParams,
@@ -38,32 +38,32 @@ export default async function Linear({
     }).then((res) => res.json()),
   ]);
 
-const services = [
-  {
-    name: "GitHub",
-    dataProp: "github_data",
-    loginComponent: <GitHubLoginLink userEmail={userEmail} />,
-  },
-  {
-    name: "Slack",
-    dataProp: "slack_data",
-    loginComponent: <SlackLoginLink userEmail={userEmail} />,
-  },
-  {
-    name: "Confluence",
-    dataProp: "confluence_data",
-    loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
-  },
-  {
-    name: "Notion",
-    dataProp: "notion_data",
-    loginComponent: <NotionLoginLink userEmail={userEmail} />,
-  },
-];
+  const services = [
+    {
+      name: "GitHub",
+      dataProp: "github_data",
+      loginComponent: <GitHubLoginLink userEmail={userEmail} />,
+    },
+    {
+      name: "Slack",
+      dataProp: "slack_data",
+      loginComponent: <SlackLoginLink userEmail={userEmail} />,
+    },
+    {
+      name: "Confluence",
+      dataProp: "confluence_data",
+      loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
+    },
+    {
+      name: "Notion",
+      dataProp: "notion_data",
+      loginComponent: <NotionLoginLink userEmail={userEmail} />,
+    },
+  ];
 
-const loginArray = services
-  .filter((service) => userData?.[service.dataProp])
-  .map((service) => service.loginComponent);
+  const loginArray = services
+    .filter((service) => userData?.[service.dataProp])
+    .map((service) => service.loginComponent);
 
   const json = await linearToken.json();
   if (json.error) {
@@ -114,12 +114,12 @@ const loginArray = services
           <p>
             If you are not redirected, please click <Link href="/">here</Link>
           </p>
-          {!fullyLogged && (
+          {loginArray.length && (
             <div className="Box">
               <h3 className="Box-title">Also login to </h3>
-                {loginArray.map((login) => (
-                  <>{login}</>
-                ))
+              {loginArray.map((login) => (
+                <>{login}</>
+              ))}
             </div>
           )}
           {error && <p>{error}</p>}
