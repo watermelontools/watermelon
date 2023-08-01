@@ -31,11 +31,11 @@ const InfoPanel = ({ info }) => {
           <span>{service_name}</span>
         </h2>
       </div>
-      <div className="d-flex flex-items-center flex-justify-start p-2">
+      <div className="d-flex flex-items-center flex-justify-start px-2">
         <img className="avatar avatar-8" src={user_avatar_url} />
         <div className="px-2">
           <h3>{user_displayname}</h3>
-          <p className="text-light">{user_email || "Unknown email"} </p>
+          <span className="text-light">{user_email || "Unknown email"} </span>
           <p className="text-light">{trimmedOrg(organization)}</p>
         </div>
       </div>

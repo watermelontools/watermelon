@@ -9,7 +9,7 @@ export default async function sendWelcome({
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
     to: emails,
-    from: "edalel@watermelon.tools",
+    from: "info@watermelon.tools",
     templateId: "d-789789fdd54046659d75103ba36c89bc",
     dynamic_template_data: {
       sender,

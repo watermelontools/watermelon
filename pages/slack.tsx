@@ -44,7 +44,6 @@ export default function Slack({ organization, avatar_url, userEmail, error }) {
 }
 export async function getServerSideProps(context) {
   let f;
-  console.log("context", context.query);
   if (context.query.code) {
     f = await fetch(`https://slack.com/api/oauth.v2.access`, {
       method: "POST",

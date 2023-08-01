@@ -1,23 +1,19 @@
+"use client";
 import Image from "next/image";
-import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
-export default function Header() {
-  const [userEmail, setUserEmail] = useState(null);
-  const { data } = useSession();
-
-  useEffect(() => {
-    setUserEmail(data?.user?.email);
-  }, [data]);
+import HeaderSignOut from "./HeaderSignOut";
+export default function Header({ userEmail, userToken }) {
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
-      <div className="Header-item">
-        <Image
-          src="/logos/watermelon.png"
-          alt="Watermelon Tools"
-          width="36"
-          height="23"
-        />
-      </div>
+      <a href="/" className="Header-link">
+        <div className="Header-item">
+          <Image
+            src="/logos/watermelon.png"
+            alt="Watermelon Tools"
+            width="36"
+            height="23"
+          />
+        </div>
+      </a>
       <div className="Header-item mr-0">
         <div>
           <details className="dropdown details-reset details-overlay d-inline-block">
@@ -35,9 +31,9 @@ export default function Header() {
               <li>
                 <a
                   className="dropdown-item"
-                  href={"https://github.com/marketplace/actions/watermelon-context-action"}
+                  href={"https://github.com/apps/watermelon-context"}
                 >
-                  GitHub Action
+                  GitHub App
                 </a>
               </li>
               <li>
@@ -45,7 +41,7 @@ export default function Header() {
                   className="dropdown-item"
                   href={`vscode://watermelontools.watermelon-tools?email=${
                     userEmail ?? ""
-                  }&token=${data?.user.name ? data.user.name : ""}`}
+                  }&token=${userToken ? userToken : ""}`}
                 >
                   VSCode Extension
                 </a>
@@ -58,10 +54,16 @@ export default function Header() {
                   API Docs
                 </a>
               </li>
+              <li>
+                <a
+                  className="dropdown-item"
+                  href={`https://app.watermelontools.com/settings`}
+                >
+                  Settings
+                </a>
+              </li>
               <li className="d-flex flex-items-center flex-justify-center">
-                <button className="btn" onClick={() => signOut()}>
-                  Sign out
-                </button>
+                <HeaderSignOut />
               </li>
             </ul>
           </details>

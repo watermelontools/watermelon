@@ -39,8 +39,8 @@ export default async function getOpenAISummary({
       prompt += `Slack ${i + 1} text: ${slackValue[i].text || ""} \n`;
     }
   }
-  for (let i = 0; i < commitList.split(",").length; i++) {
-    prompt += `Commit ${i + 1} message: ${commitList.split(",")[i]} \n`;
+  for (let i = 0; i < commitList.length; i++) {
+    prompt += `Commit ${i + 1} message: ${commitList[i]} \n`;
   }
   prompt += `Current PR Title: ${title} \n ${
     body ? `Current PR Body: ${body} \n` : ""

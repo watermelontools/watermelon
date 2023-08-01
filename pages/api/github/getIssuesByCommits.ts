@@ -54,7 +54,7 @@ export default async function handler(req, res) {
             //@ts-ignore
             issues.data.items[index].comments = comments.data.filter(
               (comment) => {
-                if (comment.user.type === "Bot") {
+                if (comment?.user?.type === "Bot") {
                   return false;
                 }
                 return true;

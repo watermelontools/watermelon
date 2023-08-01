@@ -87,13 +87,24 @@ export async function getServerSideProps(context) {
       },
     };
   } else {
-    let user = await fetch(`https://api.bitbucket.org/2.0/user`, {
-      headers: {
-        Authorization: `Bearer ${json.access_token}`,
-      },
-    });
+    const headers = {
+      Authorization: `Bearer ${json.access_token}`,
+    };
+
+    const requests = [
+      fetch(`https://api.bitbucket.org/2.0/user`, { headers }),
+      fetch(`https://api.bitbucket.org/2.0/user/permissions/workspaces`, {
+        headers,
+      }),
+      fetch(`https://api.bitbucket.org/2.0/user/emails`, { headers }),
+    ];
+
+    let [user, workspace, email] = await Promise.all(requests);
+
     let userJson = await user.json();
-    console.log("userJson", userJson);
+    let workspaceJson = await workspace.json();
+    let emailJson = await email.json();
+
     await saveUserInfo({
       access_token: json.access_token,
       refresh_token: json.refresh_token,
@@ -102,6 +113,8 @@ export async function getServerSideProps(context) {
       watermelon_user: context.query.state,
       name: userJson.display_name,
       location: userJson.location,
+      workspace: workspaceJson.values[0].workspace.slug,
+      email: emailJson.values[0].email,
     });
     return {
       props: {
