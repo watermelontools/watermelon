@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { getServerSession } from "next-auth";
 //change this to import correctly
 import saveUserInfo from "../../utils/db/linear/saveUser";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 // the recommended services should not be of the same category as the current one
 import SlackLoginLink from "../../components/SlackLoginLink";
