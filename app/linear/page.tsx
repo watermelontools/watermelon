@@ -1,18 +1,14 @@
-import Link from "next/link";
 import { getServerSession } from "next-auth";
-
+//change this to import correctly
 import saveUserInfo from "../../utils/db/linear/saveUser";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 
-import SlackLoginLink from "../../components/SlackLoginLink";
-import NotionLoginLink from "../../components/NotionLoginLink";
-import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
-import GitHubLoginLink from "../../components/GitHubLoginLink";
+import ConnectedService from "../../utils/services/page";
+import LoginArray from "../../utils/services/loginArray";
 
-export default async function Linear({
+export default async function ServicePage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -22,12 +18,14 @@ export default async function Linear({
   const userName = session?.user?.name;
   const { code, state } = searchParams;
   let error = "";
-
-  const [userData, linearToken] = await Promise.all([
+  // change service name
+  const serviceName = "Linear";
+  const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
+    // change this fetch
     fetch(`https://api.linear.app/oauth/token`, {
       method: "POST",
       headers: {
@@ -38,35 +36,11 @@ export default async function Linear({
     }),
   ]);
 
-  const services = [
-    {
-      name: "GitHub",
-      dataProp: "github_data",
-      loginComponent: <GitHubLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Slack",
-      dataProp: "slack_data",
-      loginComponent: <SlackLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Confluence",
-      dataProp: "confluence_data",
-      loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Notion",
-      dataProp: "notion_data",
-      loginComponent: <NotionLoginLink userEmail={userEmail} />,
-    },
-  ];
-  const loginArray = services
-    .map((service) =>
-      userData?.[service.dataProp] ? null : service.loginComponent
-    )
-    .filter((component) => component !== null);
+  // the recommended services should not be of the same category as the current one
+  const nameList = ["GitHub", "Slack", "Notion", "Confluence"];
+  const loginArray = LoginArray({ nameList, userEmail, userData });
 
-  const json = await linearToken.json();
+  const json = await serviceToken.json();
   if (json.error) {
     error = json.error;
   } else {
@@ -75,6 +49,7 @@ export default async function Linear({
         "query Me {\nviewer {\n  id,\n  name,\n  displayName, email,\n  avatarUrl\n},\nteams {\n  nodes {\n    id,\n    name\n  }\n}\n}",
       variables: {},
     });
+    // get user correctly
     let user = await fetch(`https://api.linear.app/graphql`, {
       method: "POST",
       headers: {
@@ -85,6 +60,7 @@ export default async function Linear({
     });
     let userText = await user.text();
     let userJson = JSON.parse(userText).data;
+    // save user correctly
     await saveUserInfo({
       access_token: json.access_token,
       id: userJson.viewer.id,
@@ -98,34 +74,14 @@ export default async function Linear({
     });
 
     return (
-      <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
-        <div className="Subhead">
-          <h2 className="Subhead-heading px-2">
-            You have logged in with Linear as {userJson.viewer.displayName} in
-            the team {userJson.teams.nodes[0].name}
-          </h2>
-        </div>
-        <img
-          src={userJson.viewer.avatarUrl}
-          alt="linear user image"
-          className="avatar avatar-8"
-        />
-        <div>
-          <TimeToRedirect url={"/"} />
-          <p>
-            If you are not redirected, please click <Link href="/">here</Link>
-          </p>
-          {loginArray.length ? (
-            <div>
-              <h3>You might also be interested: </h3>
-              {loginArray.map((login) => (
-                <>{login}</>
-              ))}
-            </div>
-          ) : null}
-          {error && <p>{error}</p>}
-        </div>
-      </div>
+      <ConnectedService
+        serviceName={serviceName}
+        displayName={userJson.viewer.displayName}
+        teamName={userJson.teams.nodes[0].name}
+        avatarUrl={userJson.viewer.avatarUrl}
+        loginArray={loginArray}
+        error={error}
+      />
     );
   }
 }
