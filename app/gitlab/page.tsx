@@ -11,6 +11,7 @@ import SlackLoginLink from "../../components/SlackLoginLink";
 import NotionLoginLink from "../../components/NotionLoginLink";
 import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
 import JiraLoginLink from "../../components/JiraLoginLink";
+import ConnectedService from "../../utils/services/page";
 
 export default async function ServicePage({
   searchParams,
@@ -106,35 +107,14 @@ export default async function ServicePage({
     });
 
     return (
-      <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
-        <div className="Subhead">
-          <h2 className="Subhead-heading px-2">
-            You have logged in with {serviceName} as{" "}
-            {userJson.viewer.displayName} in the team{" "}
-            {userJson.teams.nodes[0].name}
-          </h2>
-        </div>
-        <img
-          src={userJson.viewer.avatarUrl}
-          alt="linear user image"
-          className="avatar avatar-8"
-        />
-        <div>
-          <TimeToRedirect url={"/"} />
-          <p>
-            If you are not redirected, please click <Link href="/">here</Link>
-          </p>
-          {loginArray.length ? (
-            <div>
-              <h3>You might also be interested: </h3>
-              {loginArray.map((login) => (
-                <>{login}</>
-              ))}
-            </div>
-          ) : null}
-          {error && <p>{error}</p>}
-        </div>
-      </div>
+      <ConnectedService
+        serviceName={serviceName}
+        displayName={userName}
+        teamName={userJson.organization}
+        avatarUrl={userJson.avatar_url}
+        loginArray={loginArray}
+        error={error}
+      />
     );
   }
 }
