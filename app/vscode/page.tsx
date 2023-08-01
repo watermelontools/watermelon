@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 };
 async function VSCode() {
   const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
-  const userName = session?.user?.name;
+  let userEmail = session?.user?.email;
+  let userName = session?.user?.name;
   const data = await getAllPublicUserData({ userEmail });
   let system = "vscode";
   let url: string = `${system}://watermelontools.watermelon-tools?email=${
