@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 };
 async function VSCodium({}) {
   const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
-  let userName = session?.user?.name;
+  const userEmail = session?.user?.email;
+  const userName = session?.user?.name;
   const data = await getAllPublicUserData({ userEmail });
 
   let system = "vscodium";
