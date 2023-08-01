@@ -105,7 +105,7 @@ export default async function ServicePage({
     return (
       <ConnectedService
         serviceName={serviceName}
-        displayName={userName}
+        displayName={userJson.login}
         teamName={userJson.login}
         avatarUrl={userJson.avatar_url}
         loginArray={loginArray}
