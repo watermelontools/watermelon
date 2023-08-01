@@ -1,10 +1,8 @@
-import Link from "next/link";
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveUserInfo from "../../utils/db/slack/saveUser";
+import saveUserInfo from "../../utils/db/slack/saveUserInfo";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
-import TimeToRedirect from "../../components/redirect";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 // the recommended services should not be of the same category as the current one
 import LinearLoginLink from "../../components/LinearLoginLink";
@@ -36,7 +34,7 @@ export default async function ServicePage({
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&code=${context.query.code}&redirect_uri=https://app.watermelontools.com/slack&client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}`,
+      body: `grant_type=authorization_code&code=${code}&redirect_uri=https://app.watermelontools.com/slack&client_id=${process.env.SLACK_CLIENT_ID}&client_secret=${process.env.SLACK_CLIENT_SECRET}`,
     }),
   ]);
 
