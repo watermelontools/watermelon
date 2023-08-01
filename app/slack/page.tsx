@@ -4,12 +4,9 @@ import saveUserInfo from "../../utils/db/slack/saveUserInfo";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
-// the recommended services should not be of the same category as the current one
-import LinearLoginLink from "../../components/LinearLoginLink";
-import JiraLoginLink from "../../components/JiraLoginLink";
-import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
-import GitHubLoginLink from "../../components/GitHubLoginLink";
+
 import ConnectedService from "../../utils/services/page";
+import LoginArray from "../../utils/services/loginArray";
 
 export default async function ServicePage({
   searchParams,
@@ -39,33 +36,8 @@ export default async function ServicePage({
   ]);
 
   // the recommended services should not be of the same category as the current one
-  const services = [
-    {
-      name: "GitHub",
-      dataProp: "github_data",
-      loginComponent: <GitHubLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Linear",
-      dataProp: "linear_data",
-      loginComponent: <LinearLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Confluence",
-      dataProp: "confluence_data",
-      loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Jira",
-      dataProp: "jira_data",
-      loginComponent: <JiraLoginLink userEmail={userEmail} />,
-    },
-  ];
-  const loginArray = services
-    .map((service) =>
-      userData?.[service.dataProp] ? null : service.loginComponent
-    )
-    .filter((component) => component !== null);
+  const nameList = ["Jira", "GitHub", "Notion", "Confluence"];
+  const loginArray = LoginArray({ nameList, userEmail, userData });
 
   const json = await serviceToken.json();
   if (json.error) {

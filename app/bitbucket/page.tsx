@@ -4,12 +4,9 @@ import saveUserInfo from "../../utils/db/bitbucket/saveUser";
 
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
-// the recommended services should not be of the same category as the current one
-import SlackLoginLink from "../../components/SlackLoginLink";
-import NotionLoginLink from "../../components/NotionLoginLink";
-import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
-import JiraLoginLink from "../../components/JiraLoginLink";
+
 import ConnectedService from "../../utils/services/page";
+import LoginArray from "../../utils/services/loginArray";
 
 export default async function ServicePage({
   searchParams,
@@ -39,33 +36,8 @@ export default async function ServicePage({
   ]);
 
   // the recommended services should not be of the same category as the current one
-  const services = [
-    {
-      name: "Jira",
-      dataProp: "jira_data",
-      loginComponent: <JiraLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Slack",
-      dataProp: "slack_data",
-      loginComponent: <SlackLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Confluence",
-      dataProp: "confluence_data",
-      loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
-    },
-    {
-      name: "Notion",
-      dataProp: "notion_data",
-      loginComponent: <NotionLoginLink userEmail={userEmail} />,
-    },
-  ];
-  const loginArray = services
-    .map((service) =>
-      userData?.[service.dataProp] ? null : service.loginComponent
-    )
-    .filter((component) => component !== null);
+  const nameList = ["Jira", "Slack", "Notion", "Confluence"];
+  const loginArray = LoginArray({ nameList, userEmail, userData });
 
   const json = await serviceToken.json();
   if (json.error) {
