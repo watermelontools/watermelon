@@ -11,6 +11,7 @@ import SlackLoginLink from "../../components/SlackLoginLink";
 import NotionLoginLink from "../../components/NotionLoginLink";
 import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
 import JiraLoginLink from "../../components/JiraLoginLink";
+import ConnectedService from "../../utils/services/page";
 
 export default async function ServicePage({
   searchParams,
@@ -35,7 +36,7 @@ export default async function ServicePage({
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&code=${context.query.code}&client_id=${process.env.BITBUCKET_CLIENT_ID}&client_secret=${process.env.BITBUCKET_CLIENT_SECRET}`,
+      body: `grant_type=authorization_code&code=${code}&client_id=${process.env.BITBUCKET_CLIENT_ID}&client_secret=${process.env.BITBUCKET_CLIENT_SECRET}`,
     }),
   ]);
 
@@ -104,35 +105,14 @@ export default async function ServicePage({
     });
 
     return (
-      <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
-        <div className="Subhead">
-          <h2 className="Subhead-heading px-2">
-            You have logged in with {serviceName} as{" "}
-            {userJson.viewer.displayName} in the team{" "}
-            {userJson.teams.nodes[0].name}
-          </h2>
-        </div>
-        <img
-          src={userJson.viewer.avatarUrl}
-          alt="linear user image"
-          className="avatar avatar-8"
-        />
-        <div>
-          <TimeToRedirect url={"/"} />
-          <p>
-            If you are not redirected, please click <Link href="/">here</Link>
-          </p>
-          {loginArray.length ? (
-            <div>
-              <h3>You might also be interested: </h3>
-              {loginArray.map((login) => (
-                <>{login}</>
-              ))}
-            </div>
-          ) : null}
-          {error && <p>{error}</p>}
-        </div>
-      </div>
+      <ConnectedService
+        serviceName={serviceName}
+        displayName={userJson.display_name}
+        teamName={workspaceJson.values[0].workspace.slug}
+        avatarUrl={userJson.links.avatar.href}
+        loginArray={loginArray}
+        error={error}
+      />
     );
   }
 }
