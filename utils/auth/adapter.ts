@@ -24,8 +24,7 @@ export default function MyAdapter(): Adapter {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as any)}';
-        `
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';`
       );
       const request = await client
         .request({
@@ -71,8 +70,7 @@ export default function MyAdapter(): Adapter {
     },
     async getUserByEmail(email): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user_by_email] @email = '${email}';
-        `
+        `EXEC [dbo].[get_user_by_email] @email = '${email}';`
       );
       if (!userData.email) {
         return emptyUser;
