@@ -5,17 +5,12 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters";
-
+import { Account } from "next-auth";
+/** @return { import("next-auth/adapters").Adapter } */
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
 }
-const emptyUser = {
-  id: "",
-  name: null,
-  email: "",
-  image: null,
-  emailVerified: null,
-};
+
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
@@ -39,7 +34,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return {
         id: userData.id,
@@ -55,7 +50,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return {
         id: userData.id,
@@ -74,13 +69,13 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
-        return emptyUser;
+        return null;
       }
       let updatedUser = await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', ${
@@ -100,7 +95,7 @@ export default function MyAdapter(): Adapter {
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
-      return emptyUser;
+      return;
     },
     async linkAccount(account): Promise<void> {
       await executeRequest(
@@ -160,7 +155,7 @@ export default function MyAdapter(): Adapter {
       sessionToken,
       userId,
       expires,
-    }: AdapterSession): Promise<AdapterSession> {
+    }): Promise<AdapterSession> {
       let updatedSession = await executeRequest(
         `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
@@ -195,7 +190,7 @@ export default function MyAdapter(): Adapter {
     }): Promise<VerificationToken> {
       return await executeRequest(
         `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${new Date(
-          expires!
+          expires
         ).toISOString()}', @token = '${token}';
         `
       );
@@ -211,3 +206,4 @@ export default function MyAdapter(): Adapter {
     },
   };
 }
+loc
