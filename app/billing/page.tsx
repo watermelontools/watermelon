@@ -5,7 +5,6 @@ import CardElement from "./cardElement";
 async function BillingPage() {
   const session = await getServerSession(authOptions);
   let userEmail = session?.user?.email;
-  let { repo, owner, number } = searchParams;
   return (
     <div
       style={{
