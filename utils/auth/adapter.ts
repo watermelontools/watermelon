@@ -163,6 +163,7 @@ export default function MyAdapter(): Adapter {
     }): Promise<AdapterSession> {
       let updatedSession = await executeRequest(
         `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
+          // @ts-ignore
           expires
         ).toISOString()}';
         `
