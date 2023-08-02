@@ -195,7 +195,7 @@ export default function MyAdapter(): Adapter {
     }): Promise<VerificationToken> {
       return await executeRequest(
         `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${new Date(
-          expires
+          expires!
         ).toISOString()}', @token = '${token}';
         `
       );
