@@ -5,12 +5,17 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters";
-import { Account } from "next-auth";
-/** @return { import("next-auth/adapters").Adapter } */
+
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
 }
-
+const emptyUser = {
+  id: "",
+  name: null,
+  email: "",
+  image: null,
+  emailVerified: null,
+};
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
@@ -34,7 +39,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return {
         id: userData.id,
@@ -50,7 +55,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return {
         id: userData.id,
@@ -69,13 +74,13 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return null;
+        return emptyUser;
       }
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
-        return null;
+        return emptyUser;
       }
       let updatedUser = await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', ${
