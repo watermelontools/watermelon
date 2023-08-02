@@ -1,13 +1,20 @@
 import { App } from "@octokit/app";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import executeRequest from "../../../utils/db/azuredb";
+import addActionCount from "../../../utils/db/teams/addActionCount";
+
 import getGitHub from "../../../utils/actions/getGitHub";
 import getJira from "../../../utils/actions/getJira";
 import getSlack from "../../../utils/actions/getSlack";
-import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
-import addActionCount from "../../../utils/db/teams/addActionCount";
 import getNotion from "../../../utils/actions/getNotion";
+import getLinear from "../../../utils/actions/getLinear";
+import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
+import countMarkdown from "../../../utils/actions/markdownHelpers/count";
+import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
+
+import addActionLog from "../../../utils/db/github/addActionLog";
+import getConfluence from "../../../utils/actions/getConfluence";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -15,6 +22,7 @@ const app = new App({
 
 export default async (req, res) => {
   if (req.method === "POST") {
+    let textToWrite = "";
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
@@ -31,10 +39,11 @@ export default async (req, res) => {
         const owner = repository.owner.login;
         const repo = repository.name;
         const number = pull_request.number;
+        const userLogin = pull_request.user.login;
         trackEvent({
           name: "gitHubApp",
           properties: {
-            user: pull_request.user.login,
+            user: userLogin,
             owner,
             repo,
             action: payload.action,
@@ -45,21 +54,50 @@ export default async (req, res) => {
 
         const octokit = await app.getInstallationOctokit(installationId);
 
-        const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${pull_request.user.login}'`;
+        const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${userLogin}'`;
         const wmUserData = await executeRequest(query);
         const {
           github_token,
           jira_token,
           jira_refresh_token,
+          confluence_token,
+          confluence_refresh_token,
+          confluence_id,
+          cloudId,
           slack_token,
           notion_token,
-          cloudId,
+          linear_token,
           AISummary,
           JiraTickets,
           GitHubPRs,
           SlackMessages,
+          NotionPages,
+          LinearTickets,
           user_email,
+          watermelon_user,
         } = wmUserData;
+        if (!watermelon_user) {
+          {
+            // Post a new comment if no existing comment was found
+            await octokit
+              .request(
+                "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+                {
+                  owner,
+                  issue_number: number,
+                  repo,
+                  body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
+                }
+              )
+              .then((response) => {
+                console.info("post comment", response.data);
+              })
+              .catch((error) => {
+                return console.error("posting comment error", error);
+              });
+            return res.status(401).send("User not registered");
+          }
+        }
         let octoCommitList = await octokit.request(
           "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
           {
@@ -72,7 +110,6 @@ export default async (req, res) => {
           }
         );
         let commitList: string[] = [];
-
         for (let index = 0; index < octoCommitList?.data?.length; index++) {
           commitList.push(octoCommitList.data[index].commit.message);
         }
@@ -265,12 +302,10 @@ export default async (req, res) => {
             searchStringSet
               .concat(` ${title.split("/").join(" ")}`)
               .concat(` ${body}`.split("\n").join(" "))
-              .split("\n")
-              .flatMap((line) => line.split(","))
-              .map((commit: string) => commit.toLowerCase())
-              .filter((commit) => !stopwords.includes(commit))
-              .join(" ")
               .split(" ")
+              .flatMap((word) => word.split(","))
+              .map((word: string) => word.toLowerCase())
+              .filter((word) => !stopwords.includes(word))
           )
         ).join(" ");
         // select six random words from the search string
@@ -279,46 +314,62 @@ export default async (req, res) => {
           .sort(() => Math.random() - 0.5)
           .slice(0, 6);
 
-        const [ghValue, jiraValue, slackValue, notionValue] = await Promise.all(
-          [
-            getGitHub({
-              repo,
-              owner,
-              github_token,
-              randomWords,
-              amount: GitHubPRs,
-            }),
-            getJira({
-              user: user_email,
-              title,
-              body,
-              jira_token,
-              jira_refresh_token,
-              randomWords,
-              amount: JiraTickets,
-            }),
-            getSlack({
-              title,
-              body,
-              slack_token,
-              randomWords,
-              amount: SlackMessages,
-            }),
-            getNotion({
-              notion_token,
-              randomWords,
-              amount: 3,
-            }),
-          ]
-        );
+        const [
+          ghValue,
+          jiraValue,
+          confluenceValue,
+          slackValue,
+          notionValue,
+          linearValue,
+          count,
+        ] = await Promise.all([
+          getGitHub({
+            repo,
+            owner,
+            github_token,
+            randomWords,
+            amount: GitHubPRs,
+          }),
+          getJira({
+            user: user_email,
+            token: jira_token,
+            refresh_token: jira_refresh_token,
+            randomWords,
+            amount: JiraTickets,
+          }),
+          getConfluence({
+            confluence_token,
+            confluence_refresh_token,
+            confluence_id,
+            user: user_email,
+            randomWords,
+            amount: 3,
+          }),
+          getSlack({
+            title,
+            body,
+            slack_token,
+            randomWords,
+            amount: SlackMessages,
+          }),
+          getNotion({
+            notion_token,
+            randomWords,
+            amount: NotionPages,
+          }),
+          getLinear({
+            linear_token,
+            randomWords,
+            amount: LinearTickets,
+          }),
+          addActionCount({ watermelon_user }),
+        ]);
+        textToWrite += `### WatermelonAI Summary \n`;
+
         let businessLogicSummary;
-        let textToWrite = "";
-
-        textToWrite += "### WatermelonAI Summary (BETA)";
-        textToWrite += `\n`;
-
         if (AISummary) {
           businessLogicSummary = await getOpenAISummary({
+            commitList,
             values: {
               ghValue,
               jiraValue,
@@ -327,39 +378,61 @@ export default async (req, res) => {
               notionValue,
               linearValue,
             },
-            commitList,
             title,
             body,
           });
 
           if (businessLogicSummary) {
-            textToWrite += businessLogicSummary;
+            textToWrite += businessLogicSummary + "\n";
           } else {
-            textToWrite += "Error getting summary" + businessLogicSummary.error;
+            textToWrite +=
+              "Error getting summary" + businessLogicSummary?.error + "\n";
           }
         } else {
-          textToWrite += `AI Summary deactivated by ${pull_request.user.login}`;
+          textToWrite += `AI Summary deactivated by ${userLogin} \n`;
         }
 
-        textToWrite += githubMarkdown({
-          GitHubPRs,
-          ghValue,
-          userLogin: pull_request.user.login,
+        textToWrite += generalMarkdownHelper({
+          amount: GitHubPRs,
+          value: ghValue,
+          userLogin,
+          systemName: "GitHub",
+          systemResponseName: "GitHub PRs",
         });
-        textToWrite += jiraMarkdown({
-          JiraTickets,
-          jiraValue,
-          userLogin: pull_request.user.login,
+        textToWrite += generalMarkdownHelper({
+          amount: JiraTickets,
+          value: jiraValue,
+          userLogin,
+          systemName: "Jira",
+          systemResponseName: "Jira Tickets",
         });
-        textToWrite += slackMarkdown({
-          SlackMessages,
-          slackValue,
-          userLogin: pull_request.user.login,
+        textToWrite += generalMarkdownHelper({
+          amount: 3,
+          value: confluenceValue,
+          userLogin,
+          systemName: "Confluence",
+          systemResponseName: "Confluence Docs",
         });
-        textToWrite += notionMarkdown({
-          NotionPages,
-          notionValue,
-          userLogin: pull_request.user.login,
+        textToWrite += generalMarkdownHelper({
+          amount: SlackMessages,
+          value: slackValue,
+          userLogin,
+          systemName: "Slack",
+          systemResponseName: "Slack Threads",
+        });
+        textToWrite += generalMarkdownHelper({
+          amount: NotionPages,
+          value: notionValue,
+          userLogin,
+          systemName: "Notion",
+          systemResponseName: "Notion Pages",
+        });
+        textToWrite += generalMarkdownHelper({
+          amount: LinearTickets,
+          value: linearValue,
+          userLogin,
+          systemName: "Linear",
+          systemResponseName: "Linear Tickets",
         });
         textToWrite += countMarkdown({
           count,
@@ -367,9 +440,25 @@ export default async (req, res) => {
           repoName: repo,
         });
 
+        await addActionLog({
+          randomWords,
+          ghValue,
+          jiraValue,
+          slackValue,
+          notionValue,
+          linearValue,
+          textToWrite,
+          businessLogicSummary,
+          owner,
+          repo,
+          number,
+          payload,
+          count,
+          watermelon_user,
+        });
         // Fetch all comments on the PR
         const comments = await octokit.request(
-          "GET /repos/{owner}/{repo}/issues/comments",
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
           {
             owner,
             repo,
@@ -379,14 +468,12 @@ export default async (req, res) => {
             },
           }
         );
-        console.log("length", comments.data.length);
+        console.info("comments.data.length", comments.data.length);
         // Find our bot's comment
-        let botComment = comments.data.find((comment) =>
-          comment.user.login.includes("watermelon-context")
-        );
-        console.log("bc", botComment);
-        if (botComment) {
-          console.log("bcID", botComment.id);
+        let botComment = comments.data.find((comment) => {
+          return comment.user.login.includes("watermelon-context");
+        });
+        if (botComment?.id) {
           // Update the existing comment
           await octokit.request(
             "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
@@ -410,17 +497,28 @@ export default async (req, res) => {
               }
             )
             .then((response) => {
-              console.log(response.data);
+              console.log("post comment", {
+                url: response.data.html_url,
+                body: response.data.body,
+                user: response.data?.user?.login,
+              });
             })
             .catch((error) => {
               return console.error("posting comment error", error);
             });
         }
       }
-      return res.status(200).send("Webhook event processed");
+      return res.status(200).json({
+        message: "success",
+        textToWrite,
+      });
     } catch (error) {
       console.error("general action processing error", error);
-      res.status(500).send("Error processing webhook event");
+      res.status(500).json({
+        message: "Error processing webhook event",
+        error,
+        textToWrite,
+      });
     }
   } else {
     res.setHeader("Allow", "POST");
