@@ -212,4 +212,4 @@ export default function MyAdapter(): Adapter {
     },
   };
 }
-loc
+
