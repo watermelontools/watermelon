@@ -34,6 +34,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
+        // @ts-ignore
         return null;
       }
       return {
@@ -50,6 +51,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
+        // @ts-ignore
         return null;
       }
       return {
@@ -69,12 +71,14 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
+        // @ts-ignore
         return null;
       }
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
+        // @ts-ignore
         return null;
       }
       let updatedUser = await executeRequest(
@@ -95,6 +99,7 @@ export default function MyAdapter(): Adapter {
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
+      // @ts-ignore
       return;
     },
     async linkAccount(account): Promise<void> {
