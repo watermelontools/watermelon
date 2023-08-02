@@ -100,7 +100,7 @@ export default function MyAdapter(): Adapter {
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
-      return;
+      return emptyUser;
     },
     async linkAccount(account): Promise<void> {
       await executeRequest(
