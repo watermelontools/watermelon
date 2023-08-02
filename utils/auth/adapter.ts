@@ -5,9 +5,7 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters";
-const client = require("@sendgrid/client");
-client.setApiKey(process.env.SENDGRID_API_KEY);
-
+import { Account } from "next-auth";
 /** @return { import("next-auth/adapters").Adapter } */
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
@@ -25,27 +23,9 @@ export default function MyAdapter(): Adapter {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as any)}';`
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';
+        `
       );
-
-      const request = await client
-        .request({
-          url: `/v3/contactdb/recipients`,
-          method: "POST",
-          body: [
-            {
-              email: user.email,
-            },
-          ],
-        })
-        .then(([response, body]) => {
-          console.log(response.statusCode);
-          console.log(response.body);
-          console.log(body);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
       return {
         id: createdUser.id,
         name: createdUser.name,
@@ -56,9 +36,9 @@ export default function MyAdapter(): Adapter {
     },
     async getUser(id): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user] @id = '${id}';`
+        `EXEC [dbo].[get_user] @id = '${id}';
+        `
       );
-      console.log("getUser", userData);
       if (!userData.email) {
         return emptyUser;
       }
@@ -72,7 +52,8 @@ export default function MyAdapter(): Adapter {
     },
     async getUserByEmail(email): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user_by_email] @email = '${email}';`
+        `EXEC [dbo].[get_user_by_email] @email = '${email}';
+        `
       );
       if (!userData.email) {
         return emptyUser;
@@ -90,7 +71,8 @@ export default function MyAdapter(): Adapter {
       provider,
     }): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user_by_account] @providerAccountId = '${providerAccountId}', @provider = '${provider}';`
+        `EXEC [dbo].[get_user_by_account] @providerAccountId = '${providerAccountId}', @provider = '${provider}';
+        `
       );
       if (!userData.email) {
         return emptyUser;
@@ -106,7 +88,8 @@ export default function MyAdapter(): Adapter {
           user.email ? `@email = '${user.email}',` : ""
         } ${
           user.name ? `@name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified)}';`
+        } @emailVerified = '${makeISO(user.emailVerified)}';
+        `
       );
       return {
         id: updatedUser.id,
@@ -122,7 +105,8 @@ export default function MyAdapter(): Adapter {
     },
     async linkAccount(account): Promise<void> {
       await executeRequest(
-        `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';`
+        `EXEC [dbo].[create_account] @user_id = '${account.id}', @provider_type = '${account.provider}', @provider_id = '${account.provider_id}, @provider_account_id = '${account.providerAccountId}',  @access_token ='${account.access_token}', @refresh_token = '${account.refresh_token}', @scopes = '${account.scopes}', @access_token_expires = '${account.expires_in}';
+        `
       );
     },
     async unlinkAccount({ providerAccountId, provider }): Promise<void> {
@@ -136,7 +120,8 @@ export default function MyAdapter(): Adapter {
       let createdSession = await executeRequest(
         `EXEC [dbo].[create_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
           expires
-        ).toISOString()}';`
+        ).toISOString()}';
+        `
       );
       return {
         id: createdSession.id as string,
@@ -149,7 +134,8 @@ export default function MyAdapter(): Adapter {
       sessionToken
     ): Promise<{ session: AdapterSession; user: AdapterUser }> {
       let fetchedSession = await executeRequest(
-        `EXEC [dbo].[get_session] @sessionToken = '${sessionToken}';`
+        `EXEC [dbo].[get_session] @sessionToken = '${sessionToken}';
+        `
       );
       let fetchedUser = await executeRequest(
         `EXEC [dbo].[get_user] @id = '${fetchedSession.user_id}';`
@@ -178,10 +164,12 @@ export default function MyAdapter(): Adapter {
     }): Promise<AdapterSession> {
       let updatedSession = await executeRequest(
         `EXEC [dbo].[update_session] @session_token = '${sessionToken}', @userId = '${userId}', @expires = '${new Date(
-          new Date(expires!).toISOString()
-        )}';`
+          expires
+        ).toISOString()}';
+        `
       );
-      const session: AdapterSession = {
+      const session = {
+        id: updatedSession.id as string,
         sessionToken: updatedSession.session_token as string,
         userId: updatedSession.user_id as string,
         expires: new Date(updatedSession.expires),
@@ -190,7 +178,8 @@ export default function MyAdapter(): Adapter {
     },
     async deleteSession(sessionToken): Promise<AdapterSession> {
       let deletedSession = await executeRequest(
-        `EXEC [dbo].[delete_session] @sessionToken = '${sessionToken}';`
+        `EXEC [dbo].[delete_session] @sessionToken = '${sessionToken}';
+        `
       );
       const session = {
         id: deletedSession.id as string,
@@ -208,7 +197,8 @@ export default function MyAdapter(): Adapter {
       return await executeRequest(
         `EXEC [dbo].[create_verification_token] @identifier = '${identifier}', @expires = '${new Date(
           expires
-        ).toISOString()}', @token = '${token}';`
+        ).toISOString()}', @token = '${token}';
+        `
       );
     },
     async useVerificationToken({
@@ -216,7 +206,8 @@ export default function MyAdapter(): Adapter {
       token,
     }): Promise<VerificationToken> {
       return await executeRequest(
-        `EXEC [dbo].[delete_verification_token] @identifier = '${identifier}', @token = '${token}';`
+        `EXEC [dbo].[delete_verification_token] @identifier = '${identifier}', @token = '${token}';
+        `
       );
     },
   };
