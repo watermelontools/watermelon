@@ -5,45 +5,21 @@ import type {
   AdapterSession,
   VerificationToken,
 } from "next-auth/adapters";
-const client = require("@sendgrid/client");
-client.setApiKey(process.env.SENDGRID_API_KEY);
-
+import { Account } from "next-auth";
+/** @return { import("next-auth/adapters").Adapter } */
 function makeISO(date: string | Date) {
   return new Date(date).toISOString();
 }
-const emptyUser = {
-  id: "",
-  name: null,
-  email: "",
-  image: null,
-  emailVerified: null,
-};
+
 export default function MyAdapter(): Adapter {
   return {
     async createUser(user): Promise<AdapterUser> {
       let createdUser = await executeRequest(
         `EXEC [dbo].[create_user] @email = '${user.email}',${
           user.name ? ` @name = '${user.name}',` : ""
-        } @emailVerified = '${makeISO(user.emailVerified as any)}';`
+        } @emailVerified = '${makeISO(user.emailVerified as any)}';
+        `
       );
-      const request = await client
-        .request({
-          url: `/v3/contactdb/recipients`,
-          method: "POST",
-          body: [
-            {
-              email: user.email,
-            },
-          ],
-        })
-        .then(([response, body]) => {
-          console.log(response.statusCode);
-          console.log(response.body);
-          console.log(body);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
       return {
         id: createdUser.id,
         name: createdUser.name,
@@ -58,7 +34,7 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return {
         id: userData.id,
@@ -70,10 +46,11 @@ export default function MyAdapter(): Adapter {
     },
     async getUserByEmail(email): Promise<AdapterUser> {
       let userData = await executeRequest(
-        `EXEC [dbo].[get_user_by_email] @email = '${email}';`
+        `EXEC [dbo].[get_user_by_email] @email = '${email}';
+        `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return {
         id: userData.id,
@@ -92,13 +69,13 @@ export default function MyAdapter(): Adapter {
         `
       );
       if (!userData.email) {
-        return emptyUser;
+        return null;
       }
       return userData;
     },
     async updateUser(user): Promise<AdapterUser> {
       if (!user.emailVerified || !user.id) {
-        return emptyUser;
+        return null;
       }
       let updatedUser = await executeRequest(
         `EXEC [dbo].[update_user] @id = '${user.id}', ${
@@ -118,7 +95,7 @@ export default function MyAdapter(): Adapter {
     },
     async deleteUser(userId): Promise<AdapterUser> {
       console.log("deleteUser", userId);
-      return emptyUser;
+      return;
     },
     async linkAccount(account): Promise<void> {
       await executeRequest(
