@@ -256,18 +256,21 @@ export default async function handler(req, res) {
     }),
     getJira({
       user: user_email,
-      jira_token,
-      jira_refresh_token,
+      token: jira_token,
+      refresh_token: jira_refresh_token,
+      amount: 3,
       randomWords,
     }),
     getSlack({ title, body, slack_token, randomWords }),
   ]);
 
   const businessLogicSummary = await getOpenAISummary({
-    ghValue,
+    values: {
+      ghValue,
+      jiraValue,
+      slackValue,
+    },
     commitList,
-    jiraValue,
-    slackValue,
     title,
     body,
   });

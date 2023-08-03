@@ -1,5 +1,6 @@
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
 import CardElement from "./cardElement";
-
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Billing",
@@ -7,6 +8,8 @@ export const metadata: Metadata = {
 };
 
 async function BillingPage() {
+  const session = await getServerSession(authOptions);
+  let userEmail = session?.user?.email;
   return (
     <div
       style={{

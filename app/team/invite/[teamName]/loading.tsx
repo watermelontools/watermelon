@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-async function teamInviteLanding() {
+async function teamInviteLanding({ params }: { params: { teamName: string } }) {
   let userEmail = "tulia@watermelontools.com";
 
   return (
@@ -10,7 +10,7 @@ async function teamInviteLanding() {
         <div className="">
           <div className="Subhead">
             <h2 className="Subhead-heading">
-              You have been added to team WatermelonTools
+              You have been added to team {params.teamName}{" "}
             </h2>
             <div className="Subhead-description">Congratulations!</div>
           </div>

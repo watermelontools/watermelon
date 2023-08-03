@@ -38,6 +38,18 @@ export default function form({ userEmail }) {
   useEffect(() => {
     setUserSettingsState(userEmail);
   }, [userEmail]);
+  function OptionDropdown() {
+    return (
+      <div>
+        {Array.from(Array(6)).map((i, index) => {
+          if (index === 0) {
+            return null;
+          }
+          return <option value={index}>{index}</option>;
+        })}
+      </div>
+    );
+  }
 
   function SettingsSelector({ label, valueLabel }) {
     return (
@@ -72,6 +84,24 @@ export default function form({ userEmail }) {
       <SettingsSelector label="Notion Pages" valueLabel={"NotionPages"} />
       <SettingsSelector label="Linear Tickets" valueLabel={"LinearTickets"} />
       <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
+
+      <div className="">
+        <span>Linear Tickets:</span>
+        <select
+          className="form-select"
+          aria-label="Amount of Linear Tickets"
+          defaultValue={formState?.LinearTickets}
+          value={formState.LinearTickets}
+          onChange={(e) =>
+            setFormState({
+              ...formState,
+              LinearTickets: parseInt(e.target.value),
+            })
+          }
+        >
+          <OptionDropdown />
+        </select>
+      </div>
 
       <div className="">
         <span>AI Summary: </span>

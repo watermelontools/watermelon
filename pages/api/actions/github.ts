@@ -332,8 +332,8 @@ export default async (req, res) => {
           }),
           getJira({
             user: user_email,
-            jira_token,
-            jira_refresh_token,
+            token: jira_token,
+            refresh_token: jira_refresh_token,
             randomWords,
             amount: JiraTickets,
           }),
@@ -364,24 +364,29 @@ export default async (req, res) => {
           }),
           addActionCount({ watermelon_user }),
         ]);
-        textToWrite += `### WatermelonAI Summary (BETA) \n`;
+        textToWrite += `### WatermelonAI Summary \n`;
 
         let businessLogicSummary;
         if (AISummary) {
           businessLogicSummary = await getOpenAISummary({
-            ghValue,
             commitList,
-            jiraValue,
-            slackValue,
+            values: {
+              ghValue,
+              jiraValue,
+              confluenceValue,
+              slackValue,
+              notionValue,
+              linearValue,
+            },
             title,
             body,
           });
 
           if (businessLogicSummary) {
-            textToWrite += businessLogicSummary;
+            textToWrite += businessLogicSummary + "\n";
           } else {
             textToWrite +=
-              "Error getting summary" + businessLogicSummary.error + "\n";
+              "Error getting summary" + businessLogicSummary?.error + "\n";
           }
         } else {
           textToWrite += `AI Summary deactivated by ${userLogin} \n`;

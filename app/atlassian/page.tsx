@@ -1,81 +1,56 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import saveJiraUserInfo from "../utils/db/jira/saveUserInfo";
-import saveConfluenceUserInfo from "../utils/db/confluence/saveUserInfo";
-import GitHubLoginLink from "../components/GitHubLoginLink";
-export default function Jira({ organization, avatar_url, userEmail, error }) {
-  const [timeToRedirect, setTimeToRedirect] = useState(10);
-  const router = useRouter();
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeToRedirect(timeToRedirect - 1);
-      if (timeToRedirect === 0) {
-        router.push("/");
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [timeToRedirect]);
-  let isConfluence = userEmail.startsWith("c");
+import { getServerSession } from "next-auth";
+//change this to import correctly
+import saveJiraUserInfo from "../../utils/db/jira/saveUserInfo";
+import saveConfluenceUserInfo from "../../utils/db/confluence/saveUserInfo";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 
-  return (
-    <div className="Box" style={{ maxWidth: "100ch", margin: "auto" }}>
-      <div className="Subhead">
-        <h2 className="Subhead-heading px-2">
-          You have logged in with {isConfluence ? "Confluence" : "Jira"} to{" "}
-          {organization}
-        </h2>
-      </div>
-      <img
-        src={avatar_url}
-        alt={`${isConfluence ? "Confluence" : "Jira"} organization image`}
-        className="avatar avatar-8"
-      />
-      <div>
-        <p className="text-emphasized">We recommend you login to GitHub</p>
-        <GitHubLoginLink userEmail={userEmail} />
-      </div>
-      <div>
-        <p>You will be redirected in {timeToRedirect}...</p>
-        <p>
-          If you are not redirected, please click <Link href="/">here</Link>
-        </p>
-        {error && <p>{error}</p>}
-      </div>
-    </div>
-  );
-}
-export async function getServerSideProps(context) {
-  let f;
+import ConnectedService from "../../utils/services/page";
+import LoginArray from "../../utils/services/loginArray";
 
-  if (context.query.code) {
-    f = await fetch(`https://auth.atlassian.com/oauth/token`, {
+export default async function ServicePage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) {
+  const session = await getServerSession(authOptions);
+  const userEmail = session?.user?.email;
+  const userName = session?.user?.name;
+  const { code, state } = searchParams;
+  let isConfluence = state?.startsWith("c");
+
+  let error = "";
+  // change service name
+  const serviceName = isConfluence ? "Confluence" : "Jira";
+  const [userData, serviceToken] = await Promise.all([
+    getAllPublicUserData({ userEmail }).catch((e) => {
+      console.error(e);
+      return null;
+    }),
+    // change this fetch
+    fetch(`https://auth.atlassian.com/oauth/token`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         grant_type: "authorization_code",
-        code: context.query.code,
+        code: code,
         redirect_uri: "https://app.watermelontools.com/atlassian",
         client_id: process.env.NEXT_PUBLIC_JIRA_CLIENT_ID,
         client_secret: process.env.JIRA_CLIENT_SECRET,
       }),
-    });
-  } else
-    return {
-      props: {
-        error: "no code",
-      },
-    };
-  const json = await f.json();
+    }),
+  ]);
+
+  // the recommended services should not be of the same category as the current one
+  const nameList = ["Linear", "Slack", "Notion", "Bitbucket"];
+  const loginArray = LoginArray({ nameList, userEmail, userData });
+
+  const json = await serviceToken.json();
+  let userInfoJson;
   if (json.error) {
-    console.error("Atlassian error", json);
-    return {
-      props: {
-        error: json.error,
-      },
-    };
+    error = json.error;
   } else {
     const { access_token } = json;
     const orgInfo = await fetch(
@@ -89,7 +64,6 @@ export async function getServerSideProps(context) {
       }
     );
     const orgInfoJson = await orgInfo.json();
-    let isConfluence = context.query.state.startsWith("c");
     if (isConfluence) {
       const userInfo = await fetch(
         `https://api.atlassian.com/ex/confluence/${orgInfoJson[0].id}/rest/api/user/current`,
@@ -101,7 +75,7 @@ export async function getServerSideProps(context) {
           },
         }
       );
-      const userInfoJson = await userInfo.json();
+      userInfoJson = await userInfo.json();
       await saveConfluenceUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
@@ -110,7 +84,7 @@ export async function getServerSideProps(context) {
         url: orgInfoJson[0].url,
         org_avatar_url: orgInfoJson[0].avatarUrl,
         scopes: orgInfoJson[0].scopes,
-        watermelon_user: context.query.state.slice(1),
+        watermelon_user: state?.slice(1),
         user_email: userInfoJson.email,
         user_avatar_url:
           orgInfoJson[0].url + userInfoJson?.profilePicture?.path,
@@ -128,7 +102,7 @@ export async function getServerSideProps(context) {
           },
         }
       );
-      const userInfoJson = await userInfo.json();
+      userInfoJson = await userInfo.json();
       await saveJiraUserInfo({
         access_token: json.access_token,
         refresh_token: json.refresh_token,
@@ -137,19 +111,27 @@ export async function getServerSideProps(context) {
         url: orgInfoJson[0].url,
         org_avatar_url: orgInfoJson[0].avatarUrl,
         scopes: orgInfoJson[0].scopes,
-        watermelon_user: context.query.state.slice(1),
+        watermelon_user: state?.slice(1),
         user_email: userInfoJson.emailAddress,
         user_avatar_url: userInfoJson?.avatarUrls?.["48x48"],
         user_id: userInfoJson.accountId,
         user_displayname: userInfoJson.displayName,
       });
     }
-    return {
-      props: {
-        userEmail: context.query.state,
-        organization: orgInfoJson[0]?.name,
-        avatar_url: orgInfoJson[0]?.avatarUrl,
-      },
-    };
+
+    return (
+      <ConnectedService
+        serviceName={serviceName}
+        displayName={userInfoJson.displayName}
+        teamName={orgInfoJson[0].name}
+        avatarUrl={
+          isConfluence
+            ? orgInfoJson[0].url + userInfoJson?.profilePicture?.path
+            : userInfoJson?.avatarUrls?.["48x48"]
+        }
+        loginArray={loginArray}
+        error={error}
+      />
+    );
   }
 }

@@ -8,7 +8,7 @@ export type MarkdownRequest = {
 export type StandardAPIInput = {
   token: string;
   refresh_token?: string;
-  searchText: string;
+  searchText?: string;
   amount: number;
   user?: string;
   id?: string;
@@ -16,14 +16,15 @@ export type StandardAPIInput = {
   repo?: string;
   randomWords?: string[];
 };
+export type StandardProcessedDataArray = {
+  title: string;
+  body?: string;
+  link?: string;
+  number?: number | string;
+  image?: string;
+}[];
 export type StandardAPIResponse = {
-  data?: {
-    title: string;
-    body?: string;
-    link?: string;
-    number?: number | string;
-    image?: string;
-  }[];
+  data?: StandardProcessedDataArray;
   fullData?: any;
   error?: string;
 };

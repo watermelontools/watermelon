@@ -1,33 +1,13 @@
-import { getServerSession } from "next-auth";
-
-import LogInBtn from "../../components/login-btn";
-
-import { authOptions } from "../api/auth/[...nextauth]/route";
-
 async function Settings({}) {
-  const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
-  // if not logged in, do not show anything
-  if (!session) return <LogInBtn />;
-
-  const formState = {
-    JiraTickets: 3,
-    SlackMessages: 3,
-    GitHubPRs: 3,
-    NotionPages: 3,
-    LinearTickets: 3,
-    ConfluenceDocs: 3,
-    AISummary: 1,
-  };
-  function SettingsSelector({ label, value, defaultValue }) {
+  function SettingsSelector({ label }) {
     return (
       <div className="">
         <span>{label}</span>
         <select
           className="form-select"
           aria-label={label}
-          defaultValue={defaultValue}
-          value={value}
+          defaultValue={3}
+          value={3}
         ></select>
       </div>
     );
@@ -44,50 +24,21 @@ async function Settings({}) {
             </div>
           </div>
           <form>
-            <SettingsSelector
-              label="Jira Tickets"
-              value={formState.JiraTickets}
-              defaultValue={formState?.JiraTickets}
-            />
-            <SettingsSelector
-              label="Slack Messages"
-              value={formState.SlackMessages}
-              defaultValue={formState?.SlackMessages}
-            />
-            <SettingsSelector
-              label="GitHub PRs"
-              value={formState.GitHubPRs}
-              defaultValue={formState?.GitHubPRs}
-            />
-            <SettingsSelector
-              label="Notion Pages"
-              value={formState.NotionPages}
-              defaultValue={formState?.NotionPages}
-            />
-            <SettingsSelector
-              label="Linear Tickets"
-              value={formState.LinearTickets}
-              defaultValue={formState?.LinearTickets}
-            />
-            <SettingsSelector
-              label="Confluence Docs"
-              value={formState.ConfluenceDocs}
-              defaultValue={formState?.ConfluenceDocs}
-            />
+            <SettingsSelector label="Jira Tickets" />
+            <SettingsSelector label="Slack Messages" />
+            <SettingsSelector label="GitHub PRs" />
+            <SettingsSelector label="Notion Pages" />
+            <SettingsSelector label="Linear Tickets" />
+            <SettingsSelector label="Confluence Docs" />
 
             <div className="">
               <span>AI Summary: </span>
-              <select
-                className="form-select"
-                aria-label="AI Summary"
-                defaultValue={formState?.AISummary}
-                value={formState.AISummary}
-              >
+              <select className="form-select" aria-label="AI Summary" value={1}>
                 <option value={1}>Active</option>
                 <option value={0}>Inactive</option>
               </select>
             </div>
-            <button className="btn btn-primary" type="button" disabled={false}>
+            <button className="btn btn-primary" type="button" disabled={true}>
               {"Save"}
             </button>
           </form>
