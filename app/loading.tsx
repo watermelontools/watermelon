@@ -27,7 +27,7 @@ async function loading({}) {
           <LoginGrid userEmail={userEmail} data={fakeData} />
           <a href="https://github.com/apps/watermelon-context" target="_blank">
             <div className="Box d-flex flex-items-center flex-justify-start m-3 p-2">
-              <img className="avatar avatar-8" src="/logos/github.svg" />
+              <img className="avatar avatar-8" src="/logos/watermelon.svg" />
               <div className="p-2">
                 <h2>Try our GitHub App</h2>
                 <p>Context on each Pr</p>

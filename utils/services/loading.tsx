@@ -9,7 +9,7 @@ export default function LoadingConnectedService() {
         </h2>
       </div>
       <img
-        src="/logos/github.svg"
+        src="/logos/watermelon.svg"
         alt="linear user image"
         className="avatar avatar-8"
       />
