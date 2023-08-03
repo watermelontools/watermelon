@@ -6,7 +6,7 @@ async function loading({}) {
   const userName = "Tulia";
   const fakeObject = JSON.stringify({
     organization: "watermelon",
-    user_avatar_url: "/logos/watermelon.png",
+    user_avatar_url: "/logos/watermelon.svg",
     user_displayname: "Watermelon",
     user_email: "tulia@watermelontools.com",
   });
