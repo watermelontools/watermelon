@@ -24,11 +24,6 @@ async function HomePage() {
     "PyCharm",
     "RubyMine",
   ];
-  const vscodeX = [
-    { name: "VSCode", urlStart: "vscode" },
-    { name: "VSCode Insiders", urlStart: "vscode-insiders" },
-    { name: "VSCodium", urlStart: "vscodium" },
-  ];
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
@@ -51,7 +46,11 @@ async function HomePage() {
               gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
             }}
           >
-            {vscodeX.map(({ name, urlStart }) => (
+            {[
+              { name: "VSCode", urlStart: "vscode" },
+              { name: "VSCode Insiders", urlStart: "vscode-insiders" },
+              { name: "VSCodium", urlStart: "vscodium" },
+            ].map(({ name, urlStart }) => (
               <div className="p-3">
                 <DownloadExtension
                   name={name}
