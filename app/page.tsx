@@ -24,6 +24,11 @@ async function HomePage() {
     "PyCharm",
     "RubyMine",
   ];
+  const vscodeX = [
+    { name: "VSCode", urlStart: "vscode" },
+    { name: "VSCode Insiders", urlStart: "vscode-insiders" },
+    { name: "VSCodium", urlStart: "vscodium" },
+  ];
   return (
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
@@ -46,30 +51,17 @@ async function HomePage() {
               gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
             }}
           >
-            <div className="p-3">
-              <DownloadExtension
-                name="VSCode"
-                email={userEmail}
-                urlStart="vscode"
-                accessToken={userName}
-              />
-            </div>
-            <div className="p-3">
-              <DownloadExtension
-                name="VSCode Insiders"
-                urlStart="vscode-insiders"
-                email={userEmail}
-                accessToken={userName}
-              />
-            </div>
-            <div className="p-3">
-              <DownloadExtension
-                name="VSCodium"
-                urlStart="vscodium"
-                email={userEmail}
-                accessToken={userName}
-              />
-            </div>
+            {vscodeX.map(({ name, urlStart }) => (
+              <div className="p-3">
+                <DownloadExtension
+                  name={name}
+                  urlStart={urlStart}
+                  email={userEmail}
+                  accessToken={userName}
+                />
+              </div>
+            ))}
+
             {comingSoon.map((name) => (
               <div className="p-3">
                 <div className="Box d-flex flex-items-center flex-justify-start p-2">
