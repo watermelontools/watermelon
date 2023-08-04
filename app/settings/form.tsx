@@ -86,24 +86,6 @@ export default function form({ userEmail }) {
       <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
 
       <div className="">
-        <span>Linear Tickets:</span>
-        <select
-          className="form-select"
-          aria-label="Amount of Linear Tickets"
-          defaultValue={formState?.LinearTickets}
-          value={formState.LinearTickets}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              LinearTickets: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
-
-      <div className="">
         <span>AI Summary: </span>
         <select
           className="form-select"
