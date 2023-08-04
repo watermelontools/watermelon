@@ -1,6 +1,4 @@
-import Image from "next/image";
-
-function verify() {
+export default async function verify() {
   return (
     <div
       className="d-flex flex-items-center flex-justify-center flex-column"
@@ -45,5 +43,3 @@ function verify() {
     </div>
   );
 }
-
-export default verify;
