@@ -1,13 +1,6 @@
 import InfoPanel from "../components/dashboard/InfoPanel";
-import JiraLoginLink from "../components/JiraLoginLink";
-import SlackLoginLink from "../components/SlackLoginLink";
-import GitHubLoginLink from "../components/GitHubLoginLink";
-import GitLabLoginLink from "../components/GitLabLoginLink";
-import BitbucketLoginLink from "../components/BitbucketLoginLink";
-import LinearLoginLink from "../components/LinearLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
-import NotionLoginLink from "./NotionLoginLink";
-import ConfluenceLoginLink from "./ConfluenceLoginLink";
+import { SelectedServiceLoginLink } from "./services/loginArray";
 type LoginGridProps = {
   userEmail: string;
   user_displayname: string;
@@ -87,7 +80,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <GitHubLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="GitHub"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -99,7 +95,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <BitbucketLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="Bitbucket"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -111,7 +110,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <GitLabLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="GitLab"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
             </div>
@@ -155,7 +157,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <SlackLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="Slack"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
             </div>
@@ -187,7 +192,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <JiraLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="Jira"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -199,7 +207,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <LinearLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service="Linear"
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
               {/*         
@@ -247,7 +258,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <NotionLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service={"Notion"}
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
               <div className="p-3">
@@ -259,7 +273,10 @@ function LoginGrid({ userEmail, data }) {
                     }}
                   />
                 ) : (
-                  <ConfluenceLoginLink userEmail={userEmail} />
+                  <SelectedServiceLoginLink
+                    service={"Confluence"}
+                    userEmail={userEmail}
+                  />
                 )}
               </div>
             </div>
