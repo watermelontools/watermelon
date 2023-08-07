@@ -1,4 +1,58 @@
-# Watermelon.tools
+# Watermelontools App
+
+<img src="public/logos/watermelon.png" alt="Watermelon Logo" width="350" height="200">
+
+Welcome to Watermelon 🍉!
+
+We help developers land better PRs by giving them code context.
+
+## Our services
+
+We can connect to:
+
+<ul>
+  <li>
+    <strong>Git Platforms</strong>
+    <ul>
+      <li>
+        <img src="public/logos/github.svg" alt="GitHub Logo" width="20" height="20"> GitHub
+      </li>
+      <li>
+        <img src="public/logos/gitlab.svg" alt="GitLab Logo" width="20" height="20"> GitLab
+      </li>
+      <li>
+        <img src="public/logos/bitbucket.svg" alt="Bitbucket Logo" width="20" height="20"> Bitbucket
+      </li>
+    </ul>
+  </li>
+  <li>
+    <strong>Ticketing</strong>
+    <ul>
+      <li>
+        <img src="public/logos/jira.svg" alt="Jira Logo" width="20" height="20"> Jira
+      </li>
+    </ul>
+  </li>
+  <li>
+    <strong>Documentation</strong>
+    <ul>
+      <li>
+        <img src="public/logos/confluence.svg" alt="Confluence Logo" width="20" height="20"> Confluence
+      </li>
+      <li>
+        <img src="public/logos/notion.svg" alt="Notion Logo" width="20" height="20"> Notion
+      </li>
+    </ul>
+  </li>
+  <li>
+    <strong>Messaging</strong>
+    <ul>
+      <li>
+        <img src="public/logos/slack.svg" alt="Slack Logo" width="20" height="20"> Slack
+      </li>
+    </ul>
+  </li>
+</ul>
 
 To start developing, clone and:
 
