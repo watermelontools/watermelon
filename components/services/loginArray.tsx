@@ -1,11 +1,11 @@
-import SlackLoginLink from "../../components/SlackLoginLink";
-import NotionLoginLink from "../../components/NotionLoginLink";
-import ConfluenceLoginLink from "../../components/ConfluenceLoginLink";
-import JiraLoginLink from "../../components/JiraLoginLink";
-import GitHubLoginLink from "../../components/GitHubLoginLink";
-import LinearLoginLink from "../../components/LinearLoginLink";
-import BitbucketLoginLink from "../../components/BitbucketLoginLink";
-import GitLabLoginLink from "../../components/GitLabLoginLink";
+import SlackLoginLink from "../SlackLoginLink";
+import NotionLoginLink from "../NotionLoginLink";
+import ConfluenceLoginLink from "../ConfluenceLoginLink";
+import JiraLoginLink from "../JiraLoginLink";
+import GitHubLoginLink from "../GitHubLoginLink";
+import LinearLoginLink from "../LinearLoginLink";
+import BitbucketLoginLink from "../BitbucketLoginLink";
+import GitLabLoginLink from "../GitLabLoginLink";
 export default function LoginArray({ nameList, userEmail, userData }) {
   const services = [
     {
