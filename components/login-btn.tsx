@@ -89,16 +89,17 @@ export default function LogInBtn() {
         >
           {serviceList.map((service) => (
             <div
-              className="Box d-flex flex-items-center flex-justify-center flex-column p-4"
+              className="Box d-flex flex-items-center flex-justify-center flex-column p-2 m-2"
               style={{ width: "20ch" }}
             >
               <Image
                 src={service.image}
                 alt={service.name}
                 width="36"
-                height="23"
+                height="36"
+                className="mt-2"
               />
-              <span className="h3 mb-3 f4 text-normal">{service.name}</span>
+              <span className="text-normal mb-2">{service.name}</span>
             </div>
           ))}
         </div>
