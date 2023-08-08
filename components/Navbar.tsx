@@ -6,7 +6,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/", label: "Home" },
     { href: "/settings", label: "Settings" },
     { href: "/team", label: "Team" },
-    { href: "/billing", label: "Billing" },
+    { href: "https://calendly.com/evargas-14/watermelon-business", label: "Billing" },
   ];
   return (
     <div
