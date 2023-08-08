@@ -5,8 +5,8 @@ import saveUserInfo from "../../utils/db/linear/saveUser";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 
-import ConnectedService from "../../utils/services/page";
-import LoginArray from "../../utils/services/loginArray";
+import ConnectedService from "../../components/services/page";
+import LoginArray from "../../components/services/loginArray";
 
 export default async function ServicePage({
   searchParams,

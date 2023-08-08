@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Dashboard",
   description: "Context of your team",
 };
-async function HomePage({}) {
+async function HomePage() {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;

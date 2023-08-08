@@ -1,4 +1,4 @@
-import TimeToRedirect from "../../components/redirect";
+import TimeToRedirect from "../redirect";
 
 export default function LoadingConnectedService() {
   return (
