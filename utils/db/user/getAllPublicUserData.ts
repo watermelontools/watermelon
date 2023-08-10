@@ -9,6 +9,6 @@ export default async function getAllPublicUserData({ email }): Promise<any> {
     return data;
   } catch (err) {
     console.error(err);
-    throw err; // This will cause the promise to be rejected with the error
+    throw err;
   }
 }

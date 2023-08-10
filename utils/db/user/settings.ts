@@ -8,6 +8,6 @@ export default async function getUser({ email }): Promise<any> {
     return data;
   } catch (err) {
     console.error(err);
-    return err;
+    throw err;
   }
 }
