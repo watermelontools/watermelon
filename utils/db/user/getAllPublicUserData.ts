@@ -1,3 +1,4 @@
+import "server-only";
 import executeRequest from "../azuredb";
 
 export default async function getAllPublicUserData({ email }): Promise<any> {
