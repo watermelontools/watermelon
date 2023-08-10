@@ -11,6 +11,12 @@ export async function POST(request: Request) {
       error: `Missing parameters: ${missingParams.join(", ")}`,
     });
   }
-  let dbUser = await getAllPublicUserData({ email: req.email });
-  return NextResponse.json(dbUser);
+
+  try {
+    let dbResponse = await getAllPublicUserData({ email: req.email });
+    return NextResponse.json(dbResponse);
+  } catch (err) {
+    console.error("Error fetching db data:", err);
+    return NextResponse.json({ error: "Failed to fetch db data." });
+  }
 }

@@ -1,3 +1,4 @@
+import "server-only";
 import executeRequest from "../azuredb";
 
 export default async function getAllPublicUserData({ email }): Promise<any> {
@@ -8,6 +9,6 @@ export default async function getAllPublicUserData({ email }): Promise<any> {
     return data;
   } catch (err) {
     console.error(err);
-    return err;
+    throw err; // This will cause the promise to be rejected with the error
   }
 }
