@@ -12,6 +12,6 @@ export async function POST(request: Request) {
     });
   }
 
-  let dbUser = await getUserSettings({ email: req.email as string });
-  return NextResponse.json(dbUser);
+  let dbResponse = await getUserSettings({ email: req.email as string });
+  return NextResponse.json(dbResponse);
 }
