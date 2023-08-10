@@ -11,6 +11,6 @@ export async function POST(request: Request) {
       error: `Missing parameters: ${missingParams.join(", ")}`,
     });
   }
-  let dbUser = await getUser(req.email);
-  return NextResponse.json(dbUser);
+  let dbResponse = await getUser(req.email);
+  return NextResponse.json(dbResponse);
 }
