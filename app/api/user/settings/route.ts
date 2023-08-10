@@ -12,6 +12,11 @@ export async function POST(request: Request) {
     });
   }
 
-  let dbResponse = await getUserSettings({ email: req.email as string });
-  return NextResponse.json(dbResponse);
+  try {
+    let dbResponse = await getUserSettings({ email: req.email });
+    return NextResponse.json(dbResponse);
+  } catch (err) {
+    console.error("Error fetching db data:", err);
+    return NextResponse.json({ error: "Failed to fetch db data." });
+  }
 }
