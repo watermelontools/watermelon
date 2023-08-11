@@ -1,116 +1,69 @@
-# Watermelontools App
+# Watermelon for Visual Studio Code
 
-<img src="public/logos/watermelon.png" alt="Watermelon Logo" width="350" height="200">
+[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
-Welcome to Watermelon 🍉!
+[![GitHub Repo stars](https://img.shields.io/github/stars/watermelontools/watermelon-extension?style=flat-square)](https://github.com/watermelontools/watermelon/stargazers)
+[![Contributors](https://img.shields.io/github/contributors/watermelontools/watermelon-extension?style=flat-square)](https://github.com/watermelontools/watermelon/graphs/contributors)
+[![Twitter Follow](https://img.shields.io/twitter/follow/WatermelonTools?style=flat-square)](https://twitter.com/intent/follow?screen_name=WatermelonTools)
+[![Discord](https://img.shields.io/discord/933846506438541492?style=flat-square)](https://discord.com/invite/H4AE6b9442)
 
-We help developers land better PRs by giving them code context.
+**Watermelon helps your team merge Pull Requests With Business Value**. Our set of plug-ins help software development teams understand code context, improve their coding velocity and merge PRs like a breeze.
 
-## Our services
+We've built a search algorithm that indexes the most relevant [passive documentation](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
 
-We can connect to:
+To obtain business context in your GitHub PRs, use this app.
 
-<ul>
-  <li>
-    <strong>Git Platforms</strong>
-    <ul>
-      <li>
-        <img src="public/logos/github.svg" alt="GitHub Logo" width="20" height="20"> GitHub
-      </li>
-      <li>
-        <img src="public/logos/gitlab.svg" alt="GitLab Logo" width="20" height="20"> GitLab
-      </li>
-      <li>
-        <img src="public/logos/bitbucket.svg" alt="Bitbucket Logo" width="20" height="20"> Bitbucket
-      </li>
-    </ul>
-  </li>
-  <li>
-    <strong>Ticketing</strong>
-    <ul>
-      <li>
-        <img src="public/logos/jira.svg" alt="Jira Logo" width="20" height="20"> Jira
-      </li>
-    </ul>
-  </li>
-  <li>
-    <strong>Documentation</strong>
-    <ul>
-      <li>
-        <img src="public/logos/confluence.svg" alt="Confluence Logo" width="20" height="20"> Confluence
-      </li>
-      <li>
-        <img src="public/logos/notion.svg" alt="Notion Logo" width="20" height="20"> Notion
-      </li>
-    </ul>
-  </li>
-  <li>
-    <strong>Messaging</strong>
-    <ul>
-      <li>
-        <img src="public/logos/slack.svg" alt="Slack Logo" width="20" height="20"> Slack
-      </li>
-    </ul>
-  </li>
-</ul>
+To obtain business context in your IDE, take a look at our [VS Code Extension](https://marketplace.visualstudio.com/items?itemName=WatermelonTools.watermelon-tools)
 
-To start developing, clone and:
 
-```
-yarn
-yarn dev
-```
+## Integrations
 
-Or with npm
+We currently support the following integrations
 
-```
-npm i
-npm run dev
-```
+|Watermelon Product| Git                                   | Project Management | Messaging | Documentation |
+| :------------ | :------------------------------------ | :----------------- | :-------- | :-----------  |
+| VS Code       | GitHub, GitLab (Beta), Bitbucket (Beta)    | Jira               | Slack     |               |
+| GitHub App    | GitHub.                               | Jira, Linear               | Slack     | Notion, Confluence        |
+## Features
 
-Or with npm
+Watermelon's GitHub application allows teams to contextualize pull requests with code context from different sources. 
 
-```
-npm i
-npm run dev
-```
+![watermelon-github-application](https://marketplace-screenshots.githubusercontent.com/15256/0b80188e-a25b-4fb1-946b-5320dd0f4744?auto=webp&format=jpeg&width=670&dpr=2)
 
-(Check your node version, we recommend 18)
+## Requirements
+- Our GitHub Application works across all GitHub cloud offerings including Enterprise Cloud. 
 
-We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
-
-This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
-
-All the backend lives as serverless functions under `api`, with the route being the filename.
-
-We now use the new app router for some features.
-
-We now use the new app router for some features.
-
-As we now use OAuth2.0, local development cannot be done on new integrations.
-
-All environment vars are on vercel, the committer is responsible for correct deployments.
+## Installation
+You can install Watermelon's GitHub Application [directly from the marketplace](https://github.com/marketplace/watermelon-context). 
 
 ## Contributing
 
-We develop with a model that forces a lot of things to be done by the developer. As this is a monorepo you have to be very careful.
+Check out [Contributing.md](CONTRIBUTING.md) and be aware of the [Code of Conduct](CODE_OF_CONDUCT.md)!
 
-_PLEASE READ [THE DOCS FOLDER](/docs/)_
+We're an early-stage project, therefore we still have the luxury to coordinate via short chats with our contributors. If you're interested in contributing, please join our [Discord](https://discord.com/invite/H4AE6b9442) community.
+Alternatively, comment on our issues if you plan to solve one.
 
-### APIs
+[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
+## Privacy
 
-We have a `utils` folder that includes all the business logic. We have an `api` folder that handles web communication as dictated by NextJS. In the `types` folder we hold our typescript types, that should (roughly) match what our database has.
+We use [VS Code's telemetry library](https://github.com/microsoft/vscode-extension-telemetry). The library respects the user's decision about whether or not to send telemetry data.
 
-The developer has to match the `utils` folder structure to the `api` route schema. This makes it easier to maintain.
+We also have settings to disable it.
 
-> As an example, we have `utils/user/getProfile.ts` that is imported in `pages/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
+Watermelon [doesn't store your code](https://www.watermelontools.com/post/building-a-code-archeology-toolbox-without-storing-your-code)
 
-We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
+## Supporters
 
-### New integrations
+[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon-extension)](https://github.com/watermelontools/watermelon-extension/stargazers)
 
-To integrate a new service, several steps are to be taken, but it's pretty much copying code.
+[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon-extension)](https://github.com/watermelontools/watermelon-extension/network/members)
 
-First, we use oauth so you need to ensure that the service supports it.
+---
 
-Remember that there are several procedures in our db to replicate.
+#### About Watermelon
+
+Watermelon is built by a globally distributed team of developers devoted to making software development easier. Join our [Discord](https://discord.com/invite/H4AE6b9442) community, follow us on [Twitter](https://twitter.com/WatermelonTools) and go to the [Watermelon blog](https://watermelontools.com/blog) to get the best programming tips.
+
+### License
+
+- [Apache License](license.md)
