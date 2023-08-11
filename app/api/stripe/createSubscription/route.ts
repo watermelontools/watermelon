@@ -1,15 +1,25 @@
+import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import validateParams from "../../../../utils/api/validateParams";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
   apiVersion: "2022-08-01",
 });
 
-export default async function handler(req, res) {
+export default async function POST(request: Request) {
+  const req = await request.json();
+  const { missingParams } = validateParams(req, ["email"]);
+
+  if (missingParams.length > 0) {
+    return NextResponse.json({
+      error: `Missing parameters: ${missingParams.join(", ")}`,
+    });
+  }
   try {
     // create a stripe customer and get its id
     const customerId = await stripe.customers
       .create({
-        email: req.body.email,
+        email: req.email,
       })
       .then((customer) => {
         return customer.id;
@@ -23,7 +33,7 @@ export default async function handler(req, res) {
       items: [
         {
           price: priceId,
-          quantity: req.body.quantity,
+          quantity: req.quantity,
         },
       ],
       payment_behavior: "default_incomplete",
@@ -31,7 +41,7 @@ export default async function handler(req, res) {
       expand: ["latest_invoice.payment_intent"],
     });
 
-    res.send({
+    return NextResponse.json({
       subscriptionId: subscription.id,
       // We use Stripe's Expand functionality to get the latest invoice and its payment intent
       // So we can pass it to the front end to confirm the payment
@@ -42,6 +52,8 @@ export default async function handler(req, res) {
   } catch (error) {
     // get error code
     const errorCode = error.raw?.code;
-    return res.status(errorCode).send({ error: { message: error.message } });
+    return NextResponse.json({
+      error: { message: error.message, errorCode },
+    });
   }
 }
