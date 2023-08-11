@@ -1,6 +1,6 @@
 import { Octokit } from "octokit";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
-import getAllData from "../../../utils/db/user/getAllData";
+import getUserTokens from "../../../utils/db/user/getUserTokens";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
@@ -9,10 +9,10 @@ function replaceSpecialChars(inputString) {
   return inputString.toLowerCase().replace(specialChars, " ");
 }
 
-async function fetchGitHubIssues(userTokens, owner, repo) {
-  const parsedGithubData = JSON.parse(userTokens.github_data);
+async function fetchGitHubIssues(parsedUserTokens, owner, repo) {
+  const { github_token } = parsedUserTokens;
   const octokit = new Octokit({
-    auth: parsedGithubData.access_token,
+    auth: github_token,
   });
 
   let q = `repo:${owner}/${repo}`;
@@ -49,26 +49,26 @@ async function fetchGitHubIssues(userTokens, owner, repo) {
   }
   return issues?.data?.items;
 }
-async function fetchJiraTickets(userTokens, PRTitles) {
-  const parsedJiraData = JSON.parse(userTokens.jira_data);
+async function fetchJiraTickets(parsedUserTokens, PRTitles) {
+  const { jira_token, jira_refresh_token, cloudId, user } = parsedUserTokens;
 
-  if (!parsedJiraData.access_token || !parsedJiraData.refresh_token) {
+  if (!jira_token || !jira_refresh_token) {
     return { error: "no jira token" };
   } else {
     const newAccessTokens = await updateTokensFromJira({
-      refresh_token: parsedJiraData.refresh_token,
+      refresh_token: jira_refresh_token,
     });
     if (!newAccessTokens?.access_token) {
       return { error: "no access_token" };
     }
 
-    if (!parsedJiraData.cloudId) {
+    if (!cloudId) {
       return { error: "no Jira cloudId" };
     }
     await updateTokens({
       access_token: newAccessTokens.access_token,
       refresh_token: newAccessTokens.refresh_token,
-      user: userTokens.user,
+      user: user,
     });
 
     let cleanPRTitles = Array.from(
@@ -84,7 +84,7 @@ async function fetchJiraTickets(userTokens, PRTitles) {
       .join(" OR ");
     let jql = `(${summaryQuery}) AND (${descriptionQuery}) ORDER BY created DESC`;
     let returnVal = await fetch(
-      `https://api.atlassian.com/ex/jira/${parsedJiraData.cloudId}/rest/api/3/search`,
+      `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
       {
         method: "POST",
         headers: {
@@ -105,7 +105,7 @@ async function fetchJiraTickets(userTokens, PRTitles) {
       });
     const serverPromise = async () => {
       const serverInfo = await fetch(
-        `https://api.atlassian.com/ex/jira/${parsedJiraData.cloudId}/rest/api/3/serverInfo`,
+        `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/serverInfo`,
         {
           method: "GET",
           headers: {
@@ -133,16 +133,16 @@ async function fetchJiraTickets(userTokens, PRTitles) {
     return returnVal?.slice(0, 3);
   }
 }
-async function fetchSlackConversations(userTokens, PRTitles) {
-  let parsedSlackData = JSON.parse(userTokens.slack_data);
+async function fetchSlackConversations(parsedUserTokens, PRTitles) {
+  let { slack_token } = parsedUserTokens;
   let slackValue = {};
 
-  if (!parsedSlackData.user_token) {
+  if (!slack_token) {
     slackValue = { error: "no slack token" };
   } else {
     let response = await searchMessageByText({
       text: `${PRTitles.join("  ")}`,
-      user_token: parsedSlackData.user_token,
+      user_token: slack_token,
     });
     slackValue = response?.messages?.matches?.slice(0, 3);
   }
@@ -150,7 +150,6 @@ async function fetchSlackConversations(userTokens, PRTitles) {
 }
 export default async function handler(req, res) {
   const { user, gitSystem, repo, owner, commitList } = req.body;
-
   trackEvent({
     name: "extensionContext",
     properties: { user, repo, owner, gitSystem },
@@ -173,7 +172,7 @@ export default async function handler(req, res) {
   }
   let userTokens;
   try {
-    userTokens = await getAllData(user);
+    userTokens = await getUserTokens({ email: user });
   } catch (error) {
     console.error(
       "An error occurred while getting user tokens:",
