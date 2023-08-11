@@ -1,4 +1,4 @@
-import getAllData from "../../../utils/db/user/getAllData";
+import getUserTokens from "../../../utils/db/user/getUserTokens";
 import { Octokit } from "octokit";
 import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
 
   let userTokens;
   try {
-    userTokens = await getAllData(user);
+    userTokens = await getUserTokens({ email: user });
   } catch (error) {
     console.error(
       "An error occurred while getting user tokens:",
@@ -42,9 +42,10 @@ export default async function handler(req, res) {
     return res.send({ error });
   }
   async function fetchGitHubIssues(userTokens, owner, repo) {
-    const parsedGithubData = JSON.parse(userTokens.github_data);
+    const { github_token } = userTokens;
+
     const octokit = new Octokit({
-      auth: parsedGithubData.access_token,
+      auth: github_token,
     });
 
     let q = `repo:${owner}/${repo}`;
@@ -64,18 +65,18 @@ export default async function handler(req, res) {
     return issues?.data?.items;
   }
   async function fetchJiraTickets(userTokens, commitTitle) {
-    const parsedJiraData = JSON.parse(userTokens.jira_data);
-    if (!parsedJiraData.access_token || !parsedJiraData.refresh_token) {
+    const { jira_token, jira_refresh_token, cloudId, user } = userTokens;
+    if (!jira_token || !jira_refresh_token) {
       return { error: "no jira token" };
     } else {
       const newAccessTokens = await updateTokensFromJira({
-        refresh_token: parsedJiraData.refresh_token,
+        refresh_token: jira_refresh_token,
       });
       if (!newAccessTokens?.access_token) {
         return { error: "no access_token" };
       }
 
-      if (!parsedJiraData.cloudId) {
+      if (!cloudId) {
         return { error: "no Jira cloudId" };
       }
       await updateTokens({
@@ -86,7 +87,7 @@ export default async function handler(req, res) {
 
       let jql = `(summary ~ "${commitTitle}") AND (description ~ "${commitTitle}") ORDER BY created DESC`;
       let returnVal = await fetch(
-        `https://api.atlassian.com/ex/jira/${parsedJiraData.cloudId}/rest/api/3/search`,
+        `https://api.atlassian.com/ex/jira/${cloudId}/rest/api/3/search`,
         {
           method: "POST",
           headers: {
@@ -111,15 +112,15 @@ export default async function handler(req, res) {
     }
   }
   async function fetchSlackConversations(userTokens, commitTitle) {
-    let parsedSlackData = JSON.parse(userTokens.slack_data);
+    let { slack_token } = userTokens;
     let slackValue = {};
 
-    if (!parsedSlackData.user_token) {
+    if (!slack_token) {
       slackValue = { error: "no slack token" };
     } else {
       let response = await searchMessageByText({
         text: commitTitle,
-        user_token: parsedSlackData.user_token,
+        user_token: slack_token,
         count: 1,
       });
       slackValue = response?.messages?.matches;
