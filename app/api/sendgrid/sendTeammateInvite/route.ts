@@ -1,13 +1,8 @@
 import { NextResponse } from "next/server";
-import {
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import sendTeammateInvite from "../../../../utils/sendgrid/sendTeammateInvite";
 
-export async function POST(request: Request) {
+export default async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, [
     "sender",
@@ -17,8 +12,9 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ missingParams, url: request.url });
-    return missingParamsResponse({ missingParams });
+    return NextResponse.json({
+      error: `Missing parameters: ${missingParams.join(", ")}`,
+    });
   }
   const { sender, email, inviteUrl, teamName } = req;
 
@@ -28,6 +24,5 @@ export async function POST(request: Request) {
     inviteUrl,
     teamName,
   });
-  successPosthogTracking({ url: request.url, email: sender, data: emailSent });
   return NextResponse.json(emailSent);
 }
