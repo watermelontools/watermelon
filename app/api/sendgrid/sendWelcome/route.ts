@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import validateParams from "../../../../utils/api/validateParams";
 import sendWelcome from "../../../../utils/sendgrid/sendWelcome";
 
-export default async function POST(request: Request) {
+export async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, ["sender", "emails"]);
 
