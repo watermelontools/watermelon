@@ -26,7 +26,7 @@ function toRecords(infoArray) {
   }
   return records;
 }
-export default async function POST(request: Request) {
+export async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, ["dailyStats"]);
 
