@@ -14,6 +14,7 @@ mockedGetUserSettings.mockResolvedValue({
     ConfluenceDocs: 5,
   },
 });
+
 describe("User Route POST function", () => {
   it("returns an error when email parameter is missing", async () => {
     // Mocking request object
@@ -37,16 +38,14 @@ describe("User Route POST function", () => {
     expect(response.status).toEqual(200);
     const responseJson = await response.json();
     expect(responseJson).toEqual({
-      data: {
-        userSettings: {
-          AISummary: true,
-          JiraTickets: 5,
-          SlackMessages: 5,
-          GitHubPRs: 5,
-          NotionPages: 5,
-          LinearTickets: 5,
-          ConfluenceDocs: 5,
-        },
+      userSettings: {
+        AISummary: true,
+        JiraTickets: 5,
+        SlackMessages: 5,
+        GitHubPRs: 5,
+        NotionPages: 5,
+        LinearTickets: 5,
+        ConfluenceDocs: 5,
       },
     });
   });
