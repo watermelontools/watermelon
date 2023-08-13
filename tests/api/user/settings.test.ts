@@ -14,30 +14,30 @@ mockedGetUserSettings.mockResolvedValue({
     ConfluenceDocs: 5,
   },
 });
-jest.mock("../../../utils/db/user/settings");
+
 describe("User Route POST function", () => {
   it("returns an error when email parameter is missing", async () => {
     // Mocking request object
     const mockReq: any = {
       json: async () => ({}),
     };
-
-    const response = await (await POST(mockReq)).json();
-    expect(response).toEqual({
+    const response = await POST(mockReq);
+    expect(response.status).toEqual(400);
+    const responseJson = await response.json();
+    expect(responseJson).toEqual({
       error: "Missing parameters: email",
     });
   });
 
-  it("Gets the userSettings", async () => {
+  it("returns user settings when email parameter is provided", async () => {
     // Mocking request object
     const mockReq: any = {
-      json: async () => ({
-        email: "tulia@watermelontools.com",
-      }),
+      json: async () => ({ email: "test@example.com" }),
     };
-
-    const response = await (await POST(mockReq)).json();
-    expect(response).toEqual({
+    const response = await POST(mockReq);
+    expect(response.status).toEqual(200);
+    const responseJson = await response.json();
+    expect(responseJson).toEqual({
       userSettings: {
         AISummary: true,
         JiraTickets: 5,
