@@ -2,8 +2,8 @@
 
 [![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/watermelontools/watermelon-extension?style=flat-square)](https://github.com/watermelontools/watermelon/stargazers)
-[![Contributors](https://img.shields.io/github/contributors/watermelontools/watermelon-extension?style=flat-square)](https://github.com/watermelontools/watermelon/graphs/contributors)
+[![GitHub Repo stars](https://img.shields.io/github/stars/watermelontools/watermelon?style=flat-square)](https://github.com/watermelontools/watermelon/stargazers)
+[![Contributors](https://img.shields.io/github/contributors/watermelontools/watermelon?style=flat-square)](https://github.com/watermelontools/watermelon/graphs/contributors)
 [![Twitter Follow](https://img.shields.io/twitter/follow/WatermelonTools?style=flat-square)](https://twitter.com/intent/follow?screen_name=WatermelonTools)
 [![Discord](https://img.shields.io/discord/933846506438541492?style=flat-square)](https://discord.com/invite/H4AE6b9442)
 
