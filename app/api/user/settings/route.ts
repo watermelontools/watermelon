@@ -1,15 +1,6 @@
+import { NextResponse } from "next/server";
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
-import {
-  failedToFetchResponse,
-  missingParamsResponse,
-  successResponse,
-} from "../../../../utils/api/responses";
-import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -18,6 +9,7 @@ export async function POST(request: Request) {
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
+
   try {
     let dbResponse = await getUserSettings({ email: req.email });
 
