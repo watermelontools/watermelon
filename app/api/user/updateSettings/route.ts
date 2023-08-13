@@ -1,13 +1,4 @@
-import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import {
-  failedToFetchResponse,
-  missingParamsResponse,
-  successResponse,
-} from "../../../../utils/api/responses";
+import { NextResponse } from "next/server";
 import validateParams from "../../../../utils/api/validateParams";
 import patchUserSettings from "../../../../utils/db/user/patchUserSettings";
 import posthog from "../../../../utils/posthog/posthog";
@@ -39,11 +30,6 @@ export async function POST(request: Request) {
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    failedPosthogTracking({
-      error: err,
-      email: req.email,
-      url: request.url,
-    });
-    return failedToFetchResponse({ error: err });
+    return NextResponse.json({ error: "Failed to fetch db data." });
   }
 }

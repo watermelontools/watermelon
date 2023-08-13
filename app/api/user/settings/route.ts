@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
 import posthog from "../../../../utils/posthog/posthog";
@@ -18,6 +19,7 @@ export async function POST(request: Request) {
     });
     return missingParamsResponse({ missingParams });
   }
+
   try {
     let dbResponse = await getUserSettings({ email: req.email });
     posthog.capture({
@@ -30,11 +32,6 @@ export async function POST(request: Request) {
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    failedPosthogTracking({
-      error: err,
-      email: req.email,
-      url: request.url,
-    });
-    return failedToFetchResponse({ error: err });
+    return NextResponse.json({ error: "Failed to fetch db data." });
   }
 }

@@ -1,13 +1,4 @@
-import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import {
-  failedToFetchResponse,
-  missingParamsResponse,
-  successResponse,
-} from "../../../../utils/api/responses";
+import { NextResponse } from "next/server";
 import validateParams from "../../../../utils/api/validateParams";
 import getAllPublicUserData from "../../../../utils/db/user/getAllPublicUserData";
 import posthog from "../../../../utils/posthog/posthog";
