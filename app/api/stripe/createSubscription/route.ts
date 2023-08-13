@@ -11,9 +11,12 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
-    });
+    return NextResponse.json(
+      {
+        error: `Missing parameters: ${missingParams.join(", ")}`,
+      },
+      { status: 400 }
+    );
   }
   try {
     // create a stripe customer and get its id
