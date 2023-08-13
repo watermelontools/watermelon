@@ -54,16 +54,16 @@ Watermelon [doesn't store your code](https://www.watermelontools.com/post/buildi
 
 ## Supporters
 
-[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon-extension)](https://github.com/watermelontools/watermelon-extension/stargazers)
+[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
 
-[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon-extension)](https://github.com/watermelontools/watermelon-extension/network/members)
+[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
 
 ---
 
 #### About Watermelon
 
-Watermelon is built by a globally distributed team of developers devoted to making software development easier. Join our [Discord](https://discord.com/invite/H4AE6b9442) community, follow us on [Twitter](https://twitter.com/WatermelonTools) and go to the [Watermelon blog](https://watermelontools.com/blog) to get the best programming tips.
+Watermelon is built by a globally distributed team of developers devoted to making software development easier. Join our [Discord](https://discord.com/invite/H4AE6b9442) community, follow us on [Twitter](https://twitter.com/WatermelonTools), and go to the [Watermelon blog](https://watermelontools.com/blog) to get the best programming tips.
 
 ### License
 
-- [Apache License](license.md)
+- [Apache License](LICENSE)
