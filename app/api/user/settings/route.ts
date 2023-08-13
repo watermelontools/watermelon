@@ -13,6 +13,7 @@ export async function POST(request: Request) {
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
+
   try {
     let dbResponse = await getUserSettings({ email: req.email });
 
