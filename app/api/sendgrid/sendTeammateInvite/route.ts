@@ -12,9 +12,12 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
-    });
+    return NextResponse.json(
+      {
+        error: `Missing parameters: ${missingParams.join(", ")}`,
+      },
+      { status: 400 }
+    );
   }
   const { sender, email, inviteUrl, teamName } = req;
 
