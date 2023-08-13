@@ -23,6 +23,9 @@ export async function POST(request: Request) {
     return NextResponse.json(dbResponse);
   } catch (err) {
     console.error("Error fetching db data:", err);
-    return NextResponse.json({ error: "Failed to fetch db data." });
+    return NextResponse.json(
+      { error: "Failed to fetch db data." },
+      { status: 500 }
+    );
   }
 }
