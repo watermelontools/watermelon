@@ -1,62 +1,73 @@
-# Watermelon.tools
+# Watermelon for Visual Studio Code
 
-To start developing, clone and:
+[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
-```
-yarn
-yarn dev
-```
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/watermelontools/watermelon?style=flat-square)
+[![GitHub Repo stars](https://img.shields.io/github/stars/watermelontools/watermelon?style=flat-square)](https://github.com/watermelontools/watermelon/stargazers)
+[![Contributors](https://img.shields.io/github/contributors/watermelontools/watermelon?style=flat-square)](https://github.com/watermelontools/watermelon/graphs/contributors)
+[![Twitter Follow](https://img.shields.io/twitter/follow/WatermelonTools?style=flat-square)](https://twitter.com/intent/follow?screen_name=WatermelonTools)
+[![Discord](https://img.shields.io/discord/933846506438541492?style=flat-square)](https://discord.com/invite/H4AE6b9442)
 
-Or with npm
+**Watermelon is a Passive Documentation Search Engine** serving both our GitHub app and IDE extension. Our set of plug-ins help developers understand code context, improve their coding velocity and merge PRs like a breeze.
 
-```
-npm i
-npm run dev
-```
+We've built a search algorithm that indexes the most relevant [passive documentation](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
 
-Or with npm
+To retrieve passive documentation and code context in your GitHub PRs, use this app.
 
-```
-npm i
-npm run dev
-```
+To retrieve passive documentation and code context in your IDE, take a look at our [VS Code Extension](https://github.com/watermelontools/watermelon-extension)
 
-(Check your node version, we recommend 18)
+## Integrations
 
-We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
+We currently support the following integrations
 
-This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
+| Watermelon Product | Git                                     | Project Management | Messaging | Documentation      |
+| :----------------- | :-------------------------------------- | :----------------- | :-------- | :----------------- |
+| VS Code            | GitHub, GitLab (Beta), Bitbucket (Beta) | Jira               | Slack     |                    |
+| GitHub App         | GitHub                                  | Jira, Linear       | Slack     | Notion, Confluence |
 
-All the backend lives as serverless functions under `api`, with the route being the filename.
+## Features
 
-We now use the new app router for some features.
+Watermelon's GitHub application allows teams to contextualize pull requests with code context from different sources.
 
-We now use the new app router for some features.
+![watermelon-github-application](https://marketplace-screenshots.githubusercontent.com/15256/0b80188e-a25b-4fb1-946b-5320dd0f4744?auto=webp&format=jpeg&width=670&dpr=2)
 
-As we now use OAuth2.0, local development cannot be done on new integrations.
+## Requirements
 
-All environment vars are on vercel, the committer is responsible for correct deployments.
+- Our GitHub Application works across all GitHub cloud offerings including Enterprise Cloud.
+
+## Installation
+
+You can install Watermelon's GitHub Application [directly from the marketplace](https://github.com/marketplace/watermelon-context).
 
 ## Contributing
 
-We develop with a model that forces a lot of things to be done by the developer. As this is a monorepo you have to be very careful.
+Check out [Contributing.md](CONTRIBUTING.md) and be aware of the [Code of Conduct](CODE_OF_CONDUCT.md)!
 
-_PLEASE READ [THE DOCS FOLDER](/docs/)_
+We're an early-stage project, therefore we still have the luxury to coordinate via short chats with our contributors. If you're interested in contributing, please join our [Discord](https://discord.com/invite/H4AE6b9442) community.
+Alternatively, comment on our issues if you plan to solve one.
 
-### APIs
+[![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
-We have a `utils` folder that includes all the business logic. We have an `api` folder that handles web communication as dictated by NextJS. In the `types` folder we hold our typescript types, that should (roughly) match what our database has.
+## Privacy
 
-The developer has to match the `utils` folder structure to the `api` route schema. This makes it easier to maintain.
+We use [VS Code's telemetry library](https://github.com/microsoft/vscode-extension-telemetry). The library respects the user's decision about whether or not to send telemetry data.
 
-> As an example, we have `utils/user/getProfile.ts` that is imported in `pages/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
+We also have settings to disable it.
 
-We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
+Watermelon [doesn't store your code](https://www.watermelontools.com/post/building-a-code-archeology-toolbox-without-storing-your-code)
 
-### New integrations
+## Supporters
 
-To integrate a new service, several steps are to be taken, but it's pretty much copying code.
+[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
 
-First, we use oauth so you need to ensure that the service supports it.
+[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
 
-Remember that there are several procedures in our db to replicate.
+---
+
+#### About Watermelon
+
+Watermelon is built by a globally distributed team of developers devoted to making software development easier. Join our [Discord](https://discord.com/invite/H4AE6b9442) community, follow us on [Twitter](https://twitter.com/WatermelonTools), and go to the [Watermelon blog](https://watermelontools.com/blog) to get the best programming tips.
+
+### License
+
+- [Apache License](LICENSE)

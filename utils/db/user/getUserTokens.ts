@@ -1,13 +1,13 @@
 import executeRequest from "../azuredb";
 
-export default async function getUser(user): Promise<any> {
+export default async function getUserTokens({ email }): Promise<any> {
   try {
     let data = await executeRequest(
-      `EXEC dbo.get_all_user_data @watermelon_user = '${user}'`
+      `EXEC dbo.get_all_user_tokens @watermelon_user = '${email}'`
     );
     return data;
   } catch (err) {
     console.error(err);
-    return err;
+    throw err;
   }
 }

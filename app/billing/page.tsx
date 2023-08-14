@@ -7,9 +7,13 @@ export const metadata: Metadata = {
   description: "Pay for the Context of your team",
 };
 
-async function BillingPage() {
-  const session = await getServerSession(authOptions);
-  let userEmail = session?.user?.email;
+async function BillingPage({
+  params,
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   return (
     <div
       style={{
