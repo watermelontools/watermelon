@@ -2,7 +2,12 @@ import "@primer/css/index.scss";
 
 import { getServerSession } from "next-auth";
 
+import Navbar from "../components/Navbar";
+import Header from "../components/Header";
+import LogInBtn from "../components/login-btn";
 import { PHProvider, PostHogPageview } from "./providers";
+
+import AuthProvider from "../lib/auth/AuthProvider";
 
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ReactNode, Suspense } from "react";
@@ -30,7 +35,18 @@ export default async function RootLayout({
         <PostHogPageview />
       </Suspense>
       <body style={{ minHeight: "100vh" }}>
-        <PHProvider>{children}</PHProvider>
+        <PHProvider>
+          {userEmail ? (
+            <>
+              <Header userEmail={userEmail} userToken={userName} />
+              <Navbar>
+                <AuthProvider>{children}</AuthProvider>
+              </Navbar>
+            </>
+          ) : (
+            <LogInBtn />
+          )}
+        </PHProvider>
       </body>
     </html>
   );
