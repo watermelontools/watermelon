@@ -1,42 +1,29 @@
+import { NextResponse } from "next/server";
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
-import {
-  failedToFetchResponse,
-  missingParamsResponse,
-  successResponse,
-} from "../../../../utils/api/responses";
-import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+import posthog from "../../../../utils/posthog/posthog";
 
 export async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({
-      missingParams,
-      url: request.url,
+    return NextResponse.json({
+      error: `Missing parameters: ${missingParams.join(", ")}`,
     });
-    return missingParamsResponse({ missingParams });
   }
+  posthog.capture({
+    distinctId: req.email,
+    event: "user_settings_viewed",
+    properties: {
+      email: req.email,
+    },
+  });
   try {
     let dbResponse = await getUserSettings({ email: req.email });
-    successPosthogTracking({
-      email: req.email,
-      url: request.url,
-      data: dbResponse,
-    });
-    return successResponse({ data: dbResponse });
+    return NextResponse.json(dbResponse);
   } catch (err) {
     console.error("Error fetching db data:", err);
-    failedPosthogTracking({
-      error: err,
-      email: req.email,
-      url: request.url,
-    });
-    return failedToFetchResponse({ error: err });
+    return NextResponse.json({ error: "Failed to fetch db data." });
   }
 }
