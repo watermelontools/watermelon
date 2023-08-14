@@ -6,8 +6,8 @@ interface PostHogEvent {
   groups?: Record<string, any>;
 }
 
-function PostHogClient() {
-  const posthogClient = new PostHog(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+function PostHogClient(apiKey: string) {
+  const posthogClient = new PostHog(apiKey, {
     host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   });
 
@@ -19,10 +19,18 @@ function PostHogClient() {
         properties,
         groups,
       });
+      console.log("posthog event", event, properties);
+      if (process.env.NODE_ENV === "development") {
+        console.log(
+          `PostHog event: ${event} with properties: ${JSON.stringify(
+            properties
+          )}`
+        );
+      }
     },
   };
 }
 
-const posthog = PostHogClient();
+const posthog = PostHogClient(process.env.NEXT_PUBLIC_POSTHOG_KEY!);
 
 export default posthog;
