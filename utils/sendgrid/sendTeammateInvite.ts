@@ -1,10 +1,10 @@
 export default async function sendTeammateInvite({
-  email,
+  teammateEmail,
   sender,
   inviteUrl,
   teamName,
 }: {
-  email: string;
+  teammateEmail: string;
   sender: string;
   inviteUrl: string;
   teamName: string;
@@ -12,7 +12,7 @@ export default async function sendTeammateInvite({
   const sgMail = require("@sendgrid/mail");
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
   const msg = {
-    to: email,
+    to: teammateEmail,
     from: "info@watermelon.tools",
     templateId: "d-dd5c729f0be5439daac6b1faaf0431d6",
     dynamic_template_data: {
