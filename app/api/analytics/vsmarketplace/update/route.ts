@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+import validateParams from "../../../../../utils/api/validateParams";
 import Airtable from "airtable";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
@@ -24,13 +26,21 @@ function toRecords(infoArray) {
   }
   return records;
 }
-export default async function handler(req, res) {
-  const { dailyStats } = req.body;
+export async function POST(request: Request) {
+  const req = await request.json();
+  const { missingParams } = validateParams(req, ["dailyStats"]);
+
+  if (missingParams.length > 0) {
+    return NextResponse.json({
+      error: `Missing parameters: ${missingParams.join(", ")}`,
+    });
+  }
+  const { dailyStats } = req;
   let records;
   if (dailyStats.length < 10) {
     records = toRecords(dailyStats.slice(0, 10));
     let createdRecord = await base("vscmarketplace").create(records);
-    res.status(200).json(createdRecord);
+    return NextResponse.json(createdRecord);
   } else {
     records = toRecords(dailyStats);
     // now take the records and chunk them into groups of 10
@@ -53,6 +63,6 @@ export default async function handler(req, res) {
       // @ts-ignore
       createdRecords.push(createdRecord);
     }
-    res.status(200).json(createdRecords);
+    return NextResponse.json(createdRecords);
   }
 }

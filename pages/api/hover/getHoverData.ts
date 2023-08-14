@@ -4,6 +4,7 @@ import { trackEvent } from "../../../utils/analytics/azureAppInsights";
 import updateTokensFromJira from "../../../utils/jira/updateTokens";
 import updateTokens from "../../../utils/db/jira/updateTokens";
 import searchMessageByText from "../../../utils/slack/searchMessageByText";
+import validateParams from "../../../utils/api/validateParams";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
@@ -14,21 +15,18 @@ function handleRejection(reason) {
 }
 export default async function handler(req, res) {
   const { user, gitSystem, repo, owner, commitTitle } = req.body;
+  const { missingParams } = validateParams(req.body, [
+    "user",
+    "repo",
+    "owner",
+    "gitSystem",
+    "commitTitle",
+  ]);
 
-  if (!user) {
-    return res.send({ error: "no user" });
-  }
-  if (!repo) {
-    return res.send({ error: "no repo" });
-  }
-  if (!owner) {
-    return res.send({ error: "no owner" });
-  }
-  if (!gitSystem) {
-    return res.send({ error: "no gitSystem" });
-  }
-  if (!commitTitle) {
-    return res.send({ error: "no commitTitle" });
+  if (missingParams.length > 0) {
+    return res.json({
+      error: `Missing parameters: ${missingParams.join(", ")}`,
+    });
   }
 
   let userTokens;

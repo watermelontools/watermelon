@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import Navbar from "../components/Navbar";
 import Header from "../components/Header";
 import LogInBtn from "../components/login-btn";
+import { PHProvider, PostHogPageview } from "./providers";
 
 import AuthProvider from "../lib/auth/AuthProvider";
 
@@ -30,17 +31,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
+      <Suspense fallback={null}>
+        <PostHogPageview />
+      </Suspense>
       <body style={{ minHeight: "100vh" }}>
-        {userEmail ? (
-          <>
-            <Header userEmail={userEmail} userToken={userName} />
-            <Navbar>
-              <AuthProvider>{children}</AuthProvider>
-            </Navbar>
-          </>
-        ) : (
-          <LogInBtn />
-        )}
+        <PHProvider>
+          {userEmail ? (
+            <>
+              <Header userEmail={userEmail} userToken={userName} />
+              <Navbar>
+                <AuthProvider>{children}</AuthProvider>
+              </Navbar>
+            </>
+          ) : (
+            <LogInBtn />
+          )}
+        </PHProvider>
       </body>
     </html>
   );
