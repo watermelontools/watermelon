@@ -1,7 +1,7 @@
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
 import {
-  failedToFecthResponse,
+  failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
