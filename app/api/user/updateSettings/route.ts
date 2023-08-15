@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   if (missingParams.length > 0) {
     posthog.capture({
-      event: "api-user-updateSettings-missing-params",
+      event: `${request.url}-missing-params`,
       properties: missingParams,
     });
     return missingParamsResponse({ missingParams });
@@ -24,9 +24,23 @@ export async function POST(request: Request) {
       email: req.email,
       userSettings: req.userSettings,
     });
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-success`,
+      properties: {
+        dbResponse,
+      },
+    });
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-failed`,
+      properties: {
+        error: err,
+      },
+    });
     return failedToFecthResponse({ error: err });
   }
 }
