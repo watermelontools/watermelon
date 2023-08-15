@@ -27,7 +27,7 @@ export default function form({ userEmail }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userSettings: formState, user: userEmail }),
+        body: JSON.stringify({ userSettings: formState, email: userEmail }),
       }).then((res) => setUserSettingsState(userEmail));
     } catch (error) {
       console.error("An error occurred while saving the form", error);
@@ -38,18 +38,6 @@ export default function form({ userEmail }) {
   useEffect(() => {
     setUserSettingsState(userEmail);
   }, [userEmail]);
-  function OptionDropdown() {
-    return (
-      <div>
-        {Array.from(Array(6)).map((i, index) => {
-          if (index === 0) {
-            return null;
-          }
-          return <option value={index}>{index}</option>;
-        })}
-      </div>
-    );
-  }
 
   function SettingsSelector({ label, valueLabel }) {
     return (
@@ -84,24 +72,6 @@ export default function form({ userEmail }) {
       <SettingsSelector label="Notion Pages" valueLabel={"NotionPages"} />
       <SettingsSelector label="Linear Tickets" valueLabel={"LinearTickets"} />
       <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
-
-      <div className="">
-        <span>Linear Tickets:</span>
-        <select
-          className="form-select"
-          aria-label="Amount of Linear Tickets"
-          defaultValue={formState?.LinearTickets}
-          value={formState.LinearTickets}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              LinearTickets: parseInt(e.target.value),
-            })
-          }
-        >
-          <OptionDropdown />
-        </select>
-      </div>
 
       <div className="">
         <span>AI Summary: </span>
