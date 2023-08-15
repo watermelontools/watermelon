@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
   if (missingParams.length > 0) {
     posthog.capture({
-      event: "api-sendgrid-sendWelcom-missing-params",
+      event: `${request.url}-missing-params`,
       properties: missingParams,
     });
     return missingParamsResponse({ missingParams });
