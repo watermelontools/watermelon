@@ -13,13 +13,6 @@ export async function POST(request: Request) {
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
-  posthog.capture({
-    distinctId: req.email,
-    event: "user_settings_viewed",
-    properties: {
-      email: req.email,
-    },
-  });
   try {
     let dbResponse = await getUserSettings({ email: req.email });
 
