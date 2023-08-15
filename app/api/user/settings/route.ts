@@ -13,23 +13,30 @@ export async function POST(request: Request) {
 
   if (missingParams.length > 0) {
     posthog.capture({
-      event: "api-user-settings-missing-params",
+      event: `${request.url}-missing-params`,
       properties: missingParams,
     });
     return missingParamsResponse({ missingParams });
   }
-  posthog.capture({
-    distinctId: req.email,
-    event: "user_settings_viewed",
-    properties: {
-      email: req.email,
-    },
-  });
   try {
     let dbResponse = await getUserSettings({ email: req.email });
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-success`,
+      properties: {
+        dbResponse,
+      },
+    });
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-failed`,
+      properties: {
+        error: err,
+      },
+    });
     return failedToFecthResponse({ error: err });
   }
 }
