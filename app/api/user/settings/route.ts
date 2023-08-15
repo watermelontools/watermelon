@@ -18,7 +18,6 @@ export async function POST(request: Request) {
     });
     return missingParamsResponse({ missingParams });
   }
-
   try {
     let dbResponse = await getUserSettings({ email: req.email });
     posthog.capture({
@@ -31,6 +30,13 @@ export async function POST(request: Request) {
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    return NextResponse.json({ error: "Failed to fetch db data." });
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-failed`,
+      properties: {
+        error: err,
+      },
+    });
+    return failedToFecthResponse({ error: err });
   }
 }
