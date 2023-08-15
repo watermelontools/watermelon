@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import sendTeammateInvite from "../../../../utils/sendgrid/sendTeammateInvite";
 
@@ -12,12 +13,7 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json(
-      {
-        error: `Missing parameters: ${missingParams.join(", ")}`,
-      },
-      { status: 400 }
-    );
+    return missingParamsResponse({ missingParams });
   }
   const { sender, email, inviteUrl, teamName } = req;
 
