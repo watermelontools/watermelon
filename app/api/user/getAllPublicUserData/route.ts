@@ -4,7 +4,7 @@ import {
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
 import {
-  failedToFecthResponse,
+  failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
@@ -38,6 +38,6 @@ export async function POST(request: Request) {
       email: req.email,
       url: request.url,
     });
-    return failedToFecthResponse({ error: err });
+    return failedToFetchResponse({ error: err });
   }
 }
