@@ -12,6 +12,10 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
+    posthog.capture({
+      event: "api-user-settings-missing-params",
+      properties: missingParams,
+    });
     return missingParamsResponse({ missingParams });
   }
   posthog.capture({
