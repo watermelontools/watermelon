@@ -1,11 +1,15 @@
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
-import posthog from "../../../../utils/posthog/posthog";
 import {
   failedToFecthResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
