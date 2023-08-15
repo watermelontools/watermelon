@@ -58,10 +58,10 @@ export default async function getOpenAISummary({
 
   const prompt = `Summarize what the ${summaryPrompt} ${
     commitList?.length ? `the ${commitList?.length} commits,` : ""
-  } are about. What do they tell us about the business logic? Don't summarize each piece or block of data separately, combine them and process all data. Take into consideration the current PR title and body. Don't look at each part or service of the list as a separate thing, but as a whole. The list will be available to me so you don't need to repeat it. Try to keep the summary to 3 or 4 sentences.
+  } are about. What do they tell us about the business logic? Don't summarize each piece or block of data separately, combine them and process all data. Take into consideration the current PR title and body. Don't look at each part or service of the list as a separate thing, but as a whole. The list will be available to me so you don't need to repeat it. Try to keep the summary to 3 or 4 sentences, but if it's a smaller thing just mention that.
   Here is the list:\n  ${promptList} \n`;
   try {
-    console.log(prompt)
+    console.log(prompt);
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo-16k",
       messages: [
