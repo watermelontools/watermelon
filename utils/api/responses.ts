@@ -19,7 +19,7 @@ export function missingParamsResponse({ missingParams }) {
   );
 }
 
-export function failedToFetchResponse({ error }) {
+export function failedToFecthResponse({ error }) {
   return NextResponse.json(
     {
       error,
