@@ -30,6 +30,11 @@ export async function POST(request: Request) {
     return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
+    failedPosthogTracking({
+      error: err,
+      email: req.email,
+      url: request.url,
+    });
     return failedToFetchResponse({ error: err });
   }
 }
