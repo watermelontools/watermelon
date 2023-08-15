@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   if (missingParams.length > 0) {
     posthog.capture({
-      event: "api-user-updateSettings-missing-params",
+      event: `${request.url}-missing-params`,
       properties: missingParams,
     });
     return missingParamsResponse({ missingParams });
@@ -23,6 +23,13 @@ export async function POST(request: Request) {
     let dbResponse = await patchUserSettings({
       email: req.email,
       userSettings: req.userSettings,
+    });
+    posthog.capture({
+      distinctId: req.email,
+      event: `${request.url}-success`,
+      properties: {
+        dbResponse,
+      },
     });
     return successResponse({ data: dbResponse });
   } catch (err) {
