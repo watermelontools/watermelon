@@ -1,7 +1,7 @@
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
 import {
-  failedToFecthResponse,
+  failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
@@ -37,6 +37,6 @@ export async function POST(request: Request) {
       email: req.email,
       url: request.url,
     });
-    return failedToFecthResponse({ error: err });
+    return failedToFetchResponse({ error: err });
   }
 }
