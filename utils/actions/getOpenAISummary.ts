@@ -72,6 +72,7 @@ export default async function getOpenAISummary({
         },
         { role: "user", content: prompt },
       ],
+    });
     return completion.data.choices[0].message.content;
   } catch (error) {
     console.log(error);
