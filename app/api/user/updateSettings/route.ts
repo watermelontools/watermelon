@@ -5,6 +5,7 @@ import {
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import patchUserSettings from "../../../../utils/db/user/patchUserSettings";
+import posthog from "../../../../utils/posthog/posthog";
 
 export async function POST(request: Request) {
   const req = await request.json();
