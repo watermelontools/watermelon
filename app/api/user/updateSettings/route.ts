@@ -1,5 +1,10 @@
 import {
-  failedToFecthResponse,
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
+import {
+  failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
@@ -41,6 +46,6 @@ export async function POST(request: Request) {
         error: err,
       },
     });
-    return failedToFecthResponse({ error: err });
+    return failedToFetchResponse({ error: err });
   }
 }

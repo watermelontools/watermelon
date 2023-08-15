@@ -37,6 +37,6 @@ export async function POST(request: Request) {
         error: err,
       },
     });
-    return failedToFecthResponse({ error: err });
+    return failedToFetchResponse({ error: err });
   }
 }
