@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
 
-import getTeammates from "../../utils/db/teams/getTeammates";
-import getUserTeam from "../../utils/db/teams/getUserTeam";
+import getTeammates from "../../../utils/db/teams/getTeammates";
+import getUserTeam from "../../../utils/db/teams/getUserTeam";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
 import AddTeammateButton from "./addTeammateButton";
 import SendInviteForm from "./sendInviteForm";
 

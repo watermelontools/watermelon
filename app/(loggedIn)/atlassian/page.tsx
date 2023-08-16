@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveJiraUserInfo from "../../utils/db/jira/saveUserInfo";
-import saveConfluenceUserInfo from "../../utils/db/confluence/saveUserInfo";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
+import saveJiraUserInfo from "../../../utils/db/jira/saveUserInfo";
+import saveConfluenceUserInfo from "../../../utils/db/confluence/saveUserInfo";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 
-import ConnectedService from "../../components/services/page";
-import LoginArray from "../../components/services/loginArray";
+import ConnectedService from "../../../components/services/page";
+import LoginArray from "../../../components/services/loginArray";
 
 export default async function ServicePage({
   searchParams,

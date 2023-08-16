@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import addEmailToGitHubQueryCountTable from "../../utils/db/github/addEmailToGitHubQueryCountTable";
+import addEmailToGitHubQueryCountTable from "../../../utils/db/github/addEmailToGitHubQueryCountTable";
 
 function Paymentsuccess() {
   const router = useRouter();

@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import executeRequest from "../../../../utils/db/azuredb";
-import { authOptions } from "../../../api/auth/[...nextauth]/route";
+import executeRequest from "../../../../../utils/db/azuredb";
+import { authOptions } from "../../../../api/auth/[...nextauth]/route";
 
 async function teamInviteLanding({ params }: { params: { teamName: string } }) {
   const session = await getServerSession(authOptions);

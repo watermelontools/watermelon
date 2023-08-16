@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveUserInfo from "../../utils/db/linear/saveUser";
+import saveUserInfo from "../../../utils/db/linear/saveUser";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 
-import ConnectedService from "../../components/services/page";
-import LoginArray from "../../components/services/loginArray";
+import ConnectedService from "../../../components/services/page";
+import LoginArray from "../../../components/services/loginArray";
 
 export default async function ServicePage({
   searchParams,

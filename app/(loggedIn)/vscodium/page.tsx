@@ -1,9 +1,9 @@
 import Link from "next/link";
-import LoginGrid from "../../components/loginGrid";
+import LoginGrid from "../../../components/loginGrid";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import TimeToRedirect from "../../components/redirect";
-import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import TimeToRedirect from "../../../components/redirect";
+import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "VSCodium Login",

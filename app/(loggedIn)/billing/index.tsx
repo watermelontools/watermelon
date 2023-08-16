@@ -1,7 +1,7 @@
 import { Router } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import LogInBtn from "../../components/login-btn";
+import LogInBtn from "../../../components/login-btn";
 import { useSession } from "next-auth/react";
 
 const AdminDetails = () => {
