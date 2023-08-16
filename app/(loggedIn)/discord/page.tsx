@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveUserInfo from "../../utils/db/discord/saveUser";
+import saveUserInfo from "../../../utils/db/discord/saveUser";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
-import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
+import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 
-import ConnectedService from "../../utils/services/page";
-import LoginArray from "../../utils/services/loginArray";
+import ConnectedService from "../../../utils/services/page";
+import LoginArray from "../../../utils/services/loginArray";
 
 export default async function ServicePage({
   searchParams,
