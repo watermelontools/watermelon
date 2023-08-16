@@ -1,5 +1,5 @@
-import LoginGrid from "../components/loginGrid";
-import DownloadExtension from "../components/dashboard/DownloadExtension";
+import LoginGrid from "../../components/loginGrid";
+import DownloadExtension from "../../components/dashboard/DownloadExtension";
 
 async function loading({}) {
   const userEmail = "tulia@watermelontools.com";

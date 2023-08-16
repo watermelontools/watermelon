@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 
-import LogInBtn from "../../components/login-btn";
+import LogInBtn from "../../../components/login-btn";
 
-import { authOptions } from "../api/auth/[...nextauth]/route";
+import { authOptions } from "../../api/auth/[...nextauth]/route";
 import Form from "./form";
 import { Metadata } from "next";
 export const metadata: Metadata = {

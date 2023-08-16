@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import getUserSettings from "../../utils/api/getUserSettings";
+import getUserSettings from "../../../utils/api/getUserSettings";
 
 export default function form({ userEmail }) {
   const [saveDisabled, setSaveDisabled] = useState(false);

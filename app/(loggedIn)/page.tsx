@@ -1,8 +1,8 @@
-import LoginGrid from "../components/loginGrid";
-import DownloadExtension from "../components/dashboard/DownloadExtension";
+import LoginGrid from "../../components/loginGrid";
+import DownloadExtension from "../../components/dashboard/DownloadExtension";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
-import getAllPublicUserData from "../utils/api/getAllUserPublicData";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import getAllPublicUserData from "../../utils/api/getAllUserPublicData";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Dashboard",

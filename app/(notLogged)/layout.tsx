@@ -1,10 +1,7 @@
 import "@primer/css/index.scss";
 
-import { getServerSession } from "next-auth";
+import { PHProvider, PostHogPageview } from "../providers";
 
-import { PHProvider, PostHogPageview } from "./providers";
-
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import { ReactNode, Suspense } from "react";
 
 export const metadata = {
@@ -20,10 +17,6 @@ export default async function RootLayout({
 }: {
   children: ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
-  const userName = session?.user?.name;
-
   return (
     <html lang="en" data-color-mode="dark" data-dark-theme="dark">
       <Suspense fallback={null}>
