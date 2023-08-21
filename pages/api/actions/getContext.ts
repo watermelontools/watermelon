@@ -261,7 +261,7 @@ export default async function handler(req, res) {
       amount: 3,
       randomWords,
     }),
-    getSlack({ title, body, slack_token, randomWords }),
+    getSlack({ slack_token, searchString: randomWords.join(" ") }),
   ]);
 
   const businessLogicSummary = await getOpenAISummary({
