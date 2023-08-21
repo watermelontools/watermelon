@@ -8,13 +8,13 @@ import getJira from "../../../utils/actions/getJira";
 import getSlack from "../../../utils/actions/getSlack";
 import getNotion from "../../../utils/actions/getNotion";
 import getLinear from "../../../utils/actions/getLinear";
+import getConfluence from "../../../utils/actions/getConfluence";
 import getOpenAISummary from "../../../utils/actions/getOpenAISummary";
 
 import countMarkdown from "../../../utils/actions/markdownHelpers/count";
 import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper";
 
 import addActionLog from "../../../utils/db/github/addActionLog";
-import getConfluence from "../../../utils/actions/getConfluence";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
