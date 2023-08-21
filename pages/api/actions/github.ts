@@ -15,6 +15,9 @@ import generalMarkdownHelper from "../../../utils/actions/markdownHelpers/helper
 
 import addActionLog from "../../../utils/db/github/addActionLog";
 import getConfluence from "../../../utils/actions/getConfluence";
+
+import posthog from "../../../utils/posthog/posthog";
+
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -22,12 +25,16 @@ const app = new App({
 
 export default async (req, res) => {
   if (req.method === "POST") {
+    
     let textToWrite = "";
     try {
       // Verify and parse the webhook event
       const eventName = req.headers["x-github-event"];
       let payload = req.body;
-
+      posthog.capture("github_webhook", {
+        eventName,
+        payload
+      });
       if (
         payload.action === "opened" ||
         payload.action === "reopened" ||
