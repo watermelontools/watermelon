@@ -17,7 +17,11 @@ import generalMarkdownHelper from "../../../../utils/actions/markdownHelpers/hel
 import addActionLog from "../../../../utils/db/github/addActionLog";
 import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
-import { missingParamsPosthogTracking } from "../../../../utils/api/posthogTracking";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -511,6 +515,17 @@ export async function POST(request: Request) {
             return console.error("posting comment error", error);
           });
       }
+      successPosthogTracking({
+        url: request.url,
+        email: user_email,
+        data: {
+          repo,
+          owner,
+          number,
+          action: req.action,
+          textToWrite,
+        },
+      });
       return NextResponse.json({
         message: "success",
         textToWrite,
@@ -522,6 +537,12 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("general action processing error", error);
+    failedPosthogTracking({
+      url: request.url,
+      error: error.message,
+      email: req.email,
+    });
+
     return NextResponse.json({
       message: "Error processing webhook event",
       error,
