@@ -1,22 +1,29 @@
-import getUserTokens from "../../../utils/db/user/getUserTokens";
+import getUserTokens from "../../../../utils/db/user/getUserTokens";
 import { Octokit } from "octokit";
-import { trackEvent } from "../../../utils/analytics/azureAppInsights";
-import updateTokensFromJira from "../../../utils/jira/updateTokens";
-import updateTokens from "../../../utils/db/jira/updateTokens";
-import searchMessageByText from "../../../utils/slack/searchMessageByText";
-import validateParams from "../../../utils/api/validateParams";
-function replaceSpecialChars(inputString) {
-  const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
-  return inputString.toLowerCase().replace(specialChars, " ");
-}
+import updateTokensFromJira from "../../../../utils/jira/updateTokens";
+import updateTokens from "../../../../utils/db/jira/updateTokens";
+import searchMessageByText from "../../../../utils/slack/searchMessageByText";
+import validateParams from "../../../../utils/api/validateParams";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
+import {
+  failedToFetchResponse,
+  missingParamsResponse,
+  successResponse,
+} from "../../../../utils/api/responses";
+
 function handleRejection(reason) {
   console.error(reason);
   return { error: reason };
 }
-export default async function handler(req, res) {
-  const { user, gitSystem, repo, owner, commitTitle } = req.body;
-  const { missingParams } = validateParams(req.body, [
-    "user",
+export async function POST(request: Request) {
+  const req = await request.json();
+
+  const { missingParams } = validateParams(req, [
+    "email",
     "repo",
     "owner",
     "gitSystem",
@@ -24,20 +31,24 @@ export default async function handler(req, res) {
   ]);
 
   if (missingParams.length > 0) {
-    return res.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
-    });
+    missingParamsPosthogTracking({ url: request.url, missingParams });
+    return missingParamsResponse({ missingParams });
   }
 
   let userTokens;
   try {
-    userTokens = await getUserTokens({ email: user });
+    userTokens = await getUserTokens({ email: req.email });
   } catch (error) {
     console.error(
       "An error occurred while getting user tokens:",
       error.message
     );
-    return res.send({ error });
+    failedPosthogTracking({
+      url: request.url,
+      error: error.message,
+      email: req.email,
+    });
+    return failedToFetchResponse({ error: error.message });
   }
   async function fetchGitHubIssues(userTokens, owner, repo) {
     const { github_token } = userTokens;
@@ -126,9 +137,9 @@ export default async function handler(req, res) {
     return slackValue;
   }
   const [githubResult, jiraResult, slackResult] = await Promise.allSettled([
-    fetchGitHubIssues(userTokens, owner, repo),
-    fetchJiraTickets(userTokens, commitTitle),
-    fetchSlackConversations(userTokens, commitTitle),
+    fetchGitHubIssues(userTokens, req.owner, req.repo),
+    fetchJiraTickets(userTokens, req.commitTitle),
+    fetchSlackConversations(userTokens, req.commitTitle),
   ]);
 
   const githubIssues =
@@ -144,14 +155,20 @@ export default async function handler(req, res) {
       ? slackResult.value
       : handleRejection(slackResult.reason);
 
-  trackEvent({
-    name: "unifiedHoverData",
-    properties: { user, gitSystem, repo, owner, commitTitle },
+  successPosthogTracking({
+    url: request.url,
+    email: req.email,
+    data: {
+      github: githubIssues,
+      jira: jiraTickets,
+      slack: slackConversations,
+    },
   });
-
-  return res.send({
-    github: githubIssues,
-    jira: jiraTickets,
-    slack: slackConversations,
+  return successResponse({
+    data: {
+      github: githubIssues,
+      jira: jiraTickets,
+      slack: slackConversations,
+    },
   });
 }

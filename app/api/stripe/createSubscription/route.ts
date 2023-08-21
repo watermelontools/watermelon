@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
+import posthog from "../../../../utils/posthog/posthog";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
   apiVersion: "2022-08-01",
@@ -11,9 +13,11 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
+    posthog.capture({
+      event: `${request.url}-missing-params`,
+      properties: missingParams,
     });
+    return missingParamsResponse({ missingParams });
   }
   try {
     // create a stripe customer and get its id
