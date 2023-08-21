@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import validateParams from "../../../../../utils/api/validateParams";
 import Airtable from "airtable";
 import { missingParamsResponse } from "../../../../../utils/api/responses";
-import posthog from "../../../../../utils/posthog/posthog";
 import { missingParamsPosthogTracking } from "../../../../../utils/api/posthogTracking";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
