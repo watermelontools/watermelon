@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   const { email, gitSystem, repo, owner, commitList } = req;
 
   const { missingParams } = validateParams(req, [
-    "user",
+    "email",
     "repo",
     "owner",
     "gitSystem",
@@ -74,15 +74,16 @@ export async function POST(request: Request) {
     return failedToFetchResponse({ error: error.message });
   }
 
-  const searchStringSet = Array.from(new Set(req.commitTitle.split(" "))).join(
-    " "
-  );
+  const searchStringSet = Array.from(
+    new Set(req.commitList.split(",").split("/"))
+  ).join(" ");
 
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
     .sort(() => Math.random() - 0.5)
     .slice(0, 6);
+
   const [github, jira, confluence, slack, notion, linear] = await Promise.all([
     getGitHub({
       repo,
