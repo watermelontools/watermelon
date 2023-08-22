@@ -1,5 +1,4 @@
 import { App } from "@octokit/app";
-import { trackEvent } from "../../../../utils/analytics/azureAppInsights";
 import executeRequest from "../../../../utils/db/azuredb";
 import addActionCount from "../../../../utils/db/teams/addActionCount";
 
@@ -81,6 +80,7 @@ export async function POST(request: Request) {
         SlackMessages,
         NotionPages,
         LinearTickets,
+        ConfluencePages,
         user_email,
         watermelon_user,
       } = wmUserData;
@@ -351,13 +351,11 @@ export async function POST(request: Request) {
           confluence_id,
           user: user_email,
           randomWords,
-          amount: 3,
+          amount: ConfluencePages,
         }),
         getSlack({
-          title,
-          body,
           slack_token,
-          randomWords,
+          searchString: randomWords.join(" "),
           amount: SlackMessages,
         }),
         getNotion({
