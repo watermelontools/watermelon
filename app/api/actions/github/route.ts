@@ -103,7 +103,7 @@ export async function POST(request: Request) {
             .catch((error) => {
               return console.error("posting comment error", error);
             });
-          return res.status(401).send("User not registered");
+          return NextResponse.json("User not registered");
         }
       }
       let octoCommitList = await octokit.request(
