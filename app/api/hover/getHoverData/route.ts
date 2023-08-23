@@ -24,7 +24,6 @@ export async function POST(request: Request) {
     "email",
     "repo",
     "owner",
-    "gitSystem",
     "commitTitle",
   ]);
 

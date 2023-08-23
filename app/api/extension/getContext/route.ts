@@ -23,13 +23,12 @@ function replaceSpecialChars(inputString) {
 
 export async function POST(request: Request) {
   const req = await request.json();
-  const { email, gitSystem, repo, owner, commitList } = req;
+  const { email, repo, owner, commitList } = req;
 
   const { missingParams } = validateParams(req, [
     "email",
     "repo",
     "owner",
-    "gitSystem",
     "commitList",
   ]);
 
