@@ -16,6 +16,8 @@ import {
   successResponse,
 } from "../../../../utils/api/responses";
 import executeRequest from "../../../../utils/db/azuredb";
+import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
+import { StandardProcessedDataArray } from "../../../../types/watermelon";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
@@ -72,11 +74,9 @@ export async function POST(request: Request) {
     });
     return failedToFetchResponse({ error: error.message });
   }
-
-  const searchStringSet = Array.from(
-    new Set(req.commitList.split(",").split("/"))
-  ).join(" ");
-
+  const searchStringSet = Array.from(new Set(req.commitList.split(","))).join(
+    " "
+  );
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -122,6 +122,24 @@ export async function POST(request: Request) {
       amount: LinearTickets,
     }),
   ]);
+  const WatermelonAISummary = await getOpenAISummary({
+    commitList: req.commitList.replace(/\r?\n|\r/g, "").split(","),
+    values: {
+      github: github?.data,
+      jira: jira?.data,
+      confluence: confluence?.data,
+      slack: slack?.data,
+      notion: notion?.data,
+      linear: linear?.data,
+    },
+  });
+  const standardWatermelonAISummary: StandardProcessedDataArray = [
+    {
+      title: "WatermelonAISummary",
+      body: WatermelonAISummary,
+      link: "https://app.watermelontools.com",
+    },
+  ];
 
   successPosthogTracking({
     url: request.url,
@@ -133,6 +151,7 @@ export async function POST(request: Request) {
       slack: slack.fullData || slack.error,
       notion: notion.fullData || notion.error,
       linear: linear.fullData || linear.error,
+      watermelonSummary: standardWatermelonAISummary,
     },
   });
   return successResponse({
@@ -143,6 +162,7 @@ export async function POST(request: Request) {
       slack: slack.data || slack.error,
       notion: notion.data || notion.error,
       linear: linear.data || linear.error,
+      watermelonSummary: standardWatermelonAISummary,
     },
   });
 }
