@@ -2,7 +2,7 @@
 We discuss both on GitHub Issues and [Discord](discord.gg/H4AE6b9442).
 
 ## Contributing to Watermelon's Passive Documentation Search Engine
-Anyone is free to contribute changes to any file in this repository. 
+Anyone is free to contribute changes to any file in this repository. You don't need to ask for permission or get in line. If you see an issue that's open and it seems interesting to you, feel free to pick it up. Your solution may be better. Open-source is beautiful. 
 > Exception: If your contribution makes [paid Watermelon feature](https://watermelontools.com/pricing/) available for free, we are unlikely to accept it. Consult us beforehand for a definitive answer.
 
 ## Running the Passive Documentation Search Engine Locally
