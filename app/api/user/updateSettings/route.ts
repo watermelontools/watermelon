@@ -1,4 +1,13 @@
-import { NextResponse } from "next/server";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
+import {
+  failedToFetchResponse,
+  missingParamsResponse,
+  successResponse,
+} from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import patchUserSettings from "../../../../utils/db/user/patchUserSettings";
 
@@ -7,9 +16,11 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email", "userSettings"]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
+    missingParamsPosthogTracking({
+      missingParams,
+      url: request.url,
     });
+    return missingParamsResponse({ missingParams });
   }
 
   try {
@@ -17,9 +28,19 @@ export async function POST(request: Request) {
       email: req.email,
       userSettings: req.userSettings,
     });
-    return NextResponse.json(dbResponse);
+    successPosthogTracking({
+      email: req.email,
+      url: request.url,
+      data: dbResponse,
+    });
+    return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    return NextResponse.json({ error: "Failed to fetch db data." });
+    failedPosthogTracking({
+      error: err,
+      email: req.email,
+      url: request.url,
+    });
+    return failedToFetchResponse({ error: err });
   }
 }

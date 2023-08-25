@@ -10,7 +10,7 @@ export default function LoadingConnectedService() {
       </div>
       <img
         src="/logos/github.svg"
-        alt="linear user image"
+        alt="watermelon placeholder"
         className="avatar avatar-8"
       />
       <div>
