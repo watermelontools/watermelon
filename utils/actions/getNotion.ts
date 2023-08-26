@@ -37,16 +37,31 @@ async function getNotion({
       .catch((error) => {
         console.error("notion error", error);
       });
-
     return {
       fullData: returnVal,
       data: returnVal?.results?.map((result) => {
+        let titleProperty;
+        let summaryProperty;
+        for (let key in result.properties) {
+          // Check if the current property has a type of "title"
+          if (result.properties[key].type === "title") {
+            titleProperty = result.properties[key];
+          }
+
+          if (
+            decodeURIComponent(result.properties[key].id).trim() ===
+              "summary" ||
+            decodeURIComponent(result.properties[key].id).trim() === "Summary"
+          ) {
+            summaryProperty = result.properties[key];
+          }
+        }
         return {
-          title: result?.properties?.title?.title[0]?.plain_text,
-          body: result?.properties?.excerpt?.rich_text[0]?.plain_text,
-          link: result.url,
+          title: titleProperty?.title?.[0].plain_text,
+          body: summaryProperty?.rich_text?.[0]?.plain_text,
+          link: result.url || result?.properties?.url,
           image:
-            result.icon?.type === "external"
+            result?.icon?.type === "external"
               ? `<img src="${result?.icon?.external.url}" alt="Page icon" width="20" height="20" />`
               : result?.icon?.type === "emoji"
               ? `<img src="${result?.icon?.emoji}" alt="Page icon" width="20" height="20" />`

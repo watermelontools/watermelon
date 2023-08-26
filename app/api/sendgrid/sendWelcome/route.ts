@@ -15,5 +15,6 @@ export async function POST(request: Request) {
   const { sender, emails } = req;
 
   let emailSent = await sendWelcome({ sender, emails });
+
   return NextResponse.json(emailSent);
 }
