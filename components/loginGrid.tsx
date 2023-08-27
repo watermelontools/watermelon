@@ -8,6 +8,7 @@ import LinearLoginLink from "../components/LinearLoginLink";
 import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import ConfluenceLoginLink from "./ConfluenceLoginLink";
+import AsanaLoginLink from "./AsanaLoginLink";
 type LoginGridProps = {
   userEmail: string;
   user_displayname: string;
@@ -22,6 +23,7 @@ function LoginGrid({ userEmail, data }) {
   let discordUserData: null | LoginGridProps = null;
   let notionUserData: null | LoginGridProps = null;
   let linearUserData: null | LoginGridProps = null;
+  let asanaUserData: null | LoginGridProps = null;
   if (data?.github_data) {
     githubUserData = JSON.parse(data.github_data);
   }
@@ -48,6 +50,9 @@ function LoginGrid({ userEmail, data }) {
   }
   if (data?.linear_data) {
     linearUserData = JSON.parse(data.linear_data);
+  }
+  if (data?.asana_data) {
+    asanaUserData = JSON.parse(data.asana_data);
   }
 
   return (
@@ -200,6 +205,18 @@ function LoginGrid({ userEmail, data }) {
                   />
                 ) : (
                   <LinearLoginLink userEmail={userEmail} />
+                )}
+              </div>
+              <div className="p-3">
+                {asanaUserData?.user_displayname ? (
+                  <InfoPanel
+                    info={{
+                      ...asanaUserData,
+                      service_name: "Asana",
+                    }}
+                  />
+                ) : (
+                  <AsanaLoginLink userEmail={userEmail} />
                 )}
               </div>
               {/*         
