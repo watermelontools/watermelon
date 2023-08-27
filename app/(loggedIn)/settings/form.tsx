@@ -17,6 +17,7 @@ export default function form({ userEmail }) {
     NotionPages: 3,
     LinearTickets: 3,
     ConfluenceDocs: 3,
+    AsanaTasks: 3,
     AISummary: 1,
   });
   const handleSubmit = async () => {
@@ -72,6 +73,7 @@ export default function form({ userEmail }) {
       <SettingsSelector label="Notion Pages" valueLabel={"NotionPages"} />
       <SettingsSelector label="Linear Tickets" valueLabel={"LinearTickets"} />
       <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
+      <SettingsSelector label="Asana Tasks" valueLabel={"AsanaTasks"} />
 
       <div className="">
         <span>AI Summary: </span>
