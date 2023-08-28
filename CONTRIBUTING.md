@@ -114,13 +114,13 @@ CREATE TABLE serviceName (
 - Add the service to the `loginGrid.tsx` file in the correct section
 - Add the service to `form.tsx` under _settings_
 
-Run the `newIntegration.sh` script which will
+- Run the `newIntegration.sh` script which will:
 
-- Create the service folder under `(loggedIn)`
-- Copy the `loading.tsx` from any other service
-- Create the function under `/utils/db/service/saveUser` that you need to complete
-- Populate the `page.tsx` file to be finished the correct service parameters
-- Create an empty getter in `/utils/actions`
+  - Create the service folder under `(loggedIn)`
+  - Copy the `loading.tsx` from any other service
+  - Create the function under `/utils/db/service/saveUser` that you need to complete
+  - Populate the `page.tsx` file to be finished the correct service parameters
+  - Create an empty getter in `/utils/actions`
 
 ## Issues
 
