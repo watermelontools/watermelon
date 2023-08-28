@@ -12,24 +12,19 @@ Anyone is free to contribute changes to any file in this repository. You don't n
 
 To start developing, clone and:
 
-```
+```bash
 yarn
 yarn dev
 ```
 
 Or with npm
 
-```
+```bash
 npm i
 npm run dev
 ```
 
 Or with npm
-
-```
-npm i
-npm run dev
-```
 
 (Check your node version, we recommend 18)
 
@@ -81,7 +76,7 @@ The steps to do so are:
   >
   > _Add any other required columns as needed_
 
-```
+```sql
 CREATE TABLE serviceName (
    id INT PRIMARY KEY,
    name VARCHAR(255),
@@ -102,11 +97,11 @@ CREATE TABLE serviceName (
 
 - Edit the userSettings table
 
-  ```
+  ```sql
   ALTER TABLE userSettings ADD ServiceReadableName INT DEFAULT 3;`
   ```
 
-  ```
+  ```sql
   UPDATE userSettings SET ServiceReadableName = 3 WHERE ServiceReadableName IS NULL;
   ```
 
@@ -120,6 +115,7 @@ CREATE TABLE serviceName (
 - Add the service to `form.tsx` under _settings_
 - Create the service folder under `(loggedIn)`
 - Copy the `loading.tsx` from any other service
+- Create the function under `/utils/db/service/saveUser`
 - Populate the `page.tsx` file with the correct service parameters
 
 ## Issues
