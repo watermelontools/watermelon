@@ -92,6 +92,7 @@ CREATE TABLE serviceName (
    refresh_token VARCHAR(255),
    avatar_url VARCHAR(255),
    workspace VARCHAR(255),
+   workspace_image VARCHAR(255),
    watermelon_user VARCHAR(255),
    deleted BIT DEFAULT 0 NULL,
    deleted_at DATETIME DEFAULT GETDATE() NULL,
