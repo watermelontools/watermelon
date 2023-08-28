@@ -73,6 +73,8 @@ Remember that there are several procedures in our db to replicate.
 
 The steps to do so are:
 
+- Set the necesary vercel env vars
+  > usually `SERVICE_CLIENT_SECRET` and `SERVICE_CLIENT_ID`
 - Create the table in our DB
 
   > **This is sketch of a possible new table**
