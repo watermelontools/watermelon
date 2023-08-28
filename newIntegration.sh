@@ -64,7 +64,7 @@ export default async function ServicePage({
   // change service name
   const serviceName = "${serviceName}";
   const [userData, serviceToken] = await Promise.all([
-    getAllPublicUserData({ userEmail }).catch((e) => {
+    getAllPublicUserData({ email: userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
