@@ -10,7 +10,7 @@ mkdir -p ./app/\(loggedIn\)/${serviceName}
 cat > ./app/\(loggedIn\)/${serviceName}/loading.tsx <<EOL
 import LoadingConnectedService from "../../../components/services/loading";
 
-export default function loadingConnetedService() {
+export default function loadingConnectedService() {
   return <LoadingConnectedService />;
 }
 EOL
