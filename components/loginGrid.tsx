@@ -42,12 +42,21 @@ function LoginGrid({ userEmail, data }) {
       loginComponent: <LinearLoginLink userEmail={userEmail} />,
       type: "project_management",
     },
+
+    {
+      name: "Asana",
+      dataProp: "asana_data",
+      loginComponent: <AsanaLoginLink userEmail={userEmail} />,
+      type: "project_management",
+    },
+
     {
       name: "Slack",
       dataProp: "slack_data",
       loginComponent: <SlackLoginLink userEmail={userEmail} />,
       type: "internal_messaging",
     },
+
     {
       name: "Confluence",
       dataProp: "confluence_data",
@@ -59,13 +68,6 @@ function LoginGrid({ userEmail, data }) {
       dataProp: "notion_data",
       loginComponent: <NotionLoginLink userEmail={userEmail} />,
       type: "documentation",
-    },
-
-    {
-      name: "Asana",
-      dataProp: "asana_data",
-      loginComponent: <AsanaLoginLink userEmail={userEmail} />,
-      type: "project_management",
     },
   ];
   const typeToName = {
