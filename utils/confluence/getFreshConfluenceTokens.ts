@@ -56,9 +56,9 @@ async function updateTokensFromConfluence({
   }
 }
 
-async function getFreshConfluenceTokens({ confluence_refresh_token, user }) {
+async function getFreshConfluenceTokens({ refresh_token, user }) {
   const newAccessTokens = await updateTokensFromConfluence({
-    refresh_token: confluence_refresh_token,
+    refresh_token: refresh_token,
   });
 
   if (!newAccessTokens?.access_token) {
