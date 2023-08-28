@@ -74,6 +74,39 @@ Remember that there are several procedures in our db to replicate.
 The steps to do so are:
 
 - Create the table in our DB
+
+  > **This is sketch of a possible new table**
+  >
+  > _Add any other required columns as needed_
+
+```
+CREATE TABLE serviceName (
+   id INT PRIMARY KEY,
+   name VARCHAR(255),
+   email VARCHAR(255),
+   updated_at DATETIME DEFAULT GETDATE() NOT NULL,
+   created_at DATETIME DEFAULT GETDATE() NOT NULL,
+   access_token VARCHAR(255),
+   refresh_token VARCHAR(255),
+   avatar_url VARCHAR(255),
+   workspace VARCHAR(255),
+   watermelon_user VARCHAR(255),
+   deleted BIT DEFAULT 0 NULL,
+   deleted_at DATETIME DEFAULT GETDATE() NULL,
+   FOREIGN KEY (watermelon_user) REFERENCES watermelon.dbo.users(id)
+   );
+```
+
+- Edit the userSettings table
+
+  ```
+  ALTER TABLE userSettings ADD ServiceReadableName INT DEFAULT 3;`
+  ```
+
+  ```
+  UPDATE userSettings SET ServiceReadableName = 3 WHERE ServiceReadableName IS NULL;
+  ```
+
 - Create the necessary procedures
   - Setting the information for the user
   - Fetching the settings
