@@ -1,5 +1,5 @@
 import Link from "next/link";
-import TimeToRedirect from "../../../components/redirect";
+import TimeToRedirect from "../../components/redirect";
 
 export default function ConnectedService({
   serviceName,
