@@ -118,6 +118,11 @@ CREATE TABLE serviceName (
 - Create the function under `/utils/db/service/saveUser`
 - Populate the `page.tsx` file with the correct service parameters
 
+- Expand the prompt in `utils/actions/getOpenAISummary.ts`
+- Add to the `app/api/actions/github/route.ts` the required parts
+- Add to the `app/api/extension/getContext/route.ts` the required parts
+- Add to the `app/api/hover/getHoverData/route.ts` the required parts
+
 ## Issues
 
 If there's something you'd like to see please [open an issue](https://github.com/watermelontools/watermelon/issues/new).
