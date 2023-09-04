@@ -13,7 +13,7 @@ export default function TimeToRedirect({ url }) {
   }, [timeToRedirect]);
   return (
     <div>
-      {timeToRedirect > 0 ? (
+      {timeToRedirect > 1 ? (
         <p>We will try opening it in {timeToRedirect}...</p>
       ) : null}
     </div>
