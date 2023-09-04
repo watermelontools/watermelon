@@ -14,6 +14,7 @@ mockedGetUserSettings.mockResolvedValue({
     ConfluenceDocs: 5,
   },
 });
+
 describe("User Route POST function", () => {
   it("returns an error when email parameter is missing", async () => {
     // Mocking request object
