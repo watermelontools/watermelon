@@ -77,16 +77,20 @@ describe("User Route POST function", () => {
       }),
     };
 
-    const response = await (await POST(mockReq)).json();
-    expect(response).toEqual({
-      userSettings: {
-        AISummary: true,
-        JiraTickets: 5,
-        SlackMessages: 5,
-        GitHubPRs: 5,
-        NotionPages: 5,
-        LinearTickets: 5,
-        ConfluenceDocs: 5,
+    const response = await POST(mockReq);
+    expect(response.status).toEqual(200);
+    const responseJson = await response.json();
+    expect(responseJson).toEqual({
+      data: {
+        userSettings: {
+          AISummary: true,
+          JiraTickets: 5,
+          SlackMessages: 5,
+          GitHubPRs: 5,
+          NotionPages: 5,
+          LinearTickets: 5,
+          ConfluenceDocs: 5,
+        },
       },
     });
   });

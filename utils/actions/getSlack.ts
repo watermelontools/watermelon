@@ -1,19 +1,17 @@
 import { StandardAPIResponse } from "../../types/watermelon";
 import searchMessageByText from "../../utils/slack/searchMessageByText";
 async function getSlack({
-  title,
-  body,
+  searchString,
   slack_token,
-  randomWords,
   amount = 3,
 }): Promise<StandardAPIResponse> {
   let slackValue;
 
   if (!slack_token) {
-    slackValue = { error: "no slack token" };
+    return (slackValue = { error: "no slack token" });
   } else {
     let response = await searchMessageByText({
-      text: `${title}`,
+      text: `${searchString}`,
       user_token: slack_token,
       count: amount,
     });

@@ -11,6 +11,11 @@ export default async function getOpenAISummary({
   title,
   body,
   values,
+}: {
+  commitList: string[];
+  title?: string;
+  body?: string;
+  values: any;
 }) {
   const extractData = (key: string) => values?.[key]?.data || [];
 
@@ -61,14 +66,13 @@ export default async function getOpenAISummary({
   } are about. What do they tell us about the business logic? Don't summarize each piece or block of data separately, combine them and process all data. Take into consideration the current PR title and body. Don't look at each part or service of the list as a separate thing, but as a whole. The list will be available to me so you don't need to repeat it. Try to keep the summary to 3 or 4 sentences, but if it's a smaller thing just mention that.
   Here is the list:\n  ${promptList} \n`;
   try {
-    console.log(prompt);
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo-16k",
       messages: [
         {
           role: "system",
           content:
-            "You are a Technical PM, that understands the business and will help the user what is going in this recently opened Pull Request. The user will give you some context and you will summarize it in a succinct but not jargon filled way. You will avoid going over each individual data point, but will reason about the business logic.",
+            "You are a Technical PM, that understands the business and will help the user know what is going on in this recently opened Pull Request. The user will give you some context and you will summarize it in a succinct but not jargon filled way. You will avoid going over each individual data point, but will reason about the business logic.",
         },
         { role: "user", content: prompt },
       ],
