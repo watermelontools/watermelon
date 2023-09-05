@@ -16,11 +16,8 @@ import {
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
+import executeRequest from "../../../../utils/db/azuredb";
 
-function handleRejection(reason) {
-  console.error(reason);
-  return { error: reason };
-}
 export async function POST(request: Request) {
   const req = await request.json();
 
@@ -28,7 +25,6 @@ export async function POST(request: Request) {
     "email",
     "repo",
     "owner",
-    "gitSystem",
     "commitTitle",
   ]);
 
@@ -55,7 +51,7 @@ export async function POST(request: Request) {
     watermelon_user,
   } = wmUserData;
   try {
-    userTokens = await getUserTokens({ email: req.email });
+    wmUserData = await executeRequest(query);
   } catch (error) {
     console.error(
       "An error occurred while getting user tokens:",
@@ -68,12 +64,10 @@ export async function POST(request: Request) {
     });
     return failedToFetchResponse({ error: error.message });
   }
-  async function fetchGitHubIssues(userTokens, owner, repo) {
-    const { github_token } = userTokens;
 
-    const octokit = new Octokit({
-      auth: github_token,
-    });
+  const searchStringSet = Array.from(new Set(req.commitTitle.split(" "))).join(
+    " "
+  );
 
   // select six random words from the search string
   const randomWords = searchStringSet
@@ -128,33 +122,26 @@ export async function POST(request: Request) {
     }),
   ]);
 
-  const githubIssues =
-    githubResult.status === "fulfilled"
-      ? githubResult.value
-      : handleRejection(githubResult.reason);
-  const jiraTickets =
-    jiraResult.status === "fulfilled"
-      ? jiraResult.value
-      : handleRejection(jiraResult.reason);
-  const slackConversations =
-    slackResult.status === "fulfilled"
-      ? slackResult.value
-      : handleRejection(slackResult.reason);
-
   successPosthogTracking({
     url: request.url,
     email: req.email,
     data: {
-      github: githubIssues,
-      jira: jiraTickets,
-      slack: slackConversations,
+      github: github.fullData || github.error,
+      jira: jira.fullData || jira.error,
+      confluence: confluence.fullData || confluence.error,
+      slack: slack.fullData || slack.error,
+      notion: notion.fullData || notion.error,
+      linear: linear.fullData || linear.error,
     },
   });
   return successResponse({
     data: {
-      github: githubIssues,
-      jira: jiraTickets,
-      slack: slackConversations,
+      github: github.data || github.error,
+      jira: jira.data || jira.error,
+      confluence: confluence.data || confluence.error,
+      slack: slack.data || slack.error,
+      notion: notion.data || notion.error,
+      linear: linear.data || linear.error,
     },
   });
 }
