@@ -78,22 +78,22 @@ The steps to do so are:
   > _Add any other required columns as needed_
 
 ```sql
-CREATE TABLE serviceName (
-   id INT PRIMARY KEY,
-   name VARCHAR(255),
-   email VARCHAR(255),
-   updated_at DATETIME DEFAULT GETDATE() NOT NULL,
-   created_at DATETIME DEFAULT GETDATE() NOT NULL,
-   access_token VARCHAR(255),
-   refresh_token VARCHAR(255),
-   avatar_url VARCHAR(255),
-   workspace VARCHAR(255),
-   workspace_image VARCHAR(255),
-   watermelon_user VARCHAR(255),
-   deleted BIT DEFAULT 0 NULL,
-   deleted_at DATETIME DEFAULT GETDATE() NULL,
-   FOREIGN KEY (watermelon_user) REFERENCES watermelon.dbo.users(id)
-   );
+  CREATE TABLE serviceName (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    updated_at DATETIME DEFAULT GETDATE() NOT NULL,
+    created_at DATETIME DEFAULT GETDATE() NOT NULL,
+    access_token VARCHAR(255),
+    refresh_token VARCHAR(255),
+    avatar_url VARCHAR(255),
+    workspace VARCHAR(255),
+    workspace_image VARCHAR(255),
+    watermelon_user VARCHAR(255),
+    deleted BIT DEFAULT 0 NULL,
+    deleted_at DATETIME DEFAULT GETDATE() NULL,
+    FOREIGN KEY (watermelon_user) REFERENCES watermelon.dbo.users(id)
+    );
 ```
 
 - Edit the userSettings table
@@ -107,9 +107,95 @@ CREATE TABLE serviceName (
   ```
 
 - Create the necessary procedures
-  - Setting the information for the user
-  - Fetching the settings
-  - Fetching the tokens
+- Setting the information for the user using `create_serviceName`
+
+  ```sql
+  CREATE PROCEDURE dbo.create_serviceName
+      @access_token varchar(255),
+      @id varchar(255),
+      @name varchar(255),
+      @displayName varchar(255),
+      @email varchar(255),
+      @avatarUrl varchar(255),
+      @team_id varchar(255),
+      @team_name varchar(255),
+      @watermelon_user varchar(255)
+  AS
+  DECLARE @insertTable TABLE (
+      access_token varchar(255),
+      id varchar(255),
+      name varchar(255),
+      displayName varchar(255),
+      email varchar(255),
+      avatarUrl varchar(255),
+      team_id varchar(255),
+      team_name varchar(255),
+      watermelon_user varchar(255)
+  )
+
+  DECLARE @wmid VARCHAR(255) = (
+  SELECT
+    id
+  FROM
+    dbo.users
+  WHERE
+    email = @watermelon_user
+  )
+
+  INSERT
+    INTO
+    dbo.serviceName
+      (
+      access_token,
+    id,
+    name,
+    displayName,
+    email,
+    avatarUrl,
+    team_id,
+    team_name,
+    watermelon_user
+      )
+  OUTPUT
+  inserted.access_token,
+    inserted.id,
+    inserted.name,
+    inserted.displayName,
+    inserted.email,
+    inserted.avatarUrl,
+    inserted.team_id,
+    inserted.team_name,
+    inserted.watermelon_user
+      INTO
+    @insertTable
+  VALUES
+      (
+      @access_token,
+      @id,
+      @name,
+      @displayName,
+      @email,
+      @avatarUrl,
+      @team_id,
+      @team_name,
+      @wmid
+      )
+
+  SELECT
+    *
+  FROM
+    @insertTable
+  FOR JSON PATH,
+  WITHOUT_ARRAY_WRAPPER
+
+  ```
+
+- Fetching the settings is unchanged as we use the same procedure for all services
+- Fetching the tokens
+
+  - Edit the procedure `get_all_user_tokens` to match the service
+  - Edit the procedure `get_all_tokens_from_gh_username` to match the service
+
 - Create a `ServiceLoginLink.ts` component in the `components` folder
 - Add the service to the `loginArray.tsx` file
 - Add the service to the `loginGrid.tsx` file in the correct section
