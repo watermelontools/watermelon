@@ -145,16 +145,16 @@ export async function POST(request: Request) {
   ];
 
   const prRating = await ratePullRequest({
-    prTitle: "WM-85: Enhance JQL Query to find most relevant Jira ticket",
+    prTitle: GitHubPRs[0].title,
     businessLogicSummary: WatermelonAISummary,
   })
 
   if (prRating >= 9) {
     // flag PR as safe to merge
-    flagPullRequest({
-      repo: repo,
-      owner: owner,
-      issue_number: 275,
+    await flagPullRequest({
+      repo,
+      owner,
+      issue_number: GitHubPRs[0].number,
       github_token
     })
   }
