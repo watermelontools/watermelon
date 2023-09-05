@@ -24,19 +24,17 @@ npm i
 npm run dev
 ```
 
-Or with npm
-
 (Check your node version, we recommend 18)
 
-We use a recent version of Next. You may refer to the documentation at https://nextjs.org/docs/.
+We use a recent version of Next. You may refer to the [documentation](https://nextjs.org/docs/).
 
 This repo is automatically deployed on vercel to [app.watermelontools.com](app.watermelontools.com) on merges to `main`.
 
 All the backend lives as serverless functions under `api`, with the route being the filename.
 
-We now use the new app router for some features.
+We now use the new app router for _all_ features.
 
-As we now use OAuth2.0, local development cannot be done on new integrations.
+As we use OAuth2.0, local development cannot be done on new integrations.
 
 All environment vars are on vercel, the committer is responsible for correct deployments.
 
@@ -54,7 +52,7 @@ We have a `utils` folder that includes all the business logic. We have an `api` 
 
 The developer has to match the `utils` folder structure to the `api` route schema. This makes it easier to maintain.
 
-> As an example, we have `utils/user/getProfile.ts` that is imported in `pages/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
+> As an example, we have `utils/user/getProfile.ts` that is imported in `app/api/user/getProfile.ts` and returns a `types/UserProfile.ts`. In the database, you will find a _user_ table with all the data on the type.
 
 We do all of this as a security measure. We don't want data exposed and we consider our backend safe.
 
@@ -68,6 +66,9 @@ Remember that there are several procedures in our db to replicate.
 
 The steps to do so are:
 
+- Publicly announce the new integration
+  > serviceName refers to the shortname, like `github` or `gitlab`, lowercase
+  > ServiceReadableName refers to the name of the service and it's use in the UI, like `GitHubPRs` or `LinearTasks`
 - Set the necesary vercel env vars
   > usually `SERVICE_CLIENT_SECRET` and `SERVICE_CLIENT_ID`
 - Create the table in our DB
