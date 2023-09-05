@@ -26,6 +26,9 @@ async function updateTokensFromConfluence({
 }: {
   refresh_token: string;
 }): Promise<{ access_token: string; refresh_token: string }> {
+  // as stated in the atlassian docs, we need to refresh the access token every use
+  // https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/#how-do-i-get-a-new-access-token--if-my-access-token-expires-or-is-revoked-
+  // the refresh token, once used needs to be refreshed too
   try {
     let newAccessTokens = await fetch(
       "https://auth.atlassian.com/oauth/token",
