@@ -1,4 +1,4 @@
-import { StandardAPIResponse } from "../../types/watermelon";
+import { AtlassianAPIInput, StandardAPIResponse } from "../../types/watermelon";
 import getFreshConfluenceTokens from "../confluence/getFreshConfluenceTokens";
 
 function removeSpecialChars(inputString) {
@@ -28,28 +28,27 @@ async function fetchFromConfluence(cql, amount, accessToken, confluence_id) {
 }
 
 async function getConfluence({
-  confluence_token,
-  confluence_refresh_token,
-  confluence_id,
+  token,
+  refresh_token,
+  cloudId,
   user,
   randomWords,
   amount = 3,
-}): Promise<StandardAPIResponse> {
+}: AtlassianAPIInput): Promise<StandardAPIResponse> {
   // Error handling
-  if (!confluence_token || !confluence_refresh_token)
-    return { error: "no confluence token" };
+  if (!token || !refresh_token) return { error: "no confluence token" };
   if (!user) return { error: "no user" };
-  if (!confluence_id) return { error: "no confluence cloudId" };
+  if (!cloudId) return { error: "no confluence cloudId" };
 
   // Refresh tokens
   const newAccessTokens = await getFreshConfluenceTokens({
-    confluence_refresh_token,
+    refresh_token,
     user,
   });
   if (!newAccessTokens.access_token) return { error: "no confluence token" };
   // Constructing search query
   const cleanRandomWords = Array.from(
-    new Set(randomWords.map((word) => removeSpecialChars(word)))
+    new Set(randomWords?.map((word) => removeSpecialChars(word)))
   );
   const titleQuery = cleanRandomWords
     .map((word) => `title ~ "${word}"`)
@@ -65,7 +64,7 @@ async function getConfluence({
       cql,
       amount,
       newAccessTokens.access_token,
-      confluence_id
+      cloudId
     );
     return {
       fullData: results,
