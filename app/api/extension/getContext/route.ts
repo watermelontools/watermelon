@@ -17,6 +17,7 @@ import {
 } from "../../../../utils/api/responses";
 import executeRequest from "../../../../utils/db/azuredb";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
+import flagPulRequest from "../../../../utils/actions/flagPullRequest";
 import { StandardProcessedDataArray } from "../../../../types/watermelon";
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
@@ -140,6 +141,11 @@ export async function POST(request: Request) {
       link: "https://app.watermelontools.com",
     },
   ];
+
+  const prRating = await flagPulRequest({
+    prTitle: "WM-85: Enhance JQL Query to find most relevant Jira ticket",
+    businessLogicSummary: WatermelonAISummary,
+  })
 
   successPosthogTracking({
     url: request.url,
