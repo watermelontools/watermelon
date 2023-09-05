@@ -191,6 +191,7 @@ The steps to do so are:
   ```
 
 - Fetching the settings is unchanged as we use the same procedure for all services
+- Edit the settings getter
 - Fetching the tokens
 
   - Edit the procedure `get_all_user_tokens` to match the service
