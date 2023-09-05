@@ -17,8 +17,10 @@ import {
 } from "../../../../utils/api/responses";
 import executeRequest from "../../../../utils/db/azuredb";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
-import flagPulRequest from "../../../../utils/actions/flagPullRequest";
+import ratePullRequest from "../../../../utils/actions/ratePullRequest";
 import { StandardProcessedDataArray } from "../../../../types/watermelon";
+import flagPullRequest from "../../../../utils/actions/flagPullRequest";
+
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
@@ -142,10 +144,20 @@ export async function POST(request: Request) {
     },
   ];
 
-  const prRating = await flagPulRequest({
+  const prRating = await ratePullRequest({
     prTitle: "WM-85: Enhance JQL Query to find most relevant Jira ticket",
     businessLogicSummary: WatermelonAISummary,
   })
+
+  if (prRating >= 9) {
+    // flag PR as safe to merge
+    flagPullRequest({
+      repo: repo,
+      owner: owner,
+      issue_number: 275,
+      github_token
+    })
+  }
 
   successPosthogTracking({
     url: request.url,
