@@ -19,7 +19,7 @@ async function flagPullRequest({
       issue_number,
     });
 
-    if (labelsInPR.data.some((label) => label.name === "safe-to-merge")) {
+    if (labelsInPR.data.some((label) => label.name === "🍉 Safe to Merge")) {
       return { message: "PR already flagged as safe to merge" };
     } else {
       await octokit.rest.issues.addLabels({
