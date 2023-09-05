@@ -5,7 +5,6 @@ import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import LinearLoginLink from "../components/LinearLoginLink";
-import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import ConfluenceLoginLink from "./ConfluenceLoginLink";
 type LoginGridProps = {
@@ -19,7 +18,6 @@ function LoginGrid({ userEmail, data }) {
   let slackUserData: null | LoginGridProps = null;
   let jiraUserData: null | LoginGridProps = null;
   let confluenceUserData: null | LoginGridProps = null;
-  let discordUserData: null | LoginGridProps = null;
   let notionUserData: null | LoginGridProps = null;
   let linearUserData: null | LoginGridProps = null;
   if (data?.github_data) {
@@ -39,9 +37,6 @@ function LoginGrid({ userEmail, data }) {
   }
   if (data?.confluence_data) {
     confluenceUserData = JSON.parse(data.confluence_data);
-  }
-  if (data?.discord_data) {
-    discordUserData = JSON.parse(data.discord_data);
   }
   if (data?.notion_data) {
     notionUserData = JSON.parse(data.notion_data);
@@ -202,22 +197,6 @@ function LoginGrid({ userEmail, data }) {
                   <LinearLoginLink userEmail={userEmail} />
                 )}
               </div>
-              {/*         
-  DISCORD DOES NOT ALLOW MESSAGE SEARCH, DEVELOPMENT PAUSED FOR NOW
-  MAYBE READ THE LAST FEW DAYS?
-    <div className="p-3">
-              {discordUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
-                    ...discordUserData,
-                    service_name: "Discord",
-                  }}
-                />
-              ) : (
-                <DiscordLoginLink userEmail={userEmail} />
-              )}
-            </div> */}
             </div>
           </div>
           <div>
