@@ -28,9 +28,6 @@ export default async function flagPullRequest({
         { role: "user", content: prompt },
       ],
     });
-    console.log("pr title: " + prTitle);
-    console.log("business logic summary: " + businessLogicSummary);
-    console.log("OpenAI Rating: " + completion.data.choices[0].message.content);
     return completion.data.choices[0].message.content;
   } catch (error) {
     console.log(error);
