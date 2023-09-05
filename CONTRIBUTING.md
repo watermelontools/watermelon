@@ -1,23 +1,20 @@
 # Contributing
+
 We discuss both on GitHub Issues and [Discord](discord.gg/H4AE6b9442).
 
 ## Contributing to Watermelon's Passive Documentation Search Engine
-Anyone is free to contribute changes to any file in this repository. You don't need to ask for permission or get in line. If you see an issue that's open and it seems interesting to you, feel free to pick it up. Your solution may be better. Open-source is beautiful. 
+
+Anyone is free to contribute changes to any file in this repository. You don't need to ask for permission or get in line. If you see an issue that's open and it seems interesting to you, feel free to pick it up. Your solution may be better. Open-source is beautiful.
+
 > Exception: If your contribution makes [paid Watermelon feature](https://watermelontools.com/pricing/) available for free, we are unlikely to accept it. Consult us beforehand for a definitive answer.
 
 ## Running the Passive Documentation Search Engine Locally
+
 To start developing, clone and:
 
 ```
 yarn
 yarn dev
-```
-
-Or with npm
-
-```
-npm i
-npm run dev
 ```
 
 Or with npm
@@ -68,14 +65,15 @@ First, we use oauth so you need to ensure that the service supports it.
 Remember that there are several procedures in our db to replicate.
 
 ## Issues
+
 If there's something you'd like to see please [open an issue](https://github.com/watermelontools/watermelon/issues/new).
 
 ## PRs
+
 We love community contributions. Please fork the repo and send a PR our way.
 
 Remember, we'll discuss it publicly, it's a great opportunity to learn.
 
 ### Resources
 
-#### 
 - [Octokit (SDK for GitHub)](https://octokit.github.io/)
