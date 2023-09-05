@@ -1,39 +1,37 @@
-import { StandardProcessedDataArray } from "../../types/watermelon";
+import { Octokit } from "octokit";
 
-const { Configuration, OpenAIApi } = require("openai");
-
-const configuration = new Configuration({
-  apiKey: process.env.OPEN_AI_KEY,
-});
-const openai = new OpenAIApi(configuration);
-export default async function flagPullRequest({
-  prTitle, 
-  businessLogicSummary
-}: {
-  prTitle?: string;
-  businessLogicSummary?: string;
-}) {
-
-  const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`
-
-  try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-16k",
-      messages: [
-        {
-          role: "system",
-          content:
-            prompt,
-        },
-        { role: "user", content: prompt },
-      ],
+async function flagPullRequest({
+  repo,
+  owner,
+  issue_number,
+  github_token,
+}): Promise<any> {
+  if (!github_token) {
+    return { error: "no github token" };
+  } else {
+    const octokit = new Octokit({
+      auth: github_token,
     });
-    console.log("pr title: " + prTitle);
-    console.log("business logic summary: " + businessLogicSummary);
-    console.log("OpenAI Rating: " + completion.data.choices[0].message.content);
-    return completion.data.choices[0].message.content;
-  } catch (error) {
-    console.log(error);
-    return "Error" + error;
+
+    const labelsInPR = await octokit.rest.issues.listLabelsOnIssue({
+      owner,
+      repo,
+      issue_number,
+    });
+
+    if (labelsInPR.data.some((label) => label.name === "safe-to-merge")) {
+      return { message: "PR already flagged as safe to merge" };
+    } else {
+      await octokit.rest.issues.addLabels({
+        owner,
+        repo,
+        issue_number,
+        labels: ["🍉 Safe to Merge"],
+      });
+
+      return { message: "PR flagged as safe to merge" };
+    }
   }
 }
+
+export default flagPullRequest;
