@@ -8,6 +8,7 @@ import getSlack from "../../../../utils/actions/getSlack";
 import getNotion from "../../../../utils/actions/getNotion";
 import getLinear from "../../../../utils/actions/getLinear";
 import getConfluence from "../../../../utils/actions/getConfluence";
+import getAsana from "../../../../utils/actions/getAsana";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
 
 import countMarkdown from "../../../../utils/actions/markdownHelpers/count";
@@ -74,6 +75,8 @@ export async function POST(request: Request) {
         slack_token,
         notion_token,
         linear_token,
+        asana_token,
+        asana_workspace,
         AISummary,
         JiraTickets,
         GitHubPRs,
@@ -81,6 +84,7 @@ export async function POST(request: Request) {
         NotionPages,
         LinearTickets,
         ConfluencePages,
+        AsanaTasks,
         user_email,
         watermelon_user,
       } = wmUserData;
@@ -329,6 +333,7 @@ export async function POST(request: Request) {
         slackValue,
         notionValue,
         linearValue,
+        asanaValue,
         count,
       ] = await Promise.all([
         getGitHub({
@@ -368,6 +373,13 @@ export async function POST(request: Request) {
           randomWords,
           amount: LinearTickets,
         }),
+        getAsana({
+          access_token: asana_token,
+          user: user_email,
+          randomWords,
+          workspace: asana_workspace,
+          amount: AsanaTasks,
+        }),
         addActionCount({ watermelon_user }),
       ]);
       textToWrite += `### WatermelonAI Summary \n`;
@@ -383,6 +395,7 @@ export async function POST(request: Request) {
             slackValue,
             notionValue,
             linearValue,
+            asanaValue,
           },
           title,
           body,
@@ -440,6 +453,13 @@ export async function POST(request: Request) {
         systemName: "Linear",
         systemResponseName: "Linear Tickets",
       });
+      textToWrite += generalMarkdownHelper({
+        amount: AsanaTasks,
+        value: asanaValue,
+        userLogin,
+        systemName: "Asana",
+        systemResponseName: "Asana Tasks",
+      });
       textToWrite += countMarkdown({
         count,
         isPrivateRepo: repository.private,
@@ -453,6 +473,7 @@ export async function POST(request: Request) {
         slackValue,
         notionValue,
         linearValue,
+        asanaValue,
         textToWrite,
         businessLogicSummary,
         owner,
