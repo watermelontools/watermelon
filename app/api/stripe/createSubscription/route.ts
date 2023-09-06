@@ -13,10 +13,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    posthog.capture({
-      event: `${request.url}-missing-params`,
-      properties: missingParams,
-    });
+    missingParamsPosthogTracking({ url: request.url, missingParams });
     return missingParamsResponse({ missingParams });
   }
   try {
