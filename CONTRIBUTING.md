@@ -222,6 +222,4 @@ Remember, we'll discuss it publicly, it's a great opportunity to learn.
 
 ### Resources
 
-####
-
 - [Octokit (SDK for GitHub)](https://octokit.github.io/)
