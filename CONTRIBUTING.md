@@ -210,6 +210,14 @@ The steps to do so are:
   - Populate the `page.tsx` file to be finished the correct service parameters
   - Create an empty getter in `/utils/actions`
 
+- Now you need to edit the `page.tsx` file to match the service
+- Get the data in the `getService.tsx` file under actions
+- Add to the action log
+- Pass the data to the AI in `utils/actions/getOpenAISummary.ts` file
+- Return the data as Markdown in `api/actions/github/route.tsx`
+- Return one result in `api/hover/route.tsx`
+- Return the settings decided results in `api/extension/route.tsx`
+
 ## Issues
 
 If there's something you'd like to see please [open an issue](https://github.com/watermelontools/watermelon/issues/new).
