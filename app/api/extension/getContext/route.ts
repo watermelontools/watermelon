@@ -42,6 +42,7 @@ export async function POST(request: Request) {
   const query = `EXEC dbo.get_org_tokens @watermelon_user='${req.email}'`;
 
   let wmUserData = await executeRequest(query);
+
   const {
     github_token,
     jira_token,
@@ -64,6 +65,7 @@ export async function POST(request: Request) {
   } = wmUserData;
   try {
     wmUserData = await executeRequest(query);
+    console.log("WM User Data:", wmUserData);
   } catch (error) {
     console.error(
       "An error occurred while getting user tokens:",
