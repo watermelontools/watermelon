@@ -65,6 +65,7 @@ export default async function ServicePage({
       refresh_token: json.refresh_token,
       avatar_url: userJson.photo.image_128x128,
       workspace: userJson.workspaces[0].gid,
+      workspace_name: userJson.workspaces[0].name,
       watermelon_user: state,
     });
 
