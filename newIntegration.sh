@@ -1,6 +1,49 @@
+#!/bin/bash
+
+# Receive a "serviceName" parameter
+serviceName=$1
+
+# Create a folder with the serviceName under /app/(loggedIn)
+mkdir -p ./app/\(loggedIn\)/${serviceName}
+
+# Create a file "/app/(loggedIn)/${serviceName}/loading.tsx"
+cat > ./app/\(loggedIn\)/${serviceName}/loading.tsx <<EOL
+import LoadingConnectedService from "../../../components/services/loading";
+
+export default function loadingConnectedService() {
+  return <LoadingConnectedService />;
+}
+EOL
+
+# Create a folder with the serviceName under /utils/db
+mkdir -p ./utils/db/${serviceName}
+
+# Create a file "saveUser.ts" in that folder
+cat > ./utils/db/${serviceName}/saveUser.ts <<EOL
+import executeRequest from "../azuredb";
+
+export default async ({
+  access_token,
+  id,
+  avatar_url,
+  watermelon_user,
+  refresh_token,
+  workspace,
+  name
+}) => {
+  let query = \`EXEC dbo.create_${serviceName} @watermelon_user='\${watermelon_user}', @id='\${id}',
+ @avatar_url='\${avatar_url}', @name='\${name}', @access_token='\${access_token}', @refresh_token='\${refresh_token}',@workspace='\${workspace}';
+ \`;
+  let resp = await executeRequest(query);
+  return resp;
+};
+EOL
+
+# Create a file "/app/(loggedIn)/${serviceName}/page.tsx"
+cat > ./app/\(loggedIn\)/${serviceName}/page.tsx <<EOL
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveUserInfo from "../../../utils/db/gitlab/saveUser";
+import saveUserInfo from "../../../utils/db/${serviceName}/saveUser";
 
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
@@ -19,14 +62,14 @@ export default async function ServicePage({
   const { code, state } = searchParams;
   let error = "";
   // change service name
-  const serviceName = "GitLab";
+  const serviceName = "${serviceName}";
   const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ email: userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
     // change this fetch
-    fetch(`https://gitlab.com/oauth/token`, {
+    fetch(\`SERVICE_OAUTH_URL\`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,15 +78,15 @@ export default async function ServicePage({
       body: JSON.stringify({
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: "https://app.watermelontools.com/gitlab",
-        client_id: process.env.GITLAB_APP_ID,
-        client_secret: process.env.GITLAB_CLIENT_SECRET,
+        redirect_uri: "https://app.watermelontools.com/${serviceName}",
+        client_id: process.env.SERVICE_APP_ID,
+        client_secret: process.env.SERVICE_CLIENT_SECRET,
       }),
     }),
   ]);
 
   // the recommended services should not be of the same category as the current one
-  const nameList = ["Jira", "Slack", "Notion", "Confluence"];
+  const nameList = [];
   const loginArray = LoginArray({ nameList, userEmail, userData });
 
   const json = await serviceToken.json();
@@ -51,9 +94,9 @@ export default async function ServicePage({
     error = json.error;
   } else {
     // get user correctly
-    let user = await fetch(`https://gitlab.com/api/v4/user`, {
+    let user = await fetch(\`YOUR_USER_API_LINK\`, {
       headers: {
-        Authorization: `Bearer ${json.access_token}`,
+        Authorization: \`Bearer \${json.access_token}\`,
       },
     });
     let userJson = await user.json();
@@ -88,3 +131,9 @@ export default async function ServicePage({
     );
   }
 }
+EOL
+
+# Create a file "/utils/actions/get${serviceName}.ts"
+touch ./utils/actions/get${serviceName}.ts
+
+echo "Files and directories created successfully!"
