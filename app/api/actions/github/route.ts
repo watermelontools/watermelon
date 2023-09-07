@@ -16,6 +16,10 @@ import generalMarkdownHelper from "../../../../utils/actions/markdownHelpers/hel
 import addActionLog from "../../../../utils/db/github/addActionLog";
 import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
+
+import ratePullRequest from "../../../../utils/actions/ratePullRequest";
+import flagPullRequest from "../../../../utils/actions/flagPullRequest";
+
 import {
   failedPosthogTracking,
   missingParamsPosthogTracking,
@@ -445,6 +449,22 @@ export async function POST(request: Request) {
         isPrivateRepo: repository.private,
         repoName: repo,
       });
+
+      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+      const prRating = await ratePullRequest({
+        prTitle: GitHubPRs[0].title,
+        businessLogicSummary: businessLogicSummary,
+      })
+    
+      if (prRating >= 9) {
+        // flag PR as safe to merge
+        await flagPullRequest({
+          repo,
+          owner,
+          issue_number: GitHubPRs[0].number,
+          github_token
+        })
+      }
 
       await addActionLog({
         randomWords,
