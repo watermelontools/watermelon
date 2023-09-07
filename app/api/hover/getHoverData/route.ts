@@ -4,6 +4,7 @@ import getSlack from "../../../../utils/actions/getSlack";
 import getNotion from "../../../../utils/actions/getNotion";
 import getLinear from "../../../../utils/actions/getLinear";
 import getConfluence from "../../../../utils/actions/getConfluence";
+import getAsana from "../../../../utils/actions/getAsana";
 import validateParams from "../../../../utils/api/validateParams";
 import {
   failedPosthogTracking,
@@ -44,6 +45,8 @@ export async function POST(request: Request) {
     slack_token,
     notion_token,
     linear_token,
+    asana_token,
+    asana_workspace,
     user_email,
     watermelon_user,
   } = wmUserData;
@@ -108,6 +111,13 @@ export async function POST(request: Request) {
     getLinear({
       linear_token,
       randomWords,
+      amount: 1,
+    }),
+    getAsana({
+      access_token: asana_token,
+      user: user_email,
+      randomWords,
+      workspace: asana_workspace,
       amount: 1,
     }),
   ]);
