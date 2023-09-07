@@ -452,8 +452,8 @@ export async function POST(request: Request) {
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
       const prRating = await ratePullRequest({
-        prTitle: GitHubPRs[0].title,
-        businessLogicSummary: businessLogicSummary,
+        prTitle: title,
+        businessLogicSummary,
       })
     
       if (prRating >= 9) {
@@ -461,7 +461,7 @@ export async function POST(request: Request) {
         await flagPullRequest({
           repo,
           owner,
-          issue_number: GitHubPRs[0].number,
+          issue_number: number,
           github_token
         })
       }
