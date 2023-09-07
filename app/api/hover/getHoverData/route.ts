@@ -43,6 +43,7 @@ export async function POST(request: Request) {
     owner,
     randomWords,
     url: request.url,
+    hardMax: 1,
   });
   const { error, github, jira, confluence, slack, notion, linear, asana } =
     serviceAnswers;
