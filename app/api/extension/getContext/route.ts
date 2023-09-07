@@ -17,9 +17,7 @@ import {
 } from "../../../../utils/api/responses";
 import executeRequest from "../../../../utils/db/azuredb";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
-import ratePullRequest from "../../../../utils/actions/ratePullRequest";
 import { StandardProcessedDataArray } from "../../../../types/watermelon";
-import flagPullRequest from "../../../../utils/actions/flagPullRequest";
 
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
