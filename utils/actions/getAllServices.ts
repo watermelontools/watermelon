@@ -15,15 +15,24 @@ export default async function getAllServices({
   owner,
   randomWords,
   hardMax,
+  userLogin,
 }: {
-  email: string;
+  email?: string;
+  userLogin?: string;
   url: string;
   repo: string;
   owner: string;
   randomWords: string[];
   hardMax?: number;
 }) {
-  const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${email}'`;
+  let query = "";
+  if (email) {
+    query = `EXEC dbo.get_all_user_tokens @watermelon_user='${email}'`;
+  }
+  if (userLogin) {
+    query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${userLogin}'`;
+  }
+
   let wmUserData = await executeRequest(query);
   const {
     github_token,
@@ -47,6 +56,7 @@ export default async function getAllServices({
     LinearTickets,
     ConfluencePages,
     AsanaTasks,
+    watermelon_user,
   } = wmUserData;
   try {
     wmUserData = await executeRequest(query);
@@ -117,6 +127,8 @@ export default async function getAllServices({
     notion,
     linear,
     asana,
-    wmUserData,
+    watermelon_user,
+    AISummary,
+    user_email,
   };
 }
