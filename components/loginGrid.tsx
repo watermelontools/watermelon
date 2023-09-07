@@ -105,7 +105,6 @@ function LoginGrid({ userEmail, data }) {
                 }}
               >
                 <h2 className="Subhead-heading">{typeToName[type]}</h2>
-
               </div>
               <div
                 style={{
