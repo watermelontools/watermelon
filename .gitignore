@@ -16,3 +16,4 @@ yarn.lock
 .env
 .env*.local
 .fleet/settings.json
+.idea

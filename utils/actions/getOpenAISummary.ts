@@ -26,7 +26,7 @@ export default async function getOpenAISummary({
     extractData("confluenceValue");
   const linearValue: StandardProcessedDataArray = extractData("linearValue");
   const notionValue: StandardProcessedDataArray = extractData("notionValue");
-
+  const asanaValue: StandardProcessedDataArray = extractData("asanaValue");
   let promptList = "";
   const promptGenerator = (value, name) => {
     if (value?.length) {
@@ -48,6 +48,7 @@ export default async function getOpenAISummary({
     { value: confluenceValue, name: "Confluence Docs" },
     { value: linearValue, name: "Linear Tickets" },
     { value: notionValue, name: "Notion Pages" },
+    { value: asanaValue, name: "Asana Tasks" },
   ];
   for (let i = 0; i < callList.length; i++) {
     const { value, name } = callList[i];

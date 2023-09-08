@@ -13,7 +13,7 @@ async function VSCodeInsiders() {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;
-  const data = await getAllPublicUserData({ userEmail });
+  const data = await getAllPublicUserData({ email: userEmail });
 
   let system = "vscode-insiders";
   let url: string = `${system}://watermelontools.watermelon-tools?email=${

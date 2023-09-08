@@ -7,6 +7,7 @@ export default async function addActionLog({
   slackValue,
   notionValue,
   linearValue,
+  asanaValue,
   textToWrite,
   businessLogicSummary,
   owner,
@@ -35,19 +36,16 @@ export default async function addActionLog({
 
     return `'${JSON.stringify(value).replace(/'/g, "''")}'`;
   }
-  const github_response = stringifyAndEscape(ghValue);
-  const jira_response = stringifyAndEscape(jiraValue);
-  const slack_response = stringifyAndEscape(slackValue);
-  const notion_response = stringifyAndEscape(notionValue);
-  const linear_response = stringifyAndEscape(linearValue);
+
   try {
     const saveLog = `EXEC dbo.create_gh_action_log 
     @randomWords='${randomWords.join(" ")}', 
     @github_response='${JSON.stringify(ghValue)}', 
-    @jira_response='${JSON.stringify(jiraValue)}', 
-    @slack_response='${JSON.stringify(slackValue)}', 
-    @notion_response='${JSON.stringify(notionValue)}', 
-    @linear_response='${JSON.stringify(linearValue)}', 
+    @jira_response='${stringifyAndEscape(jiraValue)}', 
+    @slack_response='${stringifyAndEscape(slackValue)}', 
+    @notion_response='${stringifyAndEscape(notionValue)}', 
+    @linear_response='${stringifyAndEscape(linearValue)}', 
+    @asana_response='${stringifyAndEscape(asanaValue)}',
     @markdown='${textToWrite}', 
     @GPT_summary='${businessLogicSummary}', 
     @github_owner='${owner}', 
