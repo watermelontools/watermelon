@@ -61,8 +61,9 @@ export async function POST(request: Request) {
 
       const octokit = await app.getInstallationOctokit(installationId);
 
-      const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${userLogin}'`;
+      const query = `EXEC dbo.get_all_tokens_from_all_gh_teammates @github_user='${userLogin}'`;
       const wmUserData = await executeRequest(query);
+
       const {
         github_token,
         jira_token,
@@ -84,6 +85,7 @@ export async function POST(request: Request) {
         user_email,
         watermelon_user,
       } = wmUserData;
+
       if (!watermelon_user) {
         {
           // Post a new comment if no existing comment was found

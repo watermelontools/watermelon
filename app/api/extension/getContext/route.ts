@@ -38,8 +38,7 @@ export async function POST(request: Request) {
     missingParamsPosthogTracking({ url: request.url, missingParams });
     return missingParamsResponse({ missingParams });
   }
-  // const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${req.email}'`;
-  const query = `EXEC dbo.get_org_tokens @watermelon_user='${req.email}'`;
+  const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${req.email}'`;
 
   let wmUserData = await executeRequest(query);
 
