@@ -1,21 +1,16 @@
 import { App } from "@octokit/app";
-import executeRequest from "../../../../utils/db/azuredb";
 import addActionCount from "../../../../utils/db/teams/addActionCount";
 
-import getGitHub from "../../../../utils/actions/getGitHub";
-import getJira from "../../../../utils/actions/getJira";
-import getSlack from "../../../../utils/actions/getSlack";
-import getNotion from "../../../../utils/actions/getNotion";
-import getLinear from "../../../../utils/actions/getLinear";
-import getConfluence from "../../../../utils/actions/getConfluence";
-import getAsana from "../../../../utils/actions/getAsana";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
 
 import countMarkdown from "../../../../utils/actions/markdownHelpers/count";
 import generalMarkdownHelper from "../../../../utils/actions/markdownHelpers/helper";
 
 import addActionLog from "../../../../utils/db/github/addActionLog";
-import { missingParamsResponse } from "../../../../utils/api/responses";
+import {
+  failedToFetchResponse,
+  missingParamsResponse,
+} from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
@@ -26,6 +21,7 @@ import {
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
+import getAllServices from "../../../../utils/actions/getAllServices";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -65,54 +61,6 @@ export async function POST(request: Request) {
 
       const octokit = await app.getInstallationOctokit(installationId);
 
-      const query = `EXEC dbo.get_all_tokens_from_gh_username @github_user='${userLogin}'`;
-      const wmUserData = await executeRequest(query);
-      const {
-        github_token,
-        jira_token,
-        jira_refresh_token,
-        confluence_token,
-        confluence_refresh_token,
-        confluence_id,
-        cloudId,
-        slack_token,
-        notion_token,
-        linear_token,
-        asana_token,
-        asana_workspace,
-        AISummary,
-        JiraTickets,
-        GitHubPRs,
-        SlackMessages,
-        NotionPages,
-        LinearTickets,
-        ConfluencePages,
-        AsanaTasks,
-        user_email,
-        watermelon_user,
-      } = wmUserData;
-      if (!watermelon_user) {
-        {
-          // Post a new comment if no existing comment was found
-          await octokit
-            .request(
-              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-              {
-                owner,
-                issue_number: number,
-                repo,
-                body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
-              }
-            )
-            .then((response) => {
-              console.info("post comment", response.data);
-            })
-            .catch((error) => {
-              return console.error("posting comment error", error);
-            });
-          return NextResponse.json("User not registered");
-        }
-      }
       let octoCommitList = await octokit.request(
         "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
         {
@@ -328,64 +276,57 @@ export async function POST(request: Request) {
         .split(" ")
         .sort(() => Math.random() - 0.5)
         .slice(0, 6);
-
-      const [
-        ghValue,
-        jiraValue,
-        confluenceValue,
-        slackValue,
-        notionValue,
-        linearValue,
-        asanaValue,
-        count,
-      ] = await Promise.all([
-        getGitHub({
-          repo,
-          owner,
-          github_token,
-          randomWords,
-          amount: GitHubPRs,
-        }),
-        getJira({
-          user: user_email,
-          token: jira_token,
-          refresh_token: jira_refresh_token,
-          randomWords,
-          cloudId,
-          amount: JiraTickets,
-        }),
-        getConfluence({
-          token: confluence_token,
-          refresh_token: confluence_refresh_token,
-          cloudId: confluence_id,
-          user: user_email,
-          randomWords,
-          amount: ConfluencePages,
-        }),
-        getSlack({
-          slack_token,
-          searchString: randomWords.join(" "),
-          amount: SlackMessages,
-        }),
-        getNotion({
-          notion_token,
-          randomWords,
-          amount: NotionPages,
-        }),
-        getLinear({
-          linear_token,
-          randomWords,
-          amount: LinearTickets,
-        }),
-        getAsana({
-          access_token: asana_token,
-          user: user_email,
-          randomWords,
-          workspace: asana_workspace,
-          amount: AsanaTasks,
-        }),
-        addActionCount({ watermelon_user }),
-      ]);
+      const serviceAnswers = await getAllServices({
+        userLogin,
+        repo,
+        owner,
+        randomWords,
+        url: request.url,
+      });
+      const {
+        error,
+        github,
+        jira,
+        confluence,
+        slack,
+        notion,
+        linear,
+        asana,
+        watermelon_user,
+        AISummary,
+        user_email,
+      } = serviceAnswers;
+      if (error) {
+        failedPosthogTracking({
+          url: request.url,
+          error: error.message,
+          email: req.email,
+        });
+        return failedToFetchResponse({ error: error.message });
+      }
+      if (!watermelon_user) {
+        {
+          // Post a new comment if no existing comment was found
+          await octokit
+            .request(
+              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+              {
+                owner,
+                issue_number: number,
+                repo,
+                body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
+              }
+            )
+            .then((response) => {
+              console.info("post comment", response.data);
+            })
+            .catch((error) => {
+              return console.error("posting comment error", error);
+            });
+          return NextResponse.json("User not registered");
+        }
+      }
+      const count = await addActionCount({ watermelon_user });
       textToWrite += `### WatermelonAI Summary \n`;
 
       let businessLogicSummary;
@@ -393,13 +334,13 @@ export async function POST(request: Request) {
         businessLogicSummary = await getOpenAISummary({
           commitList,
           values: {
-            ghValue,
-            jiraValue,
-            confluenceValue,
-            slackValue,
-            notionValue,
-            linearValue,
-            asanaValue,
+            github: github?.data,
+            jira: jira?.data,
+            confluence: confluence?.data,
+            slack: slack?.data,
+            notion: notion?.data,
+            linear: linear?.data,
+            asana: asana?.data,
           },
           title,
           body,
@@ -416,50 +357,43 @@ export async function POST(request: Request) {
       }
 
       textToWrite += generalMarkdownHelper({
-        amount: GitHubPRs,
-        value: ghValue,
+        value: github,
         userLogin,
         systemName: "GitHub",
         systemResponseName: "GitHub PRs",
       });
       textToWrite += generalMarkdownHelper({
-        amount: JiraTickets,
-        value: jiraValue,
+        value: jira,
         userLogin,
         systemName: "Jira",
         systemResponseName: "Jira Tickets",
       });
       textToWrite += generalMarkdownHelper({
-        amount: 3,
-        value: confluenceValue,
+        value: confluence,
         userLogin,
         systemName: "Confluence",
         systemResponseName: "Confluence Docs",
       });
       textToWrite += generalMarkdownHelper({
-        amount: SlackMessages,
-        value: slackValue,
+        value: slack,
         userLogin,
         systemName: "Slack",
         systemResponseName: "Slack Threads",
       });
       textToWrite += generalMarkdownHelper({
-        amount: NotionPages,
-        value: notionValue,
+        value: notion,
         userLogin,
         systemName: "Notion",
         systemResponseName: "Notion Pages",
       });
       textToWrite += generalMarkdownHelper({
-        amount: LinearTickets,
-        value: linearValue,
+        value: linear,
         userLogin,
         systemName: "Linear",
         systemResponseName: "Linear Tickets",
       });
       textToWrite += generalMarkdownHelper({
-        amount: AsanaTasks,
-        value: asanaValue,
+        value: asana,
         userLogin,
         systemName: "Asana",
         systemResponseName: "Asana Tasks",
@@ -482,12 +416,12 @@ export async function POST(request: Request) {
 
       await addActionLog({
         randomWords,
-        ghValue,
-        jiraValue,
-        slackValue,
-        notionValue,
-        linearValue,
-        asanaValue,
+        github,
+        jira,
+        slack,
+        notion,
+        linear,
+        asana,
         textToWrite,
         businessLogicSummary,
         owner,
