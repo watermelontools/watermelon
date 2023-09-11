@@ -39,13 +39,15 @@ describe("User Route POST function", () => {
     const responseJson = await response.json();
     expect(responseJson).toEqual({
       userSettings: {
-        AISummary: true,
-        JiraTickets: 5,
-        SlackMessages: 5,
-        GitHubPRs: 5,
-        NotionPages: 5,
-        LinearTickets: 5,
-        ConfluenceDocs: 5,
+        data: {
+          AISummary: true,
+          JiraTickets: 5,
+          SlackMessages: 5,
+          GitHubPRs: 5,
+          NotionPages: 5,
+          LinearTickets: 5,
+          ConfluenceDocs: 5,
+        },
       },
     });
   });
