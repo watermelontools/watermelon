@@ -538,13 +538,24 @@ export async function POST(request: Request) {
             }
           )
           .then((response) => {
-            console.log("post comment", {
-              url: response.data.html_url,
-              body: response.data.body,
-              user: response.data?.user?.login,
+            successPosthogTracking({
+              url: request.url,
+              email: user_email,
+              data: {
+                repo,
+                owner,
+                number,
+                action: req.action,
+                textToWrite,
+              },
             });
           })
           .catch((error) => {
+            failedPosthogTracking({
+              url: request.url,
+              error: error.message,
+              email: req.email,
+            });
             return console.error("posting comment error", error);
           });
       }
