@@ -9,7 +9,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 import sendTeammateInvite from "../../../../utils/sendgrid/sendTeammateInvite";
 
-export default async function POST(request: Request) {
+export async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, [
     "sender",
