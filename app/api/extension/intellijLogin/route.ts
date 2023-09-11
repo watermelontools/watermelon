@@ -1,3 +1,4 @@
+import { NextResponse } from "next/server";
 import {
   missingParamsPosthogTracking,
   successPosthogTracking,
@@ -5,6 +6,7 @@ import {
 import {
   missingParamsResponse,
   successResponse,
+  unauthorizedResponse,
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import intellijLogin from "../../../../utils/db/user/intellijLogin";
@@ -20,6 +22,10 @@ export async function POST(request: Request) {
   }
 
   const userData = await intellijLogin({ watermelon_user: token });
+  if (!userData || !userData.email) {
+    return unauthorizedResponse({ email: token });
+  }
+
   successPosthogTracking({
     url: request.url,
     email: userData.email,
