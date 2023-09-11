@@ -38,8 +38,8 @@ describe("User Route POST function", () => {
     expect(response.status).toEqual(200);
     const responseJson = await response.json();
     expect(responseJson).toEqual({
-      userSettings: {
-        data: {
+      data: {
+        userSettings: {
           AISummary: true,
           JiraTickets: 5,
           SlackMessages: 5,
