@@ -154,21 +154,6 @@ export async function POST(request: Request) {
     },
   ];
 
-  const prRating = await ratePullRequest({
-    prTitle: GitHubPRs[0].title,
-    businessLogicSummary: WatermelonAISummary,
-  });
-
-  if (prRating >= 9) {
-    // flag PR as safe to merge
-    await flagPullRequest({
-      repo,
-      owner,
-      issue_number: GitHubPRs[0].number,
-      github_token,
-    });
-  }
-
   successPosthogTracking({
     url: request.url,
     email: req.email,
