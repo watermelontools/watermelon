@@ -88,9 +88,8 @@ export async function POST(request: Request) {
       amount: 1,
     }),
     getConfluence({
-      confluence_token,
-      confluence_refresh_token,
-      confluence_id,
+      token: confluence_token,
+      cloudId: confluence_id,
       user: user_email,
       randomWords,
       amount: 1,
