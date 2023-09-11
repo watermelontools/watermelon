@@ -8,7 +8,15 @@ export function successResponse({ data }) {
     { status: 200 }
   );
 }
-
+export function unauthorizedResponse({ email }) {
+  const missingParamsText = `email: ${email} is not authorized`;
+  return NextResponse.json(
+    {
+      error: missingParamsText,
+    },
+    { status: 400 }
+  );
+}
 export function missingParamsResponse({ missingParams }) {
   const missingParamsText = `Missing parameters: ${missingParams.join(", ")}`;
   return NextResponse.json(
