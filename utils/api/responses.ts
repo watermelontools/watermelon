@@ -14,7 +14,7 @@ export function unauthorizedResponse({ email }) {
     {
       error: missingParamsText,
     },
-    { status: 400 }
+    { status: 401 }
   );
 }
 export function missingParamsResponse({ missingParams }) {
