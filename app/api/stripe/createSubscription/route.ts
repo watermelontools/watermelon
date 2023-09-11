@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import {
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
+import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY!, {
@@ -11,9 +16,8 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    return NextResponse.json({
-      error: `Missing parameters: ${missingParams.join(", ")}`,
-    });
+    missingParamsPosthogTracking({ missingParams, url: request.url });
+    return missingParamsResponse({ missingParams });
   }
   try {
     // create a stripe customer and get its id
@@ -41,6 +45,11 @@ export async function POST(request: Request) {
       expand: ["latest_invoice.payment_intent"],
     });
 
+    successPosthogTracking({
+      url: request.url,
+      email: req.email,
+      data: subscription,
+    });
     return NextResponse.json({
       subscriptionId: subscription.id,
       // We use Stripe's Expand functionality to get the latest invoice and its payment intent
