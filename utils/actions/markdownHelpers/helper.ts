@@ -5,13 +5,12 @@ type generalMarkdown = MarkdownRequest & {
   systemResponseName: string;
 };
 const generalMarkdownHelper = ({
-  amount,
   value,
   userLogin,
   systemName,
   systemResponseName,
 }: generalMarkdown): MarkdownResponse => {
-  if (!amount) {
+  if (!value || value?.data?.length === 0) {
     return `\n ${systemResponseName} deactivated by ${userLogin}`;
   }
   if (value?.error?.match(/no (\w+) token/)) {
