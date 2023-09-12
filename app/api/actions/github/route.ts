@@ -472,20 +472,20 @@ export async function POST(request: Request) {
       });
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      const prRating = await ratePullRequest({
+      ratePullRequest({
         prTitle: title,
         businessLogicSummary,
-      })
-    
-      if (prRating >= 9) {
-        // flag PR as safe to merge
-        await flagPullRequest({
-          repo,
-          owner,
-          issue_number: number,
-          github_token
-        })
-      }
+      }).then((prRating) => {
+        if (prRating >= 4) {
+          // flag PR as safe to merge
+          flagPullRequest({
+            repo,
+            owner,
+            issue_number: number,
+            github_token
+          })
+        }
+      });
 
       await addActionLog({
         randomWords,

@@ -1,12 +1,10 @@
-import { StandardProcessedDataArray } from "../../types/watermelon";
-
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
 });
 const openai = new OpenAIApi(configuration);
-export default async function flagPullRequest({
+export default function flagPullRequest({
   prTitle, 
   businessLogicSummary
 }: {
@@ -17,20 +15,21 @@ export default async function flagPullRequest({
   const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`
 
   try {
-    const completion = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-16k",
+    return openai.createChatCompletion({
+      model: "gpt-3.5-turbo-16k", 
       messages: [
         {
           role: "system",
-          content:
-            prompt,
+          content: prompt
         },
-        { role: "user", content: prompt },
-      ],
+        { role: "user", content: prompt }
+      ]
+    }).then(result => {
+      return result.data.choices[0].message.content; 
     });
-    return completion.data.choices[0].message.content;
   } catch (error) {
     console.log(error);
     return "Error" + error;
   }
+  
 }
