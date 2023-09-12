@@ -476,7 +476,7 @@ export async function POST(request: Request) {
         prTitle: title,
         businessLogicSummary,
       }).then((prRating) => {
-        if (prRating >= 4) {
+        if (prRating >= 9) {
           // flag PR as safe to merge
           flagPullRequest({
             repo,
