@@ -19,18 +19,25 @@ async function flagPullRequest({
       issue_number,
     });
 
-    if (labelsInPR.data.some((label) => label.name === "🍉 Safe to Merge")) {
-      return { message: "PR already flagged as safe to merge" };
-    } else {
-      await octokit.rest.issues.addLabels({
-        owner,
-        repo,
-        issue_number,
-        labels: ["🍉 Safe to Merge"],
-      });
+    await octokit.rest.issues.addLabels({
+      owner,
+      repo,
+      issue_number,
+      labels: ["🍉 Safe to Merge"],
+    });
 
-      return { message: "PR flagged as safe to merge" };
-    }
+    // if (labelsInPR.data.some((label) => label.name === "🍉 Safe to Merge")) {
+    //   return { message: "PR already flagged as safe to merge" };
+    // } else {
+    //   await octokit.rest.issues.addLabels({
+    //     owner,
+    //     repo,
+    //     issue_number,
+    //     labels: ["🍉 Safe to Merge"],
+    //   });
+
+    //   return { message: "PR flagged as safe to merge" };
+    // }
   }
 }
 
