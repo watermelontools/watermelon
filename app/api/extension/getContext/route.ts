@@ -32,10 +32,12 @@ export async function POST(request: Request) {
     missingParamsPosthogTracking({ url: request.url, missingParams });
     return missingParamsResponse({ missingParams });
   }
-
-  const searchStringSet = Array?.from(new Set(req.commitList.split(","))).join(
-    " "
-  );
+  let searchStringSet;
+  if (Array.isArray(commitList)) {
+    searchStringSet = commitList.join(" ");
+  } else {
+    searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
+  }
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
     return failedToFetchResponse({ error: error.message });
   }
   const WatermelonAISummary = await getOpenAISummary({
-    commitList: req.commitList.replace(/\r?\n|\r/g, "").split(","),
+    commitList: searchStringSet.replace(/\r?\n|\r/g, "").split(","),
     values: {
       github: github?.data,
       jira: jira?.data,
