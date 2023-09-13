@@ -9,16 +9,6 @@ export function successResponse({ data }) {
   );
 }
 
-export function unauthorizedResponse({ email }) {
-  const missingParamsText = `email: ${email} is not authorized`;
-  return NextResponse.json(
-    {
-      error: missingParamsText,
-    },
-    { status: 401 }
-  );
-}
-
 export function missingParamsResponse({ missingParams }) {
   const missingParamsText = `Missing parameters: ${missingParams.join(", ")}`;
   return NextResponse.json(
@@ -26,6 +16,16 @@ export function missingParamsResponse({ missingParams }) {
       error: missingParamsText,
     },
     { status: 400 }
+  );
+}
+
+export function unauthorizedResponse({ email }) {
+  const responseText = `email: ${email} is not authorized`;
+  return NextResponse.json(
+    {
+      error: responseText,
+    },
+    { status: 401 }
   );
 }
 
