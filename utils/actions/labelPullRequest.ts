@@ -1,4 +1,5 @@
 const { Configuration, OpenAIApi } = require("openai");
+import { Octokit } from "octokit";
 
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
@@ -6,11 +7,28 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 export default function flagPullRequest({
   prTitle, 
-  businessLogicSummary
+  businessLogicSummary,
+  github_token,
+  owner,
+  repo,
+  issue_number
 }: {
   prTitle?: string;
   businessLogicSummary?: string;
+  github_token?: string;
+  owner: string;
+  repo: string;
+  issue_number: number
 }) {
+
+  if (!github_token) {
+    return { error: "no github token" };
+  }
+
+  const octokit = new Octokit({
+    auth: github_token
+  });
+
 
   const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`
 
@@ -24,7 +42,16 @@ export default function flagPullRequest({
         }
       ]
     }).then(result => {
-      return result.data.choices[0].message.content; 
+      const prRating = result.data.choices[0].message.content; 
+
+      if (prRating >= 9) {
+        octokit.rest.issues.addLabels({
+          owner,
+          repo,
+          issue_number,
+          labels: ["🍉 Safe to Merge"] 
+        });
+      }
     });
   } catch (error) {
     console.log(error);

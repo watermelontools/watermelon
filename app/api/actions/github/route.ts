@@ -18,8 +18,7 @@ import addActionLog from "../../../../utils/db/github/addActionLog";
 import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
-import ratePullRequest from "../../../../utils/actions/ratePullRequest";
-import flagPullRequest from "../../../../utils/actions/flagPullRequest";
+import labelPullRequest from "../../../../utils/actions/labelPullRequest";
 
 import {
   failedPosthogTracking,
@@ -472,19 +471,13 @@ export async function POST(request: Request) {
       });
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      ratePullRequest({
+      labelPullRequest({
         prTitle: title,
         businessLogicSummary,
-      }).then((prRating) => {
-        if (prRating >= 9) {
-          // flag PR as safe to merge
-          flagPullRequest({
-            repo,
-            owner,
-            issue_number: number,
-            github_token
-          })
-        }
+        repo,
+        owner,
+        issue_number: number,
+        github_token
       });
 
       await addActionLog({
