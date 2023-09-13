@@ -1,9 +1,11 @@
-import { NextResponse } from "next/server";
 import {
   missingParamsPosthogTracking,
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
-import { missingParamsResponse } from "../../../../utils/api/responses";
+import {
+  missingParamsResponse,
+  successResponse,
+} from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import sendTeammateInvite from "../../../../utils/sendgrid/sendTeammateInvite";
 
@@ -28,6 +30,7 @@ export async function POST(request: Request) {
     inviteUrl,
     teamName,
   });
+
   successPosthogTracking({ url: request.url, email: sender, data: emailSent });
-  return NextResponse.json(emailSent);
+  return successResponse({ data: emailSent });
 }
