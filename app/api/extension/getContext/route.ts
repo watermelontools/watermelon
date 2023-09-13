@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     return failedToFetchResponse({ error: error.message });
   }
   const WatermelonAISummary = await getOpenAISummary({
-    commitList: searchStringSet.replace(/\r?\n|\r/g, "").split(","),
+    commitList: req.commitList.replace(/\r?\n|\r/g, "").split(","),
     values: {
       github: github?.data,
       jira: jira?.data,
@@ -71,7 +71,6 @@ export async function POST(request: Request) {
       asana: asana?.data,
     },
   });
-
   const standardWatermelonAISummary: StandardProcessedDataArray = [
     {
       title: "WatermelonAISummary",
@@ -82,7 +81,7 @@ export async function POST(request: Request) {
 
   successPosthogTracking({
     url: request.url,
-    email: email,
+    email: req.email,
     data: {
       github: github?.fullData || github?.error,
       jira: jira?.fullData || jira?.error,
