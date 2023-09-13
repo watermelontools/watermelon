@@ -27,6 +27,16 @@ export function missingParamsResponse({ missingParams }) {
   );
 }
 
+export function unauthorizedResponse({ email }) {
+  const responseText = `email: ${email} is not authorized`;
+  return NextResponse.json(
+    {
+      error: responseText,
+    },
+    { status: 401 }
+  );
+}
+
 export function failedToFetchResponse({ error }) {
   return NextResponse.json(
     {
