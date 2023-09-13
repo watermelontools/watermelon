@@ -21,8 +21,7 @@ export default function flagPullRequest({
         {
           role: "system",
           content: prompt
-        },
-        { role: "user", content: prompt }
+        }
       ]
     }).then(result => {
       return result.data.choices[0].message.content; 
