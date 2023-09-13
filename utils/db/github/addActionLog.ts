@@ -2,11 +2,12 @@ import executeRequest from "../azuredb";
 
 export default async function addActionLog({
   randomWords,
-  ghValue,
-  jiraValue,
-  slackValue,
-  notionValue,
-  linearValue,
+  github,
+  jira,
+  slack,
+  notion,
+  linear,
+  asana,
   textToWrite,
   businessLogicSummary,
   owner,
@@ -35,19 +36,16 @@ export default async function addActionLog({
 
     return `'${JSON.stringify(value).replace(/'/g, "''")}'`;
   }
-  const github_response = stringifyAndEscape(ghValue);
-  const jira_response = stringifyAndEscape(jiraValue);
-  const slack_response = stringifyAndEscape(slackValue);
-  const notion_response = stringifyAndEscape(notionValue);
-  const linear_response = stringifyAndEscape(linearValue);
+
   try {
     const saveLog = `EXEC dbo.create_gh_action_log 
     @randomWords='${randomWords.join(" ")}', 
-    @github_response='${JSON.stringify(ghValue)}', 
-    @jira_response='${JSON.stringify(jiraValue)}', 
-    @slack_response='${JSON.stringify(slackValue)}', 
-    @notion_response='${JSON.stringify(notionValue)}', 
-    @linear_response='${JSON.stringify(linearValue)}', 
+    @github_response='${JSON.stringify(github)}', 
+    @jira_response='${stringifyAndEscape(jira)}', 
+    @slack_response='${stringifyAndEscape(slack)}', 
+    @notion_response='${stringifyAndEscape(notion)}', 
+    @linear_response='${stringifyAndEscape(linear)}', 
+    @asana_response='${stringifyAndEscape(asana)}',
     @markdown='${textToWrite}', 
     @GPT_summary='${businessLogicSummary}', 
     @github_owner='${owner}', 

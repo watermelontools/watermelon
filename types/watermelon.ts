@@ -2,8 +2,7 @@ export type MarkdownResponse = string;
 
 export type MarkdownRequest = {
   userLogin: string;
-  amount: number;
-  value: StandardAPIResponse;
+  value?: StandardAPIResponse;
 };
 type searchText = string | string[];
 export type StandardAPIInput = {

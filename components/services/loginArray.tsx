@@ -6,6 +6,7 @@ import GitHubLoginLink from "../GitHubLoginLink";
 import LinearLoginLink from "../LinearLoginLink";
 import BitbucketLoginLink from "../BitbucketLoginLink";
 import GitLabLoginLink from "../GitLabLoginLink";
+import AsanaLoginLink from "../AsanaLoginLink";
 export default function LoginArray({ nameList, userEmail, userData }) {
   const services = [
     {
@@ -47,6 +48,11 @@ export default function LoginArray({ nameList, userEmail, userData }) {
       name: "GitLab",
       dataProp: "gitlab_data",
       loginComponent: <GitLabLoginLink userEmail={userEmail} />,
+    },
+    {
+      name: "Asana",
+      dataProp: "asana_data",
+      loginComponent: <AsanaLoginLink userEmail={userEmail} />,
     },
   ];
   const loginArray = services

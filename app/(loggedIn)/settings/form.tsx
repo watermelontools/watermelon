@@ -10,15 +10,41 @@ export default function form({ userEmail }) {
     let settings = await getUserSettings(userEmail);
     setFormState(settings);
   };
-  const [formState, setFormState] = useState({
-    JiraTickets: 3,
-    SlackMessages: 3,
-    GitHubPRs: 3,
-    NotionPages: 3,
-    LinearTickets: 3,
-    ConfluenceDocs: 3,
+  const services = [
+    {
+      valueLabel: "JiraTickets",
+      label: "Jira Tickets",
+    },
+    {
+      valueLabel: "SlackMessages",
+      label: "Slack Messages",
+    },
+    {
+      valueLabel: "GitHubPRs",
+      label: "GitHub PRs",
+    },
+    {
+      valueLabel: "NotionPages",
+      label: "Notion Pages",
+    },
+    {
+      valueLabel: "LinearTickets",
+      label: "Linear Tickets",
+    },
+    {
+      valueLabel: "ConfluenceDocs",
+      label: "Confluence Docs",
+    },
+    {
+      valueLabel: "AsanaTasks",
+      label: "Asana Tasks",
+    },
+  ];
+  let defaultState = {
     AISummary: 1,
-  });
+  };
+  services.map((service) => (defaultState[service.valueLabel] = 3));
+  const [formState, setFormState] = useState(defaultState);
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -66,13 +92,13 @@ export default function form({ userEmail }) {
   }
   return (
     <form>
-      <SettingsSelector label="Jira Tickets" valueLabel={"JiraTickets"} />
-      <SettingsSelector label="Slack Messages" valueLabel={"SlackMessages"} />
-      <SettingsSelector label="GitHub PRs" valueLabel={"GitHubPRs"} />
-      <SettingsSelector label="Notion Pages" valueLabel={"NotionPages"} />
-      <SettingsSelector label="Linear Tickets" valueLabel={"LinearTickets"} />
-      <SettingsSelector label="Confluence Docs" valueLabel={"ConfluenceDocs"} />
-
+      {services.map((service) => (
+        <SettingsSelector
+          key={service.valueLabel}
+          valueLabel={service.valueLabel}
+          label={service.label}
+        />
+      ))}
       <div className="">
         <span>AI Summary: </span>
         <select
