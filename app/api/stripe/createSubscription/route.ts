@@ -1,9 +1,5 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import {
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
 import { missingParamsResponse } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import { missingParamsPosthogTracking } from "../../../../utils/api/posthogTracking";
@@ -46,11 +42,6 @@ export async function POST(request: Request) {
       expand: ["latest_invoice.payment_intent"],
     });
 
-    successPosthogTracking({
-      url: request.url,
-      email: req.email,
-      data: subscription,
-    });
     return NextResponse.json({
       subscriptionId: subscription.id,
       // We use Stripe's Expand functionality to get the latest invoice and its payment intent
