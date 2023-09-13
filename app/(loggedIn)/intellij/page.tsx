@@ -12,7 +12,7 @@ async function IntelliJ() {
   const session = await getServerSession(authOptions);
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;
-  const data = await getAllPublicUserData({ userEmail });
+  const data = await getAllPublicUserData({ email: userEmail });
 
   return (
     <div>
