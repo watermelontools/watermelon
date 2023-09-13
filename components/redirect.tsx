@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 export default function TimeToRedirect({ url }) {
-  const [timeToRedirect, setTimeToRedirect] = useState(9);
+  const [timeToRedirect, setTimeToRedirect] = useState(10);
 
   useEffect(() => {
     const interval = setInterval(() => {
