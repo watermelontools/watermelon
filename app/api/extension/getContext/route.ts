@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     missingParamsPosthogTracking({ url: request.url, missingParams });
     return missingParamsResponse({ missingParams });
   }
-  const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${req.email}'`;
+  const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${email}'`;
   let wmUserData = await executeRequest(query);
   const {
     github_token,
@@ -70,13 +70,16 @@ export async function POST(request: Request) {
     failedPosthogTracking({
       url: request.url,
       error: error.message,
-      email: req.email,
+      email: email,
     });
     return failedToFetchResponse({ error: error.message });
   }
-  const searchStringSet = Array.from(new Set(req.commitList.split(","))).join(
-    " "
-  );
+  let searchStringSet;
+  if (Array.isArray(commitList)) {
+    searchStringSet = commitList.join(" ");
+  } else {
+    searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
+  }
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -123,7 +126,7 @@ export async function POST(request: Request) {
     }),
   ]);
   const WatermelonAISummary = await getOpenAISummary({
-    commitList: req.commitList.replace(/\r?\n|\r/g, "").split(","),
+    commitList: searchStringSet.replace(/\r?\n|\r/g, "").split(","),
     values: {
       github: github?.data,
       jira: jira?.data,
@@ -133,6 +136,7 @@ export async function POST(request: Request) {
       linear: linear?.data,
     },
   });
+
   const standardWatermelonAISummary: StandardProcessedDataArray = [
     {
       title: "WatermelonAISummary",
@@ -143,7 +147,7 @@ export async function POST(request: Request) {
 
   successPosthogTracking({
     url: request.url,
-    email: req.email,
+    email: email,
     data: {
       github: github.fullData || github.error,
       jira: jira.fullData || jira.error,
