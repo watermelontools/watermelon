@@ -17,7 +17,6 @@ async function HomePage({}) {
     console.error(e);
     return null;
   });
-  console.log(data);
   const comingSoon = [
     "PHPStorm",
     "IntelliJ",
