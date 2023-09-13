@@ -32,49 +32,10 @@ export async function POST(request: Request) {
     missingParamsPosthogTracking({ url: request.url, missingParams });
     return missingParamsResponse({ missingParams });
   }
-  const query = `EXEC dbo.get_all_user_tokens @watermelon_user='${email}'`;
-  let wmUserData = await executeRequest(query);
-  const {
-    github_token,
-    jira_token,
-    jira_refresh_token,
-    confluence_token,
-    confluence_refresh_token,
-    confluence_id,
-    cloudId,
-    slack_token,
-    notion_token,
-    linear_token,
-    user_email,
-    AISummary,
-    JiraTickets,
-    GitHubPRs,
-    SlackMessages,
-    NotionPages,
-    LinearTickets,
-    ConfluencePages,
-  } = wmUserData;
-  try {
-    wmUserData = await executeRequest(query);
-  } catch (error) {
-    console.error(
-      "An error occurred while getting user tokens:",
-      error.message
-    );
-    failedPosthogTracking({
-      url: request.url,
-      error: error.message,
-      email: email,
-    });
-    return failedToFetchResponse({ error: error.message });
-  }
-  let searchStringSet;
-  if (Array.isArray(commitList)) {
-    searchStringSet = commitList.join(" ");
-  } else {
-    searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
-  }
 
+  const searchStringSet = Array?.from(new Set(req.commitList.split(","))).join(
+    " "
+  );
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -99,7 +60,7 @@ export async function POST(request: Request) {
     return failedToFetchResponse({ error: error.message });
   }
   const WatermelonAISummary = await getOpenAISummary({
-    commitList: searchStringSet.replace(/\r?\n|\r/g, "").split(","),
+    commitList: req.commitList.replace(/\r?\n|\r/g, "").split(","),
     values: {
       github: github?.data,
       jira: jira?.data,
@@ -110,7 +71,6 @@ export async function POST(request: Request) {
       asana: asana?.data,
     },
   });
-
   const standardWatermelonAISummary: StandardProcessedDataArray = [
     {
       title: "WatermelonAISummary",
@@ -121,7 +81,7 @@ export async function POST(request: Request) {
 
   successPosthogTracking({
     url: request.url,
-    email: email,
+    email: req.email,
     data: {
       github: github?.fullData || github?.error,
       jira: jira?.fullData || jira?.error,
