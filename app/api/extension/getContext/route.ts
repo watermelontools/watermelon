@@ -1,10 +1,5 @@
 import validateParams from "../../../../utils/api/validateParams";
 import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import {
   failedToFetchResponse,
   missingParamsResponse,
   successResponse,
@@ -31,8 +26,7 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   let searchStringSet;
   if (Array.isArray(commitList)) {
@@ -56,12 +50,11 @@ export async function POST(request: Request) {
   const { error, github, jira, confluence, slack, notion, linear, asana } =
     serviceAnswers;
   if (error) {
-    failedPosthogTracking({
+    return failedToFetchResponse({
       url: request.url,
       error: error.message,
       email: req.email,
     });
-    return failedToFetchResponse({ error: error.message });
   }
   const WatermelonAISummary = await getOpenAISummary({
     commitList: searchStringSet.replace(/\r?\n|\r/g, "").split(","),
@@ -83,7 +76,7 @@ export async function POST(request: Request) {
     },
   ];
 
-  successPosthogTracking({
+  return successResponse({
     url: request.url,
     email: req.email,
     data: {
@@ -94,18 +87,6 @@ export async function POST(request: Request) {
       notion: notion?.fullData || notion?.error,
       linear: linear?.fullData || linear?.error,
       asana: asana?.fullData || asana?.error,
-      watermelonSummary: standardWatermelonAISummary,
-    },
-  });
-  return successResponse({
-    data: {
-      github: github?.data || github?.error,
-      jira: jira?.data || jira?.error,
-      confluence: confluence?.data || confluence?.error,
-      slack: slack?.data || slack?.error,
-      notion: notion?.data || notion?.error,
-      linear: linear?.data || linear?.error,
-      asana: asana?.data || asana?.error,
       watermelonSummary: standardWatermelonAISummary,
     },
   });

@@ -5,7 +5,6 @@ interface PostHogEvent {
   properties?: Record<string, any>;
   groups?: Record<string, any>;
 }
-
 function PostHogClient(apiKey: string) {
   if (!apiKey) return { capture: () => {} };
   const posthogClient = new PostHog(apiKey, {

@@ -5,38 +5,28 @@ import {
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
-import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({
-      missingParams,
-      url: request.url,
-    });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   try {
     let dbResponse = await getUserSettings({ email: req.email });
-    successPosthogTracking({
-      email: req.email,
+
+    return successResponse({
       url: request.url,
+      email: req.email,
       data: dbResponse,
     });
-    return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    failedPosthogTracking({
-      error: err,
-      email: req.email,
+    return failedToFetchResponse({
       url: request.url,
+      error: err.message,
+      email: req.email,
     });
-    return failedToFetchResponse({ error: err });
   }
 }

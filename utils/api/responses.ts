@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "./posthogTracking";
 
-export function successResponse({ data }) {
+export function successResponse({ url, email, data }) {
+  successPosthogTracking({ url, email, data });
   return NextResponse.json(
     {
       data,
@@ -9,8 +15,9 @@ export function successResponse({ data }) {
   );
 }
 
-export function missingParamsResponse({ missingParams }) {
+export function missingParamsResponse({ url, missingParams }) {
   const missingParamsText = `Missing parameters: ${missingParams.join(", ")}`;
+  missingParamsPosthogTracking({ url, missingParams });
   return NextResponse.json(
     {
       error: missingParamsText,
@@ -29,7 +36,8 @@ export function unauthorizedResponse({ email }) {
   );
 }
 
-export function failedToFetchResponse({ error }) {
+export function failedToFetchResponse({ url, email, error }) {
+  failedPosthogTracking({ url, email, error });
   return NextResponse.json(
     {
       error,
