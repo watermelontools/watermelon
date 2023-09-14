@@ -1,4 +1,3 @@
-import exp from "constants";
 import posthog from "../posthog/posthog";
 
 export function successPosthogTracking({ url, email, data }) {
