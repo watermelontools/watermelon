@@ -33,6 +33,12 @@ export async function POST(request: Request) {
     searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
   }
 
+  let searchStringSet;
+  if (Array.isArray(commitList)) {
+    searchStringSet = commitList.join(" ");
+  } else {
+    searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
+  }
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
