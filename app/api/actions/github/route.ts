@@ -411,7 +411,9 @@ export async function POST(request: Request) {
         repo,
         owner,
         issue_number: number,
-        installationId
+        installationId,
+        reqUrl: request.url,
+        reqEmail: req.email
       });
 
       await addActionLog({

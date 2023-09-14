@@ -4,7 +4,7 @@ import {
   failedPosthogTracking,
   missingParamsPosthogTracking,
   successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+} from "../../utils/api/posthogTracking";
 
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
@@ -23,6 +23,8 @@ export default async function flagPullRequest({
   owner,
   repo,
   issue_number,
+  reqUrl,
+  reqEmail
 }: {
   prTitle?: string;
   businessLogicSummary?: string;
@@ -30,6 +32,8 @@ export default async function flagPullRequest({
   owner: string;
   repo: string;
   issue_number: number;
+  reqUrl: string;
+  reqEmail: string;
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
@@ -48,7 +52,16 @@ export default async function flagPullRequest({
       })
       .then((result) => {
         const prRating = result.data.choices[0].message.content;
-        //track posthog here
+        
+        successPosthogTracking({
+          url: reqUrl,
+          email: reqEmail,
+          data: {
+            repo,
+            owner,
+            prRating
+          },
+        });
 
         if (prRating >= 9) {
           octokit.request(
@@ -74,7 +87,11 @@ export default async function flagPullRequest({
         }
       });
   } catch (error) {
-    console.log(error);
+    failedPosthogTracking({
+      url: reqUrl,
+      error: error.message,
+      email: reqEmail,
+    });
     return "Error" + error;
   }
 }
