@@ -7,6 +7,7 @@ import {
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
 import { StandardProcessedDataArray } from "../../../../types/watermelon";
 import getAllServices from "../../../../utils/actions/getAllServices";
+
 function replaceSpecialChars(inputString) {
   const specialChars = /[!"#$%&/()=?_"{}¨*]/g; // Edit this list to include or exclude characters
   return inputString.toLowerCase().replace(specialChars, " ");
