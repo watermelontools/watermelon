@@ -33,8 +33,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["dailyStats"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ missingParams, url: request.url });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   const { dailyStats } = req;
   let records;

@@ -5,7 +5,6 @@ interface PostHogEvent {
   properties?: Record<string, any>;
   groups?: Record<string, any>;
 }
-
 function PostHogClient(apiKey: string) {
   if (!apiKey) return { capture: () => {} };
   const posthogClient = new PostHog(apiKey, {
@@ -20,6 +19,7 @@ function PostHogClient(apiKey: string) {
         properties,
         groups,
       });
+      console.log("posthog event", event, properties);
       if (process.env.NODE_ENV === "development") {
         console.log(
           `PostHog event: ${event} with properties: ${JSON.stringify(
