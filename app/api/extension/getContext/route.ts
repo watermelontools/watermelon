@@ -6,7 +6,6 @@ import {
 } from "../../../../utils/api/responses";
 import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
 import { StandardProcessedDataArray } from "../../../../types/watermelon";
-import getAsana from "../../../../utils/actions/getAsana";
 import getAllServices from "../../../../utils/actions/getAllServices";
 
 function replaceSpecialChars(inputString) {
