@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { missingParamsPosthogTracking } from "./posthogTracking";
 
 export function successResponse({ data }) {
   return NextResponse.json(
@@ -9,8 +10,9 @@ export function successResponse({ data }) {
   );
 }
 
-export function missingParamsResponse({ missingParams }) {
+export function missingParamsResponse({ url, missingParams }) {
   const missingParamsText = `Missing parameters: ${missingParams.join(", ")}`;
+  missingParamsPosthogTracking({ url, missingParams });
   return NextResponse.json(
     {
       error: missingParamsText,
