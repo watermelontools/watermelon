@@ -14,7 +14,6 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 import {
   failedPosthogTracking,
-  missingParamsPosthogTracking,
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
@@ -36,8 +35,7 @@ export async function POST(request: Request) {
     "number",
   ]);
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   try {
     // Verify and parse the webhook event

@@ -1,5 +1,9 @@
 import {
-  failedToFecthResponse,
+  failedPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
+import {
+  failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
@@ -12,11 +16,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    posthog.capture({
-      event: `${request.url}-missing-params`,
-      properties: missingParams,
-    });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
 
   try {

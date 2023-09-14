@@ -12,8 +12,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ missingParams, url: request.url });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   try {
     // create a stripe customer and get its id

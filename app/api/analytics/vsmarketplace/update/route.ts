@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import validateParams from "../../../../../utils/api/validateParams";
 import Airtable from "airtable";
 import { missingParamsResponse } from "../../../../../utils/api/responses";
-import posthog from "../../../../../utils/posthog/posthog";
 Airtable.configure({
   endpointUrl: "https://api.airtable.com",
   apiKey: process.env.AIRTABLE_API_KEY,
@@ -33,11 +32,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["dailyStats"]);
 
   if (missingParams.length > 0) {
-    posthog.capture({
-      event: `${request.url}-missing-params`,
-      properties: missingParams,
-    });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   const { dailyStats } = req;
   let records;

@@ -1,7 +1,4 @@
-import {
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+import { successPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   missingParamsResponse,
   successResponse,
@@ -16,8 +13,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["token"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
 
   const userData = await intellijLogin({ watermelon_user: token });

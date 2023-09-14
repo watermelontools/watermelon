@@ -1,7 +1,6 @@
 import validateParams from "../../../../utils/api/validateParams";
 import {
   failedPosthogTracking,
-  missingParamsPosthogTracking,
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
 import {
@@ -29,8 +28,7 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   let searchStringSet;
   if (Array.isArray(commitList)) {

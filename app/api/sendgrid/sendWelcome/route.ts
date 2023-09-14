@@ -1,7 +1,4 @@
-import {
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+import { successPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   missingParamsResponse,
   successResponse,
@@ -14,8 +11,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["sender", "emails"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ missingParams, url: request.url });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   const { sender, emails } = req;
 
