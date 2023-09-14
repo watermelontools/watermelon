@@ -405,13 +405,13 @@ export async function POST(request: Request) {
       });
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      labelPullRequest({
+      await labelPullRequest({
         prTitle: title,
         businessLogicSummary,
         repo,
         owner,
         issue_number: number,
-        github_token
+        installationId
       });
 
       await addActionLog({
