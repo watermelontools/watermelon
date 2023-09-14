@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
-import { missingParamsPosthogTracking } from "./posthogTracking";
+import {
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "./posthogTracking";
 
-export function successResponse({ data }) {
+export function successResponse({ url, email, data }) {
+  successPosthogTracking({ url, email, data });
   return NextResponse.json(
     {
       data,
