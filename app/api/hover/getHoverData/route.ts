@@ -1,10 +1,5 @@
 import validateParams from "../../../../utils/api/validateParams";
 import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import {
   failedToFetchResponse,
   missingParamsResponse,
   successResponse,
@@ -22,8 +17,7 @@ export async function POST(request: Request) {
   ]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
 
   const searchStringSet = Array.from(new Set(req.commitTitle.split(" "))).join(
@@ -48,28 +42,24 @@ export async function POST(request: Request) {
   const { error, github, jira, confluence, slack, notion, linear, asana } =
     serviceAnswers;
   if (error) {
-    failedPosthogTracking({
+    return failedToFetchResponse({
       url: request.url,
       error: error.message,
-      email: req.email,
+      email,
     });
-    return failedToFetchResponse({ error: error.message });
   }
 
-  successPosthogTracking({
+  if (error) {
+    return failedToFetchResponse({
+      url: request.url,
+      error: serviceAnswers.error.message,
+      email: req.email,
+    });
+  }
+
+  return successResponse({
     url: request.url,
     email: req.email,
-    data: {
-      github: github?.fullData || github?.error,
-      jira: jira?.fullData || jira?.error,
-      confluence: confluence?.fullData || confluence?.error,
-      slack: slack?.fullData || slack?.error,
-      notion: notion?.fullData || notion?.error,
-      linear: linear?.fullData || linear?.error,
-      asana: asana?.fullData || asana?.error,
-    },
-  });
-  return successResponse({
     data: {
       github: github?.data || github?.error,
       jira: jira?.data || jira?.error,

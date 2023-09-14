@@ -17,7 +17,6 @@ import labelPullRequest from "../../../../utils/actions/labelPullRequest";
 
 import {
   failedPosthogTracking,
-  missingParamsPosthogTracking,
   successPosthogTracking,
 } from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
@@ -39,8 +38,7 @@ export async function POST(request: Request) {
     "number",
   ]);
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ url: request.url, missingParams });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   try {
     // Verify and parse the webhook event
@@ -297,12 +295,12 @@ export async function POST(request: Request) {
         user_email,
       } = serviceAnswers;
       if (error) {
-        failedPosthogTracking({
+        return failedToFetchResponse({
+
           url: request.url,
           error: error.message,
           email: req.email,
         });
-        return failedToFetchResponse({ error: error.message });
       }
       if (!watermelon_user) {
         {
@@ -517,16 +515,11 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error("general action processing error", error);
-    failedPosthogTracking({
+
+    return failedToFetchResponse({
       url: request.url,
       error: error.message,
       email: req.email,
-    });
-
-    return NextResponse.json({
-      message: "Error processing webhook event",
-      error,
-      textToWrite,
     });
   }
 }
