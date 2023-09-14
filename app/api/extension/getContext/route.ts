@@ -34,13 +34,6 @@ export async function POST(request: Request) {
   } else {
     searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
   }
-
-  let searchStringSet;
-  if (Array.isArray(commitList)) {
-    searchStringSet = commitList.join(" ");
-  } else {
-    searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
-  }
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -58,7 +51,6 @@ export async function POST(request: Request) {
     serviceAnswers;
   if (error) {
     return failedToFetchResponse({
-
       url: request.url,
       error: error.message,
       email: req.email,
@@ -98,5 +90,4 @@ export async function POST(request: Request) {
       watermelonSummary: standardWatermelonAISummary,
     },
   });
-
 }
