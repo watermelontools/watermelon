@@ -13,7 +13,7 @@ async function HomePage({}) {
   const userEmail = session?.user?.email;
   const userName = session?.user?.name;
   // if not logged in, do not show anything
-  const data = await getAllPublicUserData({ userEmail }).catch((e) => {
+  const data = await getAllPublicUserData({ email: userEmail }).catch((e) => {
     console.error(e);
     return null;
   });

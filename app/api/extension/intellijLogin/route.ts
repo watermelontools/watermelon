@@ -1,34 +1,28 @@
 import {
   missingParamsResponse,
   successResponse,
+  unauthorizedResponse,
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
-import sendTeammateInvite from "../../../../utils/sendgrid/sendTeammateInvite";
+import intellijLogin from "../../../../utils/db/user/intellijLogin";
 
 export async function POST(request: Request) {
   const req = await request.json();
-  const { missingParams } = validateParams(req, [
-    "sender",
-    "email",
-    "inviteUrl",
-    "teamName",
-  ]);
+  const { token } = req;
+  const { missingParams } = validateParams(req, ["token"]);
 
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
-  const { sender, email, inviteUrl, teamName } = req;
 
-  let emailSent = await sendTeammateInvite({
-    sender,
-    teammateEmail: email,
-    inviteUrl,
-    teamName,
-  });
+  const userData = await intellijLogin({ watermelon_user: token });
+  if (!userData || !userData.email) {
+    return unauthorizedResponse({ email: token });
+  }
 
   return successResponse({
     url: request.url,
-    email: req.email,
-    data: emailSent,
+    email: userData.email,
+    data: userData,
   });
 }

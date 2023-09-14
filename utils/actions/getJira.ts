@@ -1,4 +1,4 @@
-import { StandardAPIInput } from "../../types/watermelon";
+import { AtlassianAPIInput } from "../../types/watermelon";
 import getJiraOrganization from "../../utils/db/jira/getOrganization";
 import getFreshJiraTokens from "../jira/getFreshJiraTokens";
 
@@ -51,7 +51,8 @@ async function getJira({
   refresh_token,
   randomWords,
   amount = 3,
-}: StandardAPIInput) {
+  cloudId,
+}: AtlassianAPIInput) {
   if (!token || !refresh_token) return { error: "no jira token" };
   if (!user) return { error: "no user" };
 
@@ -61,9 +62,12 @@ async function getJira({
   });
 
   if (!newAccessTokens?.access_token) return { error: "no jira token" };
-
-  const { jira_id } = await getJiraOrganization(user);
-  if (!jira_id) return { error: "no Jira cloudId" };
+  let fetchedCloudId;
+  if (!cloudId) {
+    const { jira_id } = await getJiraOrganization(user);
+    if (!jira_id) return { error: "no Jira cloudId" };
+    fetchedCloudId = jira_id;
+  }
 
   const cleanRandomWords = Array.from(
     new Set(randomWords?.map((word) => removeSpecialChars(word)))
@@ -78,8 +82,16 @@ async function getJira({
 
   try {
     const [results, serverInfo] = await Promise.all([
-      fetchJiraData(jql, jira_id, newAccessTokens.access_token, amount),
-      getJiraServerInfo(jira_id, newAccessTokens.access_token),
+      fetchJiraData(
+        jql,
+        cloudId || fetchedCloudId,
+        newAccessTokens.access_token,
+        amount
+      ),
+      getJiraServerInfo(
+        cloudId || fetchedCloudId,
+        newAccessTokens.access_token
+      ),
     ]);
     results.forEach((element, index) => {
       results[index].serverInfo = serverInfo;

@@ -1,6 +1,7 @@
-import { NextResponse } from "next/server";
-import { missingParamsPosthogTracking } from "../../../../utils/api/posthogTracking";
-import { missingParamsResponse } from "../../../../utils/api/responses";
+import {
+  missingParamsResponse,
+  successResponse,
+} from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import sendWelcome from "../../../../utils/sendgrid/sendWelcome";
 
@@ -9,12 +10,14 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["sender", "emails"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({ missingParams, url: request.url });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
   const { sender, emails } = req;
 
   let emailSent = await sendWelcome({ sender, emails });
-
-  return NextResponse.json(emailSent);
+  return successResponse({
+    url: request.url,
+    email: req.email,
+    data: emailSent,
+  });
 }

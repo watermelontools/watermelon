@@ -1,9 +1,4 @@
 import {
-  failedPosthogTracking,
-  missingParamsPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
-import {
   failedToFetchResponse,
   missingParamsResponse,
   successResponse,
@@ -16,11 +11,7 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, ["email", "userSettings"]);
 
   if (missingParams.length > 0) {
-    missingParamsPosthogTracking({
-      missingParams,
-      url: request.url,
-    });
-    return missingParamsResponse({ missingParams });
+    return missingParamsResponse({ url: request.url, missingParams });
   }
 
   try {
@@ -28,19 +19,19 @@ export async function POST(request: Request) {
       email: req.email,
       userSettings: req.userSettings,
     });
-    successPosthogTracking({
-      email: req.email,
+
+    return successResponse({
       url: request.url,
+      email: req.email,
       data: dbResponse,
     });
-    return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    failedPosthogTracking({
-      error: err,
-      email: req.email,
+
+    return failedToFetchResponse({
       url: request.url,
+      error: err.message,
+      email: req.email,
     });
-    return failedToFetchResponse({ error: err });
   }
 }

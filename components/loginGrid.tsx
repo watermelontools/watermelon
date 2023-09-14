@@ -5,51 +5,84 @@ import GitHubLoginLink from "../components/GitHubLoginLink";
 import GitLabLoginLink from "../components/GitLabLoginLink";
 import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import LinearLoginLink from "../components/LinearLoginLink";
-import DiscordLoginLink from "./DiscordLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import ConfluenceLoginLink from "./ConfluenceLoginLink";
-type LoginGridProps = {
-  userEmail: string;
-  user_displayname: string;
-};
-function LoginGrid({ userEmail, data }) {
-  let githubUserData: null | LoginGridProps = null;
-  let bitbucketUserData: null | LoginGridProps = null;
-  let gitlabUserData: null | LoginGridProps = null;
-  let slackUserData: null | LoginGridProps = null;
-  let jiraUserData: null | LoginGridProps = null;
-  let confluenceUserData: null | LoginGridProps = null;
-  let discordUserData: null | LoginGridProps = null;
-  let notionUserData: null | LoginGridProps = null;
-  let linearUserData: null | LoginGridProps = null;
-  if (data?.github_data) {
-    githubUserData = JSON.parse(data.github_data);
-  }
-  if (data?.bitbucket_data) {
-    bitbucketUserData = JSON.parse(data.bitbucket_data);
-  }
-  if (data?.gitlab_data) {
-    gitlabUserData = JSON.parse(data.gitlab_data);
-  }
-  if (data?.slack_data) {
-    slackUserData = JSON.parse(data.slack_data);
-  }
-  if (data?.jira_data) {
-    jiraUserData = JSON.parse(data.jira_data);
-  }
-  if (data?.confluence_data) {
-    confluenceUserData = JSON.parse(data.confluence_data);
-  }
-  if (data?.discord_data) {
-    discordUserData = JSON.parse(data.discord_data);
-  }
-  if (data?.notion_data) {
-    notionUserData = JSON.parse(data.notion_data);
-  }
-  if (data?.linear_data) {
-    linearUserData = JSON.parse(data.linear_data);
-  }
+import AsanaLoginLink from "./AsanaLoginLink";
 
+function LoginGrid({ userEmail, data }) {
+  const services = [
+    {
+      name: "GitHub",
+      dataProp: "github_data",
+      loginComponent: <GitHubLoginLink userEmail={userEmail} />,
+      type: "git_platforms",
+    },
+    {
+      name: "Bitbucket",
+      dataProp: "bitbucket_data",
+      loginComponent: <BitbucketLoginLink userEmail={userEmail} />,
+      type: "git_platforms",
+    },
+    {
+      name: "GitLab",
+      dataProp: "gitlab_data",
+      loginComponent: <GitLabLoginLink userEmail={userEmail} />,
+      type: "git_platforms",
+    },
+
+    {
+      name: "Jira",
+      dataProp: "jira_data",
+      loginComponent: <JiraLoginLink userEmail={userEmail} />,
+      type: "project_management",
+    },
+    {
+      name: "Linear",
+      dataProp: "linear_data",
+      loginComponent: <LinearLoginLink userEmail={userEmail} />,
+      type: "project_management",
+    },
+
+    {
+      name: "Asana",
+      dataProp: "asana_data",
+      loginComponent: <AsanaLoginLink userEmail={userEmail} />,
+      type: "project_management",
+    },
+
+    {
+      name: "Slack",
+      dataProp: "slack_data",
+      loginComponent: <SlackLoginLink userEmail={userEmail} />,
+      type: "internal_messaging",
+    },
+
+    {
+      name: "Confluence",
+      dataProp: "confluence_data",
+      loginComponent: <ConfluenceLoginLink userEmail={userEmail} />,
+      type: "documentation",
+    },
+    {
+      name: "Notion",
+      dataProp: "notion_data",
+      loginComponent: <NotionLoginLink userEmail={userEmail} />,
+      type: "documentation",
+    },
+  ];
+  const typeToName = {
+    git_platforms: "Git Platforms",
+    project_management: "Project Management",
+    internal_messaging: "Internal Messaging",
+    documentation: "Documentation",
+  };
+  const groupedServices = services.reduce((acc, service) => {
+    if (!acc[service.type]) {
+      acc[service.type] = [];
+    }
+    acc[service.type].push(service);
+    return acc;
+  }, {});
   return (
     <div
       style={{
@@ -60,210 +93,42 @@ function LoginGrid({ userEmail, data }) {
     >
       {userEmail && (
         <div>
-          <div>
-            <div
-              className="Subhead p-3"
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 2,
-                backgroundColor: "var(--color-canvas-default)",
-              }}
-            >
-              <h2 className="Subhead-heading">Git Platforms</h2>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
-              }}
-            >
-              <div className="p-3">
-                {githubUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...githubUserData,
-                      service_name: "GitHub",
-                    }}
-                  />
-                ) : (
-                  <GitHubLoginLink userEmail={userEmail} />
-                )}
+          {Object.keys(groupedServices).map((type) => (
+            <div key={type}>
+              <div
+                className="Subhead p-3"
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  zIndex: 2,
+                  backgroundColor: "var(--color-canvas-default)",
+                }}
+              >
+                <h2 className="Subhead-heading">{typeToName[type]}</h2>
               </div>
-              <div className="p-3">
-                {bitbucketUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...bitbucketUserData,
-                      service_name: "Bitbucket",
-                    }}
-                  />
-                ) : (
-                  <BitbucketLoginLink userEmail={userEmail} />
-                )}
-              </div>
-              <div className="p-3">
-                {gitlabUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...gitlabUserData,
-                      service_name: "GitLab",
-                    }}
-                  />
-                ) : (
-                  <GitLabLoginLink userEmail={userEmail} />
-                )}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
+                }}
+              >
+                {groupedServices[type].map((service) => (
+                  <div key={service.name} className="p-3">
+                    {data?.[service.dataProp] ? (
+                      <InfoPanel
+                        info={{
+                          ...JSON.parse(data[service.dataProp]),
+                          service_name: service.name,
+                        }}
+                      />
+                    ) : (
+                      service.loginComponent
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
-            <a
-              href="https://github.com/apps/watermelon-context"
-              target="_blank"
-            >
-              <div className="Box d-flex flex-items-center flex-justify-start m-3 p-2">
-                <img className="avatar avatar-8" src="/logos/github.svg" />
-                <div className="p-2">
-                  <h2>Try our GitHub App</h2>
-                  <p>Context on each Pr</p>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div>
-            <div
-              className="Subhead p-3"
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 2,
-                backgroundColor: "var(--color-canvas-default)",
-              }}
-            >
-              <h2 className="Subhead-heading">Internal Messaging</h2>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
-              }}
-            >
-              <div className="p-3">
-                {slackUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...slackUserData,
-                      service_name: "Slack",
-                    }}
-                  />
-                ) : (
-                  <SlackLoginLink userEmail={userEmail} />
-                )}
-              </div>
-            </div>
-          </div>
-          <div>
-            <div
-              className="Subhead p-3"
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 2,
-                backgroundColor: "var(--color-canvas-default)",
-              }}
-            >
-              <h2 className="Subhead-heading">Project Management</h2>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
-              }}
-            >
-              <div className="p-3">
-                {jiraUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...jiraUserData,
-                      service_name: "Jira",
-                    }}
-                  />
-                ) : (
-                  <JiraLoginLink userEmail={userEmail} />
-                )}
-              </div>
-              <div className="p-3">
-                {linearUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...linearUserData,
-                      service_name: "Linear",
-                    }}
-                  />
-                ) : (
-                  <LinearLoginLink userEmail={userEmail} />
-                )}
-              </div>
-              {/*         
-  DISCORD DOES NOT ALLOW MESSAGE SEARCH, DEVELOPMENT PAUSED FOR NOW
-  MAYBE READ THE LAST FEW DAYS?
-    <div className="p-3">
-              {discordUserData?.user_displayname ? (
-                <InfoPanel
-                  info={{
-                    user_avatar_url: `https://cdn.discordapp.com/avatars/${discordUserData.id}/${discordUserData.avatar_url}`,
-                    ...discordUserData,
-                    service_name: "Discord",
-                  }}
-                />
-              ) : (
-                <DiscordLoginLink userEmail={userEmail} />
-              )}
-            </div> */}
-            </div>
-          </div>
-          <div>
-            <div
-              className="Subhead p-3"
-              style={{
-                position: "sticky",
-                top: 0,
-                zIndex: 2,
-                backgroundColor: "var(--color-canvas-default)",
-              }}
-            >
-              <h2 className="Subhead-heading">Documentation</h2>
-            </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(350px, 50%))",
-              }}
-            >
-              <div className="p-3">
-                {notionUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...notionUserData,
-                      service_name: "Notion",
-                    }}
-                  />
-                ) : (
-                  <NotionLoginLink userEmail={userEmail} />
-                )}
-              </div>
-              <div className="p-3">
-                {confluenceUserData?.user_displayname ? (
-                  <InfoPanel
-                    info={{
-                      ...confluenceUserData,
-                      service_name: "Confluence",
-                    }}
-                  />
-                ) : (
-                  <ConfluenceLoginLink userEmail={userEmail} />
-                )}
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       )}
     </div>

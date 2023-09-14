@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 //change this to import correctly
-import saveUserInfo from "../../../utils/db/github/saveUser";
+import saveUserInfo from "../../../utils/db/asana/saveUser";
 
 import { authOptions } from "../../api/auth/[...nextauth]/route";
 import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
@@ -19,31 +19,26 @@ export default async function ServicePage({
   const { code, state } = searchParams;
   let error = "";
   // change service name
-  const serviceName = "GitHub";
+  const serviceName = "Asana";
   const [userData, serviceToken] = await Promise.all([
     getAllPublicUserData({ email: userEmail }).catch((e) => {
       console.error(e);
       return null;
     }),
     // change this fetch
-    fetch(`https://github.com/login/oauth/access_token`, {
+
+    fetch(`https://app.asana.com/-/oauth_token`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        code: code,
-        redirect_uri: "https://app.watermelontools.com/github",
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
-      }),
+      body: `grant_type=refresh_token&code=${code}redirect_uri=https://app.watermelontools.com/asana&client_id=${process.env.ASANA_CLIENT_ID}&client_secret=${process.env.ASANA_CLIENT_SECRET}`,
     }),
   ]);
 
   // the recommended services should not be of the same category as the current one
-  const nameList = ["Jira", "Slack", "Notion", "Confluence"];
+  const nameList = ["GitLab", "Slack", "Notion", "Confluence"];
   const loginArray = LoginArray({ nameList, userEmail, userData });
 
   const json = await serviceToken.json();
@@ -51,35 +46,35 @@ export default async function ServicePage({
     error = json.error;
   } else {
     // get user correctly
-    let user = await fetch(`https://api.github.com/user`, {
-      headers: {
-        Authorization: `token ${json.access_token}`,
-      },
-    });
+    let user = await fetch(
+      `https://app.asana.com/api/1.0/users/me?opt_fields=photo.image_128x128,workspaces,workspaces.name,photo`,
+      {
+        headers: {
+          Authorization: `Bearer ${json.access_token}`,
+        },
+      }
+    );
     let userJson = await user.json();
     // save user correctly
     await saveUserInfo({
+      id: json.data.id,
+      gid: json.data.gid,
+      name: json.data.name,
+      email: json.data.email,
       access_token: json.access_token,
-      scope: json.scope,
-      login: userJson.login,
-      id: userJson.id,
-      avatar_url: userJson.avatar_url,
+      refresh_token: json.refresh_token,
+      avatar_url: userJson.photo.image_128x128,
+      workspace: userJson.workspaces[0].gid,
+      workspace_name: userJson.workspaces[0].name,
       watermelon_user: state,
-      name: userJson.name,
-      company: userJson.company,
-      blog: userJson.blog,
-      email: userJson.email,
-      location: userJson.location,
-      bio: userJson.bio,
-      twitter_username: userJson.twitter_username,
     });
 
     return (
       <ConnectedService
         serviceName={serviceName}
-        displayName={userJson.login}
-        teamName={userJson.login}
-        avatarUrl={userJson.avatar_url}
+        displayName={json.data.name}
+        teamName={userJson.workspaces[0].name}
+        avatarUrl={userJson.photo.image_128x128}
         loginArray={loginArray}
         error={error}
       />
