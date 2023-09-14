@@ -6,10 +6,7 @@ import {
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
-import {
-  failedPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+import { failedPosthogTracking } from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -20,14 +17,12 @@ export async function POST(request: Request) {
   }
   try {
     let dbResponse = await getUserSettings({ email: req.email });
-    posthog.capture({
-      distinctId: req.email,
-      event: `${request.url}-success`,
-      properties: {
-        dbResponse,
-      },
+
+    return successResponse({
+      url: request.url,
+      email: req.email,
+      data: dbResponse,
     });
-    return successResponse({ data: dbResponse });
   } catch (err) {
     console.error("Error fetching db data:", err);
     posthog.capture({

@@ -1,8 +1,5 @@
 import validateParams from "../../../../utils/api/validateParams";
-import {
-  failedPosthogTracking,
-  successPosthogTracking,
-} from "../../../../utils/api/posthogTracking";
+import { failedPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   failedToFetchResponse,
   missingParamsResponse,
@@ -54,20 +51,9 @@ export async function POST(request: Request) {
     return failedToFetchResponse({ error: error.message });
   }
 
-  successPosthogTracking({
+  return successResponse({
     url: request.url,
     email: req.email,
-    data: {
-      github: github?.fullData || github?.error,
-      jira: jira?.fullData || jira?.error,
-      confluence: confluence?.fullData || confluence?.error,
-      slack: slack?.fullData || slack?.error,
-      notion: notion?.fullData || notion?.error,
-      linear: linear?.fullData || linear?.error,
-      asana: asana?.fullData || asana?.error,
-    },
-  });
-  return successResponse({
     data: {
       github: github?.data || github?.error,
       jira: jira?.data || jira?.error,

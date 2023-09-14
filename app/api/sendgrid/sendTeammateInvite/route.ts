@@ -1,4 +1,3 @@
-import { successPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   missingParamsResponse,
   successResponse,
@@ -27,6 +26,9 @@ export async function POST(request: Request) {
     teamName,
   });
 
-  successPosthogTracking({ url: request.url, email: sender, data: emailSent });
-  return successResponse({ data: emailSent });
+  return successResponse({
+    url: request.url,
+    email: req.email,
+    data: emailSent,
+  });
 }

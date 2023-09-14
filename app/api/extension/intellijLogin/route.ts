@@ -1,4 +1,3 @@
-import { successPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   missingParamsResponse,
   successResponse,
@@ -21,10 +20,9 @@ export async function POST(request: Request) {
     return unauthorizedResponse({ email: token });
   }
 
-  successPosthogTracking({
+  return successResponse({
     url: request.url,
     email: userData.email,
     data: userData,
   });
-  return successResponse({ data: userData });
 }
