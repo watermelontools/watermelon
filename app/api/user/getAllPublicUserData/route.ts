@@ -1,4 +1,3 @@
-import { failedPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   failedToFetchResponse,
   missingParamsResponse,
@@ -6,7 +5,6 @@ import {
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 import getAllPublicUserData from "../../../../utils/db/user/getAllPublicUserData";
-import posthog from "../../../../utils/posthog/posthog";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -26,11 +24,11 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    posthog.capture({
-      distinctId: req.email,
-      event: `${request.url}-failed`,
-      properties: { error: err },
+
+    return failedToFetchResponse({
+      url: request.url,
+      error: err.message,
+      email: req.email,
     });
-    return failedToFetchResponse({ error: err });
   }
 }

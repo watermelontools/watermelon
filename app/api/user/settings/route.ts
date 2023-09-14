@@ -1,12 +1,10 @@
 import getUserSettings from "../../../../utils/db/user/settings";
 import validateParams from "../../../../utils/api/validateParams";
-import posthog from "../../../../utils/posthog/posthog";
 import {
   failedToFetchResponse,
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
-import { failedPosthogTracking } from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -25,13 +23,10 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Error fetching db data:", err);
-    posthog.capture({
-      distinctId: req.email,
-      event: `${request.url}-failed`,
-      properties: {
-        error: err,
-      },
+    return failedToFetchResponse({
+      url: request.url,
+      error: err.message,
+      email: req.email,
     });
-    return failedToFetchResponse({ error: err });
   }
 }

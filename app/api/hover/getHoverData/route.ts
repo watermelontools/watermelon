@@ -1,5 +1,4 @@
 import validateParams from "../../../../utils/api/validateParams";
-import { failedPosthogTracking } from "../../../../utils/api/posthogTracking";
 import {
   failedToFetchResponse,
   missingParamsResponse,
@@ -43,12 +42,11 @@ export async function POST(request: Request) {
   const { error, github, jira, confluence, slack, notion, linear, asana } =
     serviceAnswers;
   if (error) {
-    failedPosthogTracking({
+    return failedToFetchResponse({
       url: request.url,
       error: error.message,
       email: req.email,
     });
-    return failedToFetchResponse({ error: error.message });
   }
 
   return successResponse({
