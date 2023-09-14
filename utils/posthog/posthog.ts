@@ -19,6 +19,7 @@ function PostHogClient(apiKey: string) {
         properties,
         groups,
       });
+      console.log("posthog event", event, properties);
       if (process.env.NODE_ENV === "development") {
         console.log(
           `PostHog event: ${event} with properties: ${JSON.stringify(

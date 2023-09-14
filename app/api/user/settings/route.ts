@@ -5,6 +5,11 @@ import {
   missingParamsResponse,
   successResponse,
 } from "../../../../utils/api/responses";
+import {
+  failedPosthogTracking,
+  missingParamsPosthogTracking,
+  successPosthogTracking,
+} from "../../../../utils/api/posthogTracking";
 
 export async function POST(request: Request) {
   const req = await request.json();
