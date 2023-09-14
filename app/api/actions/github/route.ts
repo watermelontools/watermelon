@@ -12,6 +12,9 @@ import {
   missingParamsResponse,
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
+
+import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+
 import {
   failedPosthogTracking,
   successPosthogTracking,
@@ -397,6 +400,18 @@ export async function POST(request: Request) {
         count,
         isPrivateRepo: repository.private,
         repoName: repo,
+      });
+
+      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+      await labelPullRequest({
+        prTitle: title,
+        businessLogicSummary,
+        repo,
+        owner,
+        issue_number: number,
+        installationId,
+        reqUrl: request.url,
+        reqEmail: req.email
       });
 
       await addActionLog({
