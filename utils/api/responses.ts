@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import {
+  failedPosthogTracking,
   missingParamsPosthogTracking,
   successPosthogTracking,
 } from "./posthogTracking";
@@ -35,7 +36,8 @@ export function unauthorizedResponse({ email }) {
   );
 }
 
-export function failedToFetchResponse({ error }) {
+export function failedToFetchResponse({ url, email, error }) {
+  failedPosthogTracking({ url, email, error });
   return NextResponse.json(
     {
       error,
