@@ -42,6 +42,35 @@ export async function POST(request: Request) {
   const { error, github, jira, confluence, slack, notion, linear, asana } =
     serviceAnswers;
   if (error) {
+    failedPosthogTracking({
+      url: request.url,
+      error: error.message,
+      email: req.email,
+    });
+    return failedToFetchResponse({ error: error.message });
+  }
+
+  const serviceAnswers = await getAllServices({
+    email,
+    repo,
+    owner,
+    randomWords,
+    url: request.url,
+    hardMax: 1,
+    email: req.email,
+    data: {
+      github: github?.fullData || github?.error,
+      jira: jira?.fullData || jira?.error,
+      confluence: confluence?.fullData || confluence?.error,
+      slack: slack?.fullData || slack?.error,
+      notion: notion?.fullData || notion?.error,
+      linear: linear?.fullData || linear?.error,
+      asana: asana?.fullData || asana?.error,
+    },
+  });
+  const { error, github, jira, confluence, slack, notion, linear, asana } =
+    serviceAnswers;
+  if (error) {
     return failedToFetchResponse({
       url: request.url,
       error: error.message,

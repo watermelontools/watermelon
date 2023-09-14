@@ -32,6 +32,7 @@ export async function POST(request: Request) {
   } else {
     searchStringSet = Array.from(new Set(commitList.split(","))).join(" ");
   }
+
   // select six random words from the search string
   const randomWords = searchStringSet
     .split(" ")
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
     serviceAnswers;
   if (error) {
     return failedToFetchResponse({
+
       url: request.url,
       error: error.message,
       email: req.email,
@@ -78,14 +80,15 @@ export async function POST(request: Request) {
     url: request.url,
     email: req.email,
     data: {
-      github: github?.data || github?.error,
-      jira: jira?.data || jira?.error,
-      confluence: confluence?.data || confluence?.error,
-      slack: slack?.data || slack?.error,
-      notion: notion?.data || notion?.error,
-      linear: linear?.data || linear?.error,
-      asana: asana?.data || asana?.error,
+      github: github?.fullData || github?.error,
+      jira: jira?.fullData || jira?.error,
+      confluence: confluence?.fullData || confluence?.error,
+      slack: slack?.fullData || slack?.error,
+      notion: notion?.fullData || notion?.error,
+      linear: linear?.fullData || linear?.error,
+      asana: asana?.fullData || asana?.error,
       watermelonSummary: standardWatermelonAISummary,
     },
   });
+
 }

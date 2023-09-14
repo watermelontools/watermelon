@@ -293,6 +293,7 @@ export async function POST(request: Request) {
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
+
           url: request.url,
           error: error.message,
           email: req.email,
