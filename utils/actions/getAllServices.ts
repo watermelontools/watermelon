@@ -1,5 +1,4 @@
 import { failedPosthogTracking } from "../api/posthogTracking";
-import { failedToFetchResponse } from "../api/responses";
 import executeRequest from "../db/azuredb";
 import getGitHub from "./getGitHub";
 import getJira from "./getJira";
