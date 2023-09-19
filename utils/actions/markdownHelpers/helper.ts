@@ -1,4 +1,5 @@
 import { MarkdownRequest, MarkdownResponse } from "../../../types/watermelon";
+import  getRelativeDate  from "../../getRelativeDate";
 
 type generalMarkdown = MarkdownRequest & {
   systemName: string;
@@ -26,7 +27,7 @@ const generalMarkdownHelper = ({
       markdown += (value?.data || [])
         .map(
           ({ number, title, link, body, created_at }) =>
-            `\n - [#${number} - ${title}](${link}) - On ${created_at} \n`
+            `\n - [#${number} - ${title}](${link}) - By author ${getRelativeDate(created_at)} \n`
         )
         .join("");
     } else {
