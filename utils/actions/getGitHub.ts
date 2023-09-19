@@ -21,10 +21,7 @@ async function getGitHub({
       type: "pr",
       per_page: amount,
     });
-
-    console.log("issues[0] - getGithub.ts", issues.data.items[0]);
-    // author is issues.data.items[0].user.login
-
+    
     return {
       fullData: issues.data?.items,
       data:

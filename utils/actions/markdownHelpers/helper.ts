@@ -21,8 +21,6 @@ const generalMarkdownHelper = ({
   if (Array.isArray(value.data) && value?.data?.length) {
     markdown = `\n #### ${systemResponseName}`;
 
-    console.log("value.data", value.data[0]);
-
     if (systemName === "GitHub") {
       markdown += (value?.data || [])
         .map(

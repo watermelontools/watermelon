@@ -118,7 +118,7 @@ export default async function getAllServices({
         amount: AsanaTasks,
       }),
     ]);
-  console.log("getAllServices - github: ", github);
+
   return {
     github,
     jira,
