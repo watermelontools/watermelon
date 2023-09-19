@@ -19,12 +19,24 @@ const generalMarkdownHelper = ({
   let markdown: MarkdownResponse = ``;
   if (Array.isArray(value.data) && value?.data?.length) {
     markdown = `\n #### ${systemResponseName}`;
-    markdown += (value?.data || [])
-      .map(
-        ({ number, title, link, body }) =>
-          `\n - [#${number} - ${title}](${link}) \n`
-      )
-      .join("");
+
+    console.log("value.data", value.data[0]);
+
+    if (systemName === "GitHub") {
+      markdown += (value?.data || [])
+        .map(
+          ({ number, title, link, body, created_at }) =>
+            `\n - [#${number} - ${title}](${link}) - On ${created_at} \n`
+        )
+        .join("");
+    } else {
+      markdown += (value?.data || [])
+        .map(
+          ({ number, title, link, body }) =>
+            `\n - [#${number} - ${title}](${link})\n`
+        )
+        .join("");
+    }
   } else {
     markdown += `\n No results found in **${systemResponseName}** :( \n`;
   }

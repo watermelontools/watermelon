@@ -25,6 +25,7 @@ export type StandardProcessedDataArray = {
   link?: string;
   number?: number | string;
   image?: string;
+  created_at?: string;
 }[];
 export type StandardAPIResponse = {
   data?: StandardProcessedDataArray;

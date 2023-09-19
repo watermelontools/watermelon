@@ -21,14 +21,19 @@ async function getGitHub({
       type: "pr",
       per_page: amount,
     });
+
+    console.log("issues[0] - getGithub.ts", issues.data.items[0]);
+    // author is issues.data.items[0].user.login
+
     return {
       fullData: issues.data?.items,
       data:
-        issues.data?.items?.map(({ title, body, html_url: link, number }) => ({
+        issues.data?.items?.map(({ title, body, html_url: link, number, created_at  }) => ({
           title,
           body,
           link,
           number,
+          created_at
         })) || [],
     };
   }
