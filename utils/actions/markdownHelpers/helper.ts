@@ -26,8 +26,8 @@ const generalMarkdownHelper = ({
     if (systemName === "GitHub") {
       markdown += (value?.data || [])
         .map(
-          ({ number, title, link, body, created_at }) =>
-            `\n - [#${number} - ${title}](${link}) - By author ${getRelativeDate(created_at)} \n`
+          ({ number, title, link, body, created_at, author}) =>
+            `\n - [#${number} - ${title}](${link}) - By ${author} ${getRelativeDate(created_at || "")} \n`
         )
         .join("");
     } else {

@@ -28,12 +28,13 @@ async function getGitHub({
     return {
       fullData: issues.data?.items,
       data:
-        issues.data?.items?.map(({ title, body, html_url: link, number, created_at  }) => ({
+        issues.data?.items?.map(({ title, body, html_url: link, number, created_at, user  }) => ({
           title,
           body,
           link,
           number,
-          created_at
+          created_at,
+          author: user?.login
         })) || [],
     };
   }
