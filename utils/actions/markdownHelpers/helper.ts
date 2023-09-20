@@ -12,7 +12,7 @@ const generalMarkdownHelper = ({
   systemResponseName,
 }: generalMarkdown): MarkdownResponse => {
   if (!value || value?.data?.length === 0) {
-    return `\n ${systemResponseName} deactivated by ${userLogin}`;
+    return `\n No results found in **${systemResponseName}** :( \n`;
   }
   if (value?.error?.match(/no (\w+) token/)) {
     return `\n [Click here to login to ${systemName}](https://app.watermelontools.com)`;
@@ -28,8 +28,6 @@ const generalMarkdownHelper = ({
           } ${created_at ? `${getRelativeDate(created_at ?? "")}` : ""}\n`
       )
       .join("");
-  } else {
-    markdown += `\n No results found in **${systemResponseName}** :( \n`;
   }
   return markdown;
 };
