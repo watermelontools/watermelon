@@ -1,5 +1,5 @@
 import { MarkdownRequest, MarkdownResponse } from "../../../types/watermelon";
-import  getRelativeDate  from "../../getRelativeDate";
+import getRelativeDate from "../../getRelativeDate";
 
 type generalMarkdown = MarkdownRequest & {
   systemName: string;
@@ -20,22 +20,14 @@ const generalMarkdownHelper = ({
   let markdown: MarkdownResponse = ``;
   if (Array.isArray(value.data) && value?.data?.length) {
     markdown = `\n #### ${systemResponseName}`;
-
-    if (systemName === "GitHub") {
-      markdown += (value?.data || [])
-        .map(
-          ({ number, title, link, body, created_at, author}) =>
-            `\n - [#${number} - ${title}](${link}) - By ${author} ${getRelativeDate(created_at || "")} \n`
-        )
-        .join("");
-    } else {
-      markdown += (value?.data || [])
-        .map(
-          ({ number, title, link, body }) =>
-            `\n - [#${number} - ${title}](${link})\n`
-        )
-        .join("");
-    }
+    markdown += (value?.data || [])
+      .map(
+        ({ number, title, link, body, author, created_at }) =>
+          `\n - [#${number} - ${title}](${link}) ${
+            author ? ` - By ${author}` : ""
+          } ${created_at ? `${getRelativeDate(created_at ?? "")}` : ""}\n`
+      )
+      .join("");
   } else {
     markdown += `\n No results found in **${systemResponseName}** :( \n`;
   }
