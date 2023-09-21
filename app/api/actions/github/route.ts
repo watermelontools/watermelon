@@ -33,7 +33,6 @@ export async function POST(request: Request) {
   const { missingParams } = validateParams(req, [
     "pull_request",
     "repository",
-    "organization",
     "action",
     "number",
   ]);
