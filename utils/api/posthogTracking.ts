@@ -20,7 +20,6 @@ export function missingParamsPosthogTracking({ url, missingParams }) {
     properties: missingParams,
   });
 }
-}
 export function unauthorizedPosthogTracking({ url, email, error }) {
   posthog.capture({
     distinctId: email,
