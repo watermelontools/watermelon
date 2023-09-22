@@ -13,7 +13,7 @@ import {
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
-import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import labelPullRequest from "../../../../utils/actions/labelPullRequest";
 
 import {
   failedPosthogTracking,
@@ -21,6 +21,7 @@ import {
 } from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
+import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -295,7 +296,6 @@ export async function POST(request: Request) {
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
-
           url: request.url,
           error: error.message,
           email: req.email,
@@ -400,6 +400,7 @@ export async function POST(request: Request) {
         isPrivateRepo: repository.private,
         repoName: repo,
       });
+      textToWrite += randomText();
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
       await labelPullRequest({
@@ -410,7 +411,7 @@ export async function POST(request: Request) {
         issue_number: number,
         installationId,
         reqUrl: request.url,
-        reqEmail: req.email
+        reqEmail: req.email,
       });
 
       await addActionLog({
