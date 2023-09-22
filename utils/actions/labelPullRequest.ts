@@ -10,19 +10,6 @@ import validateParams from "../../utils/api/validateParams";
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
 });
-const openai = new OpenAIApi(configuration);
-
-const app = new App({
-  appId: process.env.GITHUB_APP_ID!,
-  privateKey: process.env.GITHUB_PRIVATE_KEY!,
-});
-
-export default async function flagPullRequest({
-  prTitle,
-  businessLogicSummary,
-  installationId,
-  owner,
-  repo,
   issue_number,
   reqUrl,
   reqEmail,
