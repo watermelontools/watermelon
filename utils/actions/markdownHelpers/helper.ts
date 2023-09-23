@@ -28,7 +28,7 @@ const generalMarkdownHelper = ({
           } ${created_at ? `${getRelativeDate(created_at ?? "")}` : ""}\n`
       )
       .join("");
-  }
+  } 
   return markdown;
 };
 
