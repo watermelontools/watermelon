@@ -13,7 +13,7 @@ import {
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
-import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import labelPullRequest from "../../../../utils/actions/labelPullRequest";
 
 import {
   failedPosthogTracking,
@@ -295,7 +295,6 @@ export async function POST(request: Request) {
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
-
           url: request.url,
           error: error.message,
           email: req.email,
@@ -324,130 +323,198 @@ export async function POST(request: Request) {
         }
       }
       const count = await addActionCount({ watermelon_user });
-      textToWrite += `### WatermelonAI Summary \n`;
 
-      let businessLogicSummary;
-      if (AISummary) {
-        businessLogicSummary = await getOpenAISummary({
-          commitList,
-          values: {
-            github: github?.data,
-            jira: jira?.data,
-            confluence: confluence?.data,
-            slack: slack?.data,
-            notion: notion?.data,
-            linear: linear?.data,
-            asana: asana?.data,
-          },
-          title,
-          body,
+      console.log("count: ", count.github_app_uses);
+
+      if (count.github_app_uses <= 500) {
+        textToWrite += `### WatermelonAI Summary \n`;
+
+        let businessLogicSummary;
+        if (AISummary) {
+          businessLogicSummary = await getOpenAISummary({
+            commitList,
+            values: {
+              github: github?.data,
+              jira: jira?.data,
+              confluence: confluence?.data,
+              slack: slack?.data,
+              notion: notion?.data,
+              linear: linear?.data,
+              asana: asana?.data,
+            },
+            title,
+            body,
+          });
+
+          if (businessLogicSummary) {
+            textToWrite += businessLogicSummary + "\n";
+          } else {
+            textToWrite +=
+              "Error getting summary" + businessLogicSummary?.error + "\n";
+          }
+        } else {
+          textToWrite += `AI Summary deactivated by ${userLogin} \n`;
+        }
+
+        textToWrite += generalMarkdownHelper({
+          value: github,
+          userLogin,
+          systemName: "GitHub",
+          systemResponseName: "GitHub PRs",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: jira,
+          userLogin,
+          systemName: "Jira",
+          systemResponseName: "Jira Tickets",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: confluence,
+          userLogin,
+          systemName: "Confluence",
+          systemResponseName: "Confluence Docs",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: slack,
+          userLogin,
+          systemName: "Slack",
+          systemResponseName: "Slack Threads",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: notion,
+          userLogin,
+          systemName: "Notion",
+          systemResponseName: "Notion Pages",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: linear,
+          userLogin,
+          systemName: "Linear",
+          systemResponseName: "Linear Tickets",
+        });
+        textToWrite += generalMarkdownHelper({
+          value: asana,
+          userLogin,
+          systemName: "Asana",
+          systemResponseName: "Asana Tasks",
+        });
+        textToWrite += countMarkdown({
+          count,
+          isPrivateRepo: repository.private,
+          repoName: repo,
         });
 
-        if (businessLogicSummary) {
-          textToWrite += businessLogicSummary + "\n";
-        } else {
-          textToWrite +=
-            "Error getting summary" + businessLogicSummary?.error + "\n";
-        }
-      } else {
-        textToWrite += `AI Summary deactivated by ${userLogin} \n`;
-      }
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        await labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
 
-      textToWrite += generalMarkdownHelper({
-        value: github,
-        userLogin,
-        systemName: "GitHub",
-        systemResponseName: "GitHub PRs",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: jira,
-        userLogin,
-        systemName: "Jira",
-        systemResponseName: "Jira Tickets",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: confluence,
-        userLogin,
-        systemName: "Confluence",
-        systemResponseName: "Confluence Docs",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: slack,
-        userLogin,
-        systemName: "Slack",
-        systemResponseName: "Slack Threads",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: notion,
-        userLogin,
-        systemName: "Notion",
-        systemResponseName: "Notion Pages",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: linear,
-        userLogin,
-        systemName: "Linear",
-        systemResponseName: "Linear Tickets",
-      });
-      textToWrite += generalMarkdownHelper({
-        value: asana,
-        userLogin,
-        systemName: "Asana",
-        systemResponseName: "Asana Tasks",
-      });
-      textToWrite += countMarkdown({
-        count,
-        isPrivateRepo: repository.private,
-        repoName: repo,
-      });
-
-      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      await labelPullRequest({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email
-      });
-
-      await addActionLog({
-        randomWords,
-        github,
-        jira,
-        slack,
-        notion,
-        linear,
-        asana,
-        textToWrite,
-        businessLogicSummary,
-        owner,
-        repo,
-        number,
-        payload: req,
-        count,
-        watermelon_user,
-      });
-      // Fetch all comments on the PR
-      const comments = await octokit.request(
-        "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
-        {
+        await addActionLog({
+          randomWords,
+          github,
+          jira,
+          slack,
+          notion,
+          linear,
+          asana,
+          textToWrite,
+          businessLogicSummary,
           owner,
           repo,
-          issue_number: number,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
+          number,
+          payload: req,
+          count,
+          watermelon_user,
+        });
+        // Fetch all comments on the PR
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+          {
+            owner,
+            repo,
+            issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+        console.info("comments.data.length", comments.data.length);
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) => {
+          return comment.user.login.includes("watermelon-context");
+        });
+        if (botComment?.id) {
+          // Update the existing comment
+          await octokit.request(
+            "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+            {
+              owner,
+              repo,
+              comment_id: botComment.id,
+              body: textToWrite,
+            }
+          );
+        } else {
+          // Post a new comment if no existing comment was found
+          await octokit
+            .request(
+              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+              {
+                owner,
+                issue_number: number,
+                repo,
+                body: textToWrite,
+              }
+            )
+            .then((response) => {
+              successPosthogTracking({
+                url: request.url,
+                email: user_email,
+                data: {
+                  repo,
+                  owner,
+                  number,
+                  action: req.action,
+                  textToWrite,
+                },
+              });
+            })
+            .catch((error) => {
+              failedPosthogTracking({
+                url: request.url,
+                error: error.message,
+                email: req.email,
+              });
+              return console.error("posting comment error", error);
+            });
         }
-      );
-      console.info("comments.data.length", comments.data.length);
-      // Find our bot's comment
-      let botComment = comments.data.find((comment) => {
-        return comment.user.login.includes("watermelon-context");
-      });
-      if (botComment?.id) {
+      } else {
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`
+
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+          {
+            owner,
+            repo,
+            issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) => {
+          return comment.user.login.includes("watermelon-context");
+        });
+
         // Update the existing comment
         await octokit.request(
           "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
@@ -458,40 +525,8 @@ export async function POST(request: Request) {
             body: textToWrite,
           }
         );
-      } else {
-        // Post a new comment if no existing comment was found
-        await octokit
-          .request(
-            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-            {
-              owner,
-              issue_number: number,
-              repo,
-              body: textToWrite,
-            }
-          )
-          .then((response) => {
-            successPosthogTracking({
-              url: request.url,
-              email: user_email,
-              data: {
-                repo,
-                owner,
-                number,
-                action: req.action,
-                textToWrite,
-              },
-            });
-          })
-          .catch((error) => {
-            failedPosthogTracking({
-              url: request.url,
-              error: error.message,
-              email: req.email,
-            });
-            return console.error("posting comment error", error);
-          });
       }
+
       successPosthogTracking({
         url: request.url,
         email: user_email,
