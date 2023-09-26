@@ -18,11 +18,21 @@ async function HomePage({}) {
     return null;
   });
   const comingSoon = [
-    "PHPStorm",
     "IntelliJ",
-    "WebStorm",
+    "Android Studio",
+    "AppCode",
+    "Aqua",
+    "CLion",
+    "DataGrip",
+    "DataSpell",
+    "GoLand",
+    "MPS",
+    "PhpStorm",
     "PyCharm",
+    "Rider",
     "RubyMine",
+    "RustRover",
+    "WebStorm",
   ];
   return (
     <div>
@@ -71,18 +81,20 @@ async function HomePage({}) {
               />
             </div>
             {comingSoon.map((name) => (
-              <div className="p-3">
-                <div className="Box d-flex flex-items-center flex-justify-start p-2">
-                  <img
-                    className="avatar avatar-8"
-                    src={`/logos/${name.toLowerCase()}.svg`}
-                  />
-                  <div className="p-2">
-                    <h2>{name}</h2>
-                    <p>Coming Soon</p>
+              <a href="https://plugins.jetbrains.com/plugin/22720-watermelon-context">
+                <div className="p-3">
+                  <div className="Box d-flex flex-items-center flex-justify-start p-2">
+                    <img
+                      className="avatar avatar-8"
+                      src={`/logos/${name.toLowerCase()}.svg`}
+                    />
+                    <div className="p-2">
+                      <h2>{name}</h2>
+                      <p>Download now</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
           </div>
         </div>
