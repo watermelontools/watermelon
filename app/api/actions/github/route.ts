@@ -324,8 +324,6 @@ export async function POST(request: Request) {
       }
       const count = await addActionCount({ watermelon_user });
 
-      console.log("count: ", count.github_app_uses);
-
       if (count.github_app_uses <= 500) {
         textToWrite += `### WatermelonAI Summary \n`;
 
