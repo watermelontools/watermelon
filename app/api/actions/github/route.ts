@@ -323,8 +323,10 @@ export async function POST(request: Request) {
           return NextResponse.json("User not registered");
         }
       }
-      const count = await addActionCount({ watermelon_user });
 
+      const count = await addActionCount({ owner });
+      
+      textToWrite += `### WatermelonAI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
