@@ -325,8 +325,8 @@ export async function POST(request: Request) {
       }
 
       const count = await addActionCount({ owner });
+      
       textToWrite += `### WatermelonAI Summary \n`;
-
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
@@ -494,6 +494,40 @@ export async function POST(request: Request) {
             return console.error("posting comment error", error);
           });
       }
+
+      // If the count is surpassed, we replace the
+      if (count.github_app_uses > 500) {
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`
+
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+          {
+            owner,
+            repo,
+            issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) => {
+          return comment.user.login.includes("watermelon-context");
+        });
+
+        // Update the existing comment
+        await octokit.request(
+          "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+          {
+            owner,
+            repo,
+            comment_id: botComment.id,
+            body: textToWrite,
+          }
+        );
+      }
+
       successPosthogTracking({
         url: request.url,
         email: user_email,
