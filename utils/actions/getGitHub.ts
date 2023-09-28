@@ -1,5 +1,6 @@
 import { Octokit } from "octokit";
 import { StandardAPIResponse } from "../../types/watermelon";
+import { decrypt } from "../encryption/tokenSalting";
 async function getGitHub({
   repo,
   owner,
@@ -13,7 +14,7 @@ async function getGitHub({
     return { error: "no github token" };
   } else {
     const octokit = new Octokit({
-      auth: github_token,
+      auth: decrypt(github_token),
     });
     const issues = await octokit.rest.search.issuesAndPullRequests({
       q,
