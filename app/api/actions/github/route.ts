@@ -545,7 +545,12 @@ export async function POST(request: Request) {
       });
     }
 
-    if (req.action === "created" || req.action === "new_permissions_accepted") {
+    if (
+      req.action === "created" ||
+      req.action === "new_permissions_accepted" ||
+      req.action === "added" ||
+      req.action === "unsuspend"
+    ) {
       const octokit = await app.getInstallationOctokit(req.installation.id);
       const orgMembers = await octokit.request("GET /orgs/{org}/members", {
         org: req.repository.owner.login,
