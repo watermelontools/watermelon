@@ -21,7 +21,7 @@ export function encrypt(plaintext: string): string {
 }
 
 export function decrypt(ciphertext: string): string {
-    if(!process.env.NEXT_PUBLIC_ENCRYPTION_KEYY) {
+    if(!process.env.NEXT_PUBLIC_ENCRYPTION_KEY) {
         throw new Error("Encryption key not found"); 
     }
     const key = base64ToUint8Array(process.env.NEXT_PUBLIC_ENCRYPTION_KEY!);
