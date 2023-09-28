@@ -547,13 +547,29 @@ export async function POST(request: Request) {
 
     if (req.action === "created" || req.action === "new_permissions_accepted") {
       const octokit = await app.getInstallationOctokit(req.installation.id);
-      await octokit.request("GET /orgs/{org}/members", {
+      const orgMembers = await octokit.request("GET /orgs/{org}/members", {
         org: req.repository.owner.login,
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
         },
       });
-      console.info("org members", req.repository.owner.login);
+      console.info("org members", orgMembers.data);
+      const userPromises = orgMembers.data.map((member) => {
+        return octokit.request("GET /users/{username}", {
+          username: member.login,
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        });
+      });
+
+      // Use Promise.all to wait for all the promises to resolve
+      const users = await Promise.all(userPromises);
+
+      // Process the results
+      users.forEach((user) => {
+        console.info("user", user.data);
+      });
     }
     return NextResponse.json({
       message: "wat",
