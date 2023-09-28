@@ -6,7 +6,7 @@ export default async function getUser(user): Promise<any> {
     let data = await executeRequest(
       `EXEC dbo.get_github_token @watermelon_user = '${user}'`
     );
-    return decrypt(data);
+    return data;
   } catch (err) {
     console.error(err);
     return err;
