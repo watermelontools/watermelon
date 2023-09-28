@@ -8,8 +8,7 @@ import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 import ConnectedService from "../../../components/services/page";
 import LoginArray from "../../../components/services/loginArray";
 
-import { encrypt } from "../../../utils/encryption/encrypt";
-import decrypt from "../../../utils/encryption/decrypt";
+import { encrypt, decrypt } from "../../../utils/encryption/tokenSalting";
 
 export default async function ServicePage({
   searchParams,
