@@ -325,7 +325,7 @@ export async function POST(request: Request) {
       }
 
       const count = await addActionCount({ owner });
-      
+
       textToWrite += `### WatermelonAI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
@@ -497,7 +497,7 @@ export async function POST(request: Request) {
 
       // If the count is surpassed, we replace the
       if (count.github_app_uses > 500) {
-        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
 
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
@@ -543,6 +543,17 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
+    }
+
+    if (req.action === "created" || req.action === "new_permissions_accepted") {
+      const octokit = await app.getInstallationOctokit(req.installation.id);
+      await octokit.request("GET /orgs/{org}/members", {
+        org: req.repository.owner.login,
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+      });
+      console.info("org members", req.repository.owner.login);
     }
     return NextResponse.json({
       message: "wat",
