@@ -1,5 +1,4 @@
 import executeRequest from "../azuredb";
-import {decrypt} from "../../encryption/tokenSalting";
 
 export default async function getUser(user): Promise<any> {
   try {
