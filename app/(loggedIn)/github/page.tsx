@@ -8,6 +8,9 @@ import getAllPublicUserData from "../../../utils/api/getAllUserPublicData";
 import ConnectedService from "../../../components/services/page";
 import LoginArray from "../../../components/services/loginArray";
 
+import { encrypt } from "../../../utils/encryption/encrypt";
+import decrypt from "../../../utils/encryption/decrypt";
+
 export default async function ServicePage({
   searchParams,
 }: {
@@ -53,13 +56,13 @@ export default async function ServicePage({
     // get user correctly
     let user = await fetch(`https://api.github.com/user`, {
       headers: {
-        Authorization: `token ${json.access_token}`,
+        Authorization: `token ${decrypt(json.access_token)}`,
       },
     });
     let userJson = await user.json();
     // save user correctly
     await saveUserInfo({
-      access_token: json.access_token,
+      access_token: encrypt(json.access_token),
       scope: json.scope,
       login: userJson.login,
       id: userJson.id,

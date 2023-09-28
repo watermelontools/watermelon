@@ -1,11 +1,12 @@
 import executeRequest from "../azuredb";
+import decrypt from "../../encryption/decrypt";
 
 export default async function getUser(user): Promise<any> {
   try {
     let data = await executeRequest(
       `EXEC dbo.get_github_token @watermelon_user = '${user}'`
     );
-    return data;
+    return decrypt(data);
   } catch (err) {
     console.error(err);
     return err;
