@@ -15,7 +15,7 @@ async function getSlack({
       user_token: slack_token,
       count: amount,
     });
-    slackValue = response.messages.matches.filter(
+    slackValue = response?.messages?.matches?.filter(
       (message) => !message.channel.is_private
     );
   }
