@@ -31,13 +31,15 @@ export async function POST(request: Request) {
   const { headers } = request;
   let textToWrite = "";
   const req = await request.json();
+  console.info("ACTION", req.action);
+  console.info("req", req);
   const { missingParams } = validateParams(req, [
     "pull_request",
     "repository",
     "action",
     "number",
   ]);
-  console.info("req", req);
+
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
