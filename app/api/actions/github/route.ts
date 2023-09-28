@@ -37,10 +37,10 @@ export async function POST(request: Request) {
     "action",
     "number",
   ]);
+  console.info("req", req);
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
-  console.info("req", req);
   try {
     // Verify and parse the webhook event
     const eventName = headers["x-github-event"];
