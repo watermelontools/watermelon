@@ -38,21 +38,6 @@ export default async function flagPullRequest({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
-  const { missingParams } = validateParams("", [
-    "prTitle",
-    "businessLogicSummary",
-    "installationId",
-    "owner",
-    "repo",
-    "issue_number",
-    "reqUrl",
-    "reqEmail",
-  ]);
-
-  if (missingParams.length > 0) {
-    return missingParamsResponse({ url: reqUrl, missingParams });
-  }
-
   const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`;
 
   try {
@@ -79,7 +64,9 @@ export default async function flagPullRequest({
           },
         });
 
-        if (prRating >= 2) {
+        console.log("prRating", prRating);
+
+        if (prRating >= 9) {
           octokit.request(
             "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
             {
@@ -89,7 +76,18 @@ export default async function flagPullRequest({
               labels: ["🍉 Safe to Merge"],
             }
           );
-        } else {
+        } else if (prRating > 6) {
+          octokit.request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
+            {
+              owner,
+              repo,
+              issue_number,
+              labels: ["⚠️ Take a deeper dive"],
+            }
+          );
+        }
+        else {
           // remove label
           octokit.request(
             "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
@@ -98,6 +96,17 @@ export default async function flagPullRequest({
               repo,
               issue_number,
               name: "🍉 Safe to Merge",
+            }
+          );
+
+          // add label
+          octokit.request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
+            {
+              owner,
+              repo,
+              issue_number,
+              labels: ["🚨 Don't Merge"],
             }
           );
         }
