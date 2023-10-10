@@ -53,7 +53,7 @@ export default async function flagPullRequest({
       })
       .then((result) => {
         const prRating = result.data.choices[0].message.content;
-
+        
         successPosthogTracking({
           url: reqUrl,
           email: reqEmail,
@@ -65,6 +65,28 @@ export default async function flagPullRequest({
         });
 
         if (prRating >= 9) {
+          // remove label
+          octokit.request(
+            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+            {
+              owner,
+              repo,
+              issue_number,
+              name: "⚠️ Take a deeper dive",
+            }
+          );
+
+          // remove label
+          octokit.request(
+            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+            {
+              owner,
+              repo,
+              issue_number,
+              name: "🚨 Don't Merge",
+            }
+          );
+
           octokit.request(
             "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
             {
@@ -75,6 +97,28 @@ export default async function flagPullRequest({
             }
           );
         } else if (prRating > 6) {
+          // remove label
+          octokit.request(
+            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+            {
+              owner,
+              repo,
+              issue_number,
+              name: "🍉 Safe to Merge",
+            }
+          );
+
+          // remove label
+          octokit.request(
+            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+            {
+              owner,
+              repo,
+              issue_number,
+              name: "🚨 Don't Merge",
+            }
+          );
+
           octokit.request(
             "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
             {
@@ -94,6 +138,17 @@ export default async function flagPullRequest({
               repo,
               issue_number,
               name: "🍉 Safe to Merge",
+            }
+          );
+
+          // remove label
+          octokit.request(
+            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+            {
+              owner,
+              repo,
+              issue_number,
+              name: "⚠️ Take a deeper dive",
             }
           );
 
