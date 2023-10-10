@@ -64,8 +64,6 @@ export default async function flagPullRequest({
           },
         });
 
-        console.log("prRating", prRating);
-
         if (prRating >= 9) {
           octokit.request(
             "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
