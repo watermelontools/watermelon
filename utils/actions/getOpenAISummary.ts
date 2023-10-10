@@ -77,7 +77,9 @@ export default async function getOpenAISummary({
             know what is going on in this recently opened Pull Request. The user will give 
             you some context and you will summarize it in a succinct but not jargon filled 
             way. You will avoid going over each individual data point, but will reason about
-             the business logic.`,
+            the business logic. Be concise and don't explain step by step. Don't explain the
+            PR title in one sentence, the PR body in another one, etc. Just give a high-level
+            overview of what the PR is doing. Make it less than 45 words.`,
         },
         { role: "user", content: prompt },
       ],
