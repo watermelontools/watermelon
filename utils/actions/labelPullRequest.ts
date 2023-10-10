@@ -53,7 +53,7 @@ export default async function flagPullRequest({
       })
       .then((result) => {
         const prRating = result.data.choices[0].message.content;
-        
+
         successPosthogTracking({
           url: reqUrl,
           email: reqEmail,
@@ -72,7 +72,7 @@ export default async function flagPullRequest({
               owner,
               repo,
               issue_number,
-              name: "⚠️ Take a deeper dive",
+              name: "👀 Take a deeper dive",
             }
           );
 
@@ -125,7 +125,7 @@ export default async function flagPullRequest({
               owner,
               repo,
               issue_number,
-              labels: ["⚠️ Take a deeper dive"],
+              labels: ["👀 Take a deeper dive"],
             }
           );
         }
@@ -148,7 +148,7 @@ export default async function flagPullRequest({
               owner,
               repo,
               issue_number,
-              name: "⚠️ Take a deeper dive",
+              name: "👀 Take a deeper dive",
             }
           );
 
