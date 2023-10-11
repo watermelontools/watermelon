@@ -17,6 +17,40 @@ const app = new App({
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 
+function getAdditions(filePatch: string) {
+    const additions: string[] = [];
+  
+    // Split the patch into lines
+    const lines = filePatch.split('\n');
+  
+    // Track if we are in a deletion block
+    let inDeletionBlock = false;
+  
+    // Loop through lines
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      // Check if entering a deletion block 
+      if (line.startsWith('-')) {
+        inDeletionBlock = true;
+        continue;
+      }
+      
+      // Check if exiting a deletion block
+      if (line.startsWith('+') && inDeletionBlock) {
+        inDeletionBlock = false;
+        continue;
+      }
+      
+      // If not in a deletion block, add lines starting with +
+      if (!inDeletionBlock && line.startsWith('+')) {
+        additions.push(line); 
+      }
+    }
+  
+    return additions;
+  }
+
 export default async function detectConsoleLogs({
   installationId,
   owner,
@@ -47,7 +81,41 @@ export default async function detectConsoleLogs({
   );
 
   //console logs the diffs
-  diffFiles.map((file) => {
+  diffFiles.map(async (file) => {
     console.log("file addition: ", file.patch);
+    const additions = getAdditions(file.patch?? "");
+    console.log("additions parsed: ", additions);
+
+    const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
+    if there's a console log or its equivalent in another programming language 
+    (console.log(), println(), System.out.println(), print(), fmt.Println(), etc.). 
+    If the console log or its equivalent in another language is in a code comment, don't
+    count it as a detected console log. If there is a console log, print "true", else 
+    print "false"`
+
+    // detect if the additions contain console.logs or not
+    try {
+        return await openai
+          .createChatCompletion({
+            model: "gpt-3.5-turbo-16k",
+            messages: [
+              {
+                role: "system",
+                content: `${consoleLogDetectionPrompt} \n ${additions}`,
+              },
+            ],
+          })
+          .then((result) => {
+            const addtionsHaveConsoleLog = result.data.choices[0].message.content;
+
+            if (addtionsHaveConsoleLog === "true") {
+                console.log("CONSOLE LOG DETECTED")
+            } else {
+                console.log("not console logs")
+            }
+          })
+    } catch {
+
+    }
   });
 }
