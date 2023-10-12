@@ -276,6 +276,7 @@ export async function POST(request: Request) {
         .slice(0, 6);
       const serviceAnswers = await getAllServices({
         userLogin,
+        installationId,
         repo,
         owner,
         randomWords,
@@ -325,7 +326,7 @@ export async function POST(request: Request) {
       }
 
       const count = await addActionCount({ owner });
-      
+
       textToWrite += `### WatermelonAI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
@@ -497,7 +498,7 @@ export async function POST(request: Request) {
 
       // If the count is surpassed, we replace the
       if (count.github_app_uses > 500) {
-        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
 
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",

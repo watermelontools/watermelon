@@ -7,6 +7,8 @@ import getNotion from "./getNotion";
 import getLinear from "./getLinear";
 import getConfluence from "./getConfluence";
 import getAsana from "./getAsana";
+import { get } from "http";
+import getTeamGitHub from "./getTeamGitHub";
 export default async function getAllServices({
   email,
   url,
@@ -15,6 +17,7 @@ export default async function getAllServices({
   randomWords,
   hardMax,
   userLogin,
+  installationId,
 }: {
   email?: string;
   userLogin?: string;
@@ -23,6 +26,7 @@ export default async function getAllServices({
   owner: string;
   randomWords: string[];
   hardMax?: number;
+  installationId?: number;
 }) {
   let query = "";
   if (email) {
@@ -71,12 +75,19 @@ export default async function getAllServices({
     });
     return { error: error.message };
   }
-  const [github, jira, confluence, slack, notion, linear, asana] =
+  const [github, teamGitHub, jira, confluence, slack, notion, linear, asana] =
     await Promise.all([
       getGitHub({
         repo,
         owner,
         github_token,
+        randomWords,
+        amount: GitHubPRs,
+      }),
+      getTeamGitHub({
+        repo,
+        owner,
+        installationId,
         randomWords,
         amount: GitHubPRs,
       }),
@@ -118,7 +129,8 @@ export default async function getAllServices({
         amount: AsanaTasks,
       }),
     ]);
-
+  console.log("github", github);
+  console.log("teamGitHub", teamGitHub);
   return {
     github,
     jira,
