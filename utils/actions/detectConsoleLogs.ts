@@ -82,9 +82,7 @@ export default async function detectConsoleLogs({
 
   //console logs the diffs
   diffFiles.map(async (file) => {
-    console.log("file addition: ", file.patch);
     const additions = getAdditions(file.patch ?? "");
-    console.log("additions parsed: ", additions);
 
     const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
     if there's a console log or its equivalent in another programming language 
@@ -121,8 +119,6 @@ export default async function detectConsoleLogs({
                 body: `This PR contains console logs. Please remove them.`,
               }
             );
-          } else {
-            console.log("not console logs");
           }
         });
     } catch {}
