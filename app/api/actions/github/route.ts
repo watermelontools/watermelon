@@ -314,7 +314,7 @@ export async function POST(request: Request) {
                 owner,
                 issue_number: number,
                 repo,
-                body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
+                body: "[Please login to GitHub in Watermelon to see the results](https://app.watermelontools.com/)",
               }
             )
             .then((response) => {
