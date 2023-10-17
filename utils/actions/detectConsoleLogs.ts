@@ -46,9 +46,21 @@ function getAdditions(filePatch: string) {
     if (!inDeletionBlock && line.startsWith("+")) {
       additions.push(line);
     }
+
+    // Delete the pluses
+    lines[i] = line.replace("+", "");
+
+    // Trim the line to delete leading spaces
+    lines[i] = lines[i].trim();
+
+    // If the line is a comment, remove it
+    if (lines[i].startsWith("#") || lines[i].startsWith("//") || lines[i].startsWith("/*")) {
+      lines.splice(i, 1);
+      i--;
+    }
   }
 
-  return additions;
+  return lines.join("\n");
 }
 
 export default async function detectConsoleLogs({
@@ -80,7 +92,6 @@ export default async function detectConsoleLogs({
     }
   );
 
-  //console logs the diffs
   diffFiles.map(async (file) => {
     const additions = getAdditions(file.patch ?? "");
 
@@ -94,7 +105,7 @@ export default async function detectConsoleLogs({
     Ignore code comments from this analysis. 
     If there is a console log, print "true", else print "false"`;
 
-    // detect if the additions contain console.logs or not
+    // detect if the additions contain console logs or not
     try {
       return await openai
         .createChatCompletion({
@@ -110,8 +121,6 @@ export default async function detectConsoleLogs({
           const addtionsHaveConsoleLog = result.data.choices[0].message.content;
 
           if (addtionsHaveConsoleLog === "true") {
-            // console.log("CONSOLE LOG DETECTED"); 
-
             // comment the file with the console log detection
             octokit.request(
               "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
