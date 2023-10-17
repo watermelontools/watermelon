@@ -91,6 +91,7 @@ export default async function detectConsoleLogs({
     count it as a detected console log. For example JavaScript comments start with // or /*, 
     Python comments start with #.
     Other console functions such as console.info() should'n't be counted as console logs.
+    Ignore code comments from this analysis. 
     If there is a console log, print "true", else print "false"`;
 
     // detect if the additions contain console.logs or not
