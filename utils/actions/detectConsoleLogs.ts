@@ -88,8 +88,10 @@ export default async function detectConsoleLogs({
     if there's a console log or its equivalent in another programming language 
     (console.log(), println(), System.out.println(), print(), fmt.Println(), etc.). 
     If the console log or its equivalent in another language is in a code comment, don't
-    count it as a detected console log. If there is a console log, print "true", else 
-    print "false"`;
+    count it as a detected console log. For example JavaScript comments start with // or /*, 
+    Python comments start with #.
+    Other console functions such as console.info() should'n't be counted as console logs.
+    If there is a console log, print "true", else print "false"`;
 
     // detect if the additions contain console.logs or not
     try {
@@ -116,7 +118,7 @@ export default async function detectConsoleLogs({
                 owner,
                 repo,
                 issue_number,
-                body: `This PR contains console logs. Please remove them.`,
+                body: `This PR contains console logs in file ${file.filename}. Please remove them.`,
               }
             );
           }
