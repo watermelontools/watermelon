@@ -50,6 +50,8 @@ export async function POST(request: Request) {
       req.action === "synchronize"
     ) {
       const { installation, repository, pull_request } = req;
+      console.info("ins", installation);
+
       const installationId = installation.id;
       const { title, body } = req.pull_request;
       const owner = repository.owner.login;

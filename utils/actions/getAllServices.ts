@@ -9,6 +9,7 @@ import getConfluence from "./getConfluence";
 import getAsana from "./getAsana";
 import { get } from "http";
 import getTeamGitHub from "./getTeamGitHub";
+import posthog from "../posthog/posthog";
 export default async function getAllServices({
   email,
   url,
@@ -130,6 +131,7 @@ export default async function getAllServices({
       }),
     ]);
   console.log("github", github);
+  posthog.capture({ event: "teamGHTest", properties: teamGitHub });
   console.log("teamGitHub", teamGitHub);
   return {
     github,
