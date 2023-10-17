@@ -40,6 +40,8 @@ export default async function flagPullRequest({
 
   const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`;
 
+
+  
   try {
     return await openai
       .createChatCompletion({

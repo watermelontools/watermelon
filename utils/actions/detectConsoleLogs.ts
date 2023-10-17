@@ -107,7 +107,7 @@ export default async function detectConsoleLogs({
           const addtionsHaveConsoleLog = result.data.choices[0].message.content;
 
           if (addtionsHaveConsoleLog === "true") {
-            console.log("CONSOLE LOG DETECTED");
+            // console.log("CONSOLE LOG DETECTED"); 
 
             // comment the file with the console log detection
             octokit.request(
