@@ -62,9 +62,9 @@ export default async function getOpenAISummary({
     body ? `Current PR Body: ${body} \n` : ""
   }`;
 
-  const prompt = `Summarize what the ${summaryPrompt} ${
-    commitList?.length ? `the ${commitList?.length} commits,` : ""
-  } are about. What do they tell us about the business logic? Don't summarize each piece 
+  promptList += commitList;
+
+  const prompt = `Summarize what the ${summaryPrompt} is about. What do they tell us about the business logic? Don't summarize each piece 
   or block of data separately, combine them and process all data. Take into consideration 
   the current PR title and body. Don't look at each part or service of the list as a 
   separate thing, but as a whole. The list will be available to me so you don't need to 
