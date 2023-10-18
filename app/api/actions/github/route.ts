@@ -326,7 +326,7 @@ export async function POST(request: Request) {
       }
 
       const count = await addActionCount({ owner });
-      
+
       textToWrite += `### WatermelonAI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
@@ -406,18 +406,6 @@ export async function POST(request: Request) {
 
       // Detect console.logs and its equivalent in other languages
       await detectConsoleLogs({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
-      });
-
-      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      await labelPullRequest({
         prTitle: title,
         businessLogicSummary,
         repo,
@@ -510,7 +498,7 @@ export async function POST(request: Request) {
 
       // If the count is surpassed, we replace the
       if (count.github_app_uses > 500) {
-        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
 
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
@@ -556,6 +544,36 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
+    } else if (req.action === "created") {
+      const { installation, repository, comment, issue } = req;
+
+      const { title, body } = req.pull_request;
+      const owner = repository.owner.login;
+      const repo = repository.name;
+      const number = issue.number;
+      const installationId = installation.id;
+      const userLogin = comment.user.login;
+      if (userLogin === "watermelon-context[bot]") {
+        let botComment = comment.body;
+        if (botComment.includes("WatermelonAI Summary")) {
+          // extract the business logic summary, it's always the first paragraph under the title
+          const businessLogicSummary = botComment
+            .split("### WatermelonAI Summary")[1]
+            .split("\n")[1];
+
+          // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+          await labelPullRequest({
+            prTitle: title,
+            businessLogicSummary,
+            repo,
+            owner,
+            issue_number: number,
+            installationId,
+            reqUrl: request.url,
+            reqEmail: req.email,
+          });
+        }
+      }
     }
     return NextResponse.json({
       message: "wat",
