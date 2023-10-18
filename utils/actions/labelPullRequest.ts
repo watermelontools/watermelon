@@ -60,6 +60,35 @@ export default async function flagPullRequest({
     }
   });
 
+  const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`;
+  let labels = {
+    SAFE_TO_MERGE: "🍉 Safe to Merge",
+    TAKE_A_DEEPER_DIVE: "👀 Take a deeper dive",
+    DONT_MERGE: "🚨 Don't Merge",
+  };
+  function deleteLabel(labelName: string) {
+    octokit.request(
+      "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+      {
+        owner,
+        repo,
+        issue_number,
+        name: labelName,
+      }
+    );
+  }
+  function addLabel(labelName: string) {
+    octokit.request(
+      "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
+      {
+        owner,
+        repo,
+        issue_number,
+        labels: [labelName],
+      }
+    );
+  }
+
   try {
     return await openai
       .createChatCompletion({
@@ -85,102 +114,20 @@ export default async function flagPullRequest({
         });
 
         if (prRating >= 9) {
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "👀 Take a deeper dive",
-            }
-          );
+          deleteLabel(labels.DONT_MERGE);
+          deleteLabel(labels.TAKE_A_DEEPER_DIVE);
 
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "🚨 Don't Merge",
-            }
-          );
-
-          octokit.request(
-            "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
-            {
-              owner,
-              repo,
-              issue_number,
-              labels: ["🍉 Safe to Merge"],
-            }
-          );
+          addLabel(labels.SAFE_TO_MERGE);
         } else if (prRating > 6) {
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "🍉 Safe to Merge",
-            }
-          );
+          deleteLabel(labels.SAFE_TO_MERGE);
+          deleteLabel(labels.DONT_MERGE);
 
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "🚨 Don't Merge",
-            }
-          );
-
-          octokit.request(
-            "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
-            {
-              owner,
-              repo,
-              issue_number,
-              labels: ["👀 Take a deeper dive"],
-            }
-          );
+          addLabel(labels.TAKE_A_DEEPER_DIVE);
         } else {
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "🍉 Safe to Merge",
-            }
-          );
+          deleteLabel(labels.SAFE_TO_MERGE);
+          deleteLabel(labels.TAKE_A_DEEPER_DIVE);
 
-          // remove label
-          octokit.request(
-            "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-            {
-              owner,
-              repo,
-              issue_number,
-              name: "👀 Take a deeper dive",
-            }
-          );
-
-          // add label
-          octokit.request(
-            "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
-            {
-              owner,
-              repo,
-              issue_number,
-              labels: ["🚨 Don't Merge"],
-            }
-          );
+          addLabel(labels.DONT_MERGE);
         }
       });
   } catch (error) {
