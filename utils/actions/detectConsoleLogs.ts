@@ -54,7 +54,11 @@ function getAdditions(filePatch: string) {
     lines[i] = lines[i].trim();
 
     // If the line is a comment, remove it
-    if (lines[i].startsWith("#") || lines[i].startsWith("//") || lines[i].startsWith("/*")) {
+    if (
+      lines[i].startsWith("#") ||
+      lines[i].startsWith("//") ||
+      lines[i].startsWith("/*")
+    ) {
       lines.splice(i, 1);
       i--;
     }
@@ -92,7 +96,7 @@ export default async function detectConsoleLogs({
     }
   );
 
-  diffFiles.map(async (file) => {
+  const commentPromises = diffFiles.map(async (file) => {
     const additions = getAdditions(file.patch ?? "");
 
     const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
@@ -122,7 +126,7 @@ export default async function detectConsoleLogs({
 
           if (addtionsHaveConsoleLog === "true") {
             // comment detailing which file has the console log detected
-            octokit.request(
+            return octokit.request(
               "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
               {
                 owner,
@@ -135,4 +139,7 @@ export default async function detectConsoleLogs({
         });
     } catch {}
   });
+  try {
+    await Promise.allSettled(commentPromises);
+  } catch {}
 }
