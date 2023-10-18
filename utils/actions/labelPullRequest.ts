@@ -38,7 +38,29 @@ export default async function flagPullRequest({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
-  const prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`;
+  let prompt = `The goal of this PR is to: ${prTitle}. \n The information related to this PR is: ${businessLogicSummary}. \n On a scale of 1(very different)-10(very similar), how similar the PR's goal and the PR's related information are? Take into account semantics. Don't explain your reasoning, just print the rating. Don't give a range for the rating, print a single value.`;
+
+  // Fetch all comments on the PR
+  const comments = await octokit.request(
+    "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+    {
+      owner,
+      repo,
+      issue_number,
+      headers: {
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    }
+  );
+
+  // Find our bot's comment
+  let botComment = comments.data.find((comment) => {
+    if (comment.body.includes("This PR contains console logs")) {
+      // concat to the prompt
+      prompt += "Since the PR contains console logs, make the maximum rating 8.";
+    }
+  });
+
   let labels = {
     SAFE_TO_MERGE: "🍉 Safe to Merge",
     TAKE_A_DEEPER_DIVE: "👀 Take a deeper dive",
@@ -66,6 +88,7 @@ export default async function flagPullRequest({
       }
     );
   }
+
   try {
     return await openai
       .createChatCompletion({

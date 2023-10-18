@@ -14,6 +14,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import detectConsoleLogs from "../../../../utils/actions/detectConsoleLogs";
 
 import {
   failedPosthogTracking,
@@ -402,6 +403,18 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
+
+      // Detect console.logs and its equivalent in other languages
+      await detectConsoleLogs({
+        prTitle: title,
+        businessLogicSummary,
+        repo,
+        owner,
+        issue_number: number,
+        installationId,
+        reqUrl: request.url,
+        reqEmail: req.email,
+      });
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
       await labelPullRequest({
