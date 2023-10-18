@@ -52,11 +52,12 @@ export default async function flagPullRequest({
       },
     }
   );
+
   // Find our bot's comment
   let botComment = comments.data.find((comment) => {
     if (comment.body.includes("This PR contains console logs")) {
-      prompt +=
-        "Since the PR contains console logs, make the maximum rating 8.";
+      // concat to the prompt
+      prompt = prompt + "Since the PR contains console logs, make the maximum rating 8.";
     }
   });
 
