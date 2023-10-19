@@ -448,7 +448,6 @@ export async function POST(request: Request) {
           },
         }
       );
-      console.info("comments.data.length", comments.data.length);
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
         return comment.user.login.includes("watermelon-context");
