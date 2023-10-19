@@ -32,12 +32,7 @@ export async function POST(request: Request) {
   const { headers } = request;
   let textToWrite = "";
   const req = await request.json();
-  const { missingParams } = validateParams(req, [
-    "pull_request",
-    "repository",
-    "action",
-    "number",
-  ]);
+  const { missingParams } = validateParams(req, ["action"]);
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
@@ -50,6 +45,14 @@ export async function POST(request: Request) {
       req.action === "reopened" ||
       req.action === "synchronize"
     ) {
+      const { missingParams } = validateParams(req, [
+        "pull_request",
+        "repository",
+        "number",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
       const { installation, repository, pull_request } = req;
       const installationId = installation.id;
       const { title, body } = req.pull_request;
@@ -545,9 +548,17 @@ export async function POST(request: Request) {
         textToWrite,
       });
     } else if (req.action === "created") {
+      const { missingParams } = validateParams(req, [
+        "installation",
+        "repository",
+        "comment",
+        "issue",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
       const { installation, repository, comment, issue } = req;
-
-      const { title, body } = req.pull_request;
+      const { title, body } = req.issue;
       const owner = repository.owner.login;
       const repo = repository.name;
       const number = issue.number;
