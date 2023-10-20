@@ -534,7 +534,7 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
-    } else if (req.action === "created") {
+    } else if (req.action === "created" || req.action === "edited") {
       const { missingParams } = validateParams(req, [
         "installation",
         "repository",
