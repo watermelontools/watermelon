@@ -148,7 +148,7 @@ export default async function detectConsoleLogs({
               auth: // Insert your GitHub Personal Access Token here for testing purposes
             });
 
-            const commenetFileDiff = () => {
+            const commentFileDiff = () => {
               return normaloctokit.rest.pulls
                 .get({
                   owner,
