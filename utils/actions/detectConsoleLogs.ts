@@ -125,6 +125,7 @@ export default async function detectConsoleLogs({
           const addtionsHaveConsoleLog = result.data.choices[0].message.content;
 
           if (addtionsHaveConsoleLog === "true") {
+            console.log("CONSOLE LOG DETECTED ")
             // comment detailing which file has the console log detected
             return octokit.request(
               "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
