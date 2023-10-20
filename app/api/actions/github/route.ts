@@ -551,49 +551,50 @@ export async function POST(request: Request) {
       const number = issue.number;
       const installationId = installation.id;
       const userLogin = comment.user.login;
-      if (userLogin === "watermelon-context[bot]") {
-        let botComment = comment.body;
-        if (botComment.includes("WatermelonAI Summary")) {
-          // extract the business logic summary, it's always the first paragraph under the title
-          const businessLogicSummary = botComment
-            .split("### WatermelonAI Summary")[1]
-            .split("\n")[1];
+      let botComment = comment.body;
+      if (
+        userLogin === "watermelon-context[bot]" &&
+        botComment.includes("WatermelonAI Summary")
+      ) {
+        // extract the business logic summary, it's always the first paragraph under the title
+        const businessLogicSummary = botComment
+          .split("### WatermelonAI Summary")[1]
+          .split("\n")[1];
 
-          // Detect console.logs and its equivalent in other languages
-          await detectConsoleLogs({
-            prTitle: title,
-            businessLogicSummary,
+        // Detect console.logs and its equivalent in other languages
+        await detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        await labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+        successPosthogTracking({
+          url: request.url,
+          email: req.email,
+          data: {
             repo,
             owner,
-            issue_number: number,
-            installationId,
-            reqUrl: request.url,
-            reqEmail: req.email,
-          });
-
-          // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-          await labelPullRequest({
-            prTitle: title,
+            number,
+            action: req.action,
             businessLogicSummary,
-            repo,
-            owner,
-            issue_number: number,
-            installationId,
-            reqUrl: request.url,
-            reqEmail: req.email,
-          });
-          successPosthogTracking({
-            url: request.url,
-            email: req.email,
-            data: {
-              repo,
-              owner,
-              number,
-              action: req.action,
-              businessLogicSummary,
-            },
-          });
-        }
+          },
+        });
       }
     }
     return NextResponse.json({
