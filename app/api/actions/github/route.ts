@@ -582,6 +582,17 @@ export async function POST(request: Request) {
             reqUrl: request.url,
             reqEmail: req.email,
           });
+          successPosthogTracking({
+            url: request.url,
+            email: req.email,
+            data: {
+              repo,
+              owner,
+              number,
+              action: req.action,
+              businessLogicSummary,
+            },
+          });
         }
       }
     }
