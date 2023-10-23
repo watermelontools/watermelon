@@ -82,9 +82,13 @@ export default async function getOpenAISummary({
             way. You will avoid going over each individual data point, but will reason about
             the business logic. Be concise and don't explain step by step. Don't explain the
             PR title in one sentence, the PR body in another one, etc. Just give a high-level
-            overview of what the PR is doing. Make it less than 45 words. ${prompt} 
-            Don't explain PR and commit message separately, merge into a single explanation.
-            Don't say "the commit message".`,
+            overview of what the PR is doing. Make it less than 45 words.`,
+        },
+        {
+          role: "user",
+          content: `${prompt} 
+        Don't explain PR and commit message separately, merge into a single explanation.
+        Don't say "the commit message".`,
         },
       ],
     });
