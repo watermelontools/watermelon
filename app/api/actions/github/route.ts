@@ -309,26 +309,24 @@ export async function POST(request: Request) {
         });
       }
       if (!watermelon_user) {
-        {
-          // Post a new comment if no existing comment was found
-          await octokit
-            .request(
-              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-              {
-                owner,
-                issue_number: number,
-                repo,
-                body: "[Please login to GitHub in Watermelon to see the results](https://app.watermelontools.com/)",
-              }
-            )
-            .then((response) => {
-              console.info("post comment", response.data);
-            })
-            .catch((error) => {
-              return console.error("posting comment error", error);
-            });
-          return NextResponse.json("User not registered");
-        }
+        // Post a new comment if no existing comment was found
+        await octokit
+          .request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+            {
+              owner,
+              issue_number: number,
+              repo,
+              body: "[Please login to GitHub in Watermelon to see the results](https://app.watermelontools.com/)",
+            }
+          )
+          .then((response) => {
+            console.info("post comment", response.data);
+          })
+          .catch((error) => {
+            return console.error("posting comment error", error);
+          });
+        return NextResponse.json("User not registered");
       }
 
       const count = await addActionCount({ owner });
