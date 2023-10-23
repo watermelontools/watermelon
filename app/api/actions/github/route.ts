@@ -23,6 +23,7 @@ import {
 import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
+import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
       if (missingParams.length > 0) {
         return missingParamsResponse({ url: request.url, missingParams });
       }
-      const { installation, repository, pull_request } = req;
+      const { installation, repository, pull_request, organization } = req;
       console.info("ins", installation);
 
       const installationId = installation.id;
@@ -328,6 +329,11 @@ export async function POST(request: Request) {
           });
         return NextResponse.json("User not registered");
       }
+      const team = await createTeamAndMatchUser({
+        name: organization.login,
+        id: organization.id,
+        watermelon_user,
+      });
 
       const count = await addActionCount({ owner });
 
