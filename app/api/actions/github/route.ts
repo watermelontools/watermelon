@@ -14,6 +14,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import detectConsoleLogs from "../../../../utils/actions/detectConsoleLogs";
 
 import {
   failedPosthogTracking,
@@ -31,12 +32,7 @@ export async function POST(request: Request) {
   const { headers } = request;
   let textToWrite = "";
   const req = await request.json();
-  const { missingParams } = validateParams(req, [
-    "pull_request",
-    "repository",
-    "action",
-    "number",
-  ]);
+  const { missingParams } = validateParams(req, ["action"]);
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
@@ -49,6 +45,14 @@ export async function POST(request: Request) {
       req.action === "reopened" ||
       req.action === "synchronize"
     ) {
+      const { missingParams } = validateParams(req, [
+        "pull_request",
+        "repository",
+        "number",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
       const { installation, repository, pull_request } = req;
       console.info("ins", installation);
 
@@ -406,18 +410,6 @@ export async function POST(request: Request) {
       });
       textToWrite += randomText();
 
-      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      await labelPullRequest({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
-      });
-
       await addActionLog({
         randomWords,
         github,
@@ -447,7 +439,6 @@ export async function POST(request: Request) {
           },
         }
       );
-      console.info("comments.data.length", comments.data.length);
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
         return comment.user.login.includes("watermelon-context");
@@ -546,6 +537,68 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
+    } else if (req.action === "created" || req.action === "edited") {
+      const { missingParams } = validateParams(req, [
+        "installation",
+        "repository",
+        "comment",
+        "issue",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
+      const { installation, repository, comment, issue } = req;
+      const { title, body } = req.issue;
+      const owner = repository.owner.login;
+      const repo = repository.name;
+      const number = issue.number;
+      const installationId = installation.id;
+      const userLogin = comment.user.login;
+      let botComment = comment.body;
+      if (
+        userLogin === "watermelon-context[bot]" &&
+        botComment.includes("WatermelonAI Summary")
+      ) {
+        // extract the business logic summary, it's always the first paragraph under the title
+        const businessLogicSummary = botComment
+          .split("### WatermelonAI Summary")[1]
+          .split("\n")[1];
+
+        // Detect console.logs and its equivalent in other languages
+        await detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        await labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+        successPosthogTracking({
+          url: request.url,
+          email: req.email,
+          data: {
+            repo,
+            owner,
+            number,
+            action: req.action,
+            businessLogicSummary,
+          },
+        });
+      }
     }
     return NextResponse.json({
       message: "wat",
