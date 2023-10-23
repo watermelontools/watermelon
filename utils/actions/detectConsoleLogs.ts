@@ -126,48 +126,38 @@ export default async function detectConsoleLogs({
           const addtionsHaveConsoleLog = result.data.choices[0].message.content;
 
           if (addtionsHaveConsoleLog === "true") {
-            // comment detailing which file has the console log detected
-
-            // return octokit.request(
-            //   "POST /repos/{owner}/{repo}/issues/{issue_number}/comments/",
-            //   {
-            //     // owner,
-            //     // repo,
-            //     // issue_number,
-            //     // body: `This PR contains console logs in file ${file.filename}. Please remove them.`,
-            //     owner,
-            //     repo,
-            //     issue_number,
-            //     body: `Remove console log - todays sha file.filenmae , ${file.filename}`,
-            //     commit_id: "c1a315275dbe7e1734febc2c5386aaaf8a9d37c0",
-            //     path: file.filename
-            //   }
-            // );
-
-            const normaloctokit = new Octokit({
-              auth: // Insert your GitHub Personal Access Token here for testing purposes
-            });
-
             const commentFileDiff = () => {
-              return normaloctokit.rest.pulls
-                .get({
+              return octokit
+                .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
                   owner,
                   repo,
                   pull_number: issue_number,
                 })
-                .then((response) => {
-                  return normaloctokit.rest.pulls.createReviewComment({
-                    owner,
-                    repo,
-                    pull_number: issue_number,
-                    line: 1,
-                    body: "This file contains at least one console log. Please remove any present.",
-                    commit_id: response.data.head.sha,
-                    path: file.filename.toString(),
-                  });
+                .then((result) => {
+                  const latestCommitHash = result.data.head.sha;
+                  
+                  return octokit.request(
+                    "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                    {
+                      owner,
+                      repo,
+                      pull_number: issue_number,
+                      commit_id: result.data.head.sha,
+                      event: "REQUEST_CHANGES",
+                      path: file.filename,
+                      comments: [
+                        {
+                          path: file.filename,
+                          position: 1,
+                          body: "head.sha - This file contains at least one console log. Please remove any present.",
+                        },
+                      ],
+                    }
+                  );
                 });
             };
 
+            commentFileDiff();
           }
         });
     } catch {}
