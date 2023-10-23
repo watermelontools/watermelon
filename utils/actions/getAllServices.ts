@@ -1,13 +1,11 @@
 import { failedPosthogTracking } from "../api/posthogTracking";
 import executeRequest from "../db/azuredb";
-import getGitHub from "./getGitHub";
 import getJira from "./getJira";
 import getSlack from "./getSlack";
 import getNotion from "./getNotion";
 import getLinear from "./getLinear";
 import getConfluence from "./getConfluence";
 import getAsana from "./getAsana";
-import { get } from "http";
 import getTeamGitHub from "./getTeamGitHub";
 import posthog from "../posthog/posthog";
 export default async function getAllServices({
@@ -39,7 +37,6 @@ export default async function getAllServices({
 
   let wmUserData = await executeRequest(query);
   const {
-    github_token,
     jira_token,
     jira_refresh_token,
     confluence_token,
@@ -76,15 +73,8 @@ export default async function getAllServices({
     });
     return { error: error.message };
   }
-  const [github, teamGitHub, jira, confluence, slack, notion, linear, asana] =
+  const [teamGitHub, jira, confluence, slack, notion, linear, asana] =
     await Promise.all([
-      getGitHub({
-        repo,
-        owner,
-        github_token,
-        randomWords,
-        amount: GitHubPRs,
-      }),
       getTeamGitHub({
         repo,
         owner,
@@ -130,11 +120,10 @@ export default async function getAllServices({
         amount: AsanaTasks,
       }),
     ]);
-  console.log("github", github);
   posthog.capture({ event: "teamGHTest", properties: teamGitHub });
   console.log("teamGitHub", teamGitHub);
   return {
-    github,
+    github: teamGitHub,
     jira,
     confluence,
     slack,
