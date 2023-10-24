@@ -81,6 +81,7 @@ function getConsoleLogPosition(filePatchAndIndividualLine: any) {
     }
   }
 
+  console.log("Console log position latest v: ", positionInDiff);
   return positionInDiff;
 }
 
@@ -125,9 +126,9 @@ export default async function detectConsoleLogs({
     Other console functions such as console.info() shouldn't be counted as console logs.
     Ignore code comments from this analysis. 
     If there is a console log, return "true", else return "false".
-    If you return true, return an object that that has 2 props: result and line.
+    If you return true, return a string that that has 2 values: result (true) and the line of code.
     The line value, is the actual line in the file that contains the console log.
-    For example: { result: true, line: console.log("hello world");}`;
+    For example: true,console.log("hello world");`;
 
     // detect if the additions contain console logs or not
     try {
@@ -142,12 +143,14 @@ export default async function detectConsoleLogs({
           ],
         })
         .then((result) => {
-          const openAIResult = result.data.choices[0].message.content;
-          const addtionsHaveConsoleLog = openAIResult.result;
-          const indiviudalLine = openAIResult.line;
+          const openAIResult = result.data.choices[0].message.content.split(",");
+          console.log("openAIResult parsed", openAIResult);
+
+          const addtionsHaveConsoleLog = openAIResult[0];
+          const individualLine = openAIResult[1];
 
           console.log("additionsHaveConsoleLog", addtionsHaveConsoleLog);
-          console.log("indiviudalLine", indiviudalLine);
+          console.log("indiviudalLine", individualLine);
 
           if (addtionsHaveConsoleLog === "true") {
             const commentFileDiff = () => {
@@ -160,7 +163,7 @@ export default async function detectConsoleLogs({
                 .then((result) => {
                   const latestCommitHash = result.data.head.sha;
 
-                  let individualLine = "";
+                  // let individualLine = "";
 
                   return octokit.request(
                     "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
@@ -168,7 +171,7 @@ export default async function detectConsoleLogs({
                       owner,
                       repo,
                       pull_number: issue_number,
-                      commit_id: result.data.head.sha,
+                      commit_id: latestCommitHash,
                       event: "REQUEST_CHANGES",
                       path: file.filename,
                       comments: [
