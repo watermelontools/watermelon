@@ -68,6 +68,22 @@ function getAdditions(filePatch: string) {
   return lines.join("\n");
 }
 
+function getConsoleLogPosition(filePatchAndIndividualLine: any) {
+  let positionInDiff = 1;
+  const { filePatch, individualLine } = filePatchAndIndividualLine;
+
+  // get the position of the indiviudalLine in th filePatch
+  const lines = filePatch.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes(individualLine)) {
+      positionInDiff = i + 1;
+      break;
+    }
+  }
+
+  return positionInDiff;
+}
+
 export default async function detectConsoleLogs({
   installationId,
   owner,
@@ -108,7 +124,10 @@ export default async function detectConsoleLogs({
     Python comments start with #.
     Other console functions such as console.info() shouldn't be counted as console logs.
     Ignore code comments from this analysis. 
-    If there is a console log, print "true", else print "false"`;
+    If there is a console log, return "true", else return "false".
+    If you return true, return an object that that has 2 props: result and line.
+    The line value, is the actual line in the file that contains the console log.
+    For example: { result: true, line: console.log("hello world");}`;
 
     // detect if the additions contain console logs or not
     try {
@@ -123,7 +142,12 @@ export default async function detectConsoleLogs({
           ],
         })
         .then((result) => {
-          const addtionsHaveConsoleLog = result.data.choices[0].message.content;
+          const openAIResult = result.data.choices[0].message.content;
+          const addtionsHaveConsoleLog = openAIResult.result;
+          const indiviudalLine = openAIResult.line;
+
+          console.log("additionsHaveConsoleLog", addtionsHaveConsoleLog);
+          console.log("indiviudalLine", indiviudalLine);
 
           if (addtionsHaveConsoleLog === "true") {
             const commentFileDiff = () => {
@@ -135,7 +159,9 @@ export default async function detectConsoleLogs({
                 })
                 .then((result) => {
                   const latestCommitHash = result.data.head.sha;
-                  
+
+                  let individualLine = "";
+
                   return octokit.request(
                     "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
                     {
@@ -148,8 +174,11 @@ export default async function detectConsoleLogs({
                       comments: [
                         {
                           path: file.filename,
-                          position: 1,
-                          body: "head.sha - This file contains at least one console log. Please remove any present.",
+                          position: getConsoleLogPosition({
+                            filePatch: file.patch ?? "",
+                            individualLine
+                          }) || 1, // comment at the beggining of the file by default
+                          body: "getConsoleLogPosition - This file contains at least one console log. Please remove any present.",
                         },
                       ],
                     }
