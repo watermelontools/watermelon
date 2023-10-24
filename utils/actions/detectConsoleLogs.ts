@@ -174,7 +174,7 @@ export default async function detectConsoleLogs({
                             filePatch: file.patch ?? "",
                             individualLine
                           }) || 1, // comment at the beggining of the file by default
-                          body: "getConsoleLogPosition - This file contains at least one console log. Please remove any present.",
+                          body: "This file contains at least one console log. Please remove any present.",
                         },
                       ],
                     }
