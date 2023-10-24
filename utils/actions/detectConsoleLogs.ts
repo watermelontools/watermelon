@@ -81,7 +81,6 @@ function getConsoleLogPosition(filePatchAndIndividualLine: any) {
     }
   }
 
-  console.log("Console log position latest v: ", positionInDiff);
   return positionInDiff;
 }
 
@@ -144,13 +143,9 @@ export default async function detectConsoleLogs({
         })
         .then((result) => {
           const openAIResult = result.data.choices[0].message.content.split(",");
-          console.log("openAIResult parsed", openAIResult);
 
           const addtionsHaveConsoleLog = openAIResult[0];
           const individualLine = openAIResult[1];
-
-          console.log("additionsHaveConsoleLog", addtionsHaveConsoleLog);
-          console.log("indiviudalLine", individualLine);
 
           if (addtionsHaveConsoleLog === "true") {
             const commentFileDiff = () => {
@@ -162,8 +157,6 @@ export default async function detectConsoleLogs({
                 })
                 .then((result) => {
                   const latestCommitHash = result.data.head.sha;
-
-                  // let individualLine = "";
 
                   return octokit.request(
                     "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
