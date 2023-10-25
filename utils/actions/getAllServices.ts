@@ -17,6 +17,7 @@ export default async function getAllServices({
   randomWords,
   hardMax,
   userLogin,
+  installationId,
 }: {
   email?: string;
   userLogin?: string;
@@ -25,6 +26,7 @@ export default async function getAllServices({
   owner: string;
   randomWords: string[];
   hardMax?: number;
+  installationId?: number;
 }) {
   let query = "";
   if (email) {
