@@ -55,8 +55,7 @@ export async function POST(request: Request) {
         return missingParamsResponse({ url: request.url, missingParams });
       }
       const { installation, repository, pull_request, organization } = req;
-      console.info("ins", installation);
-
+      const { installation, repository, pull_request } = req;
       const installationId = installation.id;
       const { title, body } = req.pull_request;
       const owner = repository.owner.login;
