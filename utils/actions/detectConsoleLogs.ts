@@ -101,7 +101,8 @@ export default async function detectConsoleLogs({
 
     const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
     if there's a console log or its equivalent in another programming language 
-    (console.log(), println(), System.out.println(), print(), fmt.Println(), etc.). 
+    such as Java, Golang, Python, C, Rust, C++, etc.
+    (console.log(), println(), println!(), System.out.println(), print(), fmt.Println(), and  cout << "Print a String" << endl; are some examples). 
     If the console log or its equivalent in another language is in a code comment, don't
     count it as a detected console log. For example JavaScript comments start with // or /*, 
     Python comments start with #.
