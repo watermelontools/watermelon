@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import HeaderSignOut from "./HeaderSignOut";
 export default function Header({ userEmail, userToken }) {
   return (
     <div className="Header d-flex flex-items-center flex-justify-between">
@@ -61,9 +60,6 @@ export default function Header({ userEmail, userToken }) {
                 >
                   Settings
                 </a>
-              </li>
-              <li className="d-flex flex-items-center flex-justify-center">
-                <HeaderSignOut />
               </li>
             </ul>
           </details>
