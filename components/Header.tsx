@@ -18,19 +18,11 @@ export default function Header({ userEmail, userToken }) {
         <div>
           <details className="dropdown relative">
             <summary className="btn cursor-pointer px-4 py-2 text-white bg-blue-500 rounded-md shadow-md hover:bg-gray-200 transition-colors duration-200">
-              Account
+              {userEmail}
               <div className="dropdown-caret ml-2 w-4 h-4"></div>
             </summary>
 
             <ul className="dropdown-menu dropdown-menu-sw mt-2 w-96 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200">
-              <li>
-                <a
-                  className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
-                  href="#url"
-                >
-                  {userEmail}
-                </a>
-              </li>
               <li>
                 <a
                   className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
@@ -39,7 +31,6 @@ export default function Header({ userEmail, userToken }) {
                   GitHub App
                 </a>
               </li>
-
               <li>
                 <a
                   className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
@@ -64,6 +55,14 @@ export default function Header({ userEmail, userToken }) {
                   href={`https://app.watermelontools.com/settings`}
                 >
                   Settings
+                </a>
+              </li>
+              <li>
+                <a
+                  className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
+                  href={`https://discord.com/invite/H4AE6b9442`}
+                >
+                  Get Help
                 </a>
               </li>
             </ul>
