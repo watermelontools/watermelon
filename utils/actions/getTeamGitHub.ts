@@ -15,17 +15,21 @@ async function getTeamGitHub({
   });
   const octokit = await app.getInstallationOctokit(installationId);
 
-  const issues = await octokit.request("GET /search/issues", {
-    q,
-    is: "pr",
-    type: "pr",
-    per_page: amount,
-  });
+  const issues = await octokit
+    .request("GET /search/issues", {
+      q,
+      is: "pr",
+      type: "pr",
+      per_page: amount,
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 
   return {
-    fullData: issues.data?.items,
+    fullData: issues?.data?.items,
     data:
-      issues.data?.items?.map(
+      issues?.data?.items?.map(
         ({ title, body, html_url: link, number, created_at, user }) => ({
           title,
           body,
