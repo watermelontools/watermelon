@@ -7,6 +7,8 @@ import getNotion from "./getNotion";
 import getLinear from "./getLinear";
 import getConfluence from "./getConfluence";
 import getAsana from "./getAsana";
+import getTeamGitHub from "./getTeamGitHub";
+
 export default async function getAllServices({
   email,
   url,
