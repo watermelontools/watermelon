@@ -23,6 +23,7 @@ import {
 import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
+import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
