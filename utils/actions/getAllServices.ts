@@ -8,7 +8,7 @@ import getLinear from "./getLinear";
 import getConfluence from "./getConfluence";
 import getAsana from "./getAsana";
 import getTeamGitHub from "./getTeamGitHub";
-import posthog from "../posthog/posthog";
+
 export default async function getAllServices({
   email,
   url,
