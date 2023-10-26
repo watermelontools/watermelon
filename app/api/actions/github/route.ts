@@ -333,6 +333,12 @@ export async function POST(request: Request) {
         watermelon_user,
       });
 
+      const team = await createTeamAndMatchUser({
+        name: organization.login,
+        id: organization.id,
+        watermelon_user,
+      });
+
       const count = await addActionCount({ owner });
 
       textToWrite += `### WatermelonAI Summary \n`;

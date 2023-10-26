@@ -6,6 +6,7 @@ import {
   missingParamsResponse,
 } from "../../utils/api/responses";
 import validateParams from "../../utils/api/validateParams";
+import { Octokit } from "octokit";
 
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
@@ -67,6 +68,22 @@ function getAdditions(filePatch: string) {
   return lines.join("\n");
 }
 
+function getConsoleLogPosition(filePatchAndIndividualLine: any) {
+  let positionInDiff = 1;
+  const { filePatch, individualLine } = filePatchAndIndividualLine;
+
+  // get the position of the indiviudalLine in th filePatch
+  const lines = filePatch.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes(individualLine)) {
+      positionInDiff = i + 1;
+      break;
+    }
+  }
+
+  return positionInDiff;
+}
+
 export default async function detectConsoleLogs({
   installationId,
   owner,
@@ -108,7 +125,10 @@ export default async function detectConsoleLogs({
     Python comments start with #.
     Other console functions such as console.info() shouldn't be counted as console logs.
     Ignore code comments from this analysis. 
-    If there is a console log, print "true", else print "false"`;
+    If there is a console log, return "true", else return "false".
+    If you return true, return a string that that has 2 values: result (true) and the line of code.
+    The line value, is the actual line in the file that contains the console log.
+    For example: true,console.log("hello world");`;
 
     // detect if the additions contain console logs or not
     try {
@@ -123,19 +143,47 @@ export default async function detectConsoleLogs({
           ],
         })
         .then((result) => {
-          const addtionsHaveConsoleLog = result.data.choices[0].message.content;
+          const openAIResult = result.data.choices[0].message.content.split(",");
+
+          const addtionsHaveConsoleLog = openAIResult[0];
+          const individualLine = openAIResult[1];
 
           if (addtionsHaveConsoleLog === "true") {
-            // comment detailing which file has the console log detected
-            return octokit.request(
-              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-              {
-                owner,
-                repo,
-                issue_number,
-                body: `This PR contains console logs in file ${file.filename}. Please remove them.`,
-              }
-            );
+            const commentFileDiff = () => {
+              return octokit
+                .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
+                  owner,
+                  repo,
+                  pull_number: issue_number,
+                })
+                .then((result) => {
+                  const latestCommitHash = result.data.head.sha;
+
+                  return octokit.request(
+                    "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                    {
+                      owner,
+                      repo,
+                      pull_number: issue_number,
+                      commit_id: latestCommitHash,
+                      event: "COMMENT",
+                      path: file.filename,
+                      comments: [
+                        {
+                          path: file.filename,
+                          position: getConsoleLogPosition({
+                            filePatch: file.patch ?? "",
+                            individualLine
+                          }) || 1, // comment at the beggining of the file by default
+                          body: "This file contains at least one console log. Please remove any present.",
+                        },
+                      ],
+                    }
+                  );
+                });
+            };
+
+            commentFileDiff();
           }
         });
     } catch {}
