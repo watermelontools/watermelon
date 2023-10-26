@@ -169,12 +169,12 @@ export default async function getAllServices({
         ]);
         return {
           github,
-          asana: { error: "no asana token", data: [] },
-          confluence: { error: "no confluence token", data: [] },
-          jira: { error: "no jira token", data: [] },
-          linear: { error: "no linear token", data: [] },
-          notion: { error: "no notion token", data: [] },
-          slack: { error: "no slack token", data: [] },
+          asana: { error: "no asana token", data: [], fullData: [] },
+          confluence: { error: "no confluence token", data: [], fullData: [] },
+          jira: { error: "no jira token", data: [], fullData: [] },
+          linear: { error: "no linear token", data: [], fullData: [] },
+          notion: { error: "no notion token", data: [], fullData: [] },
+          slack: { error: "no slack token", data: [], fullData: [] },
           watermelon_user: "team",
           AISummary,
           JiraTickets,
