@@ -32,7 +32,7 @@ async function loading({}) {
             <input
               className="form-control "
               type="email"
-              placeholder={`Teammate@${teamName.name.toLowerCase()}.com`}
+              placeholder={`Teammate@${teamName?.name.toLowerCase()}.com`}
               aria-label="Teammate email"
             />
             <button className="btn" type="button">
