@@ -165,7 +165,7 @@ export default async function detectConsoleLogs({
                       repo,
                       pull_number: issue_number,
                       commit_id: latestCommitHash,
-                      event: "REQUEST_CHANGES",
+                      event: "COMMENT",
                       path: file.filename,
                       comments: [
                         {
