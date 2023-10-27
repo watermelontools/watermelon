@@ -16,36 +16,34 @@ async function Team({}) {
   ]);
 
   return (
-    <div>
-      <div className="p-3">
-        <h1>Team</h1>
-        <div className="">
-          <div className="Subhead">
-            <h2 className="Subhead-heading">My Account</h2>
-            <div className="Subhead-description">Control your own account</div>
-          </div>
-          <div>
-            <p>{userEmail}</p>
-          </div>
+    <div className="Box">
+      <div className="Subhead px-3 py-2">
+        <h2 className="Subhead-heading">Team</h2>
+      </div>
+
+      <div className="p-3" style={{ flex: 1 }}>
+        <div className="mb-4">
+          <h3 className="Subhead-heading">My Account</h3>
+
+          <div className="text-gray">{userEmail}</div>
         </div>
-        <div className="">
-          <div className="Subhead">
-            <h2 className="Subhead-heading">My Team</h2>
-          </div>
-          <h3 className="Subhead-heading">Invite</h3>
+
+        <div>
+          <h3 className="Subhead-heading">My Team</h3>
 
           <AddTeammateButton teamName={teamName.name} />
+
           <SendInviteForm teamName={teamName.name} userEmail={userEmail} />
-          <h3 className="Subhead-heading">Teammates</h3>
+
+          <h4 className="mt-4 mb-2">Teammates</h4>
+
           {teammates?.length && (
             <div>
-              {teammates.map((teammate) => {
-                return (
-                  <div key={teammate.email}>
-                    <p>{teammate.email}</p>
-                  </div>
-                );
-              })}
+              {teammates?.map((teammate) => (
+                <div key={teammate.email} className="text-gray">
+                  {teammate.email}
+                </div>
+              ))}
             </div>
           )}
         </div>

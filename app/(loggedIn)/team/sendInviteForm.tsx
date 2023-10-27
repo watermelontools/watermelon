@@ -36,7 +36,7 @@ export default function sendInviteForm({ teamName, userEmail }) {
       <input
         className="form-control "
         type="email"
-        placeholder={`Teammate@${teamName.toLowerCase()}.com`}
+        placeholder={`Teammate@${teamName?.name.toLowerCase()}.com`}
         aria-label="Teammate email"
       />
       <button className="btn mx-2" type="submit" disabled={buttonDisabled}>
