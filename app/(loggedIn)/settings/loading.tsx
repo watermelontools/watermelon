@@ -1,4 +1,4 @@
-async function Settings({}) {
+async function loading({}) {
   function SettingsSelector({ label }) {
     return (
       <div className="">
@@ -48,4 +48,4 @@ async function Settings({}) {
   );
 }
 
-export default Settings;
+export default loading;
