@@ -327,12 +327,7 @@ export async function POST(request: Request) {
           });
         return NextResponse.json("User not registered");
       }
-      const team = await createTeamAndMatchUser({
-        name: organization.login,
-        id: organization.id,
-        watermelon_user,
-      });
-
+      
       const team = await createTeamAndMatchUser({
         name: organization.login,
         id: organization.id,

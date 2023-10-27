@@ -67,10 +67,11 @@ export default function form({ userEmail }) {
 
   function SettingsSelector({ label, valueLabel }) {
     return (
-      <div className="">
-        <span>{label}</span>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {" "}
+        <span style={{ width: "100px" }}>{label}</span>{" "}
         <select
-          className="form-select"
+          className="form-select mt-2"
           aria-label={label}
           defaultValue={formState[valueLabel]}
           onChange={(e) =>
@@ -81,12 +82,14 @@ export default function form({ userEmail }) {
           }
           value={formState[valueLabel]}
         >
+          {" "}
           {Array.from({ length: 5 }, (_, index) => (
             <option key={index} value={index + 1}>
-              {index + 1}
+              {" "}
+              {index + 1}{" "}
             </option>
-          ))}
-        </select>
+          ))}{" "}
+        </select>{" "}
       </div>
     );
   }
@@ -99,10 +102,10 @@ export default function form({ userEmail }) {
           label={service.label}
         />
       ))}
-      <div className="">
+      <div style={{ display: "flex", alignItems: "center" }}>
         <span>AI Summary: </span>
         <select
-          className="form-select"
+          className="form-select ml-3 mt-2"
           aria-label="AI Summary"
           value={formState.AISummary}
           onChange={(e) =>

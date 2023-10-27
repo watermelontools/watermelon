@@ -38,25 +38,21 @@ async function HomePage({}) {
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
       {userEmail && (
-        <div>
-          <div
-            className="Subhead p-3"
-            style={{
-              position: "sticky",
-              top: 0,
-              zIndex: 2,
-              backgroundColor: "var(--color-canvas-default)",
-            }}
-          >
-            <h2 className="Subhead-heading">IDEs</h2>
+        <div className="Box" style={{ height: "100%" }}>
+          <div className="Subhead px-3 pt-2">
+            <h2 className="Subhead-heading d-flex flex-items-center flex-justify-start">
+              <img className="avatar avatar-4" src="/logos/vscode.svg" />
+              <span>IDEs</span>
+            </h2>
           </div>
+
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))",
             }}
           >
-            <div className="p-3">
+            <div className="pl-3 pr-3 pt-1 pb-3" style={{ flex: 1 }}>
               <DownloadExtension
                 name="VSCode"
                 email={userEmail}
@@ -64,7 +60,8 @@ async function HomePage({}) {
                 accessToken={userName}
               />
             </div>
-            <div className="p-3">
+
+            <div className="pl-3 pr-3 pt-1 pb-3" style={{ flex: 1 }}>
               <DownloadExtension
                 name="VSCode Insiders"
                 urlStart="vscode-insiders"
@@ -72,7 +69,7 @@ async function HomePage({}) {
                 accessToken={userName}
               />
             </div>
-            <div className="p-3">
+            <div className="pl-3 pr-3 pt-1 pb-3" style={{ flex: 1 }}>
               <DownloadExtension
                 name="VSCodium"
                 urlStart="vscodium"
