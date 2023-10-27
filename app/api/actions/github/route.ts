@@ -23,6 +23,7 @@ import {
 import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
+import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
       if (missingParams.length > 0) {
         return missingParamsResponse({ url: request.url, missingParams });
       }
-      const { installation, repository, pull_request } = req;
+      const { installation, repository, pull_request, organization } = req;
       const installationId = installation.id;
       const { title, body } = req.pull_request;
       const owner = repository.owner.login;
@@ -280,6 +281,7 @@ export async function POST(request: Request) {
         .slice(0, 6);
       const serviceAnswers = await getAllServices({
         userLogin,
+        installationId,
         repo,
         owner,
         randomWords,
@@ -306,27 +308,36 @@ export async function POST(request: Request) {
         });
       }
       if (!watermelon_user) {
-        {
-          // Post a new comment if no existing comment was found
-          await octokit
-            .request(
-              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-              {
-                owner,
-                issue_number: number,
-                repo,
-                body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
-              }
-            )
-            .then((response) => {
-              console.info("post comment", response.data);
-            })
-            .catch((error) => {
-              return console.error("posting comment error", error);
-            });
-          return NextResponse.json("User not registered");
-        }
+        // Post a new comment if no existing comment was found
+        await octokit
+          .request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+            {
+              owner,
+              issue_number: number,
+              repo,
+              body: "[Please login to GitHub in Watermelon to see the results](https://app.watermelontools.com/)",
+            }
+          )
+          .then((response) => {
+            console.info("post comment", response.data);
+          })
+          .catch((error) => {
+            return console.error("posting comment error", error);
+          });
+        return NextResponse.json("User not registered");
       }
+      const team = await createTeamAndMatchUser({
+        name: organization.login,
+        id: organization.id,
+        watermelon_user,
+      });
+
+      const team = await createTeamAndMatchUser({
+        name: organization.login,
+        id: organization.id,
+        watermelon_user,
+      });
 
       const count = await addActionCount({ owner });
 
