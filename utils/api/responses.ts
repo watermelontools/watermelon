@@ -30,6 +30,7 @@ export function missingParamsResponse({ url, missingParams }) {
 export function unauthorizedResponse({ email, url }) {
   const responseText = `email: ${email} is not authorized`;
   unauthorizedPosthogTracking({ email, url, error: responseText });
+
   return NextResponse.json(
     {
       error: responseText,

@@ -29,5 +29,4 @@ const AsanaLoginLink = ({ userEmail }) => (
   </div>
 );
 
-
 export default AsanaLoginLink;

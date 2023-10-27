@@ -24,6 +24,7 @@ import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
+
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -412,6 +413,18 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
+
+      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+      await labelPullRequest({
+        prTitle: title,
+        businessLogicSummary,
+        repo,
+        owner,
+        issue_number: number,
+        installationId,
+        reqUrl: request.url,
+        reqEmail: req.email
+      });
 
       await addActionLog({
         randomWords,
