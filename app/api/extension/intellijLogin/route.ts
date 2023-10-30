@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
   const userData = await intellijLogin({ watermelon_user: token });
   if (!userData || !userData.email) {
-    return unauthorizedResponse({ email: token });
+    return unauthorizedResponse({ email: token, url: request.url });
   }
 
   return successResponse({

@@ -1,4 +1,5 @@
 import { MarkdownRequest, MarkdownResponse } from "../../../types/watermelon";
+import getRelativeDate from "../../getRelativeDate";
 
 type generalMarkdown = MarkdownRequest & {
   systemName: string;
@@ -11,7 +12,7 @@ const generalMarkdownHelper = ({
   systemResponseName,
 }: generalMarkdown): MarkdownResponse => {
   if (!value || value?.data?.length === 0) {
-    return `\n ${systemResponseName} deactivated by ${userLogin}`;
+    return `\n No results found in **${systemResponseName}** :( \n`;
   }
   if (value?.error?.match(/no (\w+) token/)) {
     return `\n [Click here to login to ${systemName}](https://app.watermelontools.com)`;
@@ -21,13 +22,13 @@ const generalMarkdownHelper = ({
     markdown = `\n #### ${systemResponseName}`;
     markdown += (value?.data || [])
       .map(
-        ({ number, title, link, body }) =>
-          `\n - [#${number} - ${title}](${link}) \n`
+        ({ number, title, link, body, author, created_at }) =>
+          `\n - [#${number} - ${title}](${link}) ${
+            author ? ` - By ${author}` : ""
+          } ${created_at ? `${getRelativeDate(created_at ?? "")}` : ""}\n`
       )
       .join("");
-  } else {
-    markdown += `\n No results found in **${systemResponseName}** :( \n`;
-  }
+  } 
   return markdown;
 };
 

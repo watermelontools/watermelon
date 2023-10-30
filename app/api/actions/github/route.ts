@@ -13,7 +13,8 @@ import {
 } from "../../../../utils/api/responses";
 import validateParams from "../../../../utils/api/validateParams";
 
-import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+import detectConsoleLogs from "../../../../utils/actions/detectConsoleLogs";
 
 import {
   failedPosthogTracking,
@@ -21,6 +22,9 @@ import {
 } from "../../../../utils/api/posthogTracking";
 import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
+import randomText from "../../../../utils/actions/markdownHelpers/randomText";
+import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
+
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -30,12 +34,7 @@ export async function POST(request: Request) {
   const { headers } = request;
   let textToWrite = "";
   const req = await request.json();
-  const { missingParams } = validateParams(req, [
-    "pull_request",
-    "repository",
-    "action",
-    "number",
-  ]);
+  const { missingParams } = validateParams(req, ["action"]);
   if (missingParams.length > 0) {
     return missingParamsResponse({ url: request.url, missingParams });
   }
@@ -48,7 +47,15 @@ export async function POST(request: Request) {
       req.action === "reopened" ||
       req.action === "synchronize"
     ) {
-      const { installation, repository, pull_request } = req;
+      const { missingParams } = validateParams(req, [
+        "pull_request",
+        "repository",
+        "number",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
+      const { installation, repository, pull_request, organization } = req;
       const installationId = installation.id;
       const { title, body } = req.pull_request;
       const owner = repository.owner.login;
@@ -275,6 +282,7 @@ export async function POST(request: Request) {
         .slice(0, 6);
       const serviceAnswers = await getAllServices({
         userLogin,
+        installationId,
         repo,
         owner,
         randomWords,
@@ -295,37 +303,41 @@ export async function POST(request: Request) {
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
-
           url: request.url,
           error: error.message,
           email: req.email,
         });
       }
       if (!watermelon_user) {
-        {
-          // Post a new comment if no existing comment was found
-          await octokit
-            .request(
-              "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
-              {
-                owner,
-                issue_number: number,
-                repo,
-                body: "[Please login to Watermelon to see the results](https://app.watermelontools.com/)",
-              }
-            )
-            .then((response) => {
-              console.info("post comment", response.data);
-            })
-            .catch((error) => {
-              return console.error("posting comment error", error);
-            });
-          return NextResponse.json("User not registered");
-        }
+        // Post a new comment if no existing comment was found
+        await octokit
+          .request(
+            "POST /repos/{owner}/{repo}/issues/{issue_number}/comments",
+            {
+              owner,
+              issue_number: number,
+              repo,
+              body: "[Please login to GitHub in Watermelon to see the results](https://app.watermelontools.com/)",
+            }
+          )
+          .then((response) => {
+            console.info("post comment", response.data);
+          })
+          .catch((error) => {
+            return console.error("posting comment error", error);
+          });
+        return NextResponse.json("User not registered");
       }
-      const count = await addActionCount({ watermelon_user });
-      textToWrite += `### WatermelonAI Summary \n`;
+      
+      const team = await createTeamAndMatchUser({
+        name: organization.login,
+        id: organization.id,
+        watermelon_user,
+      });
 
+      const count = await addActionCount({ owner });
+
+      textToWrite += `### WatermelonAI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
@@ -400,6 +412,7 @@ export async function POST(request: Request) {
         isPrivateRepo: repository.private,
         repoName: repo,
       });
+      textToWrite += randomText();
 
       // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
       await labelPullRequest({
@@ -442,7 +455,6 @@ export async function POST(request: Request) {
           },
         }
       );
-      console.info("comments.data.length", comments.data.length);
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
         return comment.user.login.includes("watermelon-context");
@@ -492,6 +504,40 @@ export async function POST(request: Request) {
             return console.error("posting comment error", error);
           });
       }
+
+      // If the count is surpassed, we replace the
+      if (count.github_app_uses > 500) {
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
+
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+          {
+            owner,
+            repo,
+            issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) => {
+          return comment.user.login.includes("watermelon-context");
+        });
+
+        // Update the existing comment
+        await octokit.request(
+          "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+          {
+            owner,
+            repo,
+            comment_id: botComment.id,
+            body: textToWrite,
+          }
+        );
+      }
+
       successPosthogTracking({
         url: request.url,
         email: user_email,
@@ -507,6 +553,68 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
+    } else if (req.action === "created" || req.action === "edited") {
+      const { missingParams } = validateParams(req, [
+        "installation",
+        "repository",
+        "comment",
+        "issue",
+      ]);
+      if (missingParams.length > 0) {
+        return missingParamsResponse({ url: request.url, missingParams });
+      }
+      const { installation, repository, comment, issue } = req;
+      const { title, body } = req.issue;
+      const owner = repository.owner.login;
+      const repo = repository.name;
+      const number = issue.number;
+      const installationId = installation.id;
+      const userLogin = comment.user.login;
+      let botComment = comment.body;
+      if (
+        userLogin === "watermelon-context[bot]" &&
+        botComment.includes("WatermelonAI Summary")
+      ) {
+        // extract the business logic summary, it's always the first paragraph under the title
+        const businessLogicSummary = botComment
+          .split("### WatermelonAI Summary")[1]
+          .split("\n")[1];
+
+        // Detect console.logs and its equivalent in other languages
+        await detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        await labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+        successPosthogTracking({
+          url: request.url,
+          email: req.email,
+          data: {
+            repo,
+            owner,
+            number,
+            action: req.action,
+            businessLogicSummary,
+          },
+        });
+      }
     }
     return NextResponse.json({
       message: "wat",

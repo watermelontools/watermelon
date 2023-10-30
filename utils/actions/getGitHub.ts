@@ -21,14 +21,17 @@ async function getGitHub({
       type: "pr",
       per_page: amount,
     });
+    
     return {
       fullData: issues.data?.items,
       data:
-        issues.data?.items?.map(({ title, body, html_url: link, number }) => ({
+        issues.data?.items?.map(({ title, body, html_url: link, number, created_at, user  }) => ({
           title,
           body,
           link,
           number,
+          created_at,
+          author: user?.login
         })) || [],
     };
   }
