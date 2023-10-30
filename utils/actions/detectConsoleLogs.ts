@@ -74,9 +74,9 @@ function getConsoleLogPosition(filePatchAndIndividualLine: any) {
 
   // get the position of the indiviudalLine in th filePatch
   const lines = filePatch.split("\n");
-  for (let i = 0; i < lines.length; i++) {
+  for (let i = 1; i < lines.length; i++) {
     if (lines[i].includes(individualLine)) {
-      positionInDiff = i + 1;
+      positionInDiff = i;
       break;
     }
   }
@@ -159,6 +159,10 @@ export default async function detectConsoleLogs({
                 .then((result) => {
                   const latestCommitHash = result.data.head.sha;
 
+                  const consoleLogPosition = getConsoleLogPosition({
+                    filePatch: file.patch ?? "",
+                    individualLine
+                  }) 
                   return octokit.request(
                     "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
                     {
@@ -171,10 +175,8 @@ export default async function detectConsoleLogs({
                       comments: [
                         {
                           path: file.filename,
-                          position: getConsoleLogPosition({
-                            filePatch: file.patch ?? "",
-                            individualLine
-                          }) || 1, // comment at the beggining of the file by default
+                          position: consoleLogPosition || 1, // comment at the beggining of the file by default
+
                           body: "This file contains at least one console log. Please remove any present.",
                         },
                       ],
