@@ -19,7 +19,7 @@ We currently support the following integrations
 
 | Git                                     | Project Management | Messaging | Documentation      |
 | :-------------------------------------- | :----------------- | :-------- | :----------------- |
-| GitHub                                  | Jira, Linear       | Slack     | Notion, Confluence, Asana |
+| GitHub                                  | Jira, Linear, Asana      | Slack     | Notion, Confluence |
 
 ## Features
 
