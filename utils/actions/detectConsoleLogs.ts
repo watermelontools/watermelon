@@ -163,6 +163,7 @@ export default async function detectConsoleLogs({
                     filePatch: file.patch ?? "",
                     individualLine
                   }) 
+
                   return octokit.request(
                     "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
                     {
@@ -176,7 +177,6 @@ export default async function detectConsoleLogs({
                         {
                           path: file.filename,
                           position: consoleLogPosition || 1, // comment at the beggining of the file by default
-
                           body: "This file contains at least one console log. Please remove any present.",
                         },
                       ],

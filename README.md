@@ -1,4 +1,4 @@
-# Watermelon's Passive Docs Search Engine
+# Watermelon's Open Source Copilot For Code Review
 
 [![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
@@ -9,22 +9,17 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/WatermelonTools?style=flat-square)](https://twitter.com/intent/follow?screen_name=WatermelonTools)
 [![Discord](https://img.shields.io/discord/933846506438541492?style=flat-square)](https://discord.com/invite/H4AE6b9442)
 
-**Watermelon is a Passive Documentation Search Engine** serving both our GitHub app and IDE extension. Our set of plug-ins help developers understand code context, improve their coding velocity and merge PRs like a breeze.
+**Watermelon is an Open Source Copilot For Code Review**. Our GitHub application allows developers to pre-review GitHub Pull Requests by tracing their code context and performing static code analysis. Using LLMs to detect errors, compare intent to implementation, and give the PR a first health check.
 
-We've built a search algorithm that indexes the most relevant [passive documentation](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
-
-To retrieve passive documentation and code context in your GitHub PRs, use this app.
-
-To retrieve passive documentation and code context in your IDE, take a look at our [VS Code Extension](https://github.com/watermelontools/watermelon-extension)
+We've built a search algorithm that indexes the most relevant [code context](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
 
 ## Integrations
 
 We currently support the following integrations
 
-| Watermelon Product | Git                                     | Project Management | Messaging | Documentation      |
-| :----------------- | :-------------------------------------- | :----------------- | :-------- | :----------------- |
-| VS Code            | GitHub, GitLab (Beta), Bitbucket (Beta) | Jira               | Slack     |                    |
-| GitHub App         | GitHub                                  | Jira, Linear       | Slack     | Notion, Confluence |
+| Git                                     | Project Management | Messaging | Documentation      |
+| :-------------------------------------- | :----------------- | :-------- | :----------------- |
+| GitHub                                  | Jira, Linear, Asana      | Slack     | Notion, Confluence |
 
 ## Features
 
@@ -51,17 +46,9 @@ Alternatively, comment on our issues if you plan to solve one.
 
 ## Privacy
 
-We use [VS Code's telemetry library](https://github.com/microsoft/vscode-extension-telemetry). The library respects the user's decision about whether or not to send telemetry data.
-
-We also have settings to disable it.
+We use [PostHog Analytics](https://posthog.com/) to track how users interact with Watermelon's GitHub Application.
 
 Watermelon [doesn't store your code](https://www.watermelontools.com/post/building-a-code-archeology-toolbox-without-storing-your-code)
-
-## Supporters
-
-[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
-
-[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
 
 ---
 
