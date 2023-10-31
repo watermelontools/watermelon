@@ -17,10 +17,9 @@ We've built a search algorithm that indexes the most relevant [code context](htt
 
 We currently support the following integrations
 
-| Watermelon Product | Git                                     | Project Management | Messaging | Documentation      |
-| :----------------- | :-------------------------------------- | :----------------- | :-------- | :----------------- |
-| VS Code            | GitHub, GitLab (Beta), Bitbucket (Beta) | Jira               | Slack     |                    |
-| GitHub App         | GitHub                                  | Jira, Linear       | Slack     | Notion, Confluence |
+| Git                                     | Project Management | Messaging | Documentation      |
+| :-------------------------------------- | :----------------- | :-------- | :----------------- |
+| GitHub                                  | Jira, Linear       | Slack     | Notion, Confluence, Asana |
 
 ## Features
 
