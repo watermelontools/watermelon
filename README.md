@@ -50,12 +50,6 @@ We use [PostHog Analytics](https://posthog.com/) to track how users interact wit
 
 Watermelon [doesn't store your code](https://www.watermelontools.com/post/building-a-code-archeology-toolbox-without-storing-your-code)
 
-## Supporters
-
-[![Stargazers repo roster for @watermelontools/watermelon](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
-
-[![Forkers repo roster for @watermelontools/watermelon](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
-
 ---
 
 #### About Watermelon
