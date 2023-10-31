@@ -328,7 +328,7 @@ export async function POST(request: Request) {
           });
         return NextResponse.json("User not registered");
       }
-      
+
       const team = await createTeamAndMatchUser({
         name: organization.login,
         id: organization.id,
@@ -435,7 +435,7 @@ export async function POST(request: Request) {
         issue_number: number,
         installationId,
         reqUrl: request.url,
-        reqEmail: req.email
+        reqEmail: req.email,
       });
 
       await addActionLog({
@@ -566,6 +566,7 @@ export async function POST(request: Request) {
         textToWrite,
       });
     } else if (req.action === "created" || req.action === "edited") {
+      console.log("comment keys", Object.keys(req));
       const { missingParams } = validateParams(req, [
         "installation",
         "repository",
