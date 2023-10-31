@@ -46,9 +46,7 @@ Alternatively, comment on our issues if you plan to solve one.
 
 ## Privacy
 
-We use [VS Code's telemetry library](https://github.com/microsoft/vscode-extension-telemetry). The library respects the user's decision about whether or not to send telemetry data.
-
-We also have settings to disable it.
+We use [PostHog Analytics](https://posthog.com/) to track how users interact with Watermelon's GitHub Application.
 
 Watermelon [doesn't store your code](https://www.watermelontools.com/post/building-a-code-archeology-toolbox-without-storing-your-code)
 
