@@ -52,9 +52,9 @@ Watermelon [doesn't store your code](https://www.watermelontools.com/post/buildi
 
 ## Supporters
 
-[![Stargazers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
+[![Stargazers repo roster for @watermelontools/watermelon](https://reporoster.com/stars/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/stargazers)
 
-[![Forkers repo roster for @watermelontools/watermelon-extension](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
+[![Forkers repo roster for @watermelontools/watermelon](https://reporoster.com/forks/watermelontools/watermelon)](https://github.com/watermelontools/watermelon/network/members)
 
 ---
 
