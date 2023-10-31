@@ -330,8 +330,8 @@ export async function POST(request: Request) {
       }
 
       const team = await createTeamAndMatchUser({
-        name: organization.login,
-        id: organization.id,
+        name: organization?.login || repository?.owner?.login,
+        id: organization?.id || repository?.owner?.id,
         watermelon_user,
       });
 
@@ -469,7 +469,7 @@ export async function POST(request: Request) {
       );
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
-        return comment.user.login.includes("watermelon-context");
+        return comment?.user?.login.includes("watermelon-context");
       });
       if (botComment?.id) {
         // Update the existing comment
@@ -535,7 +535,7 @@ export async function POST(request: Request) {
 
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
-          return comment.user.login.includes("watermelon-context");
+          return comment?.user?.login.includes("watermelon-context");
         });
 
         // Update the existing comment
