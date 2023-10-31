@@ -58,8 +58,8 @@ export async function POST(request: Request) {
       const { installation, repository, pull_request, organization } = req;
       const installationId = installation.id;
       const { title, body } = req.pull_request;
-      const owner = repository.owner.login;
-      const repo = repository.name;
+      const owner = repository?.owner?.login;
+      const repo = repository?.name;
       const number = pull_request.number;
       const userLogin = pull_request.user.login;
 
@@ -68,8 +68,8 @@ export async function POST(request: Request) {
       let octoCommitList = await octokit.request(
         "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
         {
-          repo: repository.name,
-          owner: repository.owner.login,
+          repo: repo,
+          owner: owner,
           pull_number: number,
           headers: {
             "X-GitHub-Api-Version": "2022-11-28",
