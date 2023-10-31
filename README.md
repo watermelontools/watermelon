@@ -1,4 +1,4 @@
-# Watermelon's Passive Docs Search Engine
+# Watermelon's Open Source Copilot For Code Review
 
 [![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
@@ -9,13 +9,9 @@
 [![Twitter Follow](https://img.shields.io/twitter/follow/WatermelonTools?style=flat-square)](https://twitter.com/intent/follow?screen_name=WatermelonTools)
 [![Discord](https://img.shields.io/discord/933846506438541492?style=flat-square)](https://discord.com/invite/H4AE6b9442)
 
-**Watermelon is a Passive Documentation Search Engine** serving both our GitHub app and IDE extension. Our set of plug-ins help developers understand code context, improve their coding velocity and merge PRs like a breeze.
+**Watermelon is an Open Source Copilot For Code Review**. Our GitHub application allows developers to pre-review GitHub Pull Requests by tracing their code context and performing static code analysis. Using LLMs to detect errors, compare intent to implementation, and give the PR a first health check.
 
-We've built a search algorithm that indexes the most relevant [passive documentation](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
-
-To retrieve passive documentation and code context in your GitHub PRs, use this app.
-
-To retrieve passive documentation and code context in your IDE, take a look at our [VS Code Extension](https://github.com/watermelontools/watermelon-extension)
+We've built a search algorithm that indexes the most relevant [code context](https://www.watermelontools.com/post/what-is-passive-code-documentation-why-is-it-hard-to-scale-what-to-do-about-it) for a given pull request.
 
 ## Integrations
 
