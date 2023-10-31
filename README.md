@@ -1,3 +1,5 @@
+random
+
 # Watermelon's Passive Docs Search Engine
 
 [![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
