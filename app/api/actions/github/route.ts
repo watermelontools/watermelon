@@ -571,16 +571,16 @@ export async function POST(request: Request) {
         "installation",
         "repository",
         "comment",
-        "issue",
+        "pull_request",
       ]);
       if (missingParams.length > 0) {
         return missingParamsResponse({ url: request.url, missingParams });
       }
-      const { installation, repository, comment, issue } = req;
-      const { title, body } = req.issue;
+      const { installation, repository, comment, pull_request } = req;
+      const { title, body } = req.pull_request;
       const owner = repository.owner.login;
       const repo = repository.name;
-      const number = issue.number;
+      const number = pull_request.number;
       const installationId = installation.id;
       const userLogin = comment.user.login;
       let botComment = comment.body;
