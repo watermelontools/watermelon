@@ -566,6 +566,7 @@ export async function POST(request: Request) {
         textToWrite,
       });
     } else if (req.action === "created" || req.action === "edited") {
+      console.log("comment keys", Object.keys(req));
       const { missingParams } = validateParams(req, [
         "installation",
         "repository",
