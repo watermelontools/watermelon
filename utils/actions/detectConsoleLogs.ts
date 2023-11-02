@@ -143,7 +143,8 @@ export default async function detectConsoleLogs({
           ],
         })
         .then((result) => {
-          const openAIResult = result.data.choices[0].message.content.split(",");
+          const openAIResult =
+            result.data.choices[0].message.content.split(",");
 
           const addtionsHaveConsoleLog = openAIResult[0];
           const individualLine = openAIResult[1];
@@ -161,27 +162,34 @@ export default async function detectConsoleLogs({
 
                   const consoleLogPosition = getConsoleLogPosition({
                     filePatch: file.patch ?? "",
-                    individualLine
-                  }) 
+                    individualLine,
+                  });
 
-                  return octokit.request(
-                    "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
-                    {
-                      owner,
-                      repo,
-                      pull_number: issue_number,
-                      commit_id: latestCommitHash,
-                      event: "COMMENT",
-                      path: file.filename,
-                      comments: [
-                        {
-                          path: file.filename,
-                          position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                          body: "This file contains at least one console log. Please remove any present.",
-                        },
-                      ],
-                    }
-                  );
+                  return octokit
+                    .request(
+                      "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                      {
+                        owner,
+                        repo,
+                        pull_number: issue_number,
+                        commit_id: latestCommitHash,
+                        event: "COMMENT",
+                        path: file.filename,
+                        comments: [
+                          {
+                            path: file.filename,
+                            position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                            body: "This file contains at least one console log. Please remove any present.",
+                          },
+                        ],
+                      }
+                    )
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                })
+                .catch((err) => {
+                  console.log(err);
                 });
             };
 

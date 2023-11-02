@@ -57,7 +57,8 @@ export default async function flagPullRequest({
   let botComment = comments.data.find((comment) => {
     if (comment.body.includes("This PR contains console logs")) {
       // concat to the prompt
-      prompt += "Since the PR contains console logs, make the maximum rating 8.";
+      prompt +=
+        "Since the PR contains console logs, make the maximum rating 8.";
     }
   });
 
@@ -67,26 +68,34 @@ export default async function flagPullRequest({
     DONT_MERGE: "🚨 Don't Merge",
   };
   function deleteLabel(labelName: string) {
-    octokit.request(
-      "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
-      {
-        owner,
-        repo,
-        issue_number,
-        name: labelName,
-      }
-    );
+    octokit
+      .request(
+        "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+        {
+          owner,
+          repo,
+          issue_number,
+          name: labelName,
+        }
+      )
+      .catch((error) => {
+        console.error("Label not found", error);
+      });
   }
   function addLabel(labelName: string) {
-    octokit.request(
-      "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
-      {
-        owner,
-        repo,
-        issue_number,
-        labels: [labelName],
-      }
-    );
+    octokit
+      .request(
+        "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
+        {
+          owner,
+          repo,
+          issue_number,
+          labels: [labelName],
+        }
+      )
+      .catch((error) => {
+        console.error("add laber", error);
+      });
   }
 
   try {
