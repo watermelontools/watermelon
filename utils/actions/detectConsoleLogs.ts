@@ -142,14 +142,33 @@ export default async function detectConsoleLogs({
             },
           ],
         })
-        .then((result) => {
+        .then(async (result) => {
           const openAIResult =
             result.data.choices[0].message.content.split(",");
 
           const addtionsHaveConsoleLog = openAIResult[0];
           const individualLine = openAIResult[1];
 
-          if (addtionsHaveConsoleLog === "true") {
+          // Fetch all comments on the PR
+          const comments = await octokit.request(
+            "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+            {
+              owner,
+              repo,
+              issue_number,
+              headers: {
+                "X-GitHub-Api-Version": "2022-11-28",
+              },
+            }
+          );
+          
+          const existingCommentsByBot = comments.data.filter(comment => {
+            return comment.path === file.filename &&  
+                   comment.position === getConsoleLogPosition &&
+                   comment.user.login === "watermelon-copilot-for-code-review";
+          });
+          
+          if (addtionsHaveConsoleLog === "true" && existingCommentsByBot.length === 0) {
             const commentFileDiff = () => {
               return octokit
                 .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
@@ -179,7 +198,7 @@ export default async function detectConsoleLogs({
                           {
                             path: file.filename,
                             position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                            body: "This file contains at least one console log. Please remove any present.",
+                            body: "existingCommentsByBot - This file contains at least one console log. Please remove any present.",
                           },
                         ],
                       }
