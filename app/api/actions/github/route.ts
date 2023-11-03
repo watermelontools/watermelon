@@ -337,7 +337,7 @@ export async function POST(request: Request) {
 
       const count = await addActionCount({ owner });
 
-      textToWrite += `### WatermelonAI Summary \n`;
+      textToWrite += `### Watermelon AI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
