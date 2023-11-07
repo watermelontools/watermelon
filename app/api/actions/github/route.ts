@@ -337,7 +337,7 @@ export async function POST(request: Request) {
 
       const count = await addActionCount({ owner });
 
-      textToWrite += `### WatermelonAI Summary \n`;
+      textToWrite += `### Watermelon AI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
@@ -469,7 +469,7 @@ export async function POST(request: Request) {
       );
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
-        return comment?.user?.login.includes("watermelon-context");
+        return comment?.user?.login.includes("watermelon-copilot-for-code-review");
       });
       if (botComment?.id) {
         // Update the existing comment
