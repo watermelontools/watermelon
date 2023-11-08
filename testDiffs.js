@@ -1,6 +1,5 @@
-function processData(inputData) {
-    let output = inputData.map(element => element * 2).filter(element => element >= 10).reduce((accum, current) => accum + current, 0);
-    console.log("Processing complete:", output);
-    return output;
+function processData(input) {
+    let result = input.map(item => item * 2).filter(item => item > 10).reduce((a, b) => a + b, 0);
+    console.log("Processing complete: ", result);
+    return result;
 }
-
