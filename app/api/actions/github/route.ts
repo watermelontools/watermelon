@@ -42,11 +42,11 @@ export async function POST(request: Request) {
   try {
     // Verify and parse the webhook event
     const eventName = headers["x-github-event"];
-
+    let actionName = req.action;
     if (
-      req.action === "opened" ||
-      req.action === "reopened" ||
-      req.action === "synchronize"
+      actionName === "opened" ||
+      actionName === "reopened" ||
+      actionName === "synchronize"
     ) {
       const { missingParams } = validateParams(req, [
         "pull_request",
@@ -503,7 +503,7 @@ export async function POST(request: Request) {
                 repo,
                 owner,
                 number,
-                action: req.action,
+                action: actionName,
                 textToWrite,
               },
             });
@@ -558,7 +558,7 @@ export async function POST(request: Request) {
           repo,
           owner,
           number,
-          action: req.action,
+          action: actionName,
           textToWrite,
         },
       });
@@ -566,7 +566,7 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
-    } else if (req.action === "created" || req.action === "edited") {
+    } else if (actionName === "created" || actionName === "edited") {
       console.log("comment keys", Object.keys(req));
       const { missingParams } = validateParams(req, [
         "installation",
@@ -624,12 +624,12 @@ export async function POST(request: Request) {
             repo,
             owner,
             number,
-            action: req.action,
+            action: actionName,
             businessLogicSummary,
           },
         });
       }
-    } else if (req.action === "deleted") {
+    } else if (actionName === "deleted") {
       sendUninstall({ emails: [req.sender.email] });
     }
     return NextResponse.json({
