@@ -24,6 +24,7 @@ import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
+import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -628,6 +629,8 @@ export async function POST(request: Request) {
           },
         });
       }
+    } else if (req.action === "deleted") {
+      sendUninstall({ emails: [req.sender.email] });
     }
     return NextResponse.json({
       message: "wat",
