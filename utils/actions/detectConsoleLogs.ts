@@ -116,10 +116,17 @@ export default async function detectConsoleLogs({
   const commentPromises = diffFiles.map(async (file) => {
     const additions = getAdditions(file.patch ?? "");
 
-    const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
-    if there's a console log or its equivalent in another programming language 
+    const consoleLogDetectionPrompt = `You are going to parse code diffs in 
+    a Pull Request to detect if there are security vulnerabilities.
+    You are going to detect console logs or its equivalent in another programming language,
+    and exposed environment variables. You are going to be given a list of code additions to
+    identify the following:
+    
+    First: 
+    If there's a console log or its equivalent in another programming language 
     such as Java, Golang, Python, C, Rust, C++, etc.
-    (console.log(), println(), println!(), System.out.println(), print(), fmt.Println(), and  cout << "Print a String" << endl; are some examples). 
+    (console.log(), println(), println!(), System.out.println(), print(), fmt.Println(), and  
+    cout << "Print a String" << endl; are some examples). 
     If the console log or its equivalent in another language is in a code comment, don't
     count it as a detected console log. For example JavaScript comments start with // or /*, 
     Python comments start with #.
@@ -128,7 +135,22 @@ export default async function detectConsoleLogs({
     If there is a console log, return "true", else return "false".
     If you return true, return a string that that has 2 values: result (true) and the line of code.
     The line value, is the actual line in the file that contains the console log.
-    For example: true,console.log("hello world");`;
+    For example: true,console.log("hello world");
+    
+    Second:
+    If there's an exposed environment variable or environment secret. 
+    Search for embedded secrets. Identify patterns that resembble API keys,
+    passwords, and secret tokens. 
+    Look for strings matching common key formats (eg., API_KEY=, PASSWORD=, SECRET=).
+    Detect if the credentials are hardcoded. Calling process.env (and its equivalent
+      in other programming languages) is fine.
+    For example: API_KEY=process.env.OPENAI_API_KEY is fine. 
+    However, something like API_KEY='abcd1234' is not.
+    If there is an exposed environment secret, return "true", else return "false".
+    If you return true, return a string that that has 2 values: result (true) and the line of code.
+    The line value, is the actual line in the file that contains the exposed environment secret.
+    For example: true,const API_KEY='abcd1234';
+    `;
 
     // detect if the additions contain console logs or not
     try {
