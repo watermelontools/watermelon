@@ -133,9 +133,10 @@ export default async function detectConsoleLogs({
     Other console functions such as console.info() shouldn't be counted as console logs.
     Ignore code comments from this analysis. 
     If there is a console log, return "true", else return "false".
-    If you return true, return a string that that has 2 values: result (true) and the line of code.
+    If you return true, return a string that that has 3 values: result (true), the line of code,
+      and the vulnerability type detected with is consoleLog in this case.
     The line value, is the actual line in the file that contains the console log.
-    For example: true,console.log("hello world");
+    For example: true,console.log("hello world");,console log
     
     Second:
     If there's an exposed environment variable or environment secret. 
@@ -147,9 +148,10 @@ export default async function detectConsoleLogs({
     For example: API_KEY=process.env.OPENAI_API_KEY is fine. 
     However, something like API_KEY='abcd1234' is not.
     If there is an exposed environment secret, return "true", else return "false".
-    If you return true, return a string that that has 2 values: result (true) and the line of code.
+    If you return true, return a string that that has 3 values: result (true), the line of code,
+      and the vulnerability type detected with is exposedEnvSecret in this case.
     The line value, is the actual line in the file that contains the exposed environment secret.
-    For example: true,const API_KEY='abcd1234';
+    For example: true,const API_KEY='abcd1234';,exposed environment secret
     `;
 
     // detect if the additions contain console logs or not
@@ -170,6 +172,7 @@ export default async function detectConsoleLogs({
 
           const addtionsHaveConsoleLog = openAIResult[0];
           const individualLine = openAIResult[1];
+          const vulnerabilityTypeDetected = openAIResult[2];
 
           if (addtionsHaveConsoleLog === "true") {
             const commentFileDiff = () => {
@@ -201,7 +204,7 @@ export default async function detectConsoleLogs({
                           {
                             path: file.filename,
                             position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                            body: "This file contains at least one console log. Please remove any present.",
+                            body: `This file contains at least one ${vulnerabilityTypeDetected}. Please remove any present.`,
                           },
                         ],
                       }
