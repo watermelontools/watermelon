@@ -158,7 +158,7 @@ export default async function detectConsoleLogs({
     try {
       return await openai
         .createChatCompletion({
-          model: "gpt-3.5-turbo-16k",
+          model: "gpt-4-1106-preview",
           messages: [
             {
               role: "system",
