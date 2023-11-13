@@ -1,11 +1,7 @@
 const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
 import { successPosthogTracking } from "../../utils/api/posthogTracking";
-import {
-  failedToFetchResponse,
-  missingParamsResponse,
-} from "../../utils/api/responses";
-import validateParams from "../../utils/api/validateParams";
+import { failedToFetchResponse } from "../../utils/api/responses";
 
 const configuration = new Configuration({
   apiKey: process.env.OPEN_AI_KEY,
