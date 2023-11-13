@@ -63,36 +63,25 @@ export default async function flagPullRequest({
     TAKE_A_DEEPER_DIVE: "👀 Take a deeper dive",
     DONT_MERGE: "🚨 Don't Merge",
   };
-  function deleteLabel(labelName: string) {
-    octokit
-      .request(
-        "DELETE /repos/{owner}/{repo}/issues/{issue_number}/labels/{name}",
+
+  async function modifyLabel(issue_number, labelName, action) {
+    try {
+      await octokit.request(
+        `/${action} /repos/{owner}/{repo}/issues/{issue_number}/labels`,
         {
           owner,
           repo,
           issue_number,
-          name: labelName,
+          labels: action === "POST" ? [labelName] : labelName,
         }
-      )
-      .catch((error) => {
-        console.error("Label not found", error);
-      });
+      );
+    } catch (error) {
+      console.error(`Error during label ${action}`, error);
+    }
   }
-  function addLabel(labelName: string) {
-    octokit
-      .request(
-        "POST /repos/{owner}/{repo}/issues/{issue_number}/labels", //add label
-        {
-          owner,
-          repo,
-          issue_number,
-          labels: [labelName],
-        }
-      )
-      .catch((error) => {
-        console.error("add laber", error);
-      });
-  }
+  const addLabel = (labelName) => modifyLabel(issue_number, labelName, "POST");
+  const deleteLabel = (labelName) =>
+    modifyLabel(issue_number, labelName, "DELETE");
 
   try {
     return await openai
