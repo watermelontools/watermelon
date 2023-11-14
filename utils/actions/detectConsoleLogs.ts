@@ -128,6 +128,22 @@ export default async function detectConsoleLogs({
     }
   );
 
+  function getLatestCommitHash() {
+    return octokit
+      .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
+        owner,
+        repo,
+        pull_number: issue_number,
+      })
+      .then((result) => {
+        return result.data.head.sha;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  const latestCommitHash = getLatestCommitHash();
+
   const commentPromises = diffFiles.map(async (file) => {
     const additions = getAdditions(file.patch ?? "");
 
@@ -152,43 +168,30 @@ export default async function detectConsoleLogs({
 
           if (addtionsHaveConsoleLog === "true") {
             const commentFileDiff = () => {
+              const consoleLogPosition = getConsoleLogPosition({
+                filePatch: file.patch ?? "",
+                individualLine,
+              });
+
               return octokit
-                .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
-                  owner,
-                  repo,
-                  pull_number: issue_number,
-                })
-                .then((result) => {
-                  const latestCommitHash = result.data.head.sha;
-
-                  const consoleLogPosition = getConsoleLogPosition({
-                    filePatch: file.patch ?? "",
-                    individualLine,
-                  });
-
-                  return octokit
-                    .request(
-                      "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                .request(
+                  "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
+                  {
+                    owner,
+                    repo,
+                    pull_number: issue_number,
+                    commit_id: latestCommitHash,
+                    event: "COMMENT",
+                    path: file.filename,
+                    comments: [
                       {
-                        owner,
-                        repo,
-                        pull_number: issue_number,
-                        commit_id: latestCommitHash,
-                        event: "COMMENT",
                         path: file.filename,
-                        comments: [
-                          {
-                            path: file.filename,
-                            position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                            body: "This file contains at least one console log. Please remove any present.",
-                          },
-                        ],
-                      }
-                    )
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                })
+                        position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                        body: "This file contains at least one console log. Please remove any present.",
+                      },
+                    ],
+                  }
+                )
                 .catch((err) => {
                   console.log(err);
                 });
