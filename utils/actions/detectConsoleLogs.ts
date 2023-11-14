@@ -26,14 +26,12 @@ If you return true, return a string that that has 2 values: result (true) and th
 The line value, is the actual line in the file that contains the console log.
 For example: true,console.log("hello world");`;
 
-function getAdditions(filePatch: string) {
+function getLineDiffs(filePatch: string) {
   const additions: string[] = [];
+  const removals: string[] = [];
 
   // Split the patch into lines
   const lines = filePatch.split("\n");
-
-  // Track if we are in a deletion block
-  let inDeletionBlock = false;
 
   // Loop through lines
   for (let i = 0; i < lines.length; i++) {
@@ -41,39 +39,15 @@ function getAdditions(filePatch: string) {
 
     // Check if entering a deletion block
     if (line.startsWith("-")) {
-      inDeletionBlock = true;
-      continue;
+      removals.push(line.replace("-", "").trim());
     }
 
     // Check if exiting a deletion block
-    if (line.startsWith("+") && inDeletionBlock) {
-      inDeletionBlock = false;
-      continue;
-    }
-
-    // If not in a deletion block, add lines starting with +
-    if (!inDeletionBlock && line.startsWith("+")) {
-      additions.push(line);
-    }
-
-    // Delete the pluses
-    lines[i] = line.replace("+", "");
-
-    // Trim the line to delete leading spaces
-    lines[i] = lines[i].trim();
-
-    // If the line is a comment, remove it
-    if (
-      lines[i].startsWith("#") ||
-      lines[i].startsWith("//") ||
-      lines[i].startsWith("/*")
-    ) {
-      lines.splice(i, 1);
-      i--;
+    if (line.startsWith("+")) {
+      additions.push(line.replace("+", "").trim());
     }
   }
-
-  return lines.join("\n");
+  return { additions: additions.join("\n"), removals: removals.join("\n") };
 }
 
 function getConsoleLogPosition(filePatchAndIndividualLine: any) {
@@ -138,7 +112,7 @@ export default async function detectConsoleLogs({
   const latestCommitHash = await getLatestCommitHash();
 
   const commentPromises = diffFiles.map(async (file) => {
-    const additions = getAdditions(file.patch ?? "");
+    const { additions } = getLineDiffs(file.patch ?? "");
 
     // detect if the additions contain console logs or not
     try {
