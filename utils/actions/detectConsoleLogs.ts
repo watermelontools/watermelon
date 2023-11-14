@@ -17,7 +17,7 @@ const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
-
+const commentBody = `This PR contains console logs. Please review or remove them.`;
 const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
 if there's a console log or its equivalent in another programming language 
 such as Java, Golang, Python, C, Rust, C++, Ruby, etc.
@@ -190,7 +190,7 @@ export default async function detectConsoleLogs({
                       {
                         path: file.filename,
                         position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                        body: "This file contains at least one console log. Please remove any present.",
+                        body: commentBody,
                       },
                     ],
                   }
