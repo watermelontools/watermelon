@@ -58,7 +58,7 @@ function getConsoleLogPosition({ filePatch, individualLine }) {
   );
 
   // Convert to one-based index, or return -1 if not found
-  return zeroBasedIndex === -1 ? -1 : zeroBasedIndex + 1;
+  return zeroBasedIndex === -1 ? 0 : zeroBasedIndex + 1;
 }
 
 export default async function detectConsoleLogs({
