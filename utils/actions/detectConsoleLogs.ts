@@ -50,20 +50,15 @@ function getLineDiffs(filePatch: string) {
   return { additions: additions.join("\n"), removals: removals.join("\n") };
 }
 
-function getConsoleLogPosition(filePatchAndIndividualLine: any) {
-  let positionInDiff = 1;
-  const { filePatch, individualLine } = filePatchAndIndividualLine;
-
-  // get the position of the indiviudalLine in th filePatch
+function getConsoleLogPosition({ filePatch, individualLine }) {
+  // Split the filePatch into lines and find the index of the line that includes individualLine
   const lines = filePatch.split("\n");
-  for (let i = 1; i < lines.length; i++) {
-    if (lines[i].includes(individualLine)) {
-      positionInDiff = i;
-      break;
-    }
-  }
+  const zeroBasedIndex = lines.findIndex((line) =>
+    line.includes(individualLine)
+  );
 
-  return positionInDiff;
+  // Convert to one-based index, or return -1 if not found
+  return zeroBasedIndex === -1 ? -1 : zeroBasedIndex + 1;
 }
 
 export default async function detectConsoleLogs({
