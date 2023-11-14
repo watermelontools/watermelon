@@ -142,7 +142,7 @@ export default async function detectConsoleLogs({
         console.log(err);
       });
   }
-  const latestCommitHash = getLatestCommitHash();
+  const latestCommitHash = await getLatestCommitHash();
 
   const commentPromises = diffFiles.map(async (file) => {
     const additions = getAdditions(file.patch ?? "");
@@ -180,7 +180,10 @@ export default async function detectConsoleLogs({
                     owner,
                     repo,
                     pull_number: issue_number,
-                    commit_id: latestCommitHash,
+                    commit_id:
+                      typeof latestCommitHash === "string"
+                        ? latestCommitHash
+                        : undefined,
                     event: "COMMENT",
                     path: file.filename,
                     comments: [
