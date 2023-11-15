@@ -1,5 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
+import { posthog } from "posthog-js";
 import { successPosthogTracking } from "../../utils/api/posthogTracking";
 import { failedToFetchResponse } from "../../utils/api/responses";
 
@@ -76,7 +77,12 @@ export default async function flagPullRequest({
         }
       );
     } catch (error) {
-      console.error(`Error during label ${action}`, error);
+      posthog.capture("error", {
+        error: error.message,
+        action: `labelPullRequest - ${action}`,
+        url: reqUrl,
+        email: reqEmail,
+      });
     }
   }
   const addLabel = (labelName) => modifyLabel(labelName, "POST");
