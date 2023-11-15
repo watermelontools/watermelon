@@ -413,48 +413,55 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
-
-      // Detect console.logs and its equivalent in other languages
-      await detectConsoleLogs({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
+      Promise.all([
+        // Detect console.logs and its equivalent in other languages
+        detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        }),
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        }),
+        addActionLog({
+          randomWords,
+          github,
+          jira,
+          slack,
+          notion,
+          linear,
+          asana,
+          textToWrite,
+          businessLogicSummary,
+          owner,
+          repo,
+          number,
+          payload: req,
+          count,
+          watermelon_user,
+        }),
+      ]).catch((error) => {
+        failedPosthogTracking({
+          url: request.url,
+          error: error.message,
+          email: req.email,
+        });
+        return console.error("posting comment error", error);
       });
 
-      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      await labelPullRequest({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
-      });
-
-      await addActionLog({
-        randomWords,
-        github,
-        jira,
-        slack,
-        notion,
-        linear,
-        asana,
-        textToWrite,
-        businessLogicSummary,
-        owner,
-        repo,
-        number,
-        payload: req,
-        count,
-        watermelon_user,
-      });
       // Fetch all comments on the PR
       const comments = await octokit.request(
         "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
@@ -469,7 +476,9 @@ export async function POST(request: Request) {
       );
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
-        return comment?.user?.login.includes("watermelon-copilot-for-code-review");
+        return comment?.user?.login.includes(
+          "watermelon-copilot-for-code-review"
+        );
       });
       if (botComment?.id) {
         // Update the existing comment
