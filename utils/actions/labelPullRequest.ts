@@ -64,7 +64,7 @@ export default async function flagPullRequest({
     DONT_MERGE: "🚨 Don't Merge",
   };
 
-  async function modifyLabel(issue_number, labelName, action) {
+  async function modifyLabel(labelName, action) {
     try {
       await octokit.request(
         `/${action} /repos/{owner}/{repo}/issues/{issue_number}/labels`,
@@ -79,9 +79,8 @@ export default async function flagPullRequest({
       console.error(`Error during label ${action}`, error);
     }
   }
-  const addLabel = (labelName) => modifyLabel(issue_number, labelName, "POST");
-  const deleteLabel = (labelName) =>
-    modifyLabel(issue_number, labelName, "DELETE");
+  const addLabel = (labelName) => modifyLabel(labelName, "POST");
+  const deleteLabel = (labelName) => modifyLabel(labelName, "DELETE");
 
   try {
     return await openai
