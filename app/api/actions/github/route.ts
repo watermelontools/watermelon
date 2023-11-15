@@ -24,6 +24,7 @@ import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
+import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -41,11 +42,11 @@ export async function POST(request: Request) {
   try {
     // Verify and parse the webhook event
     const eventName = headers["x-github-event"];
-
+    let actionName = req.action;
     if (
-      req.action === "opened" ||
-      req.action === "reopened" ||
-      req.action === "synchronize"
+      actionName === "opened" ||
+      actionName === "reopened" ||
+      actionName === "synchronize"
     ) {
       const { missingParams } = validateParams(req, [
         "pull_request",
@@ -511,7 +512,7 @@ export async function POST(request: Request) {
                 repo,
                 owner,
                 number,
-                action: req.action,
+                action: actionName,
                 textToWrite,
               },
             });
@@ -566,7 +567,7 @@ export async function POST(request: Request) {
           repo,
           owner,
           number,
-          action: req.action,
+          action: actionName,
           textToWrite,
         },
       });
@@ -574,7 +575,7 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
-    } else if (req.action === "created" || req.action === "edited") {
+    } else if (actionName === "created" || actionName === "edited") {
       console.log("comment keys", Object.keys(req));
       const { missingParams } = validateParams(req, [
         "installation",
@@ -632,11 +633,13 @@ export async function POST(request: Request) {
             repo,
             owner,
             number,
-            action: req.action,
+            action: actionName,
             businessLogicSummary,
           },
         });
       }
+    } else if (actionName === "deleted") {
+      sendUninstall({ emails: [req.sender.email] });
     }
     return NextResponse.json({
       message: "wat",
