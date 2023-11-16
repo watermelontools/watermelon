@@ -38,10 +38,17 @@ async function HomePage({}) {
     <div>
       {data && <LoginGrid userEmail={userEmail} data={data} />}
       {userEmail && (
-        <div className="Box" style={{ height: "100%" }}>
-          <div className="Subhead px-3 pt-2">
+        <div style={{ height: "100%" }}>
+          <div
+            className="Subhead px-3"
+            style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 2,
+              backgroundColor: "var(--color-canvas-default)",
+            }}
+          >
             <h2 className="Subhead-heading d-flex flex-items-center flex-justify-start">
-              <img className="avatar avatar-4" src="/logos/vscode.svg" />
               <span>IDEs</span>
             </h2>
           </div>
