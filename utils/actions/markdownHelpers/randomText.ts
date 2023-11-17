@@ -5,6 +5,7 @@ const randomText = () => {
     "\n[Try us on VSCode!](https://marketplace.visualstudio.com/items?itemName=WatermelonTools.watermelon-tools)",
     "\n[Try us on VSCodium!](https://open-vsx.org/extension/WatermelonTools/watermelon-tools)",
     "\n[Try us on any JetBrains IDE!](https://plugins.jetbrains.com/plugin/22720-watermelon-context)",
+    "\n[Check your settings, so many things to change!](https://app.watermelontools.com/settings)",
   ];
 
   let randomChance = Math.random() * 100;
