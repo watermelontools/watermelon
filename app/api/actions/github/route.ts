@@ -66,6 +66,12 @@ export async function POST(request: Request) {
 
       const octokit = await app.getInstallationOctokit(installationId);
 
+      if (pull_request.user.type === "Bot") {
+        return new Response("We don't comment on bot PRs", {
+          status: 400
+        });
+      }
+
       let octoCommitList = await octokit.request(
         "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
         {
