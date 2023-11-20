@@ -80,10 +80,13 @@ export default function form({ userEmail }) {
           <div className="form-group-header">
             <h4>Search Params:</h4>
           </div>
-          <label htmlFor={`${valueLabel}-amount`}>Amount:</label>
-          <div className="form-group-body">
+          <label
+            htmlFor={`${valueLabel}-amount`}
+            className="d-flex flex-items-center"
+          >
+            Amount:
             <select
-              className="form-select mt-2"
+              className="form-select select-sm mt-2"
               aria-label={label}
               defaultValue={formState[valueLabel]}
               onChange={(e) =>
@@ -104,7 +107,7 @@ export default function form({ userEmail }) {
                 </option>
               ))}{" "}
             </select>
-          </div>
+          </label>
         </div>
         <div>
           <div className="form-group-header">
@@ -112,21 +115,10 @@ export default function form({ userEmail }) {
             <p>
               Use{" "}
               <code className="text-gray-100 bg-gray-300">{`{{systemName}}`}</code>{" "}
-              to replace with "{label}""
+              to replace with "{label}"
             </p>
           </div>
           <div className="form-group-body">
-            <div>
-              <label htmlFor={`${valueLabel}-no-results`}>
-                No results found:
-              </label>
-              <input
-                className="form-control"
-                type="text"
-                value="Example Value"
-                id={`${valueLabel}-no-results`}
-              />
-            </div>
             <div>
               <label htmlFor={`${valueLabel}-no-login`}>No login:</label>
               <input
@@ -148,15 +140,26 @@ export default function form({ userEmail }) {
               />
             </div>
             <div>
-              <label htmlFor={`${valueLabel}-nuclear`}>
-                Deactivate completely:
+              <label htmlFor={`${valueLabel}-no-results`}>
+                No results found:
               </label>
               <input
                 className="form-control"
-                type="checkbox"
+                type="text"
                 value="Example Value"
-                id={`${valueLabel}-nuclear`}
+                id={`${valueLabel}-no-results`}
               />
+            </div>
+            <div>
+              <label htmlFor={`${valueLabel}-nuclear`}>
+                Deactivate completely:
+                <input
+                  className="form-checkbox  "
+                  type="checkbox"
+                  value="Example Value"
+                  id={`${valueLabel}-nuclear`}
+                />
+              </label>
             </div>
           </div>
         </div>
