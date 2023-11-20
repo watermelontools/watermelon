@@ -67,29 +67,99 @@ export default function form({ userEmail }) {
 
   function SettingsSelector({ label, valueLabel }) {
     return (
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {" "}
-        <span style={{ width: "100px" }}>{label}</span>{" "}
-        <select
-          className="form-select mt-2"
-          aria-label={label}
-          defaultValue={formState[valueLabel]}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              [valueLabel]: parseInt(e.target.value),
-            })
-          }
-          value={formState[valueLabel]}
-        >
-          {" "}
-          {Array.from({ length: 5 }, (_, index) => (
-            <option key={index} value={index + 1}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <div className="Subhead">
+          <h3 className="Subhead-heading">{label}</h3>
+        </div>
+        <div>
+          <div className="form-group-header">
+            <h4>Search Params:</h4>
+          </div>
+          <label htmlFor={`${valueLabel}-amount`}>Amount:</label>
+          <div className="form-group-body">
+            <select
+              className="form-select mt-2"
+              aria-label={label}
+              defaultValue={formState[valueLabel]}
+              onChange={(e) =>
+                setFormState({
+                  ...formState,
+                  [valueLabel]: parseInt(e.target.value),
+                })
+              }
+              value={formState[valueLabel]}
+              id={`${valueLabel}-amount`}
+              style={{ width: "15ch" }}
+            >
               {" "}
-              {index + 1}{" "}
-            </option>
-          ))}{" "}
-        </select>{" "}
+              {Array.from({ length: 5 }, (_, index) => (
+                <option key={index} value={index + 1}>
+                  {" "}
+                  {index + 1}{" "}
+                </option>
+              ))}{" "}
+            </select>
+          </div>
+        </div>
+        <div>
+          <div className="form-group-header">
+            <h4>Response Texts:</h4>
+            <p>
+              Use{" "}
+              <code className="text-gray-100 bg-gray-300">{`{{systemName}}`}</code>{" "}
+              to replace with "{label}""
+            </p>
+          </div>
+          <div className="form-group-body">
+            <div>
+              <label htmlFor={`${valueLabel}-no-results`}>
+                No results found:
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                value="Example Value"
+                id={`${valueLabel}-no-results`}
+              />
+            </div>
+            <div>
+              <label htmlFor={`${valueLabel}-no-login`}>No login:</label>
+              <input
+                className="form-control"
+                type="text"
+                value="Example Value"
+                id={`${valueLabel}-no-login`}
+              />
+            </div>
+            <div>
+              <label htmlFor={`${valueLabel}-error-fetching`}>
+                Error fetching:
+              </label>
+              <input
+                className="form-control"
+                type="text"
+                value="Example Value"
+                id={`${valueLabel}-error-fetching`}
+              />
+            </div>
+            <div>
+              <label htmlFor={`${valueLabel}-nuclear`}>
+                Deactivate completely:
+              </label>
+              <input
+                className="form-control"
+                type="checkbox"
+                value="Example Value"
+                id={`${valueLabel}-nuclear`}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
