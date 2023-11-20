@@ -26,7 +26,7 @@ export default function Header({ userEmail, userToken }) {
               <li>
                 <a
                   className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
-                  href="https://github.com/apps/watermelon-context"
+                  href="https://github.com/apps/watermelon-copilot-for-code-review"
                 >
                   GitHub App
                 </a>

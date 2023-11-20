@@ -29,7 +29,7 @@ export default function verify() {
         </div>
       </div>
 
-      <a href="https://github.com/apps/watermelon-context" target="_blank">
+      <a href="https://github.com/apps/watermelon-copilot-for-code-review" target="_blank">
         <div
           className="Box d-flex flex-items-center flex-justify-center flex-column p-4 p-4 m-2"
           style={{ maxWidth: "80ch" }}

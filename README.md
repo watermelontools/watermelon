@@ -33,7 +33,7 @@ Watermelon's GitHub application allows teams to contextualize pull requests with
 
 ## Installation
 
-You can install Watermelon's GitHub Application [directly from the marketplace](https://github.com/marketplace/watermelon-context).
+You can install Watermelon's GitHub Application [directly from the marketplace](https://github.com/marketplace/watermelon-copilot-for-code-review).
 
 ## Contributing
 
