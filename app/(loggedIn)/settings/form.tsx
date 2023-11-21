@@ -60,6 +60,9 @@ export default function form({ userEmail }) {
   );
 
   const [formState, setFormState] = useState(defaultState);
+  const setDefault = () => {
+    setFormState(defaultState);
+  };
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -284,7 +287,7 @@ export default function form({ userEmail }) {
         >
           {saveDisabled ? "Saving..." : "Save"}
         </button>
-        <button type="button" className="btn mx-2">
+        <button type="button" className="btn mx-2" onClick={setDefault}>
           Reset to default
         </button>
       </div>
