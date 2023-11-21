@@ -201,14 +201,19 @@ export default function form({ userEmail }) {
           </select>
         </label>
       </div>
-      <button
-        className="btn btn-primary"
-        type="button"
-        disabled={saveDisabled}
-        onClick={handleSubmit}
+      <div
+        className="d-flex flex-row-reverse"
+        style={{ bottom: "1rem", right: "1rem", position: "sticky" }}
       >
-        {saveDisabled ? "Saving..." : "Save"}
-      </button>
+        <button
+          className="btn btn-primary"
+          type="button"
+          disabled={saveDisabled}
+          onClick={handleSubmit}
+        >
+          {saveDisabled ? "Saving..." : "Save"}
+        </button>
+      </div>
     </form>
   );
 }
