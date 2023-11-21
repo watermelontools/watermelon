@@ -88,7 +88,15 @@ export default function form({ userEmail }) {
           flexDirection: "column",
         }}
       >
-        <div className="Subhead">
+        <div
+          className="Subhead"
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+            backgroundColor: "var(--color-canvas-default)",
+          }}
+        >
           <h3 className="Subhead-heading">{label}</h3>
         </div>
         <div>
