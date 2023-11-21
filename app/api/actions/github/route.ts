@@ -26,6 +26,8 @@ import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
 
+
+
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -545,7 +547,7 @@ export async function POST(request: Request) {
 
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
-          return comment?.user?.login.includes("watermelon-context");
+          return comment?.user?.login.includes("watermelon-copilot-for-code-review");
         });
 
         // Update the existing comment
@@ -595,7 +597,7 @@ export async function POST(request: Request) {
       const userLogin = comment.user.login;
       let botComment = comment.body;
       if (
-        userLogin === "watermelon-context[bot]" &&
+        userLogin === "watermelon-copilot-for-code-review[bot]" &&
         botComment.includes("WatermelonAI Summary")
       ) {
         // extract the business logic summary, it's always the first paragraph under the title
