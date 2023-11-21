@@ -175,10 +175,12 @@ export default function form({ userEmail }) {
           label={service.label}
         />
       ))}
+      <div className="Subhead">
+        <h3 className="Subhead-heading">Watermelon AI</h3>
+      </div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <div className="form-group-header">
-          <h4>Watermelon AI:</h4>
-          <p></p>
+          <h4>PR Comment</h4>
         </div>
       </div>
       <div>
@@ -201,6 +203,7 @@ export default function form({ userEmail }) {
           </select>
         </label>
       </div>
+
       <div
         className="d-flex flex-row-reverse"
         style={{ bottom: "1rem", right: "1rem", position: "sticky" }}
