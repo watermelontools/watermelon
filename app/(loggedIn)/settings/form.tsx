@@ -43,6 +43,8 @@ export default function form({ userEmail }) {
   ];
   let defaultState = {
     AISummary: 1,
+    CodeComments: 1,
+    Badges: 1,
   };
   services.map((service) => (defaultState[service.valueLabel] = 3));
   const [formState, setFormState] = useState(defaultState);
