@@ -8,7 +8,11 @@ export default function form({ userEmail }) {
 
   const setUserSettingsState = async (userEmail) => {
     let settings = await getUserSettings(userEmail);
-    setFormState(settings);
+    const parsedAdditionalSettings = JSON.parse(settings.AdditionalSettings);
+    let setSettings = parsedAdditionalSettings
+      ? { ...settings, ...parsedAdditionalSettings }
+      : settings;
+    setFormState(setSettings);
   };
   const services = [
     {
@@ -46,8 +50,19 @@ export default function form({ userEmail }) {
     CodeComments: 1,
     Badges: 1,
   };
-  services.map((service) => (defaultState[service.valueLabel] = 3));
+  services.forEach(
+    (service) =>
+      (defaultState[service.valueLabel] = {
+        Amount: 3,
+        NoLoginText: "Click here to login to {{systemName}}",
+        NoResultsText: "No results found in {{systemName}}",
+        ErrorFetchingText: "Could not fetch {{systemName}}",
+      })
+  );
+  console.log("defaultState", defaultState);
+
   const [formState, setFormState] = useState(defaultState);
+  console.log("formState", formState);
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -91,14 +106,14 @@ export default function form({ userEmail }) {
             <select
               className="form-select select-sm mt-2"
               aria-label={label}
-              defaultValue={formState[valueLabel]}
+              defaultValue={formState[valueLabel].Amount}
               onChange={(e) =>
                 setFormState({
                   ...formState,
                   [valueLabel]: parseInt(e.target.value),
                 })
               }
-              value={formState[valueLabel]}
+              value={formState[valueLabel].Amount}
               id={`${valueLabel}-amount`}
               style={{ width: "15ch" }}
             >
@@ -127,7 +142,7 @@ export default function form({ userEmail }) {
               <input
                 className="form-control"
                 type="text"
-                value="Example Value"
+                value={formState[valueLabel].NoLoginText}
                 id={`${valueLabel}-no-login`}
               />
             </div>
@@ -138,7 +153,7 @@ export default function form({ userEmail }) {
               <input
                 className="form-control"
                 type="text"
-                value="Example Value"
+                value={formState[valueLabel].ErrorFetchingText}
                 id={`${valueLabel}-error-fetching`}
               />
             </div>
@@ -149,7 +164,7 @@ export default function form({ userEmail }) {
               <input
                 className="form-control"
                 type="text"
-                value="Example Value"
+                value={formState[valueLabel].NoResultsText}
                 id={`${valueLabel}-no-results`}
               />
             </div>
