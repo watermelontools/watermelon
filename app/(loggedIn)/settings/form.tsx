@@ -274,7 +274,7 @@ export default function form({ userEmail }) {
       </div>
       <div
         className="d-flex flex-row-reverse"
-        style={{ bottom: "1rem", right: "1rem", position: "sticky" }}
+        style={{ bottom: "1rem", right: "1rem", position: "sticky", zIndex: 3 }}
       >
         <button
           className="btn btn-primary"
