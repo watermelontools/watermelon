@@ -65,7 +65,7 @@ export default function form({ userEmail }) {
     setUserSettingsState(userEmail);
   }, [userEmail]);
 
-  function SettingsSelector({ label, valueLabel }) {
+  function ServiceSettingsArea({ label, valueLabel }) {
     return (
       <div
         style={{
@@ -169,7 +169,7 @@ export default function form({ userEmail }) {
   return (
     <form>
       {services.map((service) => (
-        <SettingsSelector
+        <ServiceSettingsArea
           key={service.valueLabel}
           valueLabel={service.valueLabel}
           label={service.label}
