@@ -204,7 +204,49 @@ export default function form({ userEmail }) {
           </select>
         </label>
       </div>
-
+      <div>
+        <label htmlFor={`AI-Badges`} className="d-flex flex-items-center">
+          Deactivate Badges:
+          <select
+            className="form-select ml-3 mt-2"
+            aria-label="AI Badges"
+            value={formState.AISummary}
+            id={`AI-Badges`}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                AISummary: parseInt(e.target.value),
+              })
+            }
+          >
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label
+          htmlFor={`AI-code-comments`}
+          className="d-flex flex-items-center"
+        >
+          Deactivate Code Comments:
+          <select
+            className="form-select ml-3 mt-2"
+            aria-label="AI Summary"
+            value={formState.AISummary}
+            id={`AI-code-comments`}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                AISummary: parseInt(e.target.value),
+              })
+            }
+          >
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
+          </select>
+        </label>
+      </div>
       <div
         className="d-flex flex-row-reverse"
         style={{ bottom: "1rem", right: "1rem", position: "sticky" }}
