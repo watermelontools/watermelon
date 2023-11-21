@@ -176,21 +176,30 @@ export default function form({ userEmail }) {
         />
       ))}
       <div style={{ display: "flex", alignItems: "center" }}>
-        <span>AI Summary: </span>
-        <select
-          className="form-select ml-3 mt-2"
-          aria-label="AI Summary"
-          value={formState.AISummary}
-          onChange={(e) =>
-            setFormState({
-              ...formState,
-              AISummary: parseInt(e.target.value),
-            })
-          }
-        >
-          <option value={1}>Active</option>
-          <option value={0}>Inactive</option>
-        </select>
+        <div className="form-group-header">
+          <h4>Watermelon AI:</h4>
+          <p></p>
+        </div>
+      </div>
+      <div>
+        <label htmlFor={`AI-summary`} className="d-flex flex-items-center">
+          Deactivate Summary:
+          <select
+            className="form-select ml-3 mt-2"
+            aria-label="AI Summary"
+            value={formState.AISummary}
+            id={`AI-summary`}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                AISummary: parseInt(e.target.value),
+              })
+            }
+          >
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
+          </select>
+        </label>
       </div>
       <button
         className="btn btn-primary"
