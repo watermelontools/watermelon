@@ -12,6 +12,10 @@ export default function form({ userEmail }) {
   };
   const services = [
     {
+      valueLabel: "GitHubPRs",
+      label: "GitHub PRs",
+    },
+    {
       valueLabel: "JiraTickets",
       label: "Jira Tickets",
     },
@@ -19,10 +23,7 @@ export default function form({ userEmail }) {
       valueLabel: "SlackMessages",
       label: "Slack Messages",
     },
-    {
-      valueLabel: "GitHubPRs",
-      label: "GitHub PRs",
-    },
+
     {
       valueLabel: "NotionPages",
       label: "Notion Pages",
