@@ -27,7 +27,6 @@ export default function form({ userEmail }) {
       valueLabel: "SlackMessages",
       label: "Slack Messages",
     },
-
     {
       valueLabel: "NotionPages",
       label: "Notion Pages",
@@ -59,10 +58,8 @@ export default function form({ userEmail }) {
         ErrorFetchingText: "Could not fetch {{systemName}}",
       })
   );
-  console.log("defaultState", defaultState);
 
   const [formState, setFormState] = useState(defaultState);
-  console.log("formState", formState);
   const handleSubmit = async () => {
     setSaveDisabled(true);
     try {
@@ -140,6 +137,7 @@ export default function form({ userEmail }) {
             <div>
               <label htmlFor={`${valueLabel}-no-login`}>No login:</label>
               <input
+                style={{ width: "100%" }}
                 className="form-control"
                 type="text"
                 value={formState[valueLabel].NoLoginText}
@@ -151,6 +149,7 @@ export default function form({ userEmail }) {
                 Error fetching:
               </label>
               <input
+                style={{ width: "100%" }}
                 className="form-control"
                 type="text"
                 value={formState[valueLabel].ErrorFetchingText}
@@ -162,6 +161,7 @@ export default function form({ userEmail }) {
                 No results found:
               </label>
               <input
+                style={{ width: "100%" }}
                 className="form-control"
                 type="text"
                 value={formState[valueLabel].NoResultsText}
