@@ -284,6 +284,9 @@ export default function form({ userEmail }) {
         >
           {saveDisabled ? "Saving..." : "Save"}
         </button>
+        <button type="button" className="btn mx-2">
+          Reset to default
+        </button>
       </div>
     </form>
   );
