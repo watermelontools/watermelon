@@ -2,8 +2,6 @@ import InfoPanel from "../components/dashboard/InfoPanel";
 import JiraLoginLink from "../components/JiraLoginLink";
 import SlackLoginLink from "../components/SlackLoginLink";
 import GitHubLoginLink from "../components/GitHubLoginLink";
-import GitLabLoginLink from "../components/GitLabLoginLink";
-import BitbucketLoginLink from "../components/BitbucketLoginLink";
 import LinearLoginLink from "../components/LinearLoginLink";
 import NotionLoginLink from "./NotionLoginLink";
 import ConfluenceLoginLink from "./ConfluenceLoginLink";
@@ -17,19 +15,6 @@ function LoginGrid({ userEmail, data }) {
       loginComponent: <GitHubLoginLink userEmail={userEmail} />,
       type: "git_platforms",
     },
-    {
-      name: "Bitbucket",
-      dataProp: "bitbucket_data",
-      loginComponent: <BitbucketLoginLink userEmail={userEmail} />,
-      type: "git_platforms",
-    },
-    {
-      name: "GitLab",
-      dataProp: "gitlab_data",
-      loginComponent: <GitLabLoginLink userEmail={userEmail} />,
-      type: "git_platforms",
-    },
-
     {
       name: "Jira",
       dataProp: "jira_data",

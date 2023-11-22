@@ -24,6 +24,9 @@ import { NextResponse } from "next/server";
 import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
+import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
+
+
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -41,11 +44,11 @@ export async function POST(request: Request) {
   try {
     // Verify and parse the webhook event
     const eventName = headers["x-github-event"];
-
+    let actionName = req.action;
     if (
-      req.action === "opened" ||
-      req.action === "reopened" ||
-      req.action === "synchronize"
+      actionName === "opened" ||
+      actionName === "reopened" ||
+      actionName === "synchronize"
     ) {
       const { missingParams } = validateParams(req, [
         "pull_request",
@@ -64,6 +67,12 @@ export async function POST(request: Request) {
       const userLogin = pull_request.user.login;
 
       const octokit = await app.getInstallationOctokit(installationId);
+
+      if (pull_request.user.type === "Bot") {
+        return new Response("We don't comment on bot PRs", {
+          status: 400
+        });
+      }
 
       let octoCommitList = await octokit.request(
         "GET /repos/{owner}/{repo}/pulls/{pull_number}/commits",
@@ -337,7 +346,7 @@ export async function POST(request: Request) {
 
       const count = await addActionCount({ owner });
 
-      textToWrite += `### WatermelonAI Summary \n`;
+      textToWrite += `### Watermelon AI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
         businessLogicSummary = await getOpenAISummary({
@@ -413,48 +422,55 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
-
-      // Detect console.logs and its equivalent in other languages
-      await detectConsoleLogs({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
+      Promise.all([
+        // Detect console.logs and its equivalent in other languages
+        detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        }),
+        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+        labelPullRequest({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        }),
+        addActionLog({
+          randomWords,
+          github,
+          jira,
+          slack,
+          notion,
+          linear,
+          asana,
+          textToWrite,
+          businessLogicSummary,
+          owner,
+          repo,
+          number,
+          payload: req,
+          count,
+          watermelon_user,
+        }),
+      ]).catch((error) => {
+        failedPosthogTracking({
+          url: request.url,
+          error: error.message,
+          email: req.email,
+        });
+        return console.error("posting comment error", error);
       });
 
-      // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-      await labelPullRequest({
-        prTitle: title,
-        businessLogicSummary,
-        repo,
-        owner,
-        issue_number: number,
-        installationId,
-        reqUrl: request.url,
-        reqEmail: req.email,
-      });
-
-      await addActionLog({
-        randomWords,
-        github,
-        jira,
-        slack,
-        notion,
-        linear,
-        asana,
-        textToWrite,
-        businessLogicSummary,
-        owner,
-        repo,
-        number,
-        payload: req,
-        count,
-        watermelon_user,
-      });
       // Fetch all comments on the PR
       const comments = await octokit.request(
         "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
@@ -469,7 +485,9 @@ export async function POST(request: Request) {
       );
       // Find our bot's comment
       let botComment = comments.data.find((comment) => {
-        return comment?.user?.login.includes("watermelon-context");
+        return comment?.user?.login.includes(
+          "watermelon-copilot-for-code-review"
+        );
       });
       if (botComment?.id) {
         // Update the existing comment
@@ -502,7 +520,7 @@ export async function POST(request: Request) {
                 repo,
                 owner,
                 number,
-                action: req.action,
+                action: actionName,
                 textToWrite,
               },
             });
@@ -535,7 +553,7 @@ export async function POST(request: Request) {
 
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
-          return comment?.user?.login.includes("watermelon-context");
+          return comment?.user?.login.includes("watermelon-copilot-for-code-review");
         });
 
         // Update the existing comment
@@ -557,7 +575,7 @@ export async function POST(request: Request) {
           repo,
           owner,
           number,
-          action: req.action,
+          action: actionName,
           textToWrite,
         },
       });
@@ -565,7 +583,7 @@ export async function POST(request: Request) {
         message: "success",
         textToWrite,
       });
-    } else if (req.action === "created" || req.action === "edited") {
+    } else if (actionName === "created" || actionName === "edited") {
       console.log("comment keys", Object.keys(req));
       const { missingParams } = validateParams(req, [
         "installation",
@@ -585,7 +603,7 @@ export async function POST(request: Request) {
       const userLogin = comment.user.login;
       let botComment = comment.body;
       if (
-        userLogin === "watermelon-context[bot]" &&
+        userLogin === "watermelon-copilot-for-code-review[bot]" &&
         botComment.includes("WatermelonAI Summary")
       ) {
         // extract the business logic summary, it's always the first paragraph under the title
@@ -623,11 +641,13 @@ export async function POST(request: Request) {
             repo,
             owner,
             number,
-            action: req.action,
+            action: actionName,
             businessLogicSummary,
           },
         });
       }
+    } else if (actionName === "deleted") {
+      sendUninstall({ emails: [req.sender.email] });
     }
     return NextResponse.json({
       message: "wat",
