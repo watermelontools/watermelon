@@ -238,12 +238,12 @@ export default function form({ userEmail }) {
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Badges"
-            value={formState.AISummary}
+            value={formState.Badges}
             id={`AI-Badges`}
             onChange={(e) =>
               setFormState({
                 ...formState,
-                AISummary: parseInt(e.target.value),
+                Badges: parseInt(e.target.value),
               })
             }
           >
@@ -261,12 +261,12 @@ export default function form({ userEmail }) {
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Summary"
-            value={formState.AISummary}
+            value={formState.CodeComments}
             id={`AI-code-comments`}
             onChange={(e) =>
               setFormState({
                 ...formState,
-                AISummary: parseInt(e.target.value),
+                CodeComments: parseInt(e.target.value),
               })
             }
           >
