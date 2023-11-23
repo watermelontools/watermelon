@@ -85,8 +85,9 @@ export default async function flagPullRequest({
       });
     }
   }
-  const addLabel = (labelName) => modifyLabel(labelName, "POST");
-  const deleteLabel = (labelName) => modifyLabel(labelName, "DELETE");
+  const addLabel = async (labelName) => await modifyLabel(labelName, "POST");
+  const deleteLabel = async (labelName) =>
+    await modifyLabel(labelName, "DELETE");
 
   try {
     return await openai
