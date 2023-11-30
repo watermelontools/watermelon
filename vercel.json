@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/test",
-      "schedule": "0 1 1 * *"
+      "schedule": "0 * * * *"
     }
   ]
 }
