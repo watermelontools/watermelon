@@ -240,13 +240,6 @@ export default function form({ userEmail }) {
   }
   return (
     <form onSubmit={handleSubmit}>
-      {services.map((service) => (
-        <ServiceSettingsArea
-          key={service.valueLabel}
-          valueLabel={service.valueLabel}
-          label={service.label}
-        />
-      ))}
       <div className="Subhead">
         <h3 className="Subhead-heading">Watermelon AI</h3>
       </div>
@@ -300,6 +293,13 @@ export default function form({ userEmail }) {
           </select>
         </label>
       </div>
+      {services.map((service) => (
+        <ServiceSettingsArea
+          key={service.valueLabel}
+          valueLabel={service.valueLabel}
+          label={service.label}
+        />
+      ))}
       <div
         className="d-flex flex-row-reverse"
         style={{ bottom: "1rem", right: "1rem", position: "sticky", zIndex: 3 }}
