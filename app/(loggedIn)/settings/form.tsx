@@ -2,7 +2,50 @@
 
 import { useEffect, useState } from "react";
 import getUserSettings from "../../../utils/api/getUserSettings";
-
+const services = [
+  {
+    valueLabel: "GitHubPRs",
+    label: "GitHub PRs",
+  },
+  {
+    valueLabel: "JiraTickets",
+    label: "Jira Tickets",
+  },
+  {
+    valueLabel: "SlackMessages",
+    label: "Slack Messages",
+  },
+  {
+    valueLabel: "NotionPages",
+    label: "Notion Pages",
+  },
+  {
+    valueLabel: "LinearTickets",
+    label: "Linear Tickets",
+  },
+  {
+    valueLabel: "ConfluenceDocs",
+    label: "Confluence Docs",
+  },
+  {
+    valueLabel: "AsanaTasks",
+    label: "Asana Tasks",
+  },
+];
+let defaultState = {
+  AISummary: 1,
+  CodeComments: 1,
+  Badges: 1,
+};
+services.forEach(
+  (service) =>
+    (defaultState[service.valueLabel] = {
+      Amount: 3,
+      NoLoginText: "Click here to login to {{systemName}}",
+      NoResultsText: "No results found in {{systemName}}",
+      ErrorFetchingText: "Could not fetch {{systemName}}",
+    })
+);
 export default function form({ userEmail }) {
   const [saveDisabled, setSaveDisabled] = useState(false);
 
@@ -14,64 +57,60 @@ export default function form({ userEmail }) {
       : settings;
     setFormState(setSettings);
   };
-  const services = [
-    {
-      valueLabel: "GitHubPRs",
-      label: "GitHub PRs",
-    },
-    {
-      valueLabel: "JiraTickets",
-      label: "Jira Tickets",
-    },
-    {
-      valueLabel: "SlackMessages",
-      label: "Slack Messages",
-    },
-    {
-      valueLabel: "NotionPages",
-      label: "Notion Pages",
-    },
-    {
-      valueLabel: "LinearTickets",
-      label: "Linear Tickets",
-    },
-    {
-      valueLabel: "ConfluenceDocs",
-      label: "Confluence Docs",
-    },
-    {
-      valueLabel: "AsanaTasks",
-      label: "Asana Tasks",
-    },
-  ];
-  let defaultState = {
-    AISummary: 1,
-    CodeComments: 1,
-    Badges: 1,
-  };
-  services.forEach(
-    (service) =>
-      (defaultState[service.valueLabel] = {
-        Amount: 3,
-        NoLoginText: "Click here to login to {{systemName}}",
-        NoResultsText: "No results found in {{systemName}}",
-        ErrorFetchingText: "Could not fetch {{systemName}}",
-      })
-  );
 
   const [formState, setFormState] = useState(defaultState);
   const setDefault = () => {
     setFormState(defaultState);
   };
-  const handleSubmit = async () => {
+  useEffect(() => {
+    setUserSettingsState(userEmail);
+  }, [userEmail]);
+  const handleSubmit = async (e) => {
     setSaveDisabled(true);
+    e.preventDefault(); // Prevent the browser from reloading the page
+    // Read the form data
+    const formData = new FormData(e.target);
+
+    // You can pass formData as a fetch body directly if your server supports it:
+    // However, if you want to send JSON, you can transform formData to JSON
+    const formJson = Object.fromEntries(formData.entries());
+    let transformed = {};
+    Object.entries(formJson).forEach(([key, value]) => {
+      const [service, setting] = key.split("-");
+      if (!transformed[service]) {
+        transformed[service] = {};
+      }
+
+      // Special case for non-object settings
+      if (!setting) {
+        transformed[service] = value;
+        return;
+      }
+
+      // Convert keys like "GitHubPRs-noLogin" to { NoLoginText: "some value" }
+      const formattedSetting = setting
+        .replace(/noLogin/, "NoLoginText")
+        .replace(/errorFetching/, "ErrorFetchingText")
+        .replace(/noResults/, "NoResultsText")
+        .replace(/AIsummary/, "AISummary")
+        .replace(/Badges/, "Badges")
+        .replace(/CodeComments/, "CodeComments");
+
+      transformed[service][formattedSetting] = value;
+    });
     try {
       const response = await fetch("/api/user/updateSettings", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userSettings: formState, email: userEmail }),
+        body: JSON.stringify({
+          userSettings: {
+            ...formState,
+            AdditionalSettings: transformed,
+          },
+          email: userEmail,
+        }),
       }).then((res) => setUserSettingsState(userEmail));
     } catch (error) {
       console.error("An error occurred while saving the form", error);
@@ -79,11 +118,18 @@ export default function form({ userEmail }) {
       setSaveDisabled(false);
     }
   };
-  useEffect(() => {
-    setUserSettingsState(userEmail);
-  }, [userEmail]);
 
   function ServiceSettingsArea({ label, valueLabel }) {
+    const handleNoLoginChange = ({ service, value }) => {
+      setFormState({
+        ...formState,
+        [service]: {
+          ...formState[service],
+          NoLoginText: value,
+        },
+      });
+    };
+
     return (
       <div
         style={{
@@ -115,13 +161,6 @@ export default function form({ userEmail }) {
               className="form-select select-sm mt-2"
               aria-label={label}
               defaultValue={formState[valueLabel].Amount}
-              onChange={(e) =>
-                setFormState({
-                  ...formState,
-                  [valueLabel]: parseInt(e.target.value),
-                })
-              }
-              value={formState[valueLabel].Amount}
               id={`${valueLabel}-amount`}
               style={{ width: "15ch" }}
             >
@@ -146,37 +185,40 @@ export default function form({ userEmail }) {
           </div>
           <div className="form-group-body">
             <div>
-              <label htmlFor={`${valueLabel}-no-login`}>No login:</label>
+              <label htmlFor={`${valueLabel}-noLogin`}>No login:</label>
               <input
                 style={{ width: "100%" }}
                 className="form-control"
                 type="text"
-                value={formState[valueLabel].NoLoginText}
-                id={`${valueLabel}-no-login`}
+                defaultValue={formState[valueLabel].NoLoginText}
+                id={`${valueLabel}-noLogin`}
+                name={`${valueLabel}-noLogin`}
               />
             </div>
             <div>
-              <label htmlFor={`${valueLabel}-error-fetching`}>
+              <label htmlFor={`${valueLabel}-errorFetching`}>
                 Error fetching:
               </label>
               <input
                 style={{ width: "100%" }}
                 className="form-control"
                 type="text"
-                value={formState[valueLabel].ErrorFetchingText}
-                id={`${valueLabel}-error-fetching`}
+                defaultValue={formState[valueLabel].ErrorFetchingText}
+                id={`${valueLabel}-errorFetching`}
+                name={`${valueLabel}-errorFetching`}
               />
             </div>
             <div>
-              <label htmlFor={`${valueLabel}-no-results`}>
+              <label htmlFor={`${valueLabel}-noResults`}>
                 No results found:
               </label>
               <input
                 style={{ width: "100%" }}
                 className="form-control"
                 type="text"
-                value={formState[valueLabel].NoResultsText}
-                id={`${valueLabel}-no-results`}
+                defaultValue={formState[valueLabel].NoResultsText}
+                id={`${valueLabel}-noResults`}
+                name={`${valueLabel}-noResults`}
               />
             </div>
             <div>
@@ -185,8 +227,9 @@ export default function form({ userEmail }) {
                 <input
                   className="form-checkbox  "
                   type="checkbox"
-                  value="Example Value"
                   id={`${valueLabel}-nuclear`}
+                  name={`${valueLabel}-nuclear`}
+                  defaultValue={formState[valueLabel].Nuclear}
                 />
               </label>
             </div>
@@ -196,7 +239,7 @@ export default function form({ userEmail }) {
     );
   }
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       {services.map((service) => (
         <ServiceSettingsArea
           key={service.valueLabel}
@@ -213,19 +256,14 @@ export default function form({ userEmail }) {
         </div>
       </div>
       <div>
-        <label htmlFor={`AI-summary`} className="d-flex flex-items-center">
+        <label htmlFor={`AIsummary`} className="d-flex flex-items-center">
           Deactivate Summary:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Summary"
-            value={formState.AISummary}
-            id={`AI-summary`}
-            onChange={(e) =>
-              setFormState({
-                ...formState,
-                AISummary: parseInt(e.target.value),
-              })
-            }
+            defaultValue={formState.AISummary}
+            id={`AIsummary`}
+            name={`AIsummary`}
           >
             <option value={1}>Active</option>
             <option value={0}>Inactive</option>
@@ -233,19 +271,14 @@ export default function form({ userEmail }) {
         </label>
       </div>
       <div>
-        <label htmlFor={`AI-Badges`} className="d-flex flex-items-center">
+        <label htmlFor={`Badges`} className="d-flex flex-items-center">
           Deactivate Badges:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Badges"
-            value={formState.Badges}
-            id={`AI-Badges`}
-            onChange={(e) =>
-              setFormState({
-                ...formState,
-                Badges: parseInt(e.target.value),
-              })
-            }
+            defaultValue={formState.Badges}
+            id={`Badges`}
+            name={`Badges`}
           >
             <option value={1}>Active</option>
             <option value={0}>Inactive</option>
@@ -253,22 +286,14 @@ export default function form({ userEmail }) {
         </label>
       </div>
       <div>
-        <label
-          htmlFor={`AI-code-comments`}
-          className="d-flex flex-items-center"
-        >
+        <label htmlFor={`CodeComments`} className="d-flex flex-items-center">
           Deactivate Code Comments:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Summary"
-            value={formState.CodeComments}
-            id={`AI-code-comments`}
-            onChange={(e) =>
-              setFormState({
-                ...formState,
-                CodeComments: parseInt(e.target.value),
-              })
-            }
+            defaultValue={formState.CodeComments}
+            id={`CodeComments`}
+            name={`CodeComments`}
           >
             <option value={1}>Active</option>
             <option value={0}>Inactive</option>
@@ -281,9 +306,8 @@ export default function form({ userEmail }) {
       >
         <button
           className="btn btn-primary"
-          type="button"
+          type="submit"
           disabled={saveDisabled}
-          onClick={handleSubmit}
         >
           {saveDisabled ? "Saving..." : "Save"}
         </button>
