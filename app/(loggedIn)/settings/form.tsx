@@ -240,69 +240,98 @@ export default function form({ userEmail }) {
   }
   return (
     <form onSubmit={handleSubmit}>
-      <div
-        className="Subhead"
-        title="This is a tooltip that if hovered will explain what it does"
-      >
-        <h3 className="Subhead-heading">Watermelon AI</h3>
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <div className="form-group-header">
-          <h4>PR Comment</h4>
+      <div>
+        <div
+          className="Subhead"
+          title="This is a tooltip that if hovered will explain what it does"
+        >
+          <h3 className="Subhead-heading">Watermelon AI</h3>
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div className="form-group-header">
+            <h4>PR Comment</h4>
+          </div>
+        </div>
+        <div>
+          <label htmlFor={`AIsummary`} className="d-flex flex-items-center">
+            Summary:
+            <select
+              className="form-select ml-3 mt-2"
+              aria-label="AI Summary"
+              defaultValue={formState.AISummary}
+              id={`AIsummary`}
+              name={`AIsummary`}
+            >
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label htmlFor={`Badges`} className="d-flex flex-items-center">
+            Badges:
+            <select
+              className="form-select ml-3 mt-2"
+              aria-label="AI Badges"
+              defaultValue={formState.Badges}
+              id={`Badges`}
+              name={`Badges`}
+            >
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <label htmlFor={`CodeComments`} className="d-flex flex-items-center">
+            Code Comments:
+            <select
+              className="form-select ml-3 mt-2"
+              aria-label="AI Summary"
+              defaultValue={formState.CodeComments}
+              id={`CodeComments`}
+              name={`CodeComments`}
+            >
+              <option value={1}>Active</option>
+              <option value={0}>Inactive</option>
+            </select>
+          </label>
         </div>
       </div>
       <div>
-        <label htmlFor={`AIsummary`} className="d-flex flex-items-center">
-          Summary:
+        <div
+          className="Subhead"
+          title="This is a tooltip that if hovered will explain what it does"
+        >
+          <h3 className="Subhead-heading">Search results</h3>
+        </div>
+        <label htmlFor={`search-amount`} className="d-flex flex-items-center">
+          Number of results per platform:
           <select
-            className="form-select ml-3 mt-2"
-            aria-label="AI Summary"
-            defaultValue={formState.AISummary}
-            id={`AIsummary`}
-            name={`AIsummary`}
+            className="form-select select-sm mt-2"
+            defaultValue={3}
+            id={`search-amount`}
+            style={{ width: "15ch" }}
           >
-            <option value={1}>Active</option>
-            <option value={0}>Inactive</option>
+            {" "}
+            {Array.from({ length: 5 }, (_, index) => (
+              <option key={index} value={index + 1}>
+                {" "}
+                {index + 1}{" "}
+              </option>
+            ))}{" "}
           </select>
         </label>
-      </div>
-      <div>
-        <label htmlFor={`Badges`} className="d-flex flex-items-center">
-          Badges:
-          <select
-            className="form-select ml-3 mt-2"
-            aria-label="AI Badges"
-            defaultValue={formState.Badges}
-            id={`Badges`}
-            name={`Badges`}
-          >
-            <option value={1}>Active</option>
-            <option value={0}>Inactive</option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <label htmlFor={`CodeComments`} className="d-flex flex-items-center">
-          Code Comments:
-          <select
-            className="form-select ml-3 mt-2"
-            aria-label="AI Summary"
-            defaultValue={formState.CodeComments}
-            id={`CodeComments`}
-            name={`CodeComments`}
-          >
-            <option value={1}>Active</option>
-            <option value={0}>Inactive</option>
-          </select>
-        </label>
-      </div>
-      {services.map((service) => (
-        <ServiceSettingsArea
-          key={service.valueLabel}
-          valueLabel={service.valueLabel}
-          label={service.label}
+        Response texts:
+        <input
+          className="form-checkbox  "
+          type="checkbox"
+          id={`texts-nuclear`}
+          name={`texts-nuclear`}
+          checked
         />
-      ))}
+      </div>
+
       <div
         className="d-flex flex-row-reverse"
         style={{ bottom: "1rem", right: "1rem", position: "sticky", zIndex: 3 }}
