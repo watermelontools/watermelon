@@ -2,50 +2,12 @@
 
 import { useEffect, useState } from "react";
 import getUserSettings from "../../../utils/api/getUserSettings";
-const services = [
-  {
-    valueLabel: "GitHubPRs",
-    label: "GitHub PRs",
-  },
-  {
-    valueLabel: "JiraTickets",
-    label: "Jira Tickets",
-  },
-  {
-    valueLabel: "SlackMessages",
-    label: "Slack Messages",
-  },
-  {
-    valueLabel: "NotionPages",
-    label: "Notion Pages",
-  },
-  {
-    valueLabel: "LinearTickets",
-    label: "Linear Tickets",
-  },
-  {
-    valueLabel: "ConfluenceDocs",
-    label: "Confluence Docs",
-  },
-  {
-    valueLabel: "AsanaTasks",
-    label: "Asana Tasks",
-  },
-];
+
 let defaultState = {
   AISummary: 1,
   CodeComments: 1,
   Badges: 1,
 };
-services.forEach(
-  (service) =>
-    (defaultState[service.valueLabel] = {
-      Amount: 3,
-      NoLoginText: "Click here to login to {{systemName}}",
-      NoResultsText: "No results found in {{systemName}}",
-      ErrorFetchingText: "Could not fetch {{systemName}}",
-    })
-);
 export default function form({ userEmail }) {
   const [saveDisabled, setSaveDisabled] = useState(false);
 
@@ -119,125 +81,6 @@ export default function form({ userEmail }) {
     }
   };
 
-  function ServiceSettingsArea({ label, valueLabel }) {
-    const handleNoLoginChange = ({ service, value }) => {
-      setFormState({
-        ...formState,
-        [service]: {
-          ...formState[service],
-          NoLoginText: value,
-        },
-      });
-    };
-
-    return (
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <div
-          className="Subhead"
-          style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 2,
-            backgroundColor: "var(--color-canvas-default)",
-          }}
-        >
-          <h3 className="Subhead-heading">{label}</h3>
-        </div>
-        <div>
-          <div className="form-group-header">
-            <h4>Search Params:</h4>
-          </div>
-          <label
-            htmlFor={`${valueLabel}-amount`}
-            className="d-flex flex-items-center"
-          >
-            Amount:
-            <select
-              className="form-select select-sm mt-2"
-              aria-label={label}
-              defaultValue={formState[valueLabel].Amount}
-              id={`${valueLabel}-amount`}
-              style={{ width: "15ch" }}
-            >
-              {" "}
-              {Array.from({ length: 5 }, (_, index) => (
-                <option key={index} value={index + 1}>
-                  {" "}
-                  {index + 1}{" "}
-                </option>
-              ))}{" "}
-            </select>
-          </label>
-        </div>
-        <div>
-          <div className="form-group-header">
-            <h4>Response Texts:</h4>
-            <p>
-              Use{" "}
-              <code className="text-gray-100 bg-gray-300">{`{{systemName}}`}</code>{" "}
-              to replace with "{label}"
-            </p>
-          </div>
-          <div className="form-group-body">
-            <div>
-              <label htmlFor={`${valueLabel}-noLogin`}>No login:</label>
-              <input
-                style={{ width: "100%" }}
-                className="form-control"
-                type="text"
-                defaultValue={formState[valueLabel].NoLoginText}
-                id={`${valueLabel}-noLogin`}
-                name={`${valueLabel}-noLogin`}
-              />
-            </div>
-            <div>
-              <label htmlFor={`${valueLabel}-errorFetching`}>
-                Error fetching:
-              </label>
-              <input
-                style={{ width: "100%" }}
-                className="form-control"
-                type="text"
-                defaultValue={formState[valueLabel].ErrorFetchingText}
-                id={`${valueLabel}-errorFetching`}
-                name={`${valueLabel}-errorFetching`}
-              />
-            </div>
-            <div>
-              <label htmlFor={`${valueLabel}-noResults`}>
-                No results found:
-              </label>
-              <input
-                style={{ width: "100%" }}
-                className="form-control"
-                type="text"
-                defaultValue={formState[valueLabel].NoResultsText}
-                id={`${valueLabel}-noResults`}
-                name={`${valueLabel}-noResults`}
-              />
-            </div>
-            <div>
-              <label htmlFor={`${valueLabel}-nuclear`}>
-                Deactivate completely:
-                <input
-                  className="form-checkbox  "
-                  type="checkbox"
-                  id={`${valueLabel}-nuclear`}
-                  name={`${valueLabel}-nuclear`}
-                  defaultValue={formState[valueLabel].Nuclear}
-                />
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
   return (
     <form onSubmit={handleSubmit}>
       <div>
