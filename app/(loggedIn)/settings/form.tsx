@@ -250,7 +250,7 @@ export default function form({ userEmail }) {
       </div>
       <div>
         <label htmlFor={`AIsummary`} className="d-flex flex-items-center">
-          Deactivate Summary:
+          Summary:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Summary"
@@ -265,7 +265,7 @@ export default function form({ userEmail }) {
       </div>
       <div>
         <label htmlFor={`Badges`} className="d-flex flex-items-center">
-          Deactivate Badges:
+          Badges:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Badges"
@@ -280,7 +280,7 @@ export default function form({ userEmail }) {
       </div>
       <div>
         <label htmlFor={`CodeComments`} className="d-flex flex-items-center">
-          Deactivate Code Comments:
+          Code Comments:
           <select
             className="form-select ml-3 mt-2"
             aria-label="AI Summary"
