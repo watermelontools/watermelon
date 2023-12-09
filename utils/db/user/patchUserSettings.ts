@@ -15,18 +15,7 @@ export default async function updateUserSettings({
         userSettings.CodeComments
       }'`
     );
-    console.log(
-      "pasted",
-      `EXEC dbo.update_userSettings @watermelon_user = '${email}', @AISummary='${
-        userSettings.AISummary
-      }', 
-      @AdditionalSettings=N'${JSON.stringify(
-        userSettings.AdditionalSettings
-      )}', @Badges='${userSettings.Badges}', @CodeComments='${
-        userSettings.CodeComments
-      }'  );`
-    );
-    console.log("data", data);
+
     return data;
   } catch (err) {
     console.error(err);
