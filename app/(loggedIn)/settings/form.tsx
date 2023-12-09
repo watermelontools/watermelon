@@ -240,7 +240,10 @@ export default function form({ userEmail }) {
   }
   return (
     <form onSubmit={handleSubmit}>
-      <div className="Subhead">
+      <div
+        className="Subhead"
+        title="This is a tooltip that if hovered will explain what it does"
+      >
         <h3 className="Subhead-heading">Watermelon AI</h3>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
