@@ -24,8 +24,14 @@ We currently support the following integrations
 ## Features
 
 Watermelon's GitHub application allows teams to contextualize pull requests with code context from different sources.
+<img width="907" alt="contextualization" src="https://github.com/watermelontools/watermelon/assets/8325094/36816e03-869f-4f2d-9ce6-115ce9c52a01">
 
-![watermelon-github-application](https://marketplace-screenshots.githubusercontent.com/15256/0b80188e-a25b-4fb1-946b-5320dd0f4744?auto=webp&format=jpeg&width=670&dpr=2)
+Our GitHub application also identifies errors in your codebase. Beginning with the detection of console logs (and their equivalents across various major programming languages), Watermelon comments PR line diffs whenever an error is detected. Expanded capabilities in identifying a broader range of errors soon.
+<img width="797" alt="linediff" src="https://github.com/watermelontools/watermelon/assets/8325094/aba15b7e-f9a5-4e4a-86de-dfe04aac7551">
+
+
+Finally, our GitHub app uses "LLMs as Reviewer Zero". Watermelon evaluates the traced code context against the intent of the Pull Request. Based on these insights, it labels them as "🍉 Safe To Merge", "👀 Take a Deeper Dive", or "🚨 Don't Merge".
+<img width="777" alt="prereview" src="https://github.com/watermelontools/watermelon/assets/8325094/742191f1-3505-453e-bd47-f1f2dea545c8">
 
 ## Requirements
 
