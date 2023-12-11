@@ -7,6 +7,8 @@ let defaultState = {
   AISummary: 1,
   CodeComments: 1,
   Badges: 1,
+  SearchAmount: 3,
+  ResponseTexts: 1,
 };
 export default function form({ userEmail }) {
   const [saveDisabled, setSaveDisabled] = useState(false);
@@ -29,12 +31,7 @@ export default function form({ userEmail }) {
   }, [userEmail]);
   const handleSubmit = async (e) => {
     setSaveDisabled(true);
-    e.preventDefault(); // Prevent the browser from reloading the page
-    // Read the form data
-    const formData = new FormData(e.target);
-    // You can pass formData as a fetch body directly if your server supports it:
-    // However, if you want to send JSON, you can transform formData to JSON
-    const formJson = Object.fromEntries(formData.entries());
+    e.preventDefault();
 
     try {
       const response = await fetch("/api/user/updateSettings", {
@@ -45,7 +42,7 @@ export default function form({ userEmail }) {
         body: JSON.stringify({
           userSettings: {
             ...formState,
-            AdditionalSettings: formJson,
+            AdditionalSettings: formState,
           },
           email: userEmail,
         }),
@@ -56,7 +53,9 @@ export default function form({ userEmail }) {
       setSaveDisabled(false);
     }
   };
-
+  function handleChange(e) {
+    setFormState({ ...formState, [e.target.name]: e.target.value });
+  }
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -80,6 +79,8 @@ export default function form({ userEmail }) {
               defaultValue={formState.AISummary}
               id={`AIsummary`}
               name={`AIsummary`}
+              value={formState.AISummary}
+              onChange={handleChange}
             >
               <option value={1}>Active</option>
               <option value={0}>Inactive</option>
@@ -94,6 +95,8 @@ export default function form({ userEmail }) {
               aria-label="AI Badges"
               defaultValue={formState.Badges}
               id={`Badges`}
+              onChange={handleChange}
+              value={formState.Badges}
               name={`Badges`}
             >
               <option value={1}>Active</option>
@@ -109,6 +112,8 @@ export default function form({ userEmail }) {
               aria-label="AI Summary"
               defaultValue={formState.CodeComments}
               id={`CodeComments`}
+              onChange={handleChange}
+              value={formState.CodeComments}
               name={`CodeComments`}
             >
               <option value={1}>Active</option>
@@ -129,6 +134,8 @@ export default function form({ userEmail }) {
           <select
             className="form-select select-sm mt-2"
             defaultValue={3}
+            onChange={handleChange}
+            value={formState.SearchAmount}
             name={`SearchAmount`}
             id={`SearchAmount`}
             style={{ width: "15ch" }}
@@ -142,13 +149,18 @@ export default function form({ userEmail }) {
         </label>
         <label htmlFor="ResponseTexts">
           Response texts:
-          <input
-            className="form-checkbox"
-            type="checkbox"
+          <select
+            className="form-select ml-3 mt-2"
+            aria-label="AI Summary"
+            defaultValue={formState.ResponseTexts}
             id={`ResponseTexts`}
+            onChange={handleChange}
+            value={formState.ResponseTexts}
             name={`ResponseTexts`}
-            checked
-          />
+          >
+            <option value={1}>Active</option>
+            <option value={0}>Inactive</option>
+          </select>
         </label>
       </div>
 
