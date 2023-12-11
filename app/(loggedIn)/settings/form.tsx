@@ -32,34 +32,10 @@ export default function form({ userEmail }) {
     e.preventDefault(); // Prevent the browser from reloading the page
     // Read the form data
     const formData = new FormData(e.target);
-
     // You can pass formData as a fetch body directly if your server supports it:
     // However, if you want to send JSON, you can transform formData to JSON
     const formJson = Object.fromEntries(formData.entries());
-    let transformed = {};
-    Object.entries(formJson).forEach(([key, value]) => {
-      const [service, setting] = key.split("-");
-      if (!transformed[service]) {
-        transformed[service] = {};
-      }
 
-      // Special case for non-object settings
-      if (!setting) {
-        transformed[service] = value;
-        return;
-      }
-
-      // Convert keys like "GitHubPRs-noLogin" to { NoLoginText: "some value" }
-      const formattedSetting = setting
-        .replace(/noLogin/, "NoLoginText")
-        .replace(/errorFetching/, "ErrorFetchingText")
-        .replace(/noResults/, "NoResultsText")
-        .replace(/AIsummary/, "AISummary")
-        .replace(/Badges/, "Badges")
-        .replace(/CodeComments/, "CodeComments");
-
-      transformed[service][formattedSetting] = value;
-    });
     try {
       const response = await fetch("/api/user/updateSettings", {
         method: "POST",
@@ -69,7 +45,7 @@ export default function form({ userEmail }) {
         body: JSON.stringify({
           userSettings: {
             ...formState,
-            AdditionalSettings: transformed,
+            AdditionalSettings: formJson,
           },
           email: userEmail,
         }),
@@ -148,31 +124,32 @@ export default function form({ userEmail }) {
         >
           <h3 className="Subhead-heading">Search results</h3>
         </div>
-        <label htmlFor={`search-amount`} className="d-flex flex-items-center">
+        <label htmlFor={`SearchAmount`} className="d-flex flex-items-center">
           Number of results per platform:
           <select
             className="form-select select-sm mt-2"
             defaultValue={3}
-            id={`search-amount`}
+            name={`SearchAmount`}
+            id={`SearchAmount`}
             style={{ width: "15ch" }}
           >
-            {" "}
             {Array.from({ length: 5 }, (_, index) => (
               <option key={index} value={index + 1}>
-                {" "}
-                {index + 1}{" "}
+                {index + 1}
               </option>
-            ))}{" "}
+            ))}
           </select>
         </label>
-        Response texts:
-        <input
-          className="form-checkbox  "
-          type="checkbox"
-          id={`texts-nuclear`}
-          name={`texts-nuclear`}
-          checked
-        />
+        <label htmlFor="ResponseTexts">
+          Response texts:
+          <input
+            className="form-checkbox"
+            type="checkbox"
+            id={`ResponseTexts`}
+            name={`ResponseTexts`}
+            checked
+          />
+        </label>
       </div>
 
       <div
