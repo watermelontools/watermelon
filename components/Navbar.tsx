@@ -7,7 +7,7 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/settings", label: "Settings" },
     { href: "/team", label: "Team" },
     {
-      href: "https://calendly.com/evargas-14/watermelon-business",
+      href: "https://buy.stripe.com/28o0289KVaYV5wY004",
       label: "Billing",
     },
     { href: "/api/auth/signout", label: "Logout", onClick: signOut },

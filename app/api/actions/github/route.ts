@@ -541,7 +541,7 @@ export async function POST(request: Request) {
 
       // If the count is surpassed, we replace the
       if (count.github_app_uses > 500) {
-        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://buy.stripe.com/28o0289KVaYV5wY004) to upgrade.`;
 
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
