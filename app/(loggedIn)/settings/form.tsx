@@ -15,13 +15,7 @@ export default function form({ userEmail }) {
 
   const setUserSettingsState = async (userEmail) => {
     let settings = await getUserSettings(userEmail);
-    const parsedAdditionalSettings = JSON.parse(settings.AdditionalSettings);
-
-    let setSettings = parsedAdditionalSettings
-      ? { ...settings, ...parsedAdditionalSettings }
-      : settings;
-
-    setFormState(setSettings);
+    setFormState(settings);
   };
 
   const [formState, setFormState] = useState(defaultState);
@@ -78,7 +72,6 @@ export default function form({ userEmail }) {
             <select
               className="form-select ml-3 mt-2"
               aria-label="AI Summary"
-              // defaultValue={formState.AISummary}
               id={`AISummary`}
               onChange={handleChange}
               value={formState.AISummary}
