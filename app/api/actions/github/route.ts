@@ -436,27 +436,31 @@ export async function POST(request: Request) {
       textToWrite += randomText();
       Promise.all([
         // Detect console.logs and its equivalent in other languages
-        detectConsoleLogs({
-          prTitle: title,
-          businessLogicSummary,
-          repo,
-          owner,
-          issue_number: number,
-          installationId,
-          reqUrl: request.url,
-          reqEmail: req.email,
-        }),
+        CodeComments
+          ? detectConsoleLogs({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-        labelPullRequest({
-          prTitle: title,
-          businessLogicSummary,
-          repo,
-          owner,
-          issue_number: number,
-          installationId,
-          reqUrl: request.url,
-          reqEmail: req.email,
-        }),
+        Badges
+          ? labelPullRequest({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         addActionLog({
           randomWords,
           github,
