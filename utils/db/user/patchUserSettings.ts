@@ -6,14 +6,8 @@ export default async function updateUserSettings({
 }): Promise<any> {
   try {
     let data = await executeRequest(
-      `EXEC dbo.update_userSettings @watermelon_user = '${email}', @AISummary='${
-        userSettings.AISummary
-      }', 
-      @AdditionalSettings='${JSON.stringify(
-        userSettings.AdditionalSettings
-      )}', @Badges='${userSettings.Badges}', @CodeComments='${
-        userSettings.CodeComments
-      }'`
+      `EXEC dbo.update_userSettings @watermelon_user = '${email}', @AISummary='${userSettings.AISummary}', 
+      @ResponseTexts='${userSettings.ResponseTexts}', @Badges='${userSettings.Badges}', @CodeComments='${userSettings.CodeComments}', @SearchAmount=${userSettings.SearchAmount}`
     );
 
     return data;
