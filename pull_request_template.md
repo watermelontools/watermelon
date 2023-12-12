@@ -7,7 +7,8 @@
 - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)  
 - [ ] Documentation update  
 - [ ] Chore: cleanup/renaming, etc  
-- [ ] RFC  
+- [ ] RFC
+- [ ] Test
 ## Notes
 <!--  This is a great place to add images or possible improvements -->
 <!--  Remember you can use "Closes #106" to close Issue 106 (or any number) -->
