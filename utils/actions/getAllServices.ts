@@ -50,6 +50,8 @@ export default async function getAllServices({
         AISummary,
         SearchAmount,
         ResponseTexts,
+        Badges,
+        CodeComments,
         watermelon_user,
       } = wmUserData;
       const [github, jira, confluence, slack, notion, linear, asana] =
@@ -110,6 +112,10 @@ export default async function getAllServices({
         asana,
         watermelon_user,
         AISummary,
+        ResponseTexts,
+        SearchAmount,
+        Badges,
+        CodeComments,
         user_email,
       };
     } catch (error) {
@@ -143,13 +149,8 @@ export default async function getAllServices({
         asana_workspace,
         user_email,
         AISummary,
-        JiraTickets,
-        GitHubPRs,
-        SlackMessages,
-        NotionPages,
-        LinearTickets,
-        ConfluencePages,
-        AsanaTasks,
+        CodeComments,
+        Badges,
         SearchAmount,
         ResponseTexts,
         watermelon_user,
@@ -237,6 +238,9 @@ export default async function getAllServices({
           watermelon_user,
           AISummary,
           ResponseTexts,
+          SearchAmount,
+          CodeComments,
+          Badges,
           user_email,
         };
       }

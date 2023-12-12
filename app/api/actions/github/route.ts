@@ -312,6 +312,8 @@ export async function POST(request: Request) {
         AISummary,
         user_email,
         ResponseTexts,
+        CodeComments,
+        Badges,
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
