@@ -16,9 +16,11 @@ export default function form({ userEmail }) {
   const setUserSettingsState = async (userEmail) => {
     let settings = await getUserSettings(userEmail);
     const parsedAdditionalSettings = JSON.parse(settings.AdditionalSettings);
+
     let setSettings = parsedAdditionalSettings
       ? { ...settings, ...parsedAdditionalSettings }
       : settings;
+
     setFormState(setSettings);
   };
 
@@ -71,16 +73,16 @@ export default function form({ userEmail }) {
           </div>
         </div>
         <div>
-          <label htmlFor={`AIsummary`} className="d-flex flex-items-center">
+          <label htmlFor={`AISummary`} className="d-flex flex-items-center">
             Summary:
             <select
               className="form-select ml-3 mt-2"
               aria-label="AI Summary"
-              defaultValue={formState.AISummary}
-              id={`AIsummary`}
-              name={`AIsummary`}
-              value={formState.AISummary}
+              // defaultValue={formState.AISummary}
+              id={`AISummary`}
               onChange={handleChange}
+              value={formState.AISummary}
+              name={`AISummary`}
             >
               <option value={1}>Active</option>
               <option value={0}>Inactive</option>
@@ -93,7 +95,6 @@ export default function form({ userEmail }) {
             <select
               className="form-select ml-3 mt-2"
               aria-label="AI Badges"
-              defaultValue={formState.Badges}
               id={`Badges`}
               onChange={handleChange}
               value={formState.Badges}
@@ -110,7 +111,6 @@ export default function form({ userEmail }) {
             <select
               className="form-select ml-3 mt-2"
               aria-label="AI Summary"
-              defaultValue={formState.CodeComments}
               id={`CodeComments`}
               onChange={handleChange}
               value={formState.CodeComments}
@@ -133,7 +133,6 @@ export default function form({ userEmail }) {
           Number of results per platform:
           <select
             className="form-select select-sm mt-2"
-            defaultValue={3}
             onChange={handleChange}
             value={formState.SearchAmount}
             name={`SearchAmount`}
@@ -151,8 +150,6 @@ export default function form({ userEmail }) {
           Response texts:
           <select
             className="form-select ml-3 mt-2"
-            aria-label="AI Summary"
-            defaultValue={formState.ResponseTexts}
             id={`ResponseTexts`}
             onChange={handleChange}
             value={formState.ResponseTexts}
