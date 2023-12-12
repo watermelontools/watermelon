@@ -12,19 +12,19 @@ let defaultState = {
 };
 export default function form({ userEmail }) {
   const [saveDisabled, setSaveDisabled] = useState(false);
+  const [formState, setFormState] = useState(defaultState);
+
+  useEffect(() => {
+    setUserSettingsState(userEmail);
+  }, [userEmail]);
 
   const setUserSettingsState = async (userEmail) => {
     let settings = await getUserSettings(userEmail);
     setFormState(settings);
   };
-
-  const [formState, setFormState] = useState(defaultState);
   const setDefault = () => {
     setFormState(defaultState);
   };
-  useEffect(() => {
-    setUserSettingsState(userEmail);
-  }, [userEmail]);
   const handleSubmit = async (e) => {
     setSaveDisabled(true);
     e.preventDefault();
@@ -36,10 +36,7 @@ export default function form({ userEmail }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userSettings: {
-            ...formState,
-            AdditionalSettings: formState,
-          },
+          userSettings: formState,
           email: userEmail,
         }),
       }).then((res) => setUserSettingsState(userEmail));
