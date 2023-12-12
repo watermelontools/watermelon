@@ -49,6 +49,25 @@ export default function form({ userEmail }) {
   const handleChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
   };
+  const ActivationDropdown = ({ name, ariaLabel, formStateName }) => (
+    <div>
+      <label htmlFor={`name`} className="d-flex flex-items-center">
+        {ariaLabel}:
+        <select
+          className="form-select ml-3 mt-2"
+          aria-label={ariaLabel}
+          id={name}
+          onChange={handleChange}
+          value={formState[formStateName]}
+          name={name}
+        >
+          <option value={1}>Active</option>
+          <option value={0}>Inactive</option>
+        </select>
+      </label>
+    </div>
+  );
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
@@ -63,54 +82,21 @@ export default function form({ userEmail }) {
             <h4>PR Comment</h4>
           </div>
         </div>
-        <div>
-          <label htmlFor={`AISummary`} className="d-flex flex-items-center">
-            Summary:
-            <select
-              className="form-select ml-3 mt-2"
-              aria-label="AI Summary"
-              id={`AISummary`}
-              onChange={handleChange}
-              value={formState.AISummary}
-              name={`AISummary`}
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
-          </label>
-        </div>
-        <div>
-          <label htmlFor={`Badges`} className="d-flex flex-items-center">
-            Badges:
-            <select
-              className="form-select ml-3 mt-2"
-              aria-label="AI Badges"
-              id={`Badges`}
-              onChange={handleChange}
-              value={formState.Badges}
-              name={`Badges`}
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
-          </label>
-        </div>
-        <div>
-          <label htmlFor={`CodeComments`} className="d-flex flex-items-center">
-            Code Comments:
-            <select
-              className="form-select ml-3 mt-2"
-              aria-label="AI Summary"
-              id={`CodeComments`}
-              onChange={handleChange}
-              value={formState.CodeComments}
-              name={`CodeComments`}
-            >
-              <option value={1}>Active</option>
-              <option value={0}>Inactive</option>
-            </select>
-          </label>
-        </div>
+        <ActivationDropdown
+          name="AISummary"
+          ariaLabel="AI Summary"
+          formStateName="AISummary"
+        />
+        <ActivationDropdown
+          name="CodeComments"
+          ariaLabel="Code Comments"
+          formStateName="CodeComments"
+        />
+        <ActivationDropdown
+          name="Badges"
+          ariaLabel="Badges"
+          formStateName="Badges"
+        />
       </div>
       <div>
         <div
@@ -136,19 +122,12 @@ export default function form({ userEmail }) {
             ))}
           </select>
         </label>
-        <label htmlFor="ResponseTexts">
-          Response texts:
-          <select
-            className="form-select ml-3 mt-2"
-            id={`ResponseTexts`}
-            onChange={handleChange}
-            value={formState.ResponseTexts}
-            name={`ResponseTexts`}
-          >
-            <option value={1}>Active</option>
-            <option value={0}>Inactive</option>
-          </select>
-        </label>
+
+        <ActivationDropdown
+          name="ResponseTexts"
+          ariaLabel="Response Texts"
+          formStateName="ResponseTexts"
+        />
       </div>
 
       <div
