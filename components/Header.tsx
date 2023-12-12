@@ -26,19 +26,9 @@ export default function Header({ userEmail, userToken }) {
               <li>
                 <a
                   className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
-                  href="https://github.com/apps/watermelon-context"
+                  href="https://github.com/apps/watermelon-copilot-for-code-review"
                 >
                   GitHub App
-                </a>
-              </li>
-              <li>
-                <a
-                  className="dropdown-item block px-4 py-2 text-gray-800 hover:bg-gray-200 transition-colors duration-200"
-                  href={`vscode://watermelontools.watermelon-tools?email=${
-                    userEmail ?? ""
-                  }&token=${userToken ? userToken : ""}`}
-                >
-                  VSCode Extension
                 </a>
               </li>
               <li>
