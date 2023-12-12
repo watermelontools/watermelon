@@ -46,9 +46,9 @@ export default function form({ userEmail }) {
       setSaveDisabled(false);
     }
   };
-  function handleChange(e) {
+  const handleChange = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value });
-  }
+  };
   return (
     <form onSubmit={handleSubmit}>
       <div>
