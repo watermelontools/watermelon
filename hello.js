@@ -1,5 +1,3 @@
-console.log("this should be detected");
-
 
 let arr = [1, 2, 3];
 
