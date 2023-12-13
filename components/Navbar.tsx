@@ -13,9 +13,19 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/api/auth/signout", label: "Logout", onClick: signOut },
   ];
   return (
-    <div className="d-flex flex-row h-full">
-      <nav className="SideNav shadow-md" style={{ width: 250 }}>
-        <div className="flex flex-col justify-between h-full bg-gray-100 p-4">
+    <div className="d-flex flex-row h-full" style={{ minHeight: "90vh" }}>
+      <nav
+        className="SideNav shadow-md"
+        style={{ width: 250, minHeight: "100%" }}
+      >
+        <div
+          className="flex flex-col justify-between h-full bg-gray-100 p-4"
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+          }}
+        >
           <div>
             {links.map(({ href, label }) => (
               <Link

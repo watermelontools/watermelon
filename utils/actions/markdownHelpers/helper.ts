@@ -4,18 +4,24 @@ import getRelativeDate from "../../getRelativeDate";
 type generalMarkdown = MarkdownRequest & {
   systemName: string;
   systemResponseName: string;
+  ResponseTexts?: number;
 };
 const generalMarkdownHelper = ({
   value,
   userLogin,
+  ResponseTexts,
   systemName,
   systemResponseName,
 }: generalMarkdown): MarkdownResponse => {
   if (!value || value?.data?.length === 0) {
-    return `\n No results found in **${systemResponseName}** :( \n`;
+    return ResponseTexts
+      ? `\n No results found in **${systemResponseName}** :( \n`
+      : "";
   }
   if (value?.error?.match(/no (\w+) token/)) {
-    return `\n [Click here to login to ${systemName}](https://app.watermelontools.com)`;
+    return ResponseTexts
+      ? `\n [Click here to login to ${systemName}](https://app.watermelontools.com)`
+      : "";
   }
   let markdown: MarkdownResponse = ``;
   if (Array.isArray(value.data) && value?.data?.length) {
@@ -28,7 +34,7 @@ const generalMarkdownHelper = ({
           } ${created_at ? `${getRelativeDate(created_at ?? "")}` : ""}\n`
       )
       .join("");
-  } 
+  }
   return markdown;
 };
 
