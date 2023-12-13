@@ -109,10 +109,13 @@ export default async function detectConsoleLogs({
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    const consoleLogRegex =
-      "/(console.log|print|printf|fmt.Print|log.Print|NSLog|puts|println|println!)([^)]*)(?![^]*?//|[^]*?/*|#)/";
+    console.log("additions", additions);
 
-    if (additions.includes(consoleLogRegex)) {
+    const consoleLogRegex = /(console\.log|print|printf|fmt\.Print|log\.Print|NSLog|puts|println|println!)\([^)]*\)(?![^]*?\/\/|[^]*?\/\*|#)/;
+
+    // const consoleLogRegex = /console\.log[^;]+;/;
+
+    if (additions.match(consoleLogRegex)) {
       console.log("console log detected");
 
       const commentFileDiff = async () => {
@@ -149,8 +152,6 @@ export default async function detectConsoleLogs({
 
       commentFileDiff();
     }
-
-    console.log("additions[0]", additions[0]);
 
     // detect if the additions contain console logs or not OLD APPROACH
     // try {
