@@ -109,48 +109,42 @@ export default async function detectConsoleLogs({
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    console.log("additions", additions);
-
+    const splitAdditions = additions.split("\n");
     const consoleLogRegex = /(console\.log|print|printf|fmt\.Print|log\.Print|NSLog|puts|println|println!)\([^)]*\)(?![^]*?\/\/|[^]*?\/\*|#)/;
 
-    // const consoleLogRegex = /console\.log[^;]+;/;
+    for (let i=0; i < splitAdditions.length; i++) {
+      if (splitAdditions[i].match(consoleLogRegex)) {
+        const commentFileDiff = async () => {
 
-    if (additions.match(consoleLogRegex)) {
-      console.log("console log detected");
-
-      const commentFileDiff = async () => {
-        // const consoleLogPosition = getConsoleLogPosition({
-        //   filePatch: file.patch ?? "",
-        //   individualLine,
-        // });
-        
-        const consoleLogPosition = 1;
-
-        await octokit
-          .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
-            owner,
-            repo,
-            pull_number: issue_number,
-            commit_id:
-              typeof latestCommitHash === "string"
-                ? latestCommitHash
-                : undefined,
-            event: "COMMENT",
-            path: file.filename,
-            comments: [
-              {
-                path: file.filename,
-                position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                body: commentBody,
-              },
-            ],
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      };
-
-      commentFileDiff();
+          const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
+  
+          await octokit
+            .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+              owner,
+              repo,
+              pull_number: issue_number,
+              commit_id:
+                typeof latestCommitHash === "string"
+                  ? latestCommitHash
+                  : undefined,
+              event: "COMMENT",
+              path: file.filename,
+              comments: [
+                {
+                  path: file.filename,
+                  position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                  body: commentBody,
+                },
+              ],
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        };
+  
+        commentFileDiff();
+      }
+  
     }
 
     // detect if the additions contain console logs or not OLD APPROACH
