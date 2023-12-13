@@ -110,10 +110,16 @@ export default async function detectConsoleLogs({
     const { additions } = getLineDiffs(file.patch ?? "");
 
     const splitAdditions = additions.split("\n");
+
+    // RegEx to detect console log equivalents in different languages
     const consoleLogRegex = /(console\.log|print|printf|fmt\.Print|log\.Print|NSLog|puts|println|println!)\([^)]*\)(?![^]*?\/\/|[^]*?\/\*|#)/;
+    
+    // RegEx to ignore lines that contian //, /*, etc.
+    const commentRegex = /^\s*\/{2,}|^\s*\/\*|\*\/|#/;
 
     for (let i=0; i < splitAdditions.length; i++) {
-      if (splitAdditions[i].match(consoleLogRegex)) {
+      let currentLine = splitAdditions[i];
+      if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
         const commentFileDiff = async () => {
 
           const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
