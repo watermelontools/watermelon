@@ -119,7 +119,7 @@ export default async function detectConsoleLogs({
               ],
             })
             .catch((err) => {
-              console.log(err);
+              throw err;
             });
         };
   
