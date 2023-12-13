@@ -11,20 +11,6 @@ const app = new App({
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 const commentBody = `This PR contains console logs. Please review or remove them.`;
-const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
-if there's a console log or its equivalent in another programming language 
-such as Java, Golang, Python, C, Rust, C++, Ruby, etc.
-(console.log(), println(), println!(), System.out.println(), print(), fmt.Println(), puts, and  cout << "Print a String" << endl; are some examples). 
-If the console log or its equivalent in another language is in a code comment, don't
-count it as a detected console log. For example JavaScript comments start with // or /*, 
-Python comments start with #.
-Other console functions such as console.info() shouldn't be counted as console logs.
-Ignore code comments from this analysis. 
-Something like 'input[type="email"]' is fine and should not be counted as a console log.
-If there is a console log, return "true", else return "false".
-If you return true, return a string that that has 2 values: result (true) and the line of code.
-The line value, is the actual line in the file that contains the console log.
-For example: true,console.log("hello world");`;
 
 function getLineDiffs(filePatch: string) {
   const additions: string[] = [];
