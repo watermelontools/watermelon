@@ -127,64 +127,6 @@ export default async function detectConsoleLogs({
       }
   
     }
-
-    // detect if the additions contain console logs or not OLD APPROACH
-    // try {
-    //   return await openai
-    //     .createChatCompletion({
-    //       model: "gpt-4-1106-preview",
-    //       messages: [
-    //         {
-    //           role: "system",
-    //           content: `${consoleLogDetectionPrompt} \n ${additions}`,
-    //         },
-    //       ],
-    //     })
-    //     .then((result) => {
-    //       const openAIResult =
-    //         result.data.choices[0].message.content.split(",");
-
-    //       const addtionsHaveConsoleLog = openAIResult[0];
-    //       const individualLine = openAIResult[1];
-
-    //       if (addtionsHaveConsoleLog === "true") {
-    //         const commentFileDiff = () => {
-    //           const consoleLogPosition = getConsoleLogPosition({
-    //             filePatch: file.patch ?? "",
-    //             individualLine,
-    //           });
-
-    //           return octokit
-    //             .request(
-    //               "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
-    //               {
-    //                 owner,
-    //                 repo,
-    //                 pull_number: issue_number,
-    //                 commit_id:
-    //                   typeof latestCommitHash === "string"
-    //                     ? latestCommitHash
-    //                     : undefined,
-    //                 event: "COMMENT",
-    //                 path: file.filename,
-    //                 comments: [
-    //                   {
-    //                     path: file.filename,
-    //                     position: consoleLogPosition || 1, // comment at the beggining of the file by default
-    //                     body: commentBody,
-    //                   },
-    //                 ],
-    //               }
-    //             )
-    //             .catch((err) => {
-    //               console.log(err);
-    //             });
-    //         };
-
-    //         commentFileDiff();
-    //       }
-    //     });
-    // } catch {}
   });
   try {
     await Promise.allSettled(commentPromises);
