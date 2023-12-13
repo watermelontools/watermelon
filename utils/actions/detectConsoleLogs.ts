@@ -109,10 +109,45 @@ export default async function detectConsoleLogs({
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    const consoleLogRegex = "/(console\.log|print|printf|fmt\.Print|log\.Print|NSLog|puts|println|println!)\([^)]*\)(?![^]*?\/\/|[^]*?\/\*|#)/"
+    const consoleLogRegex =
+      "/(console.log|print|printf|fmt.Print|log.Print|NSLog|puts|println|println!)([^)]*)(?![^]*?//|[^]*?/*|#)/";
 
     if (additions.includes(consoleLogRegex)) {
       console.log("console log detected");
+
+      const commentFileDiff = async () => {
+        // const consoleLogPosition = getConsoleLogPosition({
+        //   filePatch: file.patch ?? "",
+        //   individualLine,
+        // });
+        
+        const consoleLogPosition = 1;
+
+        await octokit
+          .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+            owner,
+            repo,
+            pull_number: issue_number,
+            commit_id:
+              typeof latestCommitHash === "string"
+                ? latestCommitHash
+                : undefined,
+            event: "COMMENT",
+            path: file.filename,
+            comments: [
+              {
+                path: file.filename,
+                position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                body: commentBody,
+              },
+            ],
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+
+      commentFileDiff();
     }
 
     console.log("additions[0]", additions[0]);
