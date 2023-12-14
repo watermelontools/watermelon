@@ -11,20 +11,6 @@ const app = new App({
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 const commentBody = `This PR contains console logs. Please review or remove them.`;
-const consoleLogDetectionPrompt = `This is a list of code additions. Identify 
-if there's a console log or its equivalent in another programming language 
-such as Java, Golang, Python, C, Rust, C++, Ruby, etc.
-(console.log(), println(), println!(), System.out.println(), print(), fmt.Println(), puts, and  cout << "Print a String" << endl; are some examples). 
-If the console log or its equivalent in another language is in a code comment, don't
-count it as a detected console log. For example JavaScript comments start with // or /*, 
-Python comments start with #.
-Other console functions such as console.info() shouldn't be counted as console logs.
-Ignore code comments from this analysis. 
-Something like 'input[type="email"]' is fine and should not be counted as a console log.
-If there is a console log, return "true", else return "false".
-If you return true, return a string that that has 2 values: result (true) and the line of code.
-The line value, is the actual line in the file that contains the console log.
-For example: true,console.log("hello world");`;
 
 function getLineDiffs(filePatch: string) {
   const additions: string[] = [];
@@ -48,17 +34,6 @@ function getLineDiffs(filePatch: string) {
     }
   }
   return { additions: additions.join("\n"), removals: removals.join("\n") };
-}
-
-function getConsoleLogPosition({ filePatch, individualLine }) {
-  // Split the filePatch into lines and find the index of the line that includes individualLine
-  const lines = filePatch.split("\n");
-  const zeroBasedIndex = lines.findIndex((line) =>
-    line.includes(individualLine)
-  );
-
-  // Convert to one-based index, or return -1 if not found
-  return zeroBasedIndex === -1 ? 0 : zeroBasedIndex + 1;
 }
 
 export default async function detectConsoleLogs({
@@ -109,63 +84,49 @@ export default async function detectConsoleLogs({
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    // detect if the additions contain console logs or not
-    try {
-      return await openai
-        .createChatCompletion({
-          model: "gpt-4-1106-preview",
-          messages: [
-            {
-              role: "system",
-              content: `${consoleLogDetectionPrompt} \n ${additions}`,
-            },
-          ],
-        })
-        .then((result) => {
-          const openAIResult =
-            result.data.choices[0].message.content.split(",");
+    const splitAdditions = additions.split("\n");
 
-          const addtionsHaveConsoleLog = openAIResult[0];
-          const individualLine = openAIResult[1];
+    // RegEx to detect console log equivalents in different languages
+    const consoleLogRegex = /(console\.log|print|printf|fmt\.Print|log\.Print|NSLog|puts|println|println!)\([^)]*\)(?![^]*?\/\/|[^]*?\/\*|#)/;
+    
+    // RegEx to ignore lines that contian //, /*, etc.
+    const commentRegex = /^\s*\/{2,}|^\s*\/\*|\*\/|#/;
 
-          if (addtionsHaveConsoleLog === "true") {
-            const commentFileDiff = () => {
-              const consoleLogPosition = getConsoleLogPosition({
-                filePatch: file.patch ?? "",
-                individualLine,
-              });
+    for (let i=0; i < splitAdditions.length; i++) {
+      let currentLine = splitAdditions[i];
+      if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
+        const commentFileDiff = async () => {
 
-              return octokit
-                .request(
-                  "POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews",
-                  {
-                    owner,
-                    repo,
-                    pull_number: issue_number,
-                    commit_id:
-                      typeof latestCommitHash === "string"
-                        ? latestCommitHash
-                        : undefined,
-                    event: "COMMENT",
-                    path: file.filename,
-                    comments: [
-                      {
-                        path: file.filename,
-                        position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                        body: commentBody,
-                      },
-                    ],
-                  }
-                )
-                .catch((err) => {
-                  console.log(err);
-                });
-            };
-
-            commentFileDiff();
-          }
-        });
-    } catch {}
+          const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
+  
+          await octokit
+            .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+              owner,
+              repo,
+              pull_number: issue_number,
+              commit_id:
+                typeof latestCommitHash === "string"
+                  ? latestCommitHash
+                  : undefined,
+              event: "COMMENT",
+              path: file.filename,
+              comments: [
+                {
+                  path: file.filename,
+                  position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                  body: commentBody,
+                },
+              ],
+            })
+            .catch((err) => {
+              throw err;
+            });
+        };
+  
+        commentFileDiff();
+      }
+  
+    }
   });
   try {
     await Promise.allSettled(commentPromises);
