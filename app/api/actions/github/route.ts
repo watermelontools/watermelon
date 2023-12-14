@@ -1,7 +1,7 @@
 import { App } from "@octokit/app";
 import addActionCount from "../../../../utils/db/teams/addActionCount";
 
-import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
+import getMixtralSummary from "../../../../utils/actions/getMixtralSummary";
 
 import countMarkdown from "../../../../utils/actions/markdownHelpers/count";
 import generalMarkdownHelper from "../../../../utils/actions/markdownHelpers/helper";
@@ -53,6 +53,7 @@ export async function POST(request: Request) {
         "repository",
         "number",
       ]);
+
       if (missingParams.length > 0) {
         return missingParamsResponse({ url: request.url, missingParams });
       }
@@ -354,7 +355,7 @@ export async function POST(request: Request) {
       textToWrite += `### Watermelon AI Summary \n`;
       let businessLogicSummary;
       if (AISummary) {
-        businessLogicSummary = await getOpenAISummary({
+        businessLogicSummary = await getMixtralSummary({
           commitList,
           values: {
             github: github?.data,
