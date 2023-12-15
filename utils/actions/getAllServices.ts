@@ -48,13 +48,10 @@ export default async function getAllServices({
         asana_workspace,
         user_email,
         AISummary,
-        JiraTickets,
-        GitHubPRs,
-        SlackMessages,
-        NotionPages,
-        LinearTickets,
-        ConfluencePages,
-        AsanaTasks,
+        SearchAmount,
+        ResponseTexts,
+        Badges,
+        CodeComments,
         watermelon_user,
       } = wmUserData;
       const [github, jira, confluence, slack, notion, linear, asana] =
@@ -64,14 +61,14 @@ export default async function getAllServices({
             owner,
             github_token,
             randomWords,
-            amount: GitHubPRs,
+            amount: SearchAmount,
           }),
           getJira({
             user: user_email,
             token: jira_token,
             refresh_token: jira_refresh_token,
             randomWords,
-            amount: JiraTickets,
+            amount: SearchAmount,
           }),
           getConfluence({
             token: confluence_token,
@@ -79,29 +76,29 @@ export default async function getAllServices({
             cloudId: confluence_id,
             user: user_email,
             randomWords,
-            amount: ConfluencePages,
+            amount: SearchAmount,
           }),
           getSlack({
             slack_token,
             searchString: randomWords.join(" "),
-            amount: SlackMessages,
+            amount: SearchAmount,
           }),
           getNotion({
             notion_token,
             randomWords,
-            amount: NotionPages,
+            amount: SearchAmount,
           }),
           getLinear({
             linear_token,
             randomWords,
-            amount: LinearTickets,
+            amount: SearchAmount,
           }),
           getAsana({
             access_token: asana_token,
             user: user_email,
             randomWords,
             workspace: asana_workspace,
-            amount: AsanaTasks,
+            amount: SearchAmount,
           }),
         ]);
 
@@ -115,6 +112,10 @@ export default async function getAllServices({
         asana,
         watermelon_user,
         AISummary,
+        ResponseTexts,
+        SearchAmount,
+        Badges,
+        CodeComments,
         user_email,
       };
     } catch (error) {
@@ -148,13 +149,10 @@ export default async function getAllServices({
         asana_workspace,
         user_email,
         AISummary,
-        JiraTickets,
-        GitHubPRs,
-        SlackMessages,
-        NotionPages,
-        LinearTickets,
-        ConfluencePages,
-        AsanaTasks,
+        CodeComments,
+        Badges,
+        SearchAmount,
+        ResponseTexts,
         watermelon_user,
       } = wmUserData;
       if (!watermelon_user) {
@@ -164,7 +162,7 @@ export default async function getAllServices({
             owner,
             installationId,
             randomWords,
-            amount: GitHubPRs,
+            amount: SearchAmount,
           }),
         ]);
         return {
@@ -177,13 +175,8 @@ export default async function getAllServices({
           slack: { error: "no slack token", data: [], fullData: [] },
           watermelon_user: "team",
           AISummary,
-          JiraTickets,
-          GitHubPRs,
-          SlackMessages,
-          NotionPages,
-          LinearTickets,
-          ConfluencePages,
-          AsanaTasks,
+          ResponseTexts,
+          SearchAmount,
         };
       } else {
         const [github, jira, confluence, slack, notion, linear, asana] =
@@ -193,14 +186,14 @@ export default async function getAllServices({
               owner,
               github_token,
               randomWords,
-              amount: GitHubPRs,
+              amount: SearchAmount,
             }),
             getJira({
               user: user_email,
               token: jira_token,
               refresh_token: jira_refresh_token,
               randomWords,
-              amount: JiraTickets,
+              amount: SearchAmount,
             }),
             getConfluence({
               token: confluence_token,
@@ -208,29 +201,29 @@ export default async function getAllServices({
               cloudId: confluence_id,
               user: user_email,
               randomWords,
-              amount: ConfluencePages,
+              amount: SearchAmount,
             }),
             getSlack({
               slack_token,
               searchString: randomWords.join(" "),
-              amount: SlackMessages,
+              amount: SearchAmount,
             }),
             getNotion({
               notion_token,
               randomWords,
-              amount: NotionPages,
+              amount: SearchAmount,
             }),
             getLinear({
               linear_token,
               randomWords,
-              amount: LinearTickets,
+              amount: SearchAmount,
             }),
             getAsana({
               access_token: asana_token,
               user: user_email,
               randomWords,
               workspace: asana_workspace,
-              amount: AsanaTasks,
+              amount: SearchAmount,
             }),
           ]);
 
@@ -244,6 +237,10 @@ export default async function getAllServices({
           asana,
           watermelon_user,
           AISummary,
+          ResponseTexts,
+          SearchAmount,
+          CodeComments,
+          Badges,
           user_email,
         };
       }

@@ -26,8 +26,6 @@ import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
 
-
-
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
@@ -70,7 +68,7 @@ export async function POST(request: Request) {
 
       if (pull_request.user.type === "Bot") {
         return new Response("We don't comment on bot PRs", {
-          status: 400
+          status: 400,
         });
       }
 
@@ -313,6 +311,9 @@ export async function POST(request: Request) {
         watermelon_user,
         AISummary,
         user_email,
+        ResponseTexts,
+        CodeComments,
+        Badges,
       } = serviceAnswers;
       if (error) {
         return failedToFetchResponse({
@@ -381,42 +382,49 @@ export async function POST(request: Request) {
       textToWrite += generalMarkdownHelper({
         value: github,
         userLogin,
+        ResponseTexts,
         systemName: "GitHub",
         systemResponseName: "GitHub PRs",
       });
       textToWrite += generalMarkdownHelper({
         value: jira,
         userLogin,
+        ResponseTexts,
         systemName: "Jira",
         systemResponseName: "Jira Tickets",
       });
       textToWrite += generalMarkdownHelper({
         value: confluence,
         userLogin,
+        ResponseTexts,
         systemName: "Confluence",
         systemResponseName: "Confluence Docs",
       });
       textToWrite += generalMarkdownHelper({
         value: slack,
         userLogin,
+        ResponseTexts,
         systemName: "Slack",
         systemResponseName: "Slack Threads",
       });
       textToWrite += generalMarkdownHelper({
         value: notion,
         userLogin,
+        ResponseTexts,
         systemName: "Notion",
         systemResponseName: "Notion Pages",
       });
       textToWrite += generalMarkdownHelper({
         value: linear,
         userLogin,
+        ResponseTexts,
         systemName: "Linear",
         systemResponseName: "Linear Tickets",
       });
       textToWrite += generalMarkdownHelper({
         value: asana,
         userLogin,
+        ResponseTexts,
         systemName: "Asana",
         systemResponseName: "Asana Tasks",
       });
@@ -428,27 +436,31 @@ export async function POST(request: Request) {
       textToWrite += randomText();
       Promise.all([
         // Detect console.logs and its equivalent in other languages
-        detectConsoleLogs({
-          prTitle: title,
-          businessLogicSummary,
-          repo,
-          owner,
-          issue_number: number,
-          installationId,
-          reqUrl: request.url,
-          reqEmail: req.email,
-        }),
+        CodeComments
+          ? detectConsoleLogs({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-        labelPullRequest({
-          prTitle: title,
-          businessLogicSummary,
-          repo,
-          owner,
-          issue_number: number,
-          installationId,
-          reqUrl: request.url,
-          reqEmail: req.email,
-        }),
+        Badges
+          ? labelPullRequest({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         addActionLog({
           randomWords,
           github,
@@ -541,7 +553,7 @@ export async function POST(request: Request) {
 
       // If the count is surpassed, we replace the
       if (count.github_app_uses > 500) {
-        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://calendly.com/evargas-14/watermelon-business) to upgrade.`;
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://buy.stripe.com/28o0289KVaYV5wY004) to upgrade.`;
 
         const comments = await octokit.request(
           "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
@@ -557,7 +569,9 @@ export async function POST(request: Request) {
 
         // Find our bot's comment
         let botComment = comments.data.find((comment) => {
-          return comment?.user?.login.includes("watermelon-copilot-for-code-review");
+          return comment?.user?.login.includes(
+            "watermelon-copilot-for-code-review"
+          );
         });
 
         // Update the existing comment

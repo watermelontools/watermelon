@@ -7,15 +7,25 @@ export default function Navbar({ children }: { children: React.ReactNode }) {
     { href: "/settings", label: "Settings" },
     { href: "/team", label: "Team" },
     {
-      href: "https://calendly.com/evargas-14/watermelon-business",
+      href: "https://buy.stripe.com/28o0289KVaYV5wY004",
       label: "Billing",
     },
     { href: "/api/auth/signout", label: "Logout", onClick: signOut },
   ];
   return (
-    <div className="d-flex flex-row h-full">
-      <nav className="SideNav shadow-md" style={{ width: 250 }}>
-        <div className="flex flex-col justify-between h-full bg-gray-100 p-4">
+    <div className="d-flex flex-row h-full" style={{ minHeight: "90vh" }}>
+      <nav
+        className="SideNav shadow-md"
+        style={{ width: 250, minHeight: "100%" }}
+      >
+        <div
+          className="flex flex-col justify-between h-full bg-gray-100 p-4"
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 2,
+          }}
+        >
           <div>
             {links.map(({ href, label }) => (
               <Link

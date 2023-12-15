@@ -6,8 +6,10 @@ export default async function updateUserSettings({
 }): Promise<any> {
   try {
     let data = await executeRequest(
-      `EXEC dbo.update_userSettings @watermelon_user = '${email}', @AISummary='${userSettings.AISummary}', @JiraTickets='${userSettings.JiraTickets}', @SlackMessages='${userSettings.SlackMessages}', @GitHubPRs='${userSettings.GitHubPRs}', @NotionPages= '${userSettings.NotionPages}', @LinearTickets= '${userSettings.LinearTickets}', @ConfluenceDocs= '${userSettings.ConfluenceDocs}'`
+      `EXEC dbo.update_userSettings @watermelon_user = '${email}', @AISummary='${userSettings.AISummary}', 
+      @ResponseTexts='${userSettings.ResponseTexts}', @Badges='${userSettings.Badges}', @CodeComments='${userSettings.CodeComments}', @SearchAmount=${userSettings.SearchAmount}`
     );
+
     return data;
   } catch (err) {
     console.error(err);
