@@ -80,6 +80,24 @@ export default async function detectConsoleLogs({
         console.log(err);
       });
   }
+
+  /*
+    function getLatestCommitHash() {
+      return octokit
+        .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
+          owner,
+          repo,
+          pull_number: issue_number,
+        })
+        .then((result) => {
+          return result.data.head.sha;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  */
+
   const latestCommitHash = await getLatestCommitHash();
 
   const commentPromises = diffFiles.map(async (file) => {
