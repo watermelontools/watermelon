@@ -10,7 +10,8 @@ const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
-const commentBody = `This PR contains console logs. Please review or remove them.`;
+
+const consoleLogCommentBody = `This PR contains console logs. Please review or remove them.`;
 
 function getLineDiffs(filePatch: string) {
   const additions: string[] = [];
@@ -92,6 +93,9 @@ export default async function detectConsoleLogs({
     // RegEx to ignore lines that contian //, /*, etc.
     const commentRegex = /^\s*\/{2,}|^\s*\/\*|\*\/|#/;
 
+    // Leftover comment
+    const leftoverCommentRegex = /\*[^*]*\*+(?:[^/*][^*]*\*+)*\//
+
     for (let i=0; i < splitAdditions.length; i++) {
       let currentLine = splitAdditions[i];
       if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
@@ -114,7 +118,7 @@ export default async function detectConsoleLogs({
                 {
                   path: file.filename,
                   position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                  body: commentBody,
+                  body: consoleLogCommentBody,
                 },
               ],
             })
