@@ -375,6 +375,9 @@ export async function POST(request: Request) {
           textToWrite +=
             "Error getting summary" + businessLogicSummary?.error + "\n";
         }
+        if (AISummary === 2) {
+          textToWrite += `Please create an account on [Watermelon](https://app.watermelontools.com/) to get better results. \n`;
+        }
       } else {
         textToWrite += `AI Summary deactivated by ${userLogin} \n`;
       }
