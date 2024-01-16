@@ -434,58 +434,71 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
-      Promise.all([
-        // Detect console.logs and its equivalent in other languages
-        CodeComments
-          ? detectConsoleLogs({
-              prTitle: title,
-              businessLogicSummary,
-              repo,
-              owner,
-              issue_number: number,
-              installationId,
-              reqUrl: request.url,
-              reqEmail: req.email,
-            })
-          : null,
-        // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
-        Badges
-          ? labelPullRequest({
-              prTitle: title,
-              businessLogicSummary,
-              repo,
-              owner,
-              issue_number: number,
-              installationId,
-              reqUrl: request.url,
-              reqEmail: req.email,
-            })
-          : null,
-        addActionLog({
-          randomWords,
-          github,
-          jira,
-          slack,
-          notion,
-          linear,
-          asana,
-          textToWrite,
-          businessLogicSummary,
-          owner,
-          repo,
-          number,
-          payload: req,
-          count,
-          watermelon_user,
-        }),
-      ]).catch((error) => {
-        failedPosthogTracking({
-          url: request.url,
-          error: error.message,
-          email: req.email,
-        });
-        return console.error("posting comment error", error);
-      });
+      console.log("promise all detectconsolelogs")
+
+      detectConsoleLogs({
+        prTitle: title,
+        businessLogicSummary,
+        repo,
+        owner,
+        issue_number: number,
+        installationId,
+        reqUrl: request.url,
+        reqEmail: req.email,
+      })
+
+      // Promise.all([
+      //   // Detect console.logs and its equivalent in other languages
+      //   CodeComments
+      //     ? detectConsoleLogs({
+      //         prTitle: title,
+      //         businessLogicSummary,
+      //         repo,
+      //         owner,
+      //         issue_number: number,
+      //         installationId,
+      //         reqUrl: request.url,
+      //         reqEmail: req.email,
+      //       })
+      //     : null,
+      //   // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
+      //   Badges
+      //     ? labelPullRequest({
+      //         prTitle: title,
+      //         businessLogicSummary,
+      //         repo,
+      //         owner,
+      //         issue_number: number,
+      //         installationId,
+      //         reqUrl: request.url,
+      //         reqEmail: req.email,
+      //       })
+      //     : null,
+      //   addActionLog({
+      //     randomWords,
+      //     github,
+      //     jira,
+      //     slack,
+      //     notion,
+      //     linear,
+      //     asana,
+      //     textToWrite,
+      //     businessLogicSummary,
+      //     owner,
+      //     repo,
+      //     number,
+      //     payload: req,
+      //     count,
+      //     watermelon_user,
+      //   }),
+      // ]).catch((error) => {
+      //   failedPosthogTracking({
+      //     url: request.url,
+      //     error: error.message,
+      //     email: req.email,
+      //   });
+      //   return console.error("posting comment error", error);
+      // });
 
       // Fetch all comments on the PR
       const comments = await octokit.request(
@@ -594,6 +607,7 @@ export async function POST(request: Request) {
           .split("### WatermelonAI Summary")[1]
           .split("\n")[1];
 
+          console.log("await detectConsoleLogs");
         // Detect console.logs and its equivalent in other languages
         await detectConsoleLogs({
           prTitle: title,

@@ -12,6 +12,7 @@ const app = new App({
 });
 
 const consoleLogCommentBody = `This PR contains console logs. Please review or remove them.`;
+const leftoverCommentBody = `This PR contains leftover multi-line comments. Please review or remove them.`;
 
 function getLineDiffs(filePatch: string) {
   const additions: string[] = [];
@@ -100,8 +101,75 @@ export default async function detectConsoleLogs({
 
   const latestCommitHash = await getLatestCommitHash();
 
+  console.log("before comment promises")
+
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
+
+
+    // Leftover comment
+    // const leftoverCommentRegex = /\*[^*]*\*+(?:[^/*][^*]*\*+)*\//
+    // const leftoverCommentRegex = /^\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/(?!\*/gm;
+    // const leftoverCommentRegex = /^\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/(?!\*/g;
+    const leftoverCommentRegex = /^\/\*[\s\S]*?\*\//gm;
+
+
+    console.log("leftover regex will be called")
+    const matches = additions.match(leftoverCommentRegex);
+    console.log("matches: ", matches)
+    // This control flow isn't being reached 
+    if (matches) {
+      // line contains leftover comment
+      console.log("LEFTOVER COMMENT HERE - additions scope");
+
+      const firstMatch = matches[0];
+  
+      // Find the position of the start of the comment
+      const startPos = additions.indexOf(firstMatch);
+    
+      // Split the additions into lines
+      const lines = additions.split('\n');
+    
+      // Loop through the lines to find the line index
+      let lineIndex;
+      let pos = 0;
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (pos + line.length >= startPos) {
+          lineIndex = i;
+          break;
+        }
+        pos += line.length + 1; // +1 for newline
+      }
+    
+      // Line number is line index + 1
+      const lineNumber = lineIndex + 1;
+
+      console.log("lineNumber", lineNumber);
+
+      await octokit
+      .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+        owner,
+        repo,
+        pull_number: issue_number,
+        commit_id:
+          typeof latestCommitHash === "string"
+            ? latestCommitHash
+            : undefined,
+        event: "COMMENT",
+        path: file.filename,
+        comments: [
+          {
+            path: file.filename,
+            position:  8, // comment at the beggining of the file by default
+            body: leftoverCommentBody,
+          },
+        ],
+      })
+      .catch((err) => {
+        throw err;
+      });
+    } 
 
     const splitAdditions = additions.split("\n");
 
@@ -111,41 +179,39 @@ export default async function detectConsoleLogs({
     // RegEx to ignore lines that contian //, /*, etc.
     const commentRegex = /^\s*\/{2,}|^\s*\/\*|\*\/|#/;
 
-    // Leftover comment
-    const leftoverCommentRegex = /\*[^*]*\*+(?:[^/*][^*]*\*+)*\//
-
     for (let i=0; i < splitAdditions.length; i++) {
       let currentLine = splitAdditions[i];
-      if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
-        const commentFileDiff = async () => {
 
-          const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
+      if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
+        // const commentFileDiff = async () => {
+
+        //   const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
   
-          await octokit
-            .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
-              owner,
-              repo,
-              pull_number: issue_number,
-              commit_id:
-                typeof latestCommitHash === "string"
-                  ? latestCommitHash
-                  : undefined,
-              event: "COMMENT",
-              path: file.filename,
-              comments: [
-                {
-                  path: file.filename,
-                  position: consoleLogPosition || 1, // comment at the beggining of the file by default
-                  body: consoleLogCommentBody,
-                },
-              ],
-            })
-            .catch((err) => {
-              throw err;
-            });
-        };
+        //   await octokit
+        //     .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+        //       owner,
+        //       repo,
+        //       pull_number: issue_number,
+        //       commit_id:
+        //         typeof latestCommitHash === "string"
+        //           ? latestCommitHash
+        //           : undefined,
+        //       event: "COMMENT",
+        //       path: file.filename,
+        //       comments: [
+        //         {
+        //           path: file.filename,
+        //           position: consoleLogPosition || 1, // comment at the beggining of the file by default
+        //           body: consoleLogCommentBody,
+        //         },
+        //       ],
+        //     })
+        //     .catch((err) => {
+        //       throw err;
+        //     });
+        // };
   
-        commentFileDiff();
+        // commentFileDiff();
       }
   
     }
