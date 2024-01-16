@@ -82,42 +82,15 @@ export default async function detectConsoleLogs({
       });
   }
 
-  /*
-    function getLatestCommitHash() {
-      return octokit
-        .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
-          owner,
-          repo,
-          pull_number: issue_number,
-        })
-        .then((result) => {
-          return result.data.head.sha;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  */
-
   const latestCommitHash = await getLatestCommitHash();
-
-  console.log("before comment promises")
 
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-
-    // Leftover comment
-    // const leftoverCommentRegex = /\*[^*]*\*+(?:[^/*][^*]*\*+)*\//
-    // const leftoverCommentRegex = /^\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/(?!\*/gm;
-    // const leftoverCommentRegex = /^\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\/(?!\*/g;
+    // Leftover comment RegEx
     const leftoverCommentRegex = /^\/\*[\s\S]*?\*\//gm;
-
-
-    console.log("leftover regex will be called")
     const matches = additions.match(leftoverCommentRegex);
-    console.log("matches: ", matches)
-    // This control flow isn't being reached 
+
     if (matches) {
       // line contains leftover comment
       console.log("LEFTOVER COMMENT HERE - additions scope");
@@ -145,8 +118,6 @@ export default async function detectConsoleLogs({
       // Line number is line index + 1
       const lineNumber = lineIndex + 1;
 
-      console.log("lineNumber", lineNumber);
-
       await octokit
       .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
         owner,
@@ -161,7 +132,7 @@ export default async function detectConsoleLogs({
         comments: [
           {
             path: file.filename,
-            position:  8, // comment at the beggining of the file by default
+            position:  lineNumber, // comment at the beggining of the file by default
             body: leftoverCommentBody,
           },
         ],
@@ -183,35 +154,35 @@ export default async function detectConsoleLogs({
       let currentLine = splitAdditions[i];
 
       if (!currentLine.match(commentRegex) && currentLine.match(consoleLogRegex)) {
-        // const commentFileDiff = async () => {
+        const commentFileDiff = async () => {
 
-        //   const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
+          const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
   
-        //   await octokit
-        //     .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
-        //       owner,
-        //       repo,
-        //       pull_number: issue_number,
-        //       commit_id:
-        //         typeof latestCommitHash === "string"
-        //           ? latestCommitHash
-        //           : undefined,
-        //       event: "COMMENT",
-        //       path: file.filename,
-        //       comments: [
-        //         {
-        //           path: file.filename,
-        //           position: consoleLogPosition || 1, // comment at the beggining of the file by default
-        //           body: consoleLogCommentBody,
-        //         },
-        //       ],
-        //     })
-        //     .catch((err) => {
-        //       throw err;
-        //     });
-        // };
+          await octokit
+            .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+              owner,
+              repo,
+              pull_number: issue_number,
+              commit_id:
+                typeof latestCommitHash === "string"
+                  ? latestCommitHash
+                  : undefined,
+              event: "COMMENT",
+              path: file.filename,
+              comments: [
+                {
+                  path: file.filename,
+                  position: consoleLogPosition || 1, // comment at the beggining of the file by default
+                  body: consoleLogCommentBody,
+                },
+              ],
+            })
+            .catch((err) => {
+              throw err;
+            });
+        };
   
-        // commentFileDiff();
+        commentFileDiff();
       }
   
     }
