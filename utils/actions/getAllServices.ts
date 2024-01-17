@@ -174,7 +174,7 @@ export default async function getAllServices({
           notion: { error: "no notion token", data: [], fullData: [] },
           slack: { error: "no slack token", data: [], fullData: [] },
           watermelon_user: "team",
-          AISummary,
+          AISummary: 1,
           ResponseTexts,
           SearchAmount,
         };
