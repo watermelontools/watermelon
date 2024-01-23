@@ -99,6 +99,26 @@ export default async function detectConsoleLogs({
 
           const consoleLogPosition = i + 1; // The +1 is because IDEs and GitHub file diff view index LOC at 1, not 0
   
+          // await octokit
+          // .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
+          //   owner,
+          //   repo,
+          //   pull_number: issue_number,
+          //   commit_id:
+          //     typeof latestCommitHash === "string"
+          //       ? latestCommitHash
+          //       : undefined,
+          //   event: "COMMENT",
+          //   path: file.filename,
+          //   comments: [
+          //     {
+          //       path: file.filename,
+          //       position: consoleLogPosition || 1, // comment at the beggining of the file by default
+          //       body: commentBody,
+          //     },
+          //   ],
+          // })
+
           await octokit
             .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
               owner,
