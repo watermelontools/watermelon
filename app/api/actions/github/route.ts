@@ -14,7 +14,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectConsoleLogs from "../../../../utils/actions/detectConsoleLogs";
+import detectCodeSmells from "../../../../utils/actions/detectCodeSmells";
 
 import {
   failedPosthogTracking,
@@ -438,7 +438,7 @@ export async function POST(request: Request) {
       Promise.all([
         // Detect console.logs and its equivalent in other languages
         CodeComments
-          ? detectConsoleLogs({
+          ? detectCodeSmells({
               prTitle: title,
               businessLogicSummary,
               repo,
@@ -595,9 +595,8 @@ export async function POST(request: Request) {
           .split("### WatermelonAI Summary")[1]
           .split("\n")[1];
 
-          console.log("await detectConsoleLogs");
         // Detect console.logs and its equivalent in other languages
-        await detectConsoleLogs({
+        await detectCodeSmells({
           prTitle: title,
           businessLogicSummary,
           repo,

@@ -38,7 +38,7 @@ function getLineDiffs(filePatch: string) {
   return { additions: additions.join("\n"), removals: removals.join("\n") };
 }
 
-export default async function detectConsoleLogs({
+export default async function detectCodeSmells({
   installationId,
   owner,
   repo,
