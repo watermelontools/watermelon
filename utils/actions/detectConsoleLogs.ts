@@ -92,8 +92,6 @@ export default async function detectConsoleLogs({
     const leftoverCommentRegex = /^\/\*[\s\S]*?\*\/|\/\/[\s\S]*?\n/gm;
     const matches = additions.match(leftoverCommentRegex);
 
-    console.log("detectConsoleLogs.ts called")
-
     if (matches) {
       const firstMatch = matches[0];
 
