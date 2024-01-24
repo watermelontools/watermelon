@@ -87,8 +87,7 @@ export default async function detectCodeSmells({
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    // Leftover comment RegEx
-    // const leftoverCommentRegex = /^\/\*[\s\S]*?\*\//gm;
+    // Leftout comment RegEx
     const leftoverCommentRegex = /^\/\*[\s\S]*?\*\/|\/\/[\s\S]*?\n/gm;
     const matches = additions.match(leftoverCommentRegex);
 
