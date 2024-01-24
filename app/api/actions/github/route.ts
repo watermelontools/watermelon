@@ -437,7 +437,7 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
-      Promise.all([
+      Promise.allSettled([
         // Detect console.logs and its equivalent in other languages
         CodeComments
           ? detectConsoleLogs({
