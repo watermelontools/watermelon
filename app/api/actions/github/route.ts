@@ -16,6 +16,7 @@ import validateParams from "../../../../utils/api/validateParams";
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
 import detectLefoutComments from "../../../../utils/codeSmells/detectLefoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
+import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
 
 import {
   failedPosthogTracking,
@@ -453,6 +454,19 @@ export async function POST(request: Request) {
         // Detect console.logs and its equivalent in other languages
         CodeComments
         ? detectLefoutComments({
+            prTitle: title,
+            businessLogicSummary,
+            repo,
+            owner,
+            issue_number: number,
+            installationId,
+            reqUrl: request.url,
+            reqEmail: req.email,
+          })
+        : null,
+        // Detect PII data that's sensible for companies that are heaavy in compliance standards
+        CodeComments
+        ? detectPIIData({
             prTitle: title,
             businessLogicSummary,
             repo,
