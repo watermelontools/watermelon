@@ -88,35 +88,41 @@ export default async function detectConsoleLogs({
     const { additions } = getLineDiffs(file.patch ?? "");
 
     // Leftover comment RegEx
-    const leftoverCommentRegex = /^\/\*[\s\S]*?\*\//gm;
+    // const leftoverCommentRegex = /^\/\*[\s\S]*?\*\//gm;
+    const leftoverCommentRegex = /^\/\*[\s\S]*?\*\/|\/\/[\s\S]*?\n/gm;
     const matches = additions.match(leftoverCommentRegex);
+
+    console.log("detectConsoleLogs.ts called")
 
     if (matches) {
       // line contains leftover comment
       console.log("LEFTOVER COMMENT HERE - additions scope");
+      console.log("additions", additions);
 
       const firstMatch = matches[0];
-  
+
       // Find the position of the start of the comment
       const startPos = additions.indexOf(firstMatch);
-    
+      
       // Split the additions into lines
       const lines = additions.split('\n');
-    
-      // Loop through the lines to find the line index
-      let lineIndex;
-      let pos = 0;
+      
+      // Initialize lineNumber to 0
+      let lineNumber = 4; //MINDBLOWING!
+      
+      // Loop through the lines to find the line number
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        if (pos + line.length >= startPos) {
-          lineIndex = i;
+        // Check if the current line contains the first match
+        if (line.includes(firstMatch)) {
+          // Set lineNumber to the current index plus 1 (since line numbers are 1-based)
+          lineNumber = i + 1;
           break;
         }
-        pos += line.length + 1; // +1 for newline
       }
     
-      // Line number is line index + 1
-      const lineNumber = lineIndex + 1;
+
+      console.log("lineNumber - REFACTORED", lineNumber);
 
       await octokit
       .request("POST /repos/{owner}/{repo}/pulls/{pull_number}/reviews", {
