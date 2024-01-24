@@ -14,7 +14,8 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectConsoleLogs from "../../../../utils/actions/detectConsoleLogs";
+import detectLefoutComments from "../../../../utils/codeSmells/detectLefoutComments";
+import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
 
 import {
   failedPosthogTracking,
@@ -375,6 +376,9 @@ export async function POST(request: Request) {
           textToWrite +=
             "Error getting summary" + businessLogicSummary?.error + "\n";
         }
+        if (AISummary === 2) {
+          textToWrite += `Please create an account on [Watermelon](https://app.watermelontools.com/) to get better results. \n`;
+        }
       } else {
         textToWrite += `AI Summary deactivated by ${userLogin} \n`;
       }
@@ -434,7 +438,7 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
-      Promise.all([
+      Promise.allSettled([
         // Detect console.logs and its equivalent in other languages
         CodeComments
           ? detectConsoleLogs({
@@ -448,6 +452,19 @@ export async function POST(request: Request) {
               reqEmail: req.email,
             })
           : null,
+        // Detect console.logs and its equivalent in other languages
+        CodeComments
+        ? detectLefoutComments({
+            prTitle: title,
+            businessLogicSummary,
+            repo,
+            owner,
+            issue_number: number,
+            installationId,
+            reqUrl: request.url,
+            reqEmail: req.email,
+          })
+        : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
@@ -551,7 +568,7 @@ export async function POST(request: Request) {
           });
       }
 
-      // If the count is surpassed, we replace the
+      // If the count is surpassed, we replace the text
       if (count.github_app_uses > 500) {
         textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://buy.stripe.com/28o0289KVaYV5wY004) to upgrade.`;
 
@@ -631,6 +648,18 @@ export async function POST(request: Request) {
 
         // Detect console.logs and its equivalent in other languages
         await detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+        // Detect multi-line leftout comments
+        await detectLefoutComments({
           prTitle: title,
           businessLogicSummary,
           repo,
