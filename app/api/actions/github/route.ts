@@ -14,7 +14,8 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectCodeSmells from "../../../../utils/actions/detectCodeSmells";
+import detectLefoutComments from "../../../../utils/codeSmells/detectLefoutComments";
+import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
 
 import {
   failedPosthogTracking,
@@ -435,10 +436,10 @@ export async function POST(request: Request) {
       });
       textToWrite += randomText();
 
-      Promise.all([
+      Promise.allSettled([
         // Detect console.logs and its equivalent in other languages
         CodeComments
-          ? detectCodeSmells({
+          ? detectConsoleLogs({
               prTitle: title,
               businessLogicSummary,
               repo,
@@ -449,6 +450,19 @@ export async function POST(request: Request) {
               reqEmail: req.email,
             })
           : null,
+        // Detect console.logs and its equivalent in other languages
+        CodeComments
+        ? detectLefoutComments({
+            prTitle: title,
+            businessLogicSummary,
+            repo,
+            owner,
+            issue_number: number,
+            installationId,
+            reqUrl: request.url,
+            reqEmail: req.email,
+          })
+        : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
@@ -596,7 +610,19 @@ export async function POST(request: Request) {
           .split("\n")[1];
 
         // Detect console.logs and its equivalent in other languages
-        await detectCodeSmells({
+        await detectConsoleLogs({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+        // Detect multi-line leftout comments
+        await detectLefoutComments({
           prTitle: title,
           businessLogicSummary,
           repo,
