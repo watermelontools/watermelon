@@ -1,12 +1,6 @@
-const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
 import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
-
-const configuration = new Configuration({
-  apiKey: process.env.OPEN_AI_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
