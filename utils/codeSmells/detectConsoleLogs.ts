@@ -1,11 +1,7 @@
-const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
+import getDiffFiles from "./getDiffFiles";
+import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
-
-const configuration = new Configuration({
-  apiKey: process.env.OPEN_AI_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -33,32 +29,19 @@ export default async function detectConsoleLogs({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
-  // get the diffs
-  const { data: diffFiles } = await octokit.request(
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
-    {
-      owner,
-      repo,
-      pull_number: issue_number,
-    }
-  );
+  const diffFiles = await getDiffFiles({
+    owner,
+    repo,
+    issue_number,
+    installationId,
+  });
 
-  function getLatestCommitHash() {
-    return octokit
-      .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
-        owner,
-        repo,
-        pull_number: issue_number,
-      })
-      .then((result) => {
-        return result.data.head.sha;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  const latestCommitHash = await getLatestCommitHash();
+  const latestCommitHash = await getLatestCommitHash({
+    installationId,
+    owner,
+    repo,
+    issue_number,
+  });
 
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");

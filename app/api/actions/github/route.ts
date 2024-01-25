@@ -14,8 +14,11 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectLefoutComments from "../../../../utils/codeSmells/detectLefoutComments";
+
+// code smells
+import detectLeftoutComments from "../../../../utils/codeSmells/detectLeftoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
+import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
 
 import {
   failedPosthogTracking,
@@ -438,6 +441,7 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
+
       Promise.allSettled([
         // Detect console.logs and its equivalent in other languages
         CodeComments
@@ -454,17 +458,30 @@ export async function POST(request: Request) {
           : null,
         // Detect console.logs and its equivalent in other languages
         CodeComments
-        ? detectLefoutComments({
-            prTitle: title,
-            businessLogicSummary,
-            repo,
-            owner,
-            issue_number: number,
-            installationId,
-            reqUrl: request.url,
-            reqEmail: req.email,
-          })
-        : null,
+          ? detectLeftoutComments({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
+        // Detect PII data that's sensible for companies that are heaavy in compliance standards
+        CodeComments
+          ? detectPIIData({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
@@ -646,6 +663,18 @@ export async function POST(request: Request) {
           .split("### WatermelonAI Summary")[1]
           .split("\n")[1];
 
+        // PII data for compliance-heavy companies
+        await detectPIIData({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
         // Detect console.logs and its equivalent in other languages
         await detectConsoleLogs({
           prTitle: title,
@@ -659,7 +688,7 @@ export async function POST(request: Request) {
         });
 
         // Detect multi-line leftout comments
-        await detectLefoutComments({
+        await detectLeftoutComments({
           prTitle: title,
           businessLogicSummary,
           repo,
