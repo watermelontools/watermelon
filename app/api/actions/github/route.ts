@@ -14,7 +14,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectLetfoutComments from "../../../../utils/codeSmells/detectLefoutComments";
+import detectLeftoutComments from "../../../../utils/codeSmells/detectLetfoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
 import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
 
@@ -453,7 +453,7 @@ export async function POST(request: Request) {
           : null,
         // Detect console.logs and its equivalent in other languages
         CodeComments
-          ? detectLetfoutComments({
+          ? detectLeftoutComments({
               prTitle: title,
               businessLogicSummary,
               repo,
@@ -648,7 +648,7 @@ export async function POST(request: Request) {
         });
 
         // Detect multi-line leftout comments
-        await detectLetfoutComments({
+        await detectLeftoutComments({
           prTitle: title,
           businessLogicSummary,
           repo,
