@@ -54,7 +54,7 @@ export default async function detectPIIData({
         return result.data.head.sha;
       })
       .catch((err) => {
-        console.log(err);
+        throw err;
       });
   }
 
@@ -66,8 +66,7 @@ export default async function detectPIIData({
     const lines = additions.split("\n");
 
     // PII Data RegEx
-    // const piiRegex = "\b(age|dob|date_of_birth|birthdate|postal_code|postal-code|PostalCode|zipcode|zip-code|ZipCode|address|street|city|state|country|ssn|social_security_number|SocialSecurityNumber|social-security-number|email|e-mail|phoneNumber|phone-number|Phone_Number|medical_record|MedicalRecord|medical-record|health_insurance|HealthInsurance|health-insurance|patient_id|PatientID|patient-id)\b|\b\d{3}-\d{2}-\d{4}\b|\b\d{3}-\d{3}-\d{4}\b|[\w.-]+@[\w.-]+\.\w{2,}"
-    const piiRegex = new RegExp("\\b(age|dob|date_of_birth|birthdate|postal_code|postal-code|PostalCode|zipcode|zip-code|ZipCode|address|street|city|state|country|ssn|social_security_number|SocialSecurityNumber|social-security-number|email|e-mail|phoneNumber|phone-number|Phone_Number|medical_record|MedicalRecord|medical-record|health_insurance|HealthInsurance|health-insurance|patient_id|PatientID|patient-id)\\b|\\b\\d{3}-\\d{2}-\\d{4}\\b|\\b\\d{3}-\\d{3}-\\d{4}\\b|[\\w.-]+@[\\w.-]+\\.\\w{2,}", "g");
+    const piiRegex = new RegExp("\\b(age|dob|date_of_birth|birthdate|postal_code|postal-code|PostalCode|zipcode|zip-code|ZipCode|address|street|city|state|country|ssn|social_security_number|SocialSecurityNumber|social-security-number|email|e-mail|phoneNumber|phone-number|Phone_Number|medical_record|MedicalRecord|medical-record|health_insurance|HealthInsurance|health-insurance|patient_id|PatientID|patient-id|card_number|CardNumber|card-number|cardNumber)\\b|\\b\\d{3}-\\d{2}-\\d{4}\\b|\\b\\d{3}-\\d{3}-\\d{4}\\b|[\\w.-]+@[\\w.-]+\\.\\w{2,}", "g");
     const matches = additions.match(piiRegex);
 
     if (matches) {

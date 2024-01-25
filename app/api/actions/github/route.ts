@@ -623,7 +623,19 @@ export async function POST(request: Request) {
           .split("### WatermelonAI Summary")[1]
           .split("\n")[1];
 
-        // Detect console.logs and its equivalent in other languages
+        // PII data for compliance-heavy companies
+        await detectPIIData({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
+          // Detect console.logs and its equivalent in other languages
         await detectConsoleLogs({
           prTitle: title,
           businessLogicSummary,
@@ -646,6 +658,18 @@ export async function POST(request: Request) {
           reqUrl: request.url,
           reqEmail: req.email,
         });
+
+        // Detect PII data
+        detectPIIData({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        })
 
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         await labelPullRequest({
