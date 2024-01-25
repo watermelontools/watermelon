@@ -1,4 +1,5 @@
 import { App } from "@octokit/app";
+import getDiffFiles from "./getDiffFiles";
 import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
 
@@ -28,15 +29,12 @@ export default async function detectPIIData({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
-  // get the diffs
-  const { data: diffFiles } = await octokit.request(
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
-    {
-      owner,
-      repo,
-      pull_number: issue_number,
-    }
-  );
+  const diffFiles = await getDiffFiles({
+    owner,
+    repo,
+    issue_number,
+    installationId,
+  });
 
   const latestCommitHash = await getLatestCommitHash({
     installationId,
