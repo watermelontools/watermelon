@@ -33,8 +33,6 @@ export default async function detectPIIData({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
-  console.log("pii data file called")
-
   // get the diffs
   const { data: diffFiles } = await octokit.request(
     "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
@@ -66,20 +64,6 @@ export default async function detectPIIData({
     const { additions } = getLineDiffs(file.patch ?? "");
 
     const lines = additions.split("\n");
-let lineNumber = 0;
-
-// I also want to test this approach 
-
-// lines.forEach((line, index) => {
-//   const matches = line.match(piiRegex);
-//   if (matches) {
-//     // If there's a match, the line number is the index of the line plus 1 (since line numbers are 1-based)
-//     lineNumber = index + 1;
-//     // Do something with the line number and the matches
-//     // For example, you could log it, store it, or use it to create a comment in a code review
-//     console.log(`PII found on line ${lineNumber}:`, matches);
-//   }
-// });
 
     // PII Data RegEx
     // const piiRegex = "\b(age|dob|date_of_birth|birthdate|postal_code|postal-code|PostalCode|zipcode|zip-code|ZipCode|address|street|city|state|country|ssn|social_security_number|SocialSecurityNumber|social-security-number|email|e-mail|phoneNumber|phone-number|Phone_Number|medical_record|MedicalRecord|medical-record|health_insurance|HealthInsurance|health-insurance|patient_id|PatientID|patient-id)\b|\b\d{3}-\d{2}-\d{4}\b|\b\d{3}-\d{3}-\d{4}\b|[\w.-]+@[\w.-]+\.\w{2,}"
