@@ -33,6 +33,8 @@ export default async function detectPIIData({
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
 
+  console.log("pii data file called")
+
   // get the diffs
   const { data: diffFiles } = await octokit.request(
     "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
