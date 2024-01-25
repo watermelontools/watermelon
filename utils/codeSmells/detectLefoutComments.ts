@@ -9,7 +9,7 @@ const app = new App({
 
 const leftoverCommentBody = `This PR contains leftover multi-line comments. Please review or remove them.`;
 
-export default async function detectLefoutComments({
+export default async function detectLetfoutComments({
   installationId,
   owner,
   repo,
