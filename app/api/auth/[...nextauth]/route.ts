@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
   theme: {
     colorScheme: "dark", // "auto" | "dark" | "light"
     brandColor: "#238636", // Hex color code
-    logo: "public/logo.png", // Absolute URL to image
+    logo: "/favicon/favicon-32x32.png", // Absolute URL to image
   },
   // Configure one or more authentication providers
   providers: [

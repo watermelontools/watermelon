@@ -14,6 +14,8 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
+
+// code smells
 import detectLeftoutComments from "../../../../utils/codeSmells/detectLeftoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
 import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
@@ -377,6 +379,9 @@ export async function POST(request: Request) {
           textToWrite +=
             "Error getting summary" + businessLogicSummary?.error + "\n";
         }
+        if (AISummary === 2) {
+          textToWrite += `Please create an account on [Watermelon](https://app.watermelontools.com/) to get better results. \n`;
+        }
       } else {
         textToWrite += `AI Summary deactivated by ${userLogin} \n`;
       }
@@ -580,6 +585,41 @@ export async function POST(request: Request) {
           });
       }
 
+      // If the count is surpassed, we replace the text
+      if (count.github_app_uses > 500) {
+        textToWrite = `Your team has surpassed the free monthly usage. [Please click here](https://buy.stripe.com/28o0289KVaYV5wY004) to upgrade.`;
+
+        const comments = await octokit.request(
+          "GET /repos/{owner}/{repo}/issues/{issue_number}/comments?sort=created&direction=desc",
+          {
+            owner,
+            repo,
+            issue_number: number,
+            headers: {
+              "X-GitHub-Api-Version": "2022-11-28",
+            },
+          }
+        );
+
+        // Find our bot's comment
+        let botComment = comments.data.find((comment) => {
+          return comment?.user?.login.includes(
+            "watermelon-copilot-for-code-review"
+          );
+        });
+
+        // Update the existing comment
+        await octokit.request(
+          "PATCH /repos/{owner}/{repo}/issues/comments/{comment_id}",
+          {
+            owner,
+            repo,
+            comment_id: botComment.id,
+            body: textToWrite,
+          }
+        );
+      }
+
       successPosthogTracking({
         url: request.url,
         email: user_email,
@@ -649,18 +689,6 @@ export async function POST(request: Request) {
 
         // Detect multi-line leftout comments
         await detectLeftoutComments({
-          prTitle: title,
-          businessLogicSummary,
-          repo,
-          owner,
-          issue_number: number,
-          installationId,
-          reqUrl: request.url,
-          reqEmail: req.email,
-        });
-
-        // Detect PII data
-        detectPIIData({
           prTitle: title,
           businessLogicSummary,
           repo,
