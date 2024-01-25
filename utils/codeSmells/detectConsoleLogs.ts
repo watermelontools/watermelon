@@ -1,5 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
+import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
 
 const configuration = new Configuration({
@@ -43,22 +44,12 @@ export default async function detectConsoleLogs({
     }
   );
 
-  function getLatestCommitHash() {
-    return octokit
-      .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
-        owner,
-        repo,
-        pull_number: issue_number,
-      })
-      .then((result) => {
-        return result.data.head.sha;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  const latestCommitHash = await getLatestCommitHash();
+  const latestCommitHash = await getLatestCommitHash({
+    installationId,
+    owner,
+    repo,
+    issue_number,
+  });
 
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
