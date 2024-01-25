@@ -14,7 +14,7 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectLeftoutComments from "../../../../utils/codeSmells/detectLetfoutComments";
+import detectLeftoutComments from "../../../../utils/codeSmells/detectLeftoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
 import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
 
