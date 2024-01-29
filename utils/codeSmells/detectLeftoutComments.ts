@@ -1,4 +1,5 @@
 import { App } from "@octokit/app";
+import posthog from "../posthog/posthog";
 import getDiffFiles from "./getDiffFiles";
 import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
@@ -28,6 +29,16 @@ export default async function detectLeftoutComments({
   reqEmail: string;
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
+  posthog.capture({
+    event: "detectLeftoutComments",
+    properties: {
+      reqUrl,
+      reqEmail,
+      owner,
+      repo,
+      issue_number,
+    },
+  });
   const diffFiles = await getDiffFiles({
     owner,
     repo,
