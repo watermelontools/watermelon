@@ -176,6 +176,7 @@ export default async function getAllServices({
           watermelon_user: "team",
           AISummary: 2,
           ResponseTexts,
+          CodeComments,
           SearchAmount,
         };
       } else {
@@ -239,7 +240,7 @@ export default async function getAllServices({
           AISummary,
           ResponseTexts,
           SearchAmount,
-          CodeComments,
+          CodeComments: CodeComments || 1,
           Badges,
           user_email,
         };
