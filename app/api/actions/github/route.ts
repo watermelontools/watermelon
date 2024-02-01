@@ -29,6 +29,7 @@ import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
+import detectJWT from "../../../../utils/codeSmells/detectJWT";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -299,6 +300,17 @@ export async function POST(request: Request) {
               reqEmail: req.email,
             })
           : null,
+          CodeComments
+          ? detectJWT({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
