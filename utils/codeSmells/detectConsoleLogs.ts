@@ -45,7 +45,7 @@ export default async function detectConsoleLogs({
     getLatestCommitHash(requestOptions),
   ]).catch((err) => {
     posthog.capture({
-      event: "detectLeftoutCommentsError",
+      event: "detectConsoleLogsError",
       properties: {
         reqUrl,
         reqEmail,

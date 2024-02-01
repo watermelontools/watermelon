@@ -45,7 +45,7 @@ export default async function detectPIIData({
     getLatestCommitHash(requestOptions),
   ]).catch((err) => {
     posthog.capture({
-      event: "detectLeftoutCommentsError",
+      event: "detectPIIDataError",
       properties: {
         reqUrl,
         reqEmail,
