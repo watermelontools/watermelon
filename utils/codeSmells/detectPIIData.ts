@@ -39,20 +39,24 @@ export default async function detectPIIData({
       issue_number,
     },
   });
-  const diffFiles = await getDiffFiles({
-    owner,
-    repo,
-    issue_number,
-    installationId,
+  const requestOptions = { owner, repo, issue_number, installationId };
+  const [diffFiles, latestCommitHash] = await Promise.all([
+    getDiffFiles(requestOptions),
+    getLatestCommitHash(requestOptions),
+  ]).catch((err) => {
+    posthog.capture({
+      event: "detectPIIDataError",
+      properties: {
+        reqUrl,
+        reqEmail,
+        owner,
+        repo,
+        issue_number,
+        error: err,
+      },
+    });
+    return [[], undefined];
   });
-
-  const latestCommitHash = await getLatestCommitHash({
-    installationId,
-    owner,
-    repo,
-    issue_number,
-  });
-
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
