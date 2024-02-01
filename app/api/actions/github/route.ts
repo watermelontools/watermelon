@@ -29,6 +29,7 @@ import getAllServices from "../../../../utils/actions/getAllServices";
 import randomText from "../../../../utils/actions/markdownHelpers/randomText";
 import createTeamAndMatchUser from "../../../../utils/db/teams/createTeamAndMatchUser";
 import sendUninstall from "../../../../utils/sendgrid/sendUninstall";
+import detectUUID from "../../../../utils/codeSmells/detectUUID";
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
@@ -289,6 +290,18 @@ export async function POST(request: Request) {
         // Detect PII data that's sensible for companies that are heaavy in compliance standards
         CodeComments
           ? detectPIIData({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
+        CodeComments
+          ? detectUUID({
               prTitle: title,
               businessLogicSummary,
               repo,
