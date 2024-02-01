@@ -300,7 +300,7 @@ export async function POST(request: Request) {
               reqEmail: req.email,
             })
           : null,
-          CodeComments
+        CodeComments
           ? detectJWT({
               prTitle: title,
               businessLogicSummary,
@@ -311,6 +311,7 @@ export async function POST(request: Request) {
               reqUrl: request.url,
               reqEmail: req.email,
             })
+          : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
