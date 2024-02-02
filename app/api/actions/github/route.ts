@@ -5,7 +5,7 @@ import getOpenAISummary from "../../../../utils/actions/getOpenAISummary";
 
 import countMarkdown from "../../../../utils/actions/markdownHelpers/count";
 import generalMarkdownHelper from "../../../../utils/actions/markdownHelpers/helper";
-
+import constants from "../../../../utils/constants";
 import addActionLog from "../../../../utils/db/github/addActionLog";
 import {
   failedToFetchResponse,
@@ -14,8 +14,11 @@ import {
 import validateParams from "../../../../utils/api/validateParams";
 
 import labelPullRequest from "../../../../utils/actions/labelPullRequest";
-import detectLefoutComments from "../../../../utils/codeSmells/detectLefoutComments";
+
+// code smells
+import detectLeftoutComments from "../../../../utils/codeSmells/detectLeftoutComments";
 import detectConsoleLogs from "../../../../utils/codeSmells/detectConsoleLogs";
+import detectPIIData from "../../../../utils/codeSmells/detectPIIData";
 
 import {
   failedPosthogTracking,
@@ -89,189 +92,6 @@ export async function POST(request: Request) {
         commitList.push(octoCommitList.data[index].commit.message);
       }
       const commitSet = new Set(commitList);
-      const stopwords = [
-        "a",
-        "about",
-        "add comments",
-        "add",
-        "all",
-        "an",
-        "and",
-        "as",
-        "at",
-        "better",
-        "bug",
-        "bugs",
-        "bugfix",
-        "bugfixes",
-        "build",
-        "bump dependencies",
-        "bump version",
-        "but",
-        "by",
-        "call",
-        "cd",
-        "change",
-        "changed",
-        "changes",
-        "changing",
-        "chore",
-        "ci",
-        "cleanup",
-        "code review",
-        "comment out",
-        "commit",
-        "commits",
-        "config",
-        "config",
-        "create",
-        "critical",
-        "debug",
-        "delete",
-        "dependency update",
-        "deploy",
-        "docs",
-        "documentation",
-        "eslint",
-        "feat",
-        "feature",
-        "fix",
-        "fix",
-        "fixed",
-        "fixes",
-        "fixing",
-        "for",
-        "from",
-        "get",
-        "github",
-        "gitignore",
-        "hack",
-        "he",
-        "hotfix",
-        "husky",
-        "if",
-        "ignore",
-        "improve",
-        "improved",
-        "improvement",
-        "improvements",
-        "improves",
-        "improving",
-        "in",
-        "init",
-        "is",
-        "lint-staged",
-        "lint",
-        "linting",
-        "list",
-        "log",
-        "logging",
-        "logs",
-        "major",
-        "merge conflict",
-        "merge",
-        "minor",
-        "npm",
-        "of",
-        "on",
-        "oops",
-        "or",
-        "package-lock.json",
-        "package.json",
-        "prettier",
-        "print",
-        "quickfix",
-        "refactor",
-        "refactored",
-        "refactoring",
-        "refactors",
-        "release",
-        "remove comments",
-        "remove console",
-        "remove",
-        "remove",
-        "removed",
-        "removes",
-        "removing",
-        "revert",
-        "security",
-        "setup",
-        "squash",
-        "start",
-        "style",
-        "stylelint",
-        "temp",
-        "test",
-        "tested",
-        "testing",
-        "tests",
-        "the",
-        "to",
-        "try",
-        "typo",
-        "up",
-        "update dependencies",
-        "update",
-        "updated",
-        "updates",
-        "updating",
-        "use",
-        "version",
-        "was",
-        "wip",
-        "with",
-        "yarn.lock",
-        "master",
-        "main",
-        "dev",
-        "development",
-        "prod",
-        "production",
-        "staging",
-        "stage",
-        "[",
-        "]",
-        "!",
-        "{",
-        "}",
-        "(",
-        ")",
-        "''",
-        '"',
-        "``",
-        "-",
-        "_",
-        ":",
-        ";",
-        ",",
-        ".",
-        "?",
-        "/",
-        "|",
-        "&",
-        "*",
-        "^",
-        "%",
-        "$",
-        "#",
-        "##",
-        "###",
-        "####",
-        "#####",
-        "######",
-        "#######",
-        "@",
-        "\n",
-        "\t",
-        "\r",
-        "<!--",
-        "-->",
-        "/*",
-        "*/",
-        "[x]",
-        "[]",
-        "[ ]",
-      ];
       // create a string from the commitlist set and remove stopwords in lowercase
 
       const searchStringSet = Array.from(commitSet).join(" ");
@@ -284,7 +104,7 @@ export async function POST(request: Request) {
             .split(" ")
             .flatMap((word) => word.split(","))
             .map((word: string) => word.toLowerCase())
-            .filter((word) => !stopwords.includes(word))
+            .filter((word) => !constants.stopwords.includes(word))
         )
       ).join(" ");
       // select six random words from the search string
@@ -438,6 +258,7 @@ export async function POST(request: Request) {
         repoName: repo,
       });
       textToWrite += randomText();
+
       Promise.allSettled([
         // Detect console.logs and its equivalent in other languages
         CodeComments
@@ -454,17 +275,30 @@ export async function POST(request: Request) {
           : null,
         // Detect console.logs and its equivalent in other languages
         CodeComments
-        ? detectLefoutComments({
-            prTitle: title,
-            businessLogicSummary,
-            repo,
-            owner,
-            issue_number: number,
-            installationId,
-            reqUrl: request.url,
-            reqEmail: req.email,
-          })
-        : null,
+          ? detectLeftoutComments({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
+        // Detect PII data that's sensible for companies that are heaavy in compliance standards
+        CodeComments
+          ? detectPIIData({
+              prTitle: title,
+              businessLogicSummary,
+              repo,
+              owner,
+              issue_number: number,
+              installationId,
+              reqUrl: request.url,
+              reqEmail: req.email,
+            })
+          : null,
         // Make Watermelon Review the PR's business logic here by comparing the title with the AI-generated summary
         Badges
           ? labelPullRequest({
@@ -646,6 +480,18 @@ export async function POST(request: Request) {
           .split("### WatermelonAI Summary")[1]
           .split("\n")[1];
 
+        // PII data for compliance-heavy companies
+        await detectPIIData({
+          prTitle: title,
+          businessLogicSummary,
+          repo,
+          owner,
+          issue_number: number,
+          installationId,
+          reqUrl: request.url,
+          reqEmail: req.email,
+        });
+
         // Detect console.logs and its equivalent in other languages
         await detectConsoleLogs({
           prTitle: title,
@@ -659,7 +505,7 @@ export async function POST(request: Request) {
         });
 
         // Detect multi-line leftout comments
-        await detectLefoutComments({
+        await detectLeftoutComments({
           prTitle: title,
           businessLogicSummary,
           repo,
