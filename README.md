@@ -1,5 +1,8 @@
 # Watermelon's Open Source Copilot For Code Review
 
+> DEPRECATION NOTICE
+> Watermelon will be sunsetting the service at the end of march. We apologize for any inconvenience. 
+
 [![Report an issue](https://img.shields.io/badge/-Report%20an%20issue-critical)](https://github.com/watermelontools/watermelon/issues)
 
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/m/watermelontools/watermelon?style=flat-square)
