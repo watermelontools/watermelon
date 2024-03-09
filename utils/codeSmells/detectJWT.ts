@@ -1,20 +1,17 @@
-const { Configuration, OpenAIApi } = require("openai");
 import { App } from "@octokit/app";
+import posthog from "../posthog/posthog";
+import getDiffFiles from "./getDiffFiles";
+import getLatestCommitHash from "./getLatestCommitHash";
 import { getLineDiffs } from "./getLineDiffs";
-
-const configuration = new Configuration({
-  apiKey: process.env.OPEN_AI_KEY,
-});
-const openai = new OpenAIApi(configuration);
 
 const app = new App({
   appId: process.env.GITHUB_APP_ID!,
   privateKey: process.env.GITHUB_PRIVATE_KEY!,
 });
 
-const leftoverCommentBody = `This PR contains leftover multi-line comments. Please review or remove them.`;
+const JWTComment = `This PR contains data that looks like a JWT. Please review or remove them.`;
 
-export default async function detectLefoutComments({
+export default async function detectJWT({
   installationId,
   owner,
   repo,
@@ -32,40 +29,45 @@ export default async function detectLefoutComments({
   reqEmail: string;
 }) {
   const octokit = await app.getInstallationOctokit(installationId);
-
-  // get the diffs
-  const { data: diffFiles } = await octokit.request(
-    "GET /repos/{owner}/{repo}/pulls/{pull_number}/files",
-    {
+  posthog.capture({
+    event: "detectJWTData",
+    properties: {
+      reqUrl,
+      reqEmail,
       owner,
       repo,
-      pull_number: issue_number,
-    }
-  );
-
-  function getLatestCommitHash() {
-    return octokit
-      .request("GET /repos/{owner}/{repo}/pulls/{pull_number}", {
+      issue_number,
+    },
+  });
+  const requestOptions = { owner, repo, issue_number, installationId };
+  const [diffFiles, latestCommitHash] = await Promise.all([
+    getDiffFiles(requestOptions),
+    getLatestCommitHash(requestOptions),
+  ]).catch((err) => {
+    posthog.capture({
+      event: "detectJWTError",
+      properties: {
+        reqUrl,
+        reqEmail,
         owner,
         repo,
-        pull_number: issue_number,
-      })
-      .then((result) => {
-        return result.data.head.sha;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  const latestCommitHash = await getLatestCommitHash();
-
+        issue_number,
+        error: err,
+      },
+    });
+    return [[], undefined];
+  });
   const commentPromises = diffFiles.map(async (file) => {
     const { additions } = getLineDiffs(file.patch ?? "");
 
-    // Leftout comment RegEx
-    const leftoverCommentRegex = /^\/\*[\s\S]*?\*\/|\/\/[\s\S]*?\n/gm;
-    const matches = additions.match(leftoverCommentRegex);
+    const lines = additions.split("\n");
+
+    // JWt Data RegEx
+    const JWTRegex = new RegExp(
+      "\\b[A-Za-z0-9-_]+.[A-Za-z0-9-_]+.[A-Za-z0-9-_]*\b",
+      "g"
+    );
+    const matches = additions.match(JWTRegex);
 
     if (matches) {
       const firstMatch = matches[0];
@@ -100,7 +102,7 @@ export default async function detectLefoutComments({
             {
               path: file.filename,
               position: lineNumber, // comment at the beggining of the file by default
-              body: leftoverCommentBody,
+              body: JWTComment,
             },
           ],
         })
