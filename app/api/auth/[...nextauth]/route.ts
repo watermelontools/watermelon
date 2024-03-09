@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     verifyRequest: "/auth/verify",
+    newUser: "/auth/new-user",
   },
   theme: {
     colorScheme: "dark", // "auto" | "dark" | "light"
